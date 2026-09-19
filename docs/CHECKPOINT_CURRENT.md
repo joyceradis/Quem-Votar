@@ -129,3 +129,40 @@ Este checkpoint é datado. Se a `main` avançar, ele deve ser atualizado no pró
 - limitações conhecidas relevantes.
 
 Microcommits sem mudança de estado não exigem novo checkpoint.
+
+
+## Feature freeze de produção
+
+A V5.5 entra em regime de feature freeze até 04/10/2026.
+
+Durante esse período, não devem ser introduzidos:
+
+- novos recursos de produto;
+- novos fluxos de navegação;
+- redesign estrutural;
+- experimentos de interface;
+- módulos comerciais.
+
+Permanecem permitidas mudanças estritamente necessárias para preservar:
+
+- correção factual;
+- proveniência;
+- atualização de dados;
+- segurança;
+- disponibilidade;
+- acessibilidade;
+- responsividade;
+- integridade da experiência pública.
+
+Também permanecem permitidos:
+
+- atualização de snapshots eleitorais;
+- correções factuais;
+- correções de associação entre candidatura, tema, fonte ou evidência;
+- correções críticas de UI/mobile;
+- correções de segurança e infraestrutura;
+- regressões que possam alterar a interpretação de informação publicada.
+
+Toda mudança durante o freeze deve usar o menor escopo efetivo possível.
+
+Baseline canônico durante o freeze: **V5.5**.
