@@ -16,6 +16,47 @@ assert SPEC.loader is not None
 SPEC.loader.exec_module(collector)
 
 
+PYPDF_AVAILABLE = importlib.util.find_spec("pypdf") is not None
+
+MINIMAL_TEXT_PDF = b"""%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+5 0 obj
+<< /Length 86 >>
+stream
+BT
+/F1 12 Tf
+72 720 Td
+(Maria Silva apresentou proposta para ampliar unidades de saude.) Tj
+ET
+endstream
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000000311 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+446
+%%EOF
+"""
+
+
 class CollectorTests(unittest.TestCase):
     def setUp(self) -> None:
         self.candidates = {
@@ -113,6 +154,63 @@ class CollectorTests(unittest.TestCase):
         self.assertTrue(draft["candidate_mentioned"])
         self.assertEqual(64, len(draft["content_sha256"]))
         self.assertIn("Maria Silva", draft["raw_excerpt"])
+
+    @unittest.skipUnless(PYPDF_AVAILABLE, "pypdf não instalado")
+    def test_collect_pdf_creates_pending_draft(self) -> None:
+        source = {
+            "candidate_id": "123",
+            "source_kind": "institutional",
+            "discovery_status": "exact_content",
+            "source_url": "https://example.org/documentos/projeto-85-2025.pdf",
+            "source_title": "Projeto de Lei",
+            "source_publisher": "Assembleia Legislativa",
+            "published_at": "2025-02-20",
+        }
+
+        def fake_fetch(url: str, **kwargs):
+            return MINIMAL_TEXT_PDF, url, "application/pdf"
+
+        draft = collector.collect_source(
+            source,
+            candidates=self.candidates,
+            fetcher=fake_fetch,
+        )
+
+        self.assertEqual("pending", draft["review_status"])
+        self.assertEqual("pdf", draft["document_type"])
+        self.assertEqual(1, draft["page_count"])
+        self.assertTrue(draft["candidate_mentioned"])
+        self.assertEqual(64, len(draft["source_sha256"]))
+        self.assertEqual(64, len(draft["content_sha256"]))
+        self.assertIn("Maria Silva", draft["raw_excerpt"])
+
+    @unittest.skipUnless(PYPDF_AVAILABLE, "pypdf não instalado")
+    def test_pdf_without_text_is_rejected_without_ocr(self) -> None:
+        from pypdf import PdfWriter
+
+        buffer = io.BytesIO()
+        writer = PdfWriter()
+        writer.add_blank_page(width=612, height=792)
+        writer.write(buffer)
+
+        source = {
+            "candidate_id": "123",
+            "source_kind": "institutional",
+            "discovery_status": "exact_content",
+            "source_url": "https://example.org/documentos/scan.pdf",
+            "source_title": "Documento",
+            "source_publisher": "Assembleia Legislativa",
+        }
+
+        def fake_fetch(url: str, **kwargs):
+            return buffer.getvalue(), url, "application/pdf"
+
+        with self.assertRaisesRegex(RuntimeError, "OCR não é executado"):
+            collector.collect_source(
+                source,
+                candidates=self.candidates,
+                fetcher=fake_fetch,
+            )
 
     def test_approved_review_can_be_promoted(self) -> None:
         draft = {
