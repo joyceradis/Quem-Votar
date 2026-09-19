@@ -63,17 +63,26 @@ Mudança partidária é um fato cronológico. O produto não atribui "coerência
 
 ## TopicEvidence
 
+Fonte canônica: `data/reference/topic-evidence.json`.
+
 ```json
 {
-  "topic_id": "seguranca-publica",
   "candidate_id": "SQ_CANDIDATO",
-  "evidence_type": "official_program | candidate_statement | roll_call_vote | bill | official_interview",
+  "topic_id": "seguranca",
+  "evidence_type": "proposta | declaração | atuação",
   "statement": "Resumo factual curto",
-  "source": {},
+  "quote_or_summary": "Trecho ou resumo fiel à fonte",
+  "source_url": "https://...",
+  "source_title": "string",
+  "source_publisher": "string",
+  "published_at": "YYYY-MM-DD|null",
+  "captured_at": "ISO-8601",
   "scope": "federal | estadual | municipal | geral",
-  "verification_status": "verified"
+  "verification_status": "verified | dated | secondary_source"
 }
 ```
+
+A coleta automatizada não escreve diretamente nessa fonte. Material bruto passa por `data/staging/`, revisão semântica e validação determinística antes de qualquer promoção.
 
 ## Coverage
 
