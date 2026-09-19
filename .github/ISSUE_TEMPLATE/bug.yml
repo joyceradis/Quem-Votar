@@ -1,0 +1,45 @@
+name: 🐞 Bug
+description: Registre algo que está quebrado, inconsistente ou diferente do esperado.
+title: "[BUG] "
+body:
+  - type: textarea
+    id: happened
+    attributes:
+      label: O que aconteceu?
+      placeholder: Conte o que você viu. Pode ser simples.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: O que deveria acontecer?
+      placeholder: Qual seria o comportamento correto?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área principal
+      options:
+        - Interface / UX
+        - Dados / evidências
+        - Governança / segurança
+        - Automação / CI
+        - Documentação
+        - Outro
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Como reproduzir?
+      placeholder: Passos, página, botão, link ou situação em que ocorreu.
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidência
+      placeholder: Print, mensagem de erro, link ou observação adicional.
