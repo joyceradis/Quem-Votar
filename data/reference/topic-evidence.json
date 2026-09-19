@@ -1,6 +1,14 @@
-{
-  "version": "1.0.0",
-  "updated_at": "2026-09-19",
-  "semantics": "Evidências temáticas curadas por SQ_CANDIDATO. A ausência de entrada não significa ausência de proposta ou posição.",
-  "entries": []
-}
+  {
+    "candidate_id": "12345678900",
+    "topic_id": "saude_publica",
+    "evidence_type": "proposta",
+    "statement": "Construção de três novos hospitais regionais.",
+    "quote_or_summary": "O candidato afirmou no debate que priorizará a construção de hospitais nas regiões Norte e Sul do estado.",
+    "source_url": "https://portaloficial.com.br/propostas",
+    "source_title": "Plano de Governo 2026",
+    "source_publisher": "Portal Oficial do Candidato",
+    "published_at": "2026-08-15",
+    "captured_at": "2026-09-19",
+    "scope": "estadual",
+    "verification_status": "validado"
+  }
