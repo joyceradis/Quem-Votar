@@ -1,0 +1,41 @@
+name: ⚡ Ideia rápida
+description: Registre uma ideia pelo celular antes de esquecer. Ela pode ser detalhada depois.
+title: "[IDEIA] "
+body:
+  - type: markdown
+    attributes:
+      value: "Escreva do seu jeito. A ideia não precisa nascer tecnicamente perfeita."
+
+  - type: textarea
+    id: idea
+    attributes:
+      label: Qual é a ideia?
+      placeholder: Explique em linguagem simples o que você imaginou.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área principal
+      options:
+        - Interface / UX
+        - Dados / evidências
+        - Governança / segurança
+        - Automação / CI
+        - Documentação
+        - Outro
+    validations:
+      required: true
+
+  - type: textarea
+    id: outcome
+    attributes:
+      label: O que você gostaria que acontecesse?
+      placeholder: Como você saberia que a ideia funcionou?
+
+  - type: textarea
+    id: avoid
+    attributes:
+      label: O que não pode acontecer?
+      placeholder: Algum risco, comportamento ou coisa que você quer preservar?
