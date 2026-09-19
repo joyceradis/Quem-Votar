@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0B456F">
+<meta name="description" content="Apoio voluntário, transparência financeira e independência editorial do Quem Votar?.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="styles.css?v=5.5.0">
+<title>Apoio e transparência · Quem Votar?</title>
+<style>
+.support-shell{max-width:980px;margin:0 auto;padding:64px 24px 86px}.support-hero{padding-bottom:42px;border-bottom:1px solid rgba(17,59,86,.12)}.support-hero h1{margin:0;max-width:820px;font-size:clamp(3rem,6vw,5.7rem);line-height:.93;letter-spacing:-.065em}.support-hero p:not(.eyebrow){max-width:760px;margin:20px 0 0;color:#536b79}.support-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:26px;border-top:1px solid rgba(17,59,86,.12)}.support-block{padding:34px 30px 34px 0;border-bottom:1px solid rgba(17,59,86,.12)}.support-block:nth-child(even){padding-left:30px;border-left:1px solid rgba(17,59,86,.12)}.support-block h2{margin:0 0 10px;font-size:1.45rem}.support-block p{margin:0 0 14px;color:#536b79}.support-key{display:grid;gap:5px;margin:18px 0}.support-key span{font-size:.72rem;font-weight:900;letter-spacing:.06em;text-transform:uppercase;color:#536b79}.support-key code{font-size:.96rem;overflow-wrap:anywhere}.support-actions{display:flex;flex-wrap:wrap;gap:10px}.support-button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border:0;border-radius:999px;background:#2A75D3;color:#fff;font:inherit;font-weight:900;text-decoration:none;cursor:pointer}.support-button.secondary{background:#f8fafc;color:#0B456F;border:1px solid rgba(17,59,86,.18)}.support-feedback{min-height:1.2em;margin-top:10px;color:#536b79;font-size:.78rem}.support-status{display:inline-block;margin-top:8px;padding:8px 11px;border:1px solid rgba(17,59,86,.16);border-radius:8px;color:#536b79;font-size:.82rem}.support-policy{margin-top:44px}.support-policy h2{font-size:2rem;margin:0 0 18px}.support-policy ul{padding-left:20px;color:#536b79}.support-policy li+li{margin-top:8px}.support-note{margin-top:28px;padding:20px;border-left:4px solid #1679b6;background:#f8fafc;color:#536b79}.support-note strong{color:#173244}.support-links{display:flex;flex-wrap:wrap;gap:18px;margin-top:28px}.support-links a{color:#1679b6;font-weight:850;text-decoration:none}@media(max-width:700px){.support-shell{padding:42px 16px 70px}.support-grid{grid-template-columns:1fr}.support-block,.support-block:nth-child(even){padding:26px 0;border-left:0}.support-hero h1{font-size:clamp(2.8rem,14vw,4.2rem)}}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
+<header class="site-header">
+  <a class="brand" href="index.html" aria-label="Quem Votar? início"><img src="assets/logo.svg" alt="Quem Votar? ES 2026"></a>
+  <div class="header-actions"><a href="index.html" style="color:#1679b6;font-weight:850;text-decoration:none">Voltar ao site</a></div>
+</header>
+<main id="conteudo" class="support-shell">
+  <section class="support-hero">
+    <p class="eyebrow">APOIO E TRANSPARÊNCIA</p>
+    <h1>O projeto é gratuito. A independência editorial continua intacta.</h1>
+    <p>Contribuições ajudam a manter software, dados, documentação e infraestrutura. Apoio financeiro não compra influência sobre candidaturas, fontes, temas, ordem, classificação ou apresentação das informações.</p>
+  </section>
+
+  <section class="support-grid" aria-label="Formas de apoio">
+    <article class="support-block">
+      <h2>Apoio via PIX</h2>
+      <p>Quem quiser contribuir diretamente com a manutenção do projeto pode usar a chave abaixo.</p>
+      <div class="support-key">
+        <span>Chave PIX · e-mail</span>
+        <code id="pixKey">contato@drajoyceradis.com</code>
+      </div>
+      <div class="support-actions">
+        <button class="support-button" id="copyPix" type="button">Copiar chave PIX</button>
+      </div>
+      <p class="support-feedback" id="pixFeedback" aria-live="polite"></p>
+    </article>
+
+    <article class="support-block">
+      <h2>GitHub Sponsors</h2>
+      <p>O repositório já está configurado para usar o mecanismo nativo de patrocínio do GitHub. Quando o perfil Sponsors da mantenedora estiver ativo, o botão <strong>Sponsor</strong> aparecerá no próprio repositório.</p>
+      <div class="support-actions">
+        <a class="support-button secondary" href="https://github.com/joyceradis/Quem-Votar" target="_blank" rel="noopener">Abrir repositório no GitHub</a>
+      </div>
+      <span class="support-status">Configuração do repositório pronta; ativação do perfil Sponsors depende da conta da mantenedora.</span>
+    </article>
+  </section>
+
+  <section class="support-policy">
+    <h2>Regra de independência</h2>
+    <ul>
+      <li>Apoio financeiro não altera seleção, ordem, redação, fontes, temas ou visibilidade de candidaturas.</li>
+      <li>Não tratamos candidaturas, campanhas, partidos, federações, coligações, comitês eleitorais ou intermediários desses atores como apoiadores institucionais neutros.</li>
+      <li>Apoiadores não recebem acesso antecipado, veto, aprovação editorial ou destaque dentro de fichas, busca, comparação ou páginas temáticas.</li>
+      <li>Nenhuma contribuição escreve ou modifica a camada canônica de evidências eleitorais.</li>
+      <li>Não usamos trackers publicitários, personalização política ou segmentação baseada em apoio financeiro.</li>
+    </ul>
+    <div class="support-note"><strong>Separação de camadas.</strong> Apoio sustenta a operação. Evidência sustenta o conteúdo. Os dois fluxos permanecem tecnicamente e editorialmente separados.</div>
+    <div class="support-links"><a href="sobre.html">Como o projeto funciona</a><a href="docs/SUSTAINABILITY.md">Arquitetura de sustentabilidade</a><a href="docs/LICENSING.md">Licenciamento</a></div>
+  </section>
+</main>
+<footer class="site-footer">
+  <div><strong>Quem Votar? · Espírito Santo 2026</strong><span>Informação pública, em linguagem normal.</span></div>
+  <div><a href="apoio.html">Apoio e transparência</a><a href="LICENSE">AGPL-3.0-only</a></div>
+</footer>
+<script>
+(() => {
+  const button = document.getElementById("copyPix");
+  const key = document.getElementById("pixKey");
+  const feedback = document.getElementById("pixFeedback");
+  if (!button || !key || !feedback) return;
+
+  button.addEventListener("click", async () => {
+    const value = key.textContent.trim();
+    try {
+      await navigator.clipboard.writeText(value);
+      feedback.textContent = "Chave PIX copiada.";
+      button.textContent = "Copiado";
+    } catch {
+      const input = document.createElement("textarea");
+      input.value = value;
+      input.setAttribute("readonly", "");
+      input.style.position = "fixed";
+      input.style.opacity = "0";
+      document.body.appendChild(input);
+      input.select();
+      const copied = document.execCommand("copy");
+      input.remove();
+      feedback.textContent = copied ? "Chave PIX copiada." : "Não foi possível copiar automaticamente. Selecione a chave acima.";
+      if (copied) button.textContent = "Copiado";
+    }
+    setTimeout(() => {
+      button.textContent = "Copiar chave PIX";
+      feedback.textContent = "";
+    }, 2200);
+  });
+})();
+</script>
+</body>
+</html>
