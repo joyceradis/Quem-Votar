@@ -15,7 +15,7 @@ const params=()=>new URLSearchParams(location.search);
 
 async function getJSON(path,fallback=[]){
   try{
-    const response=await fetch(path+"?v=5.4",{cache:"no-store"});
+    const response=await fetch(path+"?v=5.5",{cache:"no-store"});
     return response.ok?await response.json():fallback;
   }catch{
     return fallback;
@@ -234,8 +234,17 @@ function candidateCard(candidate,kind,selectedIds){
   const name=candidate.ballot_name||candidate.full_name||"Nome não disponível";
   const selected=selectedIds.includes(String(candidate.tse_id));
   const profileUrl=`candidato.html?id=${encodeURIComponent(candidate.tse_id)}&cargo=${kind}`;
-  const proposalCount=topicEvidence(candidate).length;
+  const evidence=topicEvidence(candidate);
+  const proposalCount=evidence.length;
   const today=currentActivity(candidate,kind);
+  const documentedTopics=candidateTopicIds(candidate)
+    .map(id=>topicById(id))
+    .filter(Boolean);
+  const visibleTopics=documentedTopics.slice(0,3);
+  const remainingTopics=Math.max(0,documentedTopics.length-visibleTopics.length);
+  const topicTags=visibleTopics.length
+    ? `<div class="candidate-topic-tags" aria-label="Temas com evidência documentada">${visibleTopics.map(topic=>`<span>${esc(topic.label)}</span>`).join("")}${remainingTopics?`<span class="more">+${remainingTopics}</span>`:""}</div>`
+    : "";
 
   return `
     <article class="candidate-card" data-profile-url="${profileUrl}">
@@ -247,7 +256,8 @@ function candidateCard(candidate,kind,selectedIds){
         <h3><a href="${profileUrl}">${esc(name)}</a></h3>
         <p class="candidate-electoral">${esc(candidate.party||"Partido não informado")} · nº ${esc(candidate.number||"—")}</p>
         <p class="candidate-now">${esc(today)}</p>
-        ${proposalCount?`<p class="candidate-proposals">${proposalCount} proposta${proposalCount===1?"":"s"} ou declaração${proposalCount===1?"":"ões"} com fonte</p>`:""}
+        ${topicTags}
+        ${proposalCount?`<p class="candidate-proposals">${proposalCount} registro${proposalCount===1?"":"s"} temático${proposalCount===1?"":"s"} com fonte</p>`:""}
       </div>
       <div class="candidate-actions">
         <a class="profile-link" href="${profileUrl}">Entender</a>
