@@ -1,0 +1,58 @@
+name: ✨ Melhoria
+description: Proponha uma melhoria ou nova funcionalidade com contexto suficiente para implementação.
+title: "[MELHORIA] "
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: O que você percebeu?
+      placeholder: Qual problema, limitação ou oportunidade você encontrou?
+    validations:
+      required: true
+
+  - type: textarea
+    id: desired
+    attributes:
+      label: O que deveria acontecer?
+      placeholder: Descreva o comportamento desejado.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área principal
+      options:
+        - Interface / UX
+        - Dados / evidências
+        - Governança / segurança
+        - Automação / CI
+        - Documentação
+        - Outro
+    validations:
+      required: true
+
+  - type: dropdown
+    id: risk
+    attributes:
+      label: Risco técnico
+      description: Se não souber, marque "Não sei".
+      options:
+        - Não sei
+        - Baixo — texto, visual ou ajuste local
+        - Médio — comportamento, busca, integração ou automação
+        - Alto — dados, evidências, governança ou contratos
+    validations:
+      required: true
+
+  - type: textarea
+    id: preserve
+    attributes:
+      label: O que precisa ser preservado?
+      placeholder: Regras, comportamento atual, dados ou decisões que não devem regredir.
+
+  - type: textarea
+    id: done
+    attributes:
+      label: Como saberemos que terminou?
+      placeholder: Critérios simples de pronto, se você já souber.
