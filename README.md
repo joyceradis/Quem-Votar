@@ -6,6 +6,19 @@ Plataforma cívica open source para consulta factual e rastreável de candidatur
 
 **Baseline visual:** `V5.4` · assets `5.4.0`
 
+## Onde acompanhar o projeto
+
+- **README:** explica o produto e o estado estável atual.
+- **Roadmap:** mostra a sequência de evolução e as prioridades maiores.
+- **Issues:** são as tarefas concretas, com discussão, decisões e critérios de pronto.
+
+**Próximos passos ativos:**
+1. [#3 — concluir os critérios restantes da V5.4](https://github.com/joyceradis/Quem-Votar/issues/3);
+2. [#5 — criar o coletor de evidências com etapa de staging/validação](https://github.com/joyceradis/Quem-Votar/issues/5);
+3. [#2 — ampliar a cobertura de propostas, declarações e atuação com fonte](https://github.com/joyceradis/Quem-Votar/issues/2).
+
+O detalhamento e o estado de cada tarefa ficam nas Issues; o [roadmap](docs/ROADMAP_V1.md) mantém a visão de sequência sem duplicar toda a implementação.
+
 ## Recorte desta versão
 
 A versão atual cobre:
