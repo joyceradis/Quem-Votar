@@ -1,0 +1,13 @@
+# Arquivos de governança e control plane exigem atenção explícita da mantenedora.
+# A exigência de review por CODEOWNER depende de uma regra de proteção/ruleset no GitHub.
+
+/AGENTS.md @joyceradis
+/AUDITORIA.md @joyceradis
+/METODOLOGIA.md @joyceradis
+/scripts/audit-site.py @joyceradis
+/docs/GOVERNANCE.md @joyceradis
+/docs/DELIVERY_GOVERNANCE.md @joyceradis
+/docs/PRODUCT_NORTH_STAR.md @joyceradis
+/docs/TOPIC_EVIDENCE.md @joyceradis
+/.github/CODEOWNERS @joyceradis
+/.github/workflows/ @joyceradis
