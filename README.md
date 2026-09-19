@@ -8,6 +8,8 @@ Plataforma cívica open source para consulta factual e rastreável de candidatur
 
 **Baseline visual atual:** `V5.5` · versão canônica em [`VERSION`](VERSION)
 
+[Produção](https://joyceradis.github.io/Quem-Votar/) · [Como funciona](sobre.html) · [Metodologia](METODOLOGIA.md) · [Apoiar o projeto](apoio.html) · [Licença](LICENSE)
+
 ## Onde acompanhar o projeto
 
 Cada documento tem uma função diferente:
@@ -195,3 +197,22 @@ The AGPL-3.0-only license applies to the original software identified in this re
 Third-party data, documents, photographs and other materials remain subject to the licenses, rights and terms of their respective sources.
 
 Detailed rules for visual assets and trademark usage may be documented separately in a future `TRADEMARK_POLICY.md`.
+
+
+## Apoie o projeto
+
+O **Quem Votar?** é gratuito para quem consulta e open source. Contribuições ajudam a custear manutenção, dados, documentação e infraestrutura sem conceder qualquer influência sobre o conteúdo eleitoral.
+
+### GitHub Sponsors
+
+O repositório já possui `.github/FUNDING.yml` configurado para o perfil `joyceradis`. Quando o perfil GitHub Sponsors estiver ativo, o botão **Sponsor** aparecerá no repositório.
+
+### PIX
+
+Chave PIX (e-mail):
+
+`contato@drajoyceradis.com`
+
+Apoio financeiro não altera fontes, metodologia, temas, ordem, classificação ou apresentação de candidaturas.
+
+Mais detalhes: [apoio e transparência](apoio.html) · [arquitetura de sustentabilidade](docs/SUSTAINABILITY.md).

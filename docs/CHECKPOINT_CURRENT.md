@@ -133,35 +133,34 @@ Microcommits sem mudança de estado não exigem novo checkpoint.
 
 ## Feature freeze de produção
 
-A V5.5 entra em regime de feature freeze até 04/10/2026.
+A V5.5 permanece em regime de feature freeze até 04/10/2026, com fronteira explícita entre o **núcleo eleitoral** e a **camada de sustentabilidade**.
 
-Durante esse período, não devem ser introduzidos:
+### Núcleo eleitoral congelado
 
-- novos recursos de produto;
-- novos fluxos de navegação;
-- redesign estrutural;
-- experimentos de interface;
-- módulos comerciais.
+Permanecem congelados, salvo correção, segurança, acessibilidade, disponibilidade, atualização factual ou proveniência:
 
-Permanecem permitidas mudanças estritamente necessárias para preservar:
+- busca e navegação eleitoral;
+- fichas de candidaturas;
+- comparação;
+- temas e taxonomia política;
+- regras editoriais;
+- `topic_evidence` e sua semântica;
+- pipeline de publicação canônica;
+- qualquer mudança que altere ordem, visibilidade, tratamento ou interpretação de candidaturas.
 
-- correção factual;
-- proveniência;
-- atualização de dados;
-- segurança;
-- disponibilidade;
-- acessibilidade;
-- responsividade;
-- integridade da experiência pública.
+### Camada de sustentabilidade isolada
 
-Também permanecem permitidos:
+Pode evoluir durante o freeze sem alterar a versão V5.5 quando permanecer desacoplada do conteúdo eleitoral:
 
-- atualização de snapshots eleitorais;
-- correções factuais;
-- correções de associação entre candidatura, tema, fonte ou evidência;
-- correções críticas de UI/mobile;
-- correções de segurança e infraestrutura;
-- regressões que possam alterar a interpretação de informação publicada.
+- `.github/FUNDING.yml`;
+- GitHub Sponsors;
+- seção de apoio no README;
+- rota estática `apoio.html`;
+- cópia local de chave PIX;
+- documentação de transparência e sustentabilidade;
+- link secundário de apoio no rodapé.
+
+Essa camada não pode escrever na fonte canônica de evidências, aparecer como publicidade dentro de fichas/busca/comparação/temas nem conceder qualquer influência editorial.
 
 Toda mudança durante o freeze deve usar o menor escopo efetivo possível.
 
