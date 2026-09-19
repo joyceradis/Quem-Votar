@@ -1,0 +1,63 @@
+name: 🧾 Dados / evidências
+description: Tarefa relacionada a fontes, cobertura, coleta, integração ou validação de dados.
+title: "[DADOS] "
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Qual é o problema de dados?
+      placeholder: O que está faltando, inconsistente ou precisa ser integrado?
+    validations:
+      required: true
+
+  - type: textarea
+    id: objective
+    attributes:
+      label: Qual é o objetivo?
+      placeholder: O que a tarefa deve produzir ou permitir?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área principal
+      options:
+        - Dados / evidências
+        - Governança / segurança
+        - Automação / CI
+        - Interface / UX
+        - Documentação
+    validations:
+      required: true
+
+  - type: dropdown
+    id: risk
+    attributes:
+      label: Risco técnico
+      description: Mudanças em evidência canônica, proveniência ou contratos tendem a ser de alto risco.
+      options:
+        - Não sei
+        - Baixo — documentação ou leitura sem alteração de contrato
+        - Médio — coleta, staging ou integração controlada
+        - Alto — fonte canônica, evidência, proveniência ou contrato
+    validations:
+      required: true
+
+  - type: textarea
+    id: sources
+    attributes:
+      label: Fontes ou referências conhecidas
+      placeholder: Links, arquivos, APIs ou Issues relacionadas.
+
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Regras que não podem ser violadas
+      placeholder: Exemplo: não inferir posição, não sobrescrever fonte canônica, preservar SQ_CANDIDATO.
+
+  - type: textarea
+    id: done
+    attributes:
+      label: Critério de pronto
+      placeholder: Como saberemos que essa tarefa terminou corretamente?
