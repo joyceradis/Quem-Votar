@@ -15,7 +15,7 @@ const params=()=>new URLSearchParams(location.search);
 
 async function getJSON(path,fallback=[]){
   try{
-    const response=await fetch(path+"?v=5.3",{cache:"no-store"});
+    const response=await fetch(path+"?v=5.4",{cache:"no-store"});
     return response.ok?await response.json():fallback;
   }catch{
     return fallback;
@@ -202,7 +202,7 @@ function toggleCompare(id){
 }
 
 async function initHome(){
-  const[{federal,estadual,meta},topics]=await Promise.all([loadCore(),loadTopics()]);
+  const[{federal,estadual,meta,all},topics]=await Promise.all([loadCore(),loadTopics()]);
   TOPICS=topics;
   applyGlobalMeta(meta);
 
@@ -210,14 +210,23 @@ async function initHome(){
   $("homeEstadualCount").textContent=estadual.length||"—";
   $("homeTotalCount").textContent=(federal.length+estadual.length)||"—";
 
+  const evidencedTopicIds=new Set(all.flatMap(candidate=>candidateTopicIds(candidate)));
+  const visibleTopics=TOPICS.topics.filter(topic=>evidencedTopicIds.has(topic.id));
   const mount=$("homeTopics");
   if(mount){
-    mount.innerHTML=TOPICS.topics.map(topic=>`
-      <a href="temas.html#${encodeURIComponent(topic.id)}">
-        <span>${esc(topic.label)}</span>
-        <small>${esc((topic.life_areas||[]).slice(0,2).join(" · "))}</small>
-      </a>
-    `).join("");
+    const section=mount.closest(".home-topics");
+    if(!visibleTopics.length){
+      if(section)section.hidden=true;
+      mount.innerHTML="";
+    }else{
+      if(section)section.hidden=false;
+      mount.innerHTML=visibleTopics.map(topic=>`
+        <a href="temas.html#${encodeURIComponent(topic.id)}">
+          <span>${esc(topic.label)}</span>
+          <small>${esc((topic.life_areas||[]).slice(0,2).join(" · "))}</small>
+        </a>
+      `).join("");
+    }
   }
 }
 
@@ -308,14 +317,20 @@ async function initCandidates(){
   let page=Math.max(1,Number(url.get("page"))||1);
 
   $("searchInput").value=url.get("q")||"";
-  $("topicFilter").value=url.get("tema")||"";
   $("institutionalFilter").value=url.get("institucional")==="1"?"1":"";
   $("federalCount").textContent=federal.length;
   $("estadualCount").textContent=estadual.length;
   $("listUpdate").textContent=`Atualizado em ${formatSnapshot(meta?.collected_at)}`;
-  $("topicFilter").innerHTML='<option value="">Todos os assuntos</option>'+
-    TOPICS.topics.map(topic=>`<option value="${esc(topic.id)}">${esc(topic.label)}</option>`).join("");
-  $("topicFilter").value=url.get("tema")||"";
+
+  function populateTopics(){
+    const select=$("topicFilter");
+    const requested=url.get("tema")||select.value;
+    const availableIds=new Set(datasets[kind].flatMap(candidate=>candidateTopicIds(candidate)));
+    const topicsForKind=TOPICS.topics.filter(topic=>availableIds.has(topic.id));
+    select.innerHTML='<option value="">Todos os assuntos com fonte</option>'+
+      topicsForKind.map(topic=>`<option value="${esc(topic.id)}">${esc(topic.label)}</option>`).join("");
+    select.value=topicsForKind.some(topic=>topic.id===requested)?requested:"";
+  }
 
   const filterToggle=$("filterToggle");
   const secondaryFilters=$("secondaryFilters");
@@ -436,6 +451,7 @@ async function initCandidates(){
       button.setAttribute("aria-selected",String(active));
     });
 
+    populateTopics();
     populateParties();
     render();
   }
@@ -484,7 +500,8 @@ async function initTopics(){
         stats[item.topic_id].evidence+=1;
       }
     }));
-    $("topicCards").innerHTML=TOPICS.topics.map(topic=>{
+    const visibleTopics=TOPICS.topics.filter(topic=>stats[topic.id]?.candidates.size);
+    $("topicCards").innerHTML=visibleTopics.length?visibleTopics.map(topic=>{
       const row=stats[topic.id];
       const count=row.candidates.size;
       return `
@@ -495,13 +512,13 @@ async function initTopics(){
             <div class="life-areas">${(topic.life_areas||[]).map(area=>`<span>${esc(area)}</span>`).join("")}</div>
           </div>
           <div class="topic-status">
-            <strong>${count?count:"—"}</strong>
-            <span>${count?`pessoa${count===1?"":"s"} com fonte neste assunto`:"Ainda sem pessoas conectadas a fontes deste assunto"}</span>
+            <strong>${count}</strong>
+            <span>pessoa${count===1?"":"s"} com fonte neste assunto</span>
           </div>
-          ${count?`<a href="candidatos.html?tema=${encodeURIComponent(topic.id)}">Ver pessoas</a>`:""}
+          <a href="candidatos.html?tema=${encodeURIComponent(topic.id)}">Ver pessoas</a>
         </article>
       `;
-    }).join("");
+    }).join(""):'<div class="empty">Ainda não há propostas, declarações ou atuações temáticas integradas com fonte. A ausência de registro não significa ausência de posição.</div>';
   });
 }
 function definitionRow(label,value){
@@ -547,6 +564,18 @@ async function initProfile(){
   const impactTopics=practicalAreas(candidate);
 
   document.title=`${name} · Quem Votar?`;
+  const roleLabel=kind==="federal"?"Deputado Federal":"Deputado Estadual";
+  const shareDescription=`${name} · ${roleLabel} · ${candidate.party||"Partido não informado"} · nº ${candidate.number||"—"}. Consulte dados públicos e fontes.`;
+  const profileUrl=new URL(location.href);
+  profileUrl.searchParams.set("id",String(candidate.tse_id));
+  profileUrl.searchParams.set("cargo",kind);
+  const canonicalUrl=profileUrl.toString();
+  document.querySelector('meta[property="og:title"]')?.setAttribute("content",document.title);
+  document.querySelector('meta[property="og:description"]')?.setAttribute("content",shareDescription);
+  document.querySelector('meta[property="og:url"]')?.setAttribute("content",canonicalUrl);
+  document.querySelector('meta[name="twitter:title"]')?.setAttribute("content",document.title);
+  document.querySelector('meta[name="twitter:description"]')?.setAttribute("content",shareDescription);
+  document.querySelector('link[rel="canonical"]')?.setAttribute("href",canonicalUrl);
 
   const todayContent=institutional||institutionalEvidence.length?`
     ${institutional?`<div class="plain-fact"><span>Hoje</span><strong>${esc(currentActivity(candidate,kind))}</strong><small>${esc([institutional.party,institutional.status].filter(Boolean).join(" · "))}</small></div>`:""}
@@ -580,7 +609,10 @@ async function initProfile(){
         <h1>${esc(name)}</h1>
         <p class="full-name">${esc(candidate.full_name||"")}</p>
         <div class="identity-line"><strong>${esc(candidate.party||"Partido não informado")}</strong><span>nº ${esc(candidate.number||"—")}</span><span>${esc(candidate.occupation||"Ocupação não informada")}</span></div>
-        <button id="profileCompare" class="profile-compare" type="button" data-candidate-id="${esc(candidate.tse_id)}">${getCompareIds().includes(String(candidate.tse_id))?"Remover da comparação":"Comparar"}</button>
+        <div class="profile-actions">
+          <button id="profileCompare" class="profile-compare" type="button" data-candidate-id="${esc(candidate.tse_id)}">${getCompareIds().includes(String(candidate.tse_id))?"Remover da comparação":"Comparar"}</button>
+          <button id="profileShare" class="profile-share" type="button">Compartilhar perfil</button>
+        </div>
       </div>
     </section>
 
@@ -598,6 +630,24 @@ async function initProfile(){
   $("profileCompare")?.addEventListener("click",event=>{
     const ids=toggleCompare(event.currentTarget.dataset.candidateId);
     event.currentTarget.textContent=ids.includes(String(candidate.tse_id))?"Remover da comparação":"Comparar";
+  });
+
+  $("profileShare")?.addEventListener("click",async event=>{
+    const button=event.currentTarget;
+    const original=button.textContent;
+    try{
+      if(navigator.share){
+        await navigator.share({title:document.title,text:shareDescription,url:canonicalUrl});
+        return;
+      }
+      await navigator.clipboard.writeText(canonicalUrl);
+      button.textContent="Link copiado";
+      setTimeout(()=>button.textContent=original,1800);
+    }catch(error){
+      if(error?.name==="AbortError")return;
+      button.textContent="Copie o link da barra";
+      setTimeout(()=>button.textContent=original,2200);
+    }
   });
 }
 async function initCompare(){
