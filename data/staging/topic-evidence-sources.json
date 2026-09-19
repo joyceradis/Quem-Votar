@@ -1,6 +1,23 @@
 {
   "version": "1.0.0",
-  "updated_at": "2026-09-19T00:00:00+00:00",
+  "updated_at": "2026-09-19T21:10:00+00:00",
   "semantics": "Fila de fontes para descoberta/coleta. Perfis declarados ao TSE são sementes, não evidências publicáveis.",
-  "sources": []
+  "sources": [
+    {
+      "candidate_id": "80002537487",
+      "candidate_name": "ALEXANDRE XAMBINHO",
+      "source_kind": "institutional",
+      "discovery_status": "exact_content",
+      "seed_url": "",
+      "source_url": "https://www3.al.es.gov.br/Arquivo/Documents/PL/440788-202502201511248154365Q28Z0%2819273%29.pdf",
+      "source_title": "Projeto de Lei nº 85/2025 — Programa Estadual de Apoio ao Transporte Intermunicipal de Pacientes do SUS (PROATIS)",
+      "source_publisher": "Assembleia Legislativa do Estado do Espírito Santo",
+      "published_at": "2025-02-20",
+      "collection_notes": "Fonte institucional oficial adicionada como smoke test real. O coletor atual deve rejeitar application/pdf até existir adaptador de PDF; nenhuma classificação temática é aplicada nesta etapa.",
+      "source_origin": {
+        "institution": "ALES",
+        "discovery_method": "pesquisa pública em fonte institucional"
+      }
+    }
+  ]
 }
