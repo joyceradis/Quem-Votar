@@ -15,6 +15,21 @@ Fluxo:
 
 Perfis de redes sociais declarados ao TSE entram como `discovery_status: "seed"`. Um perfil não é uma evidência. Para coleta, é necessário um link de conteúdo específico (`exact_content`), como matéria, post, vídeo ou documento identificável.
 
+## Dependência para PDFs
+
+A coleta de PDF textual usa `pypdf 6.19.0`, fixado em `requirements-evidence.txt`.
+
+Instalação:
+
+```bash
+python -m pip install -r requirements-evidence.txt
+```
+
+Projeto: https://pypi.org/project/pypdf/  
+Licença: BSD-3-Clause.
+
+O coletor **não executa OCR automaticamente**. PDF sem camada textual suficiente é rejeitado e permanece fora da fonte canônica.
+
 ## Comandos
 
 Descobrir redes declaradas ao TSE para as candidaturas presentes no snapshot:
