@@ -185,3 +185,35 @@ Regras obrigatórias:
 - apoio de candidatura, campanha, partido, federação, coligação, comitê eleitoral ou intermediário atuando em nome desses atores não deve ser tratado como apoio institucional neutro do projeto.
 
 O financiamento da infraestrutura e a camada editorial permanecem operacionalmente separados.
+
+
+## Separação arquitetural entre conteúdo eleitoral e sustentabilidade
+
+A sustentabilidade financeira é uma camada operacional separada da camada editorial e da camada canônica de evidências.
+
+### Camada editorial eleitoral
+
+Inclui dados de candidaturas, evidências, temas, comparação, busca, metodologia e apresentação de informação política. Durante o feature freeze V5.5, essa camada permanece congelada, exceto para manutenção factual, segurança, acessibilidade, disponibilidade e proveniência.
+
+### Camada de sustentabilidade
+
+Pode conter:
+
+- GitHub Sponsors;
+- `.github/FUNDING.yml`;
+- apoio individual por PIX;
+- documentação de financiamento;
+- uma rota estática de transparência e apoio;
+- identificação futura de apoiadores conforme as regras desta governança.
+
+Essa camada não pode:
+
+- modificar dados eleitorais ou critérios editoriais;
+- aparecer como publicidade dentro de fichas, busca, comparação ou temas;
+- introduzir recomendação, personalização política ou segmentação;
+- conceder prioridade, veto, acesso antecipado ou influência;
+- escrever na fonte canônica de evidências.
+
+Apoio individual deve ser apresentado como contribuição à manutenção do software, dados, documentação e infraestrutura do projeto, nunca como contribuição a candidatura, partido ou campanha.
+
+A configuração financeira deve usar o menor acoplamento possível com o núcleo eleitoral. Sempre que possível, preferir mecanismos nativos do repositório e componentes estáticos sem terceiros ou trackers.
