@@ -6,7 +6,7 @@ Data: 2026-09-19.
 
 Branch: `main`.
 
-Baseline visual: `V5.3`. Cache de assets: `5.3.0`.
+Baseline visual: `V5.4`. Cache de assets: `5.4.0`.
 
 Este checkpoint não cria sozinho um GitHub Release formal.
 
@@ -36,9 +36,12 @@ Taxonomia temática pública: `data/reference/policy-topics.json`.
 - stylesheet canônico sem camadas de override herdadas;
 - cargo e busca dominam o primeiro viewport;
 - filtros secundários aparecem sob demanda;
+- assuntos e filtros temáticos só aparecem quando existe `topic_evidence` documentada para o recorte correspondente;
 - listagem é editorial e compacta;
 - nome/cargo/partido/número têm precedência sobre foto e ocupação;
 - ficha: Visão geral -> Trajetória -> Temas e propostas -> Registros públicos -> Fontes e limitações;
+- ficha possui ação de compartilhamento com URL direta e fallback de cópia de link;
+- metadados sociais básicos são atualizados no navegador para a candidatura aberta;
 - favicon SVG e manifesto web configurados;
 - identidade visual em azul, branco e rosa; azul conduz interação e rosa funciona apenas como acento de marca;
 - mudança visual deve ser entregue em commit atômico conforme `docs/DELIVERY_GOVERNANCE.md`.
@@ -49,6 +52,10 @@ Taxonomia temática pública: `data/reference/policy-topics.json`.
 - snapshots TSE não foram reinterpretados;
 - Câmara e ALES preservam critérios de vínculo;
 - lacuna continua sendo lacuna.
+
+## Limitação conhecida de compartilhamento
+
+GitHub Pages é hospedagem estática. A ficha usa uma única página com query string e atualiza Open Graph no navegador; crawlers sociais que não executam JavaScript podem exibir preview genérico. Preview social individualizado por candidatura exige geração estática por candidato ou camada de renderização no servidor e permanece pendente.
 
 ## Pendências de conteúdo
 
