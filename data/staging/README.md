@@ -1,0 +1,77 @@
+# Staging de evidências temáticas
+
+Esta pasta é intermediária. Nada aqui é exibido diretamente na interface pública.
+
+Fluxo:
+
+`fonte permitida → sources → drafts → reviews → promote → data/reference/topic-evidence.json`
+
+## Arquivos
+
+- `topic-evidence-sources.json`: fila de fontes e sementes de descoberta.
+- `topic-evidence-drafts.json`: conteúdo bruto coletado, com hash e trecho auditável.
+- `topic-evidence-reviews.json`: decisão semântica separada da coleta.
+- `topic-evidence-rejections.json`: criado pelo coletor quando uma URL falha ou é rejeitada.
+
+Perfis de redes sociais declarados ao TSE entram como `discovery_status: "seed"`. Um perfil não é uma evidência. Para coleta, é necessário um link de conteúdo específico (`exact_content`), como matéria, post, vídeo ou documento identificável.
+
+## Comandos
+
+Descobrir redes declaradas ao TSE para as candidaturas presentes no snapshot:
+
+```bash
+python scripts/coletor_evidencias.py discover-tse-socials
+```
+
+Adicionar manualmente uma URL específica descoberta por pesquisa:
+
+```bash
+python scripts/coletor_evidencias.py add-source \
+  --candidate-id SQ_CANDIDATO_REAL \
+  --url https://exemplo.org/noticia/conteudo-especifico \
+  --source-kind official_candidate \
+  --publisher "Portal oficial"
+```
+
+Coletar as URLs específicas:
+
+```bash
+python scripts/coletor_evidencias.py collect
+```
+
+Validar staging e reviews:
+
+```bash
+python scripts/coletor_evidencias.py validate
+```
+
+Testar uma promoção sem alterar a fonte canônica:
+
+```bash
+python scripts/coletor_evidencias.py promote
+```
+
+Somente depois de revisão aprovada e em branch/PR apropriado:
+
+```bash
+python scripts/coletor_evidencias.py promote --write-canonical
+```
+
+## Revisão semântica
+
+Uma revisão aprovada precisa registrar, no máximo após 3 tentativas:
+
+- `draft_id`;
+- `status: "approved"`;
+- `attempts`;
+- `topic_id`;
+- `evidence_type`: `proposta`, `declaração` ou `atuação`;
+- `statement` e/ou `quote_or_summary`;
+- `scope`;
+- `verification_status`;
+- `support_text`: trecho que precisa existir no material bruto coletado;
+- `attribution_basis`: por que a evidência é atribuível à candidatura;
+- `reviewed_at`;
+- `reviewer`.
+
+Se houver ambiguidade relevante, usar `quarantine` ou `rejected`. Ausência de evidência não é convertida em posição política.
