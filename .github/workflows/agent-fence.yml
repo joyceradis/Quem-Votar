@@ -21,7 +21,7 @@ jobs:
 
     steps:
       - name: 📥 Baixar código e histórico necessário
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           fetch-depth: 0
 
@@ -39,7 +39,7 @@ jobs:
           echo "Arquivos alterados no PR:"
           cat /tmp/arquivos-alterados.txt
 
-          PROTEGIDOS='^(AGENTS\.md|AUDITORIA\.md|METODOLOGIA\.md|docs/(GOVERNANCE|DELIVERY_GOVERNANCE|PRODUCT_NORTH_STAR|TOPIC_EVIDENCE)\.md|\.github/workflows/)'
+          PROTEGIDOS='^(AGENTS\.md|AUDITORIA\.md|METODOLOGIA\.md|scripts/audit-site\.py|docs/(GOVERNANCE|DELIVERY_GOVERNANCE|PRODUCT_NORTH_STAR|TOPIC_EVIDENCE)\.md|\.github/(CODEOWNERS|workflows/))'
 
           VIOLACOES=$(grep -E "$PROTEGIDOS" /tmp/arquivos-alterados.txt || true)
 
@@ -57,14 +57,14 @@ jobs:
 
       - name: 💬 Explicar bloqueio no PR
         if: failure() && steps.governance.outcome == 'failure'
-        uses: actions/github-script@v7
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
         with:
           script: |
             const body = [
               "🛑 **Cerca elétrica acionada**",
               "",
               "Este PR tentou alterar um arquivo protegido de governança ou do control plane.",
-              "Arquivos protegidos incluem AGENTS.md, AUDITORIA.md, METODOLOGIA.md, documentos normativos em docs/ e workflows em .github/workflows/.",
+              "Arquivos protegidos incluem AGENTS.md, AUDITORIA.md, METODOLOGIA.md, scripts/audit-site.py, documentos normativos em docs/, CODEOWNERS e workflows em .github/workflows/.",
               "",
               "A alteração precisa ser deliberada pela mantenedora e feita fora deste fluxo automatizado."
             ].join("\n");
@@ -77,14 +77,14 @@ jobs:
             });
 
       - name: 🔗 Validar links internos
-        uses: lycheeverse/lychee-action@v2
+        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2
         with:
           args: '--offline --no-progress "./**/*.html" "./**/*.md"'
           fail: true
 
       - name: 🌐 Verificar saúde de links externos
         continue-on-error: true
-        uses: lycheeverse/lychee-action@v2
+        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2
         with:
           args: '--no-progress --max-retries 2 --timeout 20 "./**/*.html" "./**/*.md"'
           fail: true
