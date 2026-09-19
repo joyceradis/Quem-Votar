@@ -167,3 +167,21 @@ Ausência de contexto não é autorização para reconstruir. Antes de mudança 
 ## Entrega técnica
 
 Mudanças de interface e deploy devem seguir `docs/DELIVERY_GOVERNANCE.md`, incluindo pré-auditoria, commit atômico e pós-auditoria de produção.
+
+
+## Independência editorial e apoio institucional
+
+Qualquer apoio institucional deve ser identificado de forma transparente e permanecer sujeito ao firewall editorial do projeto.
+
+Apoio institucional pode financiar infraestrutura, operação ou desenvolvimento, mas não concede participação editorial nem influência sobre dados, metodologia, seleção de fontes, tratamento de candidaturas, classificação de evidências ou resultados exibidos pela plataforma.
+
+Regras obrigatórias:
+
+- apoio financeiro não modifica critérios de inclusão, taxonomia, padrões de evidência ou tratamento de informação ausente;
+- apoiadores não recebem tratamento preferencial em decisões editoriais ou metodológicas;
+- qualquer exibição pública de apoiadores deve seguir padrão visual uniforme e não promocional;
+- proeminência visual não varia de acordo com o valor financeiro do apoio;
+- apoio não concede direito de veto, aprovação prévia, acesso privilegiado a conteúdo ou interferência em ordem, filtros, comparação ou apresentação de candidaturas;
+- apoio de candidatura, campanha, partido, federação, coligação, comitê eleitoral ou intermediário atuando em nome desses atores não deve ser tratado como apoio institucional neutro do projeto.
+
+O financiamento da infraestrutura e a camada editorial permanecem operacionalmente separados.
