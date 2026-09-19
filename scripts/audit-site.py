@@ -45,6 +45,7 @@ def main() -> None:
 
     home = read(ROOT / "index.html")
     candidates_page = read(ROOT / "candidatos.html")
+    profile_page = read(ROOT / "candidato.html")
     compare_page = read(ROOT / "comparar.html")
     topics_page = read(ROOT / "temas.html")
     app = read(ROOT / "app.js")
@@ -88,6 +89,10 @@ def main() -> None:
     assert "Área profissional" not in public_markup, "V5 não usa profissão como tema público"
     assert 'id="topicFilter"' in candidates_page, "filtro temático documentado ausente"
     assert "policy-topics.json" in app, "UI deve usar taxonomia de temas de política pública"
+    assert "evidencedTopicIds" in app and "visibleTopics" in app, "temas públicos devem depender de evidência documentada"
+    assert 'id="profileShare"' in app and "navigator.share" in app, "compartilhamento de perfil ausente"
+    assert 'property="og:title"' in profile_page and 'property="og:description"' in profile_page, "metadados sociais básicos ausentes"
+    assert 'rel="canonical"' in profile_page, "URL canônica da ficha ausente"
     for init in ("initHome", "initCandidates", "initTopics", "initProfile", "initCompare", "initAbout"):
         assert f"function {init}" in app, f"controlador ausente: {init}"
 
