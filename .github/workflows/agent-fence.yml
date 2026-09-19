@@ -3,56 +3,98 @@ name: 🛡️ Cerca Elétrica para Agentes de IA
 on:
   pull_request:
     branches: [ "main" ]
+    types: [opened, synchronize, reopened, ready_for_review]
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 permissions:
   contents: read
-  pull-requests: write # Permite que o bot comente no PR dando bronca na IA
+  pull-requests: write
 
 jobs:
   vigia-de-agentes:
     name: 🛑 Inspetor de Regras da IA
     runs-on: ubuntu-latest
-    timeout-minutes: 5 # Corta rápido se a IA travar
+    timeout-minutes: 8
 
     steps:
-      - name: 📥 Baixar código
+      - name: 📥 Baixar código e histórico necessário
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2 # Pega só o commit atual e o anterior para comparar mudanças
+          fetch-depth: 0
 
-      - name: 🚫 Bloquear alteração em documentos de governança
-        # Se a IA tentar alterar suas metodologias ou regras sem você pedir, o workflow barra.
+      - name: 🚫 Proteger governança e control plane
+        id: governance
+        shell: bash
         run: |
-          # Pega a lista de arquivos alterados no PR
-          ALTERADOS=$(git diff --name-only HEAD^ HEAD)
-          
-          for ARQUIVO in $ALTERADOS; do
-            if [[ "$ARQUIVO" == "AGENTS.md" || "$ARQUIVO" == "AUDITORIA.md" || "$ARQUIVO" == "METODOLOGIA.md" ]]; then
-              echo "❌ ERRO CRÍTICO: Um agente tentou alterar $ARQUIVO!"
-              echo "Agentes autônomos são proibidos de reescrever a governança do projeto."
-              exit 1 # Isso quebra o workflow e trava o agente
-            fi
-          done
-          echo "✅ Nenhuma violação de governança detectada."
+          set -euo pipefail
 
-      - name: 🔗 Validação de Links Cívicos
-        # Como é um site político (Quem-Votar), a IA não pode quebrar links de fontes.
+          BASE_SHA="${{ github.event.pull_request.base.sha }}"
+          HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+
+          git diff --name-only "$BASE_SHA" "$HEAD_SHA" | sort -u > /tmp/arquivos-alterados.txt
+
+          echo "Arquivos alterados no PR:"
+          cat /tmp/arquivos-alterados.txt
+
+          PROTEGIDOS='^(AGENTS\.md|AUDITORIA\.md|METODOLOGIA\.md|docs/(GOVERNANCE|DELIVERY_GOVERNANCE|PRODUCT_NORTH_STAR|TOPIC_EVIDENCE)\.md|\.github/workflows/)'
+
+          VIOLACOES=$(grep -E "$PROTEGIDOS" /tmp/arquivos-alterados.txt || true)
+
+          if [[ -n "$VIOLACOES" ]]; then
+            echo "❌ ALTERAÇÃO BLOQUEADA."
+            echo "Este PR altera arquivos de governança ou do control plane:"
+            echo "$VIOLACOES"
+            echo
+            echo "Esses arquivos não podem ser modificados por PR automatizado."
+            echo "Mudanças deliberadas de governança devem ser feitas explicitamente pela mantenedora fora deste fluxo."
+            exit 1
+          fi
+
+          echo "✅ Nenhuma violação de governança/control plane detectada."
+
+      - name: 💬 Explicar bloqueio no PR
+        if: failure() && steps.governance.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body = [
+              "🛑 **Cerca elétrica acionada**",
+              "",
+              "Este PR tentou alterar um arquivo protegido de governança ou do control plane.",
+              "Arquivos protegidos incluem AGENTS.md, AUDITORIA.md, METODOLOGIA.md, documentos normativos em docs/ e workflows em .github/workflows/.",
+              "",
+              "A alteração precisa ser deliberada pela mantenedora e feita fora deste fluxo automatizado."
+            ].join("\n");
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body
+            });
+
+      - name: 🔗 Validar links internos
         uses: lycheeverse/lychee-action@v2
         with:
-          args: '--offline --no-progress "./**/*.html"'
+          args: '--offline --no-progress "./**/*.html" "./**/*.md"'
           fail: true
 
-      - name: 🧹 Verificar Sintaxe (Sem bagunçar o código)
-        # Em vez de tentar consertar e gerar um loop, o workflow usa uma ferramenta 
-        # super rápida e determinística (Biome) escrita em Rust para ver se a IA quebrou o HTML/JS.
-        uses: biomejs/setup-biome@v2
+      - name: 🌐 Verificar saúde de links externos
+        continue-on-error: true
+        uses: lycheeverse/lychee-action@v2
         with:
-          version: latest
-      
-      - name: Rodar auditoria de código
-        # Se a IA cuspiu código ruim, o Biome trava o PR aqui. A IA vai ver o erro e consertar sozinha.
-        run: biome ci ./
+          args: '--no-progress --max-retries 2 --timeout 20 "./**/*.html" "./**/*.md"'
+          fail: true
+
+      - name: 🧹 Validar sintaxe determinística
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check app.js
+          python -m py_compile scripts/sync-data.py scripts/audit-site.py
+
+      - name: 🧪 Rodar auditoria nativa do projeto
+        run: python scripts/audit-site.py
