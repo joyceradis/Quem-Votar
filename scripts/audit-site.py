@@ -98,6 +98,9 @@ def main() -> None:
 
     topics = json.loads(read(ROOT / "data" / "reference" / "policy-topics.json"))
     topic_evidence_source = json.loads(read(ROOT / "data" / "reference" / "topic-evidence.json"))
+    assert isinstance(topic_evidence_source, dict), "topic-evidence deve ser objeto JSON"
+    assert set(("version", "updated_at", "semantics", "entries")).issubset(topic_evidence_source), "topic-evidence: envelope canônico incompleto"
+    assert isinstance(topic_evidence_source.get("entries"), list), "topic-evidence.entries deve ser lista"
     assert topics.get("topics"), "taxonomia de temas vazia"
     topic_ids = [x.get("id") for x in topics["topics"]]
     assert len(topic_ids) == len(set(topic_ids)), "id de tema duplicado"
