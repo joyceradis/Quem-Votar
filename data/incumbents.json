@@ -1,0 +1,296 @@
+{
+  "updated_reference": "2026-09-19",
+  "note": "Base de referência para identificar mandato em exercício. Partido eleitoral de 2026 deve vir do TSE, não deste arquivo.",
+  "federal": [
+    {
+      "name": "Amaro Neto",
+      "aliases": [
+        "Amaro Neto"
+      ],
+      "legislature": 57,
+      "source": "https://www.camara.leg.br/deputados/204560"
+    },
+    {
+      "name": "Da Vitoria",
+      "aliases": [
+        "Da Vitória",
+        "Da Vitoria"
+      ],
+      "legislature": 57,
+      "source": "https://www.camara.leg.br/deputados"
+    },
+    {
+      "name": "Dr. Victor Linhalis",
+      "aliases": [
+        "Dr Victor Linhalis",
+        "Victor Linhalis"
+      ],
+      "legislature": 57,
+      "source": "https://www.camara.leg.br/deputados"
+    },
+    {
+      "name": "Evair Vieira de Melo",
+      "aliases": [
+        "Evair de Melo",
+        "Evair Vieira de Melo"
+      ],
+      "legislature": 57,
+      "source": "https://www.camara.leg.br/deputados"
+    },
+    {
+      "name": "Gilson Daniel",
+      "aliases": [
+        "Gilson Daniel"
+      ],
+      "legislature": 57,
+      "source": "https://www.camara.leg.br/deputados"
+    },
+    {
+      "name": "Gilvan da Federal",
+      "aliases": [
+        "Gilvan da Federal"
+      ],
+      "legislature": 57,
+      "source": "https://www.camara.leg.br/deputados"
+    },
+    {
+      "name": "Helder Salomão",
+      "aliases": [
+        "Helder Salomao",
+        "Helder Salomão"
+      ],
+      "legislature": 57,
+      "source": "https://www.camara.leg.br/deputados"
+    },
+    {
+      "name": "Jack Rocha",
+      "aliases": [
+        "Jack Rocha"
+      ],
+      "legislature": 57,
+      "source": "https://www.camara.leg.br/deputados"
+    },
+    {
+      "name": "Messias Donato",
+      "aliases": [
+        "Messias Donato"
+      ],
+      "legislature": 57,
+      "source": "https://www.camara.leg.br/deputados"
+    },
+    {
+      "name": "Paulo Folletto",
+      "aliases": [
+        "Paulo Folleto",
+        "Paulo Folletto"
+      ],
+      "legislature": 57,
+      "source": "https://www.camara.leg.br/deputados"
+    }
+  ],
+  "estadual": [
+    {
+      "name": "Adilson Espindula",
+      "aliases": [
+        "Adilson Espindula",
+        "Adilson Espíndula"
+      ]
+    },
+    {
+      "name": "Alcântaro Filho",
+      "aliases": [
+        "Alcantaro",
+        "Alcântaro",
+        "Alcantaro Filho",
+        "Alcântaro Filho"
+      ]
+    },
+    {
+      "name": "Alexandre Xambinho",
+      "aliases": [
+        "Alexandre Xambinho"
+      ]
+    },
+    {
+      "name": "Allan Ferreira",
+      "aliases": [
+        "Allan Ferreira"
+      ]
+    },
+    {
+      "name": "Bispo Alves",
+      "aliases": [
+        "Bispo Alves"
+      ]
+    },
+    {
+      "name": "Callegari",
+      "aliases": [
+        "Callegari"
+      ]
+    },
+    {
+      "name": "Camila Valadão",
+      "aliases": [
+        "Camila Valadao",
+        "Camila Valadão"
+      ]
+    },
+    {
+      "name": "Capitão Assumção",
+      "aliases": [
+        "Capitao Assumcao",
+        "Capitão Assumção"
+      ]
+    },
+    {
+      "name": "Coronel Weliton",
+      "aliases": [
+        "Coronel Weliton"
+      ]
+    },
+    {
+      "name": "Dary Pagung",
+      "aliases": [
+        "Dary Pagung"
+      ]
+    },
+    {
+      "name": "Delegado Danilo Bahiense",
+      "aliases": [
+        "Delegado Danilo Bahiense",
+        "Danilo Bahiense"
+      ]
+    },
+    {
+      "name": "Denninho Silva",
+      "aliases": [
+        "Denninho Silva",
+        "Deninho Silva"
+      ]
+    },
+    {
+      "name": "Dr. Bruno Resende",
+      "aliases": [
+        "Dr Bruno Resende",
+        "Bruno Resende"
+      ]
+    },
+    {
+      "name": "Engenheiro José Esmeraldo",
+      "aliases": [
+        "Engenheiro Jose Esmeraldo",
+        "José Esmeraldo",
+        "Jose Esmeraldo"
+      ]
+    },
+    {
+      "name": "Fábio Duarte",
+      "aliases": [
+        "Fabio Duarte",
+        "Fábio Duarte"
+      ]
+    },
+    {
+      "name": "Fabrício Gandini",
+      "aliases": [
+        "Fabricio Gandini",
+        "Fabrício Gandini",
+        "Gandini"
+      ]
+    },
+    {
+      "name": "Hudson Leal",
+      "aliases": [
+        "Hudson Leal"
+      ]
+    },
+    {
+      "name": "Iriny Lopes",
+      "aliases": [
+        "Iriny Lopes"
+      ]
+    },
+    {
+      "name": "Janete de Sá",
+      "aliases": [
+        "Janete de Sa",
+        "Janete de Sá"
+      ]
+    },
+    {
+      "name": "João Coser",
+      "aliases": [
+        "Joao Coser",
+        "João Coser"
+      ]
+    },
+    {
+      "name": "Lucas Polese",
+      "aliases": [
+        "Lucas Polese"
+      ]
+    },
+    {
+      "name": "Marcelo Santos",
+      "aliases": [
+        "Marcelo Santos"
+      ]
+    },
+    {
+      "name": "Marcos Madureira",
+      "aliases": [
+        "Marcos Madureira"
+      ]
+    },
+    {
+      "name": "Mazinho dos Anjos",
+      "aliases": [
+        "Mazinho dos Anjos"
+      ]
+    },
+    {
+      "name": "Pablo Muribeca",
+      "aliases": [
+        "Pablo Muribeca"
+      ]
+    },
+    {
+      "name": "Raquel Lessa",
+      "aliases": [
+        "Raquel Lessa"
+      ]
+    },
+    {
+      "name": "Sérgio Meneguelli",
+      "aliases": [
+        "Sergio Meneguelli",
+        "Sérgio Meneguelli"
+      ]
+    },
+    {
+      "name": "Tyago Hoffmann",
+      "aliases": [
+        "Tyago Hoffmann",
+        "Tyago Hoffman"
+      ]
+    },
+    {
+      "name": "Vandinho Leite",
+      "aliases": [
+        "Vandinho Leite"
+      ]
+    },
+    {
+      "name": "Zé Preto",
+      "aliases": [
+        "Ze Preto",
+        "Zé Preto"
+      ]
+    }
+  ],
+  "state_source": {
+    "label": "Assembleia Legislativa do Espírito Santo / Diário do Poder Legislativo; composição de referência revisada em 2026",
+    "url": "https://www.al.es.gov.br/"
+  }
+}
