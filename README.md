@@ -4,7 +4,7 @@ Plataforma cívica open source para consulta factual e rastreável de candidatur
 
 **Produção:** https://joyceradis.github.io/Quem-Votar/
 
-**Baseline visual:** `V5.3` · assets `5.3.0`
+**Baseline visual:** `V5.4` · assets `5.4.0`
 
 ## Recorte desta versão
 
@@ -30,13 +30,13 @@ O próprio site mostra:
 
 A data é exibida no fuso `America/Sao_Paulo`.
 
-## Experiência pública V5.3
+## Experiência pública V5.4
 
 ### Home
 - escolha de cargo e busca no primeiro viewport;
 - contagens e snapshot ligados à fonte TSE;
 - três caminhos simples: nome, tema ou comparação;
-- temas de política pública, sem inferência por profissão.
+- temas de política pública apenas quando há evidência documentada, sem inferência por profissão.
 
 ### Candidatos
 - 12 resultados por página;
@@ -62,7 +62,8 @@ Leitura em camadas:
 - Trajetória;
 - Temas e propostas;
 - Registros públicos;
-- Fontes e limitações.
+- Fontes e limitações;
+- compartilhamento direto da ficha por URL.
 
 ### Comparação
 Até 3 candidaturas lado a lado, com os mesmos campos factuais/documentais.
