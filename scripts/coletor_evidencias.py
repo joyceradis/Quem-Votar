@@ -68,6 +68,8 @@ ALLOWED_DISCOVERY_STATUS = {"seed", "exact_content"}
 MAX_FETCH_BYTES = 8 * 1024 * 1024
 MAX_TSE_ZIP_BYTES = 64 * 1024 * 1024
 MAX_EXCERPT_CHARS = 9000
+MAX_PDF_PAGES = 250
+MAX_PDF_TEXT_CHARS = 500_000
 DEFAULT_TIMEOUT = 20
 DEFAULT_USER_AGENT = (
     "Quem-Votar-Evidence-Collector/1.0 "
@@ -406,6 +408,95 @@ def parse_page_html(raw: bytes, content_type: str = "") -> dict[str, Any]:
     }
 
 
+def parse_pdf_document(raw: bytes) -> dict[str, Any]:
+    """Extrai texto de PDF textual sem OCR.
+
+    O PDF continua sendo material bruto de staging. Esta etapa não classifica
+    tema, tipo de evidência ou posição política.
+    """
+    try:
+        from pypdf import PdfReader
+    except ImportError as exc:
+        raise RuntimeError(
+            "extração de PDF requer pypdf; instale requirements-evidence.txt"
+        ) from exc
+
+    try:
+        reader = PdfReader(io.BytesIO(raw), strict=False)
+    except Exception as exc:
+        raise RuntimeError(f"PDF inválido ou corrompido: {exc}") from exc
+
+    if reader.is_encrypted:
+        try:
+            result = reader.decrypt("")
+        except Exception as exc:
+            raise RuntimeError("PDF criptografado não pôde ser aberto") from exc
+        if not result:
+            raise RuntimeError("PDF criptografado exige senha")
+
+    try:
+        page_count = len(reader.pages)
+    except Exception as exc:
+        raise RuntimeError(f"não foi possível ler as páginas do PDF: {exc}") from exc
+
+    if page_count <= 0:
+        raise RuntimeError("PDF sem páginas")
+    if page_count > MAX_PDF_PAGES:
+        raise RuntimeError(
+            f"PDF excede limite de {MAX_PDF_PAGES} páginas para coleta automática"
+        )
+
+    blocks: list[str] = []
+    total_chars = 0
+    for page_number, page in enumerate(reader.pages, start=1):
+        try:
+            try:
+                page_text = page.extract_text(
+                    extraction_mode="layout",
+                    layout_mode_space_vertically=False,
+                )
+            except TypeError:
+                page_text = page.extract_text()
+        except Exception as exc:
+            raise RuntimeError(
+                f"falha ao extrair texto da página {page_number}: {exc}"
+            ) from exc
+
+        page_text = page_text or ""
+        page_blocks = [clean(line) for line in page_text.splitlines() if clean(line)]
+        for block in page_blocks:
+            if total_chars >= MAX_PDF_TEXT_CHARS:
+                break
+            remaining = MAX_PDF_TEXT_CHARS - total_chars
+            value = block[:remaining]
+            if value:
+                blocks.append(value)
+                total_chars += len(value)
+        if total_chars >= MAX_PDF_TEXT_CHARS:
+            break
+
+    normalized_text = clean("\n".join(blocks))
+    if len(normalized_text) < 40:
+        raise RuntimeError(
+            "PDF sem texto suficiente para revisão; OCR não é executado automaticamente"
+        )
+
+    metadata = reader.metadata or {}
+    title = clean(
+        getattr(metadata, "title", "")
+        or (metadata.get("/Title") if hasattr(metadata, "get") else "")
+    )
+    return {
+        "title": title,
+        "publisher": "",
+        "published_at": "",
+        "canonical_url": "",
+        "blocks": blocks,
+        "text": normalized_text,
+        "page_count": page_count,
+    }
+
+
 def normalize_date(value: str) -> str:
     value = clean(value)
     if not value:
@@ -650,18 +741,15 @@ def collect_source(
     candidate = candidates[candidate_id]
     source_url = clean(item.get("source_url"))
     body, final_url, content_type = fetcher(source_url)
+    final_url = clean(final_url)
+    normalized_content_type = clean(content_type).casefold()
+    final_path = urllib.parse.urlparse(final_url).path.casefold()
+    is_pdf = "application/pdf" in normalized_content_type or final_path.endswith(".pdf")
 
-    if not (
-        "text/html" in content_type
-        or "application/xhtml+xml" in content_type
-        or "text/plain" in content_type
-        or not content_type
-    ):
-        raise RuntimeError(
-            f"tipo de conteúdo ainda não suportado para extração: {content_type or 'desconhecido'}"
-        )
-
-    if "text/plain" in content_type:
+    if is_pdf:
+        page = parse_pdf_document(body)
+        document_type = "pdf"
+    elif "text/plain" in normalized_content_type:
         text = body.decode("utf-8", errors="replace")
         page = {
             "title": "",
@@ -670,11 +758,22 @@ def collect_source(
             "canonical_url": "",
             "blocks": [clean(x) for x in text.splitlines() if clean(x)],
             "text": clean(text),
+            "page_count": None,
         }
-    else:
+        document_type = "text"
+    elif (
+        "text/html" in normalized_content_type
+        or "application/xhtml+xml" in normalized_content_type
+        or not normalized_content_type
+    ):
         page = parse_page_html(body, content_type)
+        page["page_count"] = None
+        document_type = "html"
+    else:
+        raise RuntimeError(
+            f"tipo de conteúdo ainda não suportado para extração: {content_type or 'desconhecido'}"
+        )
 
-    final_url = clean(final_url)
     if not is_exact_content_url(final_url, clean(item.get("source_kind"))):
         raise RuntimeError("redirecionamento terminou em URL genérica/não específica")
 
@@ -682,6 +781,7 @@ def collect_source(
     if len(normalized_text) < 40:
         raise RuntimeError("conteúdo textual insuficiente para revisão")
 
+    source_hash = hashlib.sha256(body).hexdigest()
     content_hash = hashlib.sha256(normalized_text.encode("utf-8")).hexdigest()
     excerpt = build_excerpt(page.get("blocks") or [], candidate)
     source_title = clean(item.get("source_title") or page.get("title"))
@@ -705,6 +805,9 @@ def collect_source(
         "source_publisher": source_publisher,
         "published_at": published_at,
         "captured_at": utc_now(),
+        "document_type": document_type,
+        "page_count": page.get("page_count"),
+        "source_sha256": source_hash,
         "content_sha256": content_hash,
         "candidate_mentioned": candidate_mentioned(normalized_text, candidate),
         "raw_excerpt": excerpt,

@@ -1,0 +1,4 @@
+# Extração de texto de PDFs no pipeline de staging.
+# Projeto: https://pypi.org/project/pypdf/
+# Licença: BSD-3-Clause
+pypdf==6.19.0
