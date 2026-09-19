@@ -352,6 +352,38 @@ Bot, Action, GitHub App ou automação com credencial de escrita deve ter:
 
 Sessões interativas não exigem kill switch.
 
+### Autonomia operacional delegada
+
+Issues marcadas como `status:in-progress` autorizam execução técnica contínua dentro do escopo aprovado, sem necessidade de nova autorização humana a cada etapa intermediária.
+
+Essa autonomia inclui:
+
+- criação de sub-issues;
+- criação de branches e Pull Requests;
+- correção de falhas de CI;
+- ajustes e refatorações necessárias para cumprir o escopo;
+- implementação e ajuste de coletores;
+- criação e manutenção de camadas de staging;
+- tratamento de formatos e fontes, como HTML, JSON, CSV e PDF;
+- testes, validações e documentação técnica;
+- investigação e correção de bloqueios técnicos encontrados durante a execução.
+
+O agente deve continuar avançando autonomamente enquanto a próxima ação for consequência técnica razoável do escopo já aprovado.
+
+Não é necessária nova autorização humana para cada commit, sub-issue, correção, teste ou PR intermediário.
+
+### Gates humanos obrigatórios
+
+A execução deve parar e solicitar decisão explícita da mantenedora quando houver:
+
+1. alteração das regras de governança ou do control plane;
+2. publicação de nova evidência política na fonte canônica;
+3. mudança destrutiva ou irreversível relevante;
+4. conflito entre contratos ou ambiguidade de produto que não possa ser resolvida pelo estado canônico do repositório;
+5. funcionalidade completa que dependa de decisão final de publicação, consolidação ou mudança de escopo.
+
+Descobrir uma limitação técnica durante a execução não constitui, por si só, motivo para interromper o trabalho. O agente deve registrar a limitação, criar a sub-issue apropriada quando necessário e continuar pelo próximo caminho seguro disponível.
+
 
 ## 21. Norte de produto público
 
