@@ -49,6 +49,21 @@ def main() -> None:
     topics_page = read(ROOT / "temas.html")
     app = read(ROOT / "app.js")
     styles = read(ROOT / "styles.css")
+    quality_workflow = read(ROOT / ".github" / "workflows" / "quality.yml")
+    sync_workflow = read(ROOT / ".github" / "workflows" / "sync-data.yml")
+    delivery_governance = read(ROOT / "docs" / "DELIVERY_GOVERNANCE.md")
+
+    # Contrato visual e de entrega: impede herança silenciosa e tempestade de commits.
+    assert len(re.findall(r":root\s*\{", styles)) == 1, "styles.css deve ter um único :root canônico"
+    assert "visual depth pass" not in styles.lower(), "override visual legado reapareceu"
+    assert "--green:" not in styles, "verde não faz parte da paleta estrutural azul/branco/rosa"
+    assert all(token in styles for token in ("--blue:", "--blue-dark:", "--pink:", "--white:")), "tokens da identidade ES incompletos"
+    assert "Em quem eu vou votar?" in home, "Home deve manter a pergunta principal aprovada"
+    assert re.search(r"\.desktop-nav\s*\{[^}]*display\s*:\s*none", styles), "navegação principal deve ficar no menu lateral"
+    assert "\n  push:" not in sync_workflow, "sincronização de dados não deve rodar a cada push de interface"
+    assert "cancel-in-progress: false" in quality_workflow, "Quality deve enfileirar em vez de cancelar"
+    assert "cancel-in-progress: false" in sync_workflow, "Sync deve enfileirar em vez de cancelar"
+    assert "commit atômico" in delivery_governance.lower(), "governança de entrega atômica ausente"
 
     assert 'id="cards"' not in home, "Home voltou a concentrar a listagem"
     assert 'id="cards"' in candidates_page, "listagem sem mount de cards"
@@ -57,6 +72,8 @@ def main() -> None:
     assert 'id="topicCards"' in topics_page, "áreas/temas sem mount próprio"
     assert "const PAGE_SIZE=12" in app, "paginação deve permanecer explícita e auditável"
     public_markup = "\n".join(read(ROOT / name) for name in REQUIRED_PAGES) + "\n" + app
+    assert public_markup.count('id="drawer"') == len(REQUIRED_PAGES), "menu lateral deve existir em todas as páginas"
+    assert public_markup.count('id="menuButton"') == len(REQUIRED_PAGES), "botão do menu lateral deve existir em todas as páginas"
     assert "✓" not in public_markup, "UI pública não deve usar check como indicador visual"
     assert "topic-icon" not in public_markup and "step-no" not in public_markup, "ícones decorativos antigos reapareceram"
     assert "office-card.estadual" not in styles, "cargo estadual não pode receber cor partidária/semântica própria"

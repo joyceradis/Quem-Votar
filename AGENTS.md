@@ -157,7 +157,7 @@ Antes de incorporar componente externo:
 - preferir implementação própria para padrões simples de interação;
 - não copiar HTML/CSS/JS proprietário de sites usados apenas como benchmark visual.
 
-Referências de UX ficam em `docs/DESIGN_REFERENCES.md`.
+Referências de UX ficam em `docs/DESIGN_REFERENCES.md`. Regras de entrega e pós-deploy ficam em `docs/DELIVERY_GOVERNANCE.md`.
 
 
 ## 13. Governança operacional — entrega rápida com rastreabilidade
@@ -216,7 +216,7 @@ Há três conceitos distintos:
 
 Não chamar uma sequência de commits de “V2” ou “V3” como se fosse release formal sem tag/release correspondente.
 
-Para o ciclo atual, trabalhar incrementalmente em `main` e criar release somente quando houver um checkpoint funcional auditado. Evitar burocracia de branches/PRs para ajustes pequenos do mesmo dia; usar branch isolada apenas para mudança estrutural de alto risco.
+Para o ciclo atual, trabalhar em `main` e criar release somente quando houver um checkpoint funcional auditado. Uma entrega lógica de frontend deve ser persistida como commit atômico; não fracionar cache-bust ou a mesma revisão visual em vários commits. Usar branch isolada apenas para mudança estrutural de alto risco.
 
 
 ## 15. Filtros, temas e comparação

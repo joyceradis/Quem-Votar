@@ -8,16 +8,19 @@ on:
       - "*.html"
       - "styles.css"
       - "app.js"
-      - "scripts/**"
+      - "scripts/audit-site.py"
       - "data/generated/**"
+      - "docs/DELIVERY_GOVERNANCE.md"
+      - "AGENTS.md"
       - ".github/workflows/quality.yml"
+      - ".github/workflows/sync-data.yml"
 
 permissions:
   contents: read
 
 concurrency:
   group: quality-site
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   audit:
@@ -37,5 +40,5 @@ jobs:
           python -m py_compile scripts/sync-data.py scripts/audit-site.py
           node --check app.js
 
-      - name: Auditar contratos de dados e interface
+      - name: Auditar contratos de dados, interface e entrega
         run: python scripts/audit-site.py

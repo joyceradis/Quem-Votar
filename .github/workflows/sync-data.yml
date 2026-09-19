@@ -4,20 +4,13 @@ on:
   workflow_dispatch:
   schedule:
     - cron: "17 */6 * * *"
-  push:
-    branches: [main]
-    paths:
-      - "scripts/sync-data.py"
-      - "app.js"
-      - "data/reference/**"
-      - ".github/workflows/sync-data.yml"
 
 permissions:
   contents: write
 
 concurrency:
   group: sync-dados-eleitorais
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   sync:
@@ -63,7 +56,6 @@ jobs:
           assert all(ids), "candidato sem SQ_CANDIDATO"
           assert len(ids) == len(set(ids)), "SQ_CANDIDATO duplicado"
 
-          # Não publicar campos pessoais usados apenas em bases de origem.
           forbidden = {
               "cpf", "nr_cpf_candidato", "titulo_eleitoral", "nr_titulo_eleitoral",
               "email", "birth_date", "dt_nascimento", "race_color", "gender",
@@ -71,11 +63,7 @@ jobs:
           }
           blob = json.dumps({"federal": federal, "estadual": estadual}).lower()
           assert not any(f'"{key}"' in blob for key in forbidden), "campo pessoal não necessário no snapshot"
-
-          # #NE e #NULO são códigos de ausência na origem, não situação jurídica.
           assert "#NE" not in blob and "#NULO" not in blob, "sentinela TSE vazou para a interface"
-
-          # Proveniência: TSE continua explicitamente como fonte primária.
           assert all(x.get("source", {}).get("institution") == "TSE" for x in federal + estadual)
           assert meta.get("sources", {}).get("operational_mirror"), "fallback sem proveniência"
 

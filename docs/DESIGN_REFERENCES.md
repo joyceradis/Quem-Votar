@@ -57,7 +57,7 @@ Tokens V5:
 - texto: `--ink`
 - estrutura: `--line` e `--surface`
 
-Os valores digitais são uma interpretação de interface inspirada na identidade capixaba; o projeto não afirma que sejam códigos cromáticos normativos oficiais. O rosa é acento de identidade e não carrega significado político ou de qualidade.
+Os valores digitais são uma interpretação de interface inspirada na identidade capixaba; o projeto não afirma que sejam códigos cromáticos normativos oficiais. Azul, branco e rosa formam a identidade visual; o rosa é acento de marca e não carrega significado político ou de qualidade.
 
 ## Evidência aplicada à V5
 

@@ -6,7 +6,7 @@ Data: 2026-09-19.
 
 Branch: `main`.
 
-Versão de interface: `5.0.0-rc.1`.
+Baseline visual: `V5`. Cache de assets: `5.2.0`.
 
 Este checkpoint não cria sozinho um GitHub Release formal.
 
@@ -29,14 +29,17 @@ Taxonomia temática pública: `data/reference/policy-topics.json`.
 
 ## Interface
 
-- home sem faixa de snapshot duplicada ou painel numérico gigante;
+- home com a pergunta “Em quem eu vou votar?” e hero azul com acento rosa;
+- menu principal lateral em todas as larguras;
+- stylesheet canônico sem camadas de override herdadas;
 - cargo e busca dominam o primeiro viewport;
 - filtros secundários aparecem sob demanda;
 - listagem é editorial e compacta;
 - nome/cargo/partido/número têm precedência sobre foto e ocupação;
 - ficha: Visão geral -> Trajetória -> Temas e propostas -> Registros públicos -> Fontes e limitações;
 - favicon SVG e manifesto web configurados;
-- identidade visual em azul, branco e rosa; azul conduz interação e rosa funciona apenas como acento de marca.
+- identidade visual em azul, branco e rosa; azul conduz interação e rosa funciona apenas como acento de marca;
+- mudança visual deve ser entregue em commit atômico conforme `docs/DELIVERY_GOVERNANCE.md`.
 
 ## Dados preservados
 

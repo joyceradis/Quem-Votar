@@ -4,7 +4,7 @@ Plataforma cívica open source para consulta factual e rastreável de candidatur
 
 **Produção:** https://joyceradis.github.io/Quem-Votar/
 
-**Versão de interface:** `5.0.0-rc.1`
+**Baseline visual:** `V5` · assets `5.2.0`
 
 ## Recorte desta versão
 
@@ -90,6 +90,7 @@ Quando uma imagem ou dado usa transporte intermediário por limitação operacio
 Leia antes de alterar:
 - `AGENTS.md`
 - `docs/GOVERNANCE.md`
+- `docs/DELIVERY_GOVERNANCE.md`
 - `docs/CHECKPOINT_CURRENT.md`
 - `docs/FILTERS.md`
 - `docs/DATA_MODEL.md`

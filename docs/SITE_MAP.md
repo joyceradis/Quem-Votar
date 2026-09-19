@@ -42,7 +42,7 @@ Recorte, snapshot, significado dos temas, fontes e regra de tratamento de lacuna
 
 ## Identidade visual
 
-Azul, branco e rosa formam a identidade visual capixaba do projeto. Branco e tons neutros estruturam; azul conduz ações; rosa aparece como acento de marca. Nenhuma cor codifica qualidade, ideologia ou recomendação.
+Azul, branco e rosa formam a identidade visual capixaba do projeto. A home usa presença cromática azul com acento rosa, sem virar coleção de cards. Branco e tons neutros estruturam; azul conduz ações; rosa aparece como acento de marca. Nenhuma cor codifica qualidade, ideologia ou recomendação.
 
 ## Dados
 

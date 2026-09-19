@@ -162,3 +162,8 @@ A regra operacional é proporcional ao risco:
 Nenhum agente arbitra conflitos por preferência própria. O estado atual do repositório, os documentos normativos e o checkpoint recuperável prevalecem. Quando eles não resolvem a divergência, a decisão é humana.
 
 Ausência de contexto não é autorização para reconstruir. Antes de mudança substancial, o agente precisa compreender o estado que pretende modificar.
+
+
+## Entrega técnica
+
+Mudanças de interface e deploy devem seguir `docs/DELIVERY_GOVERNANCE.md`, incluindo pré-auditoria, commit atômico e pós-auditoria de produção.
