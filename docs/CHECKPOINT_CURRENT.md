@@ -83,3 +83,15 @@ Fonte canônica: `data/reference/topic-evidence.json`.
 O sync eleitoral anexa essa camada por `SQ_CANDIDATO` sem apagá-la. No checkpoint atual, a cobertura é **0 registros**, portanto a interface deve declarar a lacuna em vez de inferir posição.
 
 A expansão dessa camada é acompanhada pela issue #2.
+
+## Coleta em staging
+
+A issue #5 introduz a infraestrutura de coleta sem alterar a cobertura pública por si só:
+
+- `scripts/coletor_evidencias.py` lê os `SQ_CANDIDATO` do snapshot atual;
+- redes sociais declaradas ao TSE entram como sementes de descoberta, não como evidência;
+- URLs de conteúdo específico geram rascunhos em `data/staging/`;
+- coleta bruta, revisão semântica e promoção canônica ficam separadas;
+- promoção é `dry-run` por padrão e exige `--write-canonical` explicitamente;
+- revisão aprovada precisa estar ancorada em trecho coletado e respeitar o limite de até 3 tentativas;
+- a cobertura canônica permanece em **0 registros** até existirem evidências reais aprovadas.
