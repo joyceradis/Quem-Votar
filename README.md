@@ -186,3 +186,12 @@ O software original deste repositório é distribuído sob a **GNU Affero Genera
 A licença do software não transforma automaticamente dados, documentos, fotografias ou outros materiais de terceiros em conteúdo AGPL. Esses materiais permanecem sujeitos aos direitos, termos e condições das respectivas fontes.
 
 A identidade visual e o nome do projeto não devem ser interpretados como autorização para sugerir endosso institucional, político ou comercial por parte do projeto ou de sua mantenedora.
+
+
+### Software Licensing and Trademark Use
+
+The AGPL-3.0-only license applies to the original software identified in this repository. It does not grant authorization to use the “Quem Votar?” name, logos, trademarks or other distinctive signs, nor to imply endorsement, association or partnership with the project or its maintainer.
+
+Third-party data, documents, photographs and other materials remain subject to the licenses, rights and terms of their respective sources.
+
+Detailed rules for visual assets and trademark usage may be documented separately in a future `TRADEMARK_POLICY.md`.
