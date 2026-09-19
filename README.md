@@ -2,6 +2,8 @@
 
 Plataforma cívica open source para consulta factual e rastreável de candidaturas a Deputado Federal e Deputado Estadual no Espírito Santo.
 
+**Licença do software original:** GNU AGPL v3.0 only (`AGPL-3.0-only`). Dados e materiais provenientes de fontes externas permanecem sujeitos aos termos de suas fontes.
+
 **Produção:** https://joyceradis.github.io/Quem-Votar/
 
 **Baseline visual atual:** `V5.5` · versão canônica em [`VERSION`](VERSION)
@@ -175,3 +177,12 @@ Leia antes de alterar:
 - `docs/SITE_MAP.md`
 - `METODOLOGIA.md`
 - `AUDITORIA.md`
+
+
+## Licenciamento
+
+O software original deste repositório é distribuído sob a **GNU Affero General Public License v3.0 only (AGPL-3.0-only)**. Consulte [LICENSE](LICENSE).
+
+A licença do software não transforma automaticamente dados, documentos, fotografias ou outros materiais de terceiros em conteúdo AGPL. Esses materiais permanecem sujeitos aos direitos, termos e condições das respectivas fontes.
+
+A identidade visual e o nome do projeto não devem ser interpretados como autorização para sugerir endosso institucional, político ou comercial por parte do projeto ou de sua mantenedora.
