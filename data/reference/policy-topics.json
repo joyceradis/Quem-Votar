@@ -1,13 +1,90 @@
 {
-  "version": "1.0.0",
+  "version": "1.1.0",
   "semantics": "Temas de política pública. Um candidato só é associado a um tema quando existe topic_evidence individualizada e documentada. Ocupação, partido e profissão não geram associação temática.",
   "topics": [
-    {"id":"saude","label":"Saúde","description":"SUS, atenção primária, hospitais, saúde mental, medicamentos, prevenção e financiamento da saúde."},
-    {"id":"educacao","label":"Educação","description":"Educação básica e superior, professores, acesso, permanência, formação e financiamento."},
-    {"id":"seguranca","label":"Segurança pública","description":"Policiamento, prevenção da violência, sistema prisional, investigação e políticas de segurança."},
-    {"id":"economia","label":"Economia e trabalho","description":"Emprego, renda, tributação, empreendedorismo, desenvolvimento econômico e relações de trabalho."},
-    {"id":"infraestrutura","label":"Infraestrutura e mobilidade","description":"Transporte, mobilidade, saneamento, obras públicas, conectividade e desenvolvimento urbano."},
-    {"id":"meio-ambiente","label":"Meio ambiente","description":"Clima, conservação, recursos naturais, licenciamento, resíduos e proteção ambiental."},
-    {"id":"direitos","label":"Direitos e proteção social","description":"Assistência social, direitos civis, proteção de grupos vulneráveis e políticas de inclusão."}
+    {
+      "id": "saude",
+      "label": "Saúde",
+      "description": "SUS, atenção primária, hospitais, saúde mental, medicamentos, prevenção e financiamento da saúde.",
+      "life_areas": [
+        "Quem usa o SUS",
+        "Quem trabalha na saúde",
+        "Hospitais e clínicas",
+        "Medicamentos e prevenção"
+      ],
+      "practical_question": "Como isso pode mexer com quem usa ou trabalha na saúde?"
+    },
+    {
+      "id": "educacao",
+      "label": "Educação",
+      "description": "Educação básica e superior, professores, acesso, permanência, formação e financiamento.",
+      "life_areas": [
+        "Estudantes e famílias",
+        "Professores",
+        "Escolas e universidades",
+        "Acesso e permanência"
+      ],
+      "practical_question": "Como isso pode mexer com quem estuda, ensina ou tem filhos na escola?"
+    },
+    {
+      "id": "seguranca",
+      "label": "Segurança pública",
+      "description": "Policiamento, prevenção da violência, sistema prisional, investigação e políticas de segurança.",
+      "life_areas": [
+        "Quem mora nas cidades",
+        "Polícias e investigação",
+        "Prevenção da violência",
+        "Sistema prisional"
+      ],
+      "practical_question": "Como isso pode mexer com segurança, prevenção e investigação?"
+    },
+    {
+      "id": "economia",
+      "label": "Economia e trabalho",
+      "description": "Emprego, renda, tributação, empreendedorismo, desenvolvimento econômico e relações de trabalho.",
+      "life_areas": [
+        "Emprego e renda",
+        "Quem empreende",
+        "Impostos e preços",
+        "Desenvolvimento local"
+      ],
+      "practical_question": "Como isso pode mexer com trabalho, renda, negócios e preços?"
+    },
+    {
+      "id": "infraestrutura",
+      "label": "Infraestrutura e mobilidade",
+      "description": "Transporte, mobilidade, saneamento, obras públicas, conectividade e desenvolvimento urbano.",
+      "life_areas": [
+        "Transporte e trânsito",
+        "Saneamento",
+        "Internet e conectividade",
+        "Obras e cidades"
+      ],
+      "practical_question": "Como isso pode mexer com deslocamento, saneamento e cidade?"
+    },
+    {
+      "id": "meio-ambiente",
+      "label": "Meio ambiente",
+      "description": "Clima, conservação, recursos naturais, licenciamento, resíduos e proteção ambiental.",
+      "life_areas": [
+        "Água e clima",
+        "Licenciamento",
+        "Resíduos",
+        "Proteção de áreas naturais"
+      ],
+      "practical_question": "Como isso pode mexer com água, clima, licenciamento e resíduos?"
+    },
+    {
+      "id": "direitos",
+      "label": "Direitos e proteção social",
+      "description": "Assistência social, direitos civis, proteção de grupos vulneráveis e políticas de inclusão.",
+      "life_areas": [
+        "Assistência social",
+        "Direitos civis",
+        "Proteção social",
+        "Inclusão e acesso a serviços"
+      ],
+      "practical_question": "Como isso pode mexer com proteção social, direitos e acesso a serviços?"
+    }
   ]
 }

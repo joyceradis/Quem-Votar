@@ -157,7 +157,7 @@ Antes de incorporar componente externo:
 - preferir implementação própria para padrões simples de interação;
 - não copiar HTML/CSS/JS proprietário de sites usados apenas como benchmark visual.
 
-Referências de UX ficam em `docs/DESIGN_REFERENCES.md`. Regras de entrega e pós-deploy ficam em `docs/DELIVERY_GOVERNANCE.md`.
+Referências de UX ficam em `docs/DESIGN_REFERENCES.md`. Regras de entrega e pós-deploy ficam em `docs/DELIVERY_GOVERNANCE.md`. O objetivo e a linguagem pública do produto ficam em `docs/PRODUCT_NORTH_STAR.md`.
 
 
 ## 13. Governança operacional — entrega rápida com rastreabilidade
@@ -349,3 +349,12 @@ Bot, Action, GitHub App ou automação com credencial de escrita deve ter:
 - proibição de merge destrutivo silencioso.
 
 Sessões interativas não exigem kill switch.
+
+
+## 21. Norte de produto público
+
+A interface pública prioriza três perguntas: o que a pessoa faz hoje, o que diz que vai fazer e onde isso pode mexer na vida real.
+
+Não transformar essa terceira pergunta em recomendação personalizada, score, ranking ou conclusão de benefício/prejuízo. A explicação de impacto é descritiva e vinculada a propostas/documentos com fonte.
+
+Jargão técnico de governança de dados fica fora do primeiro nível da interface.

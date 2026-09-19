@@ -7,7 +7,7 @@
 <meta name="description" content="Busque e filtre candidaturas a deputado federal e estadual no Espírito Santo com dados públicos e fontes rastreáveis.">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="styles.css?v=5.2.0">
+<link rel="stylesheet" href="styles.css?v=5.3.0">
 <title>Candidaturas · Quem Votar?</title>
 </head>
 <body data-page="candidates">
@@ -15,10 +15,10 @@
 <header class="site-header">
   <a class="brand" href="index.html" aria-label="Quem Votar? início"><img src="assets/logo.svg" alt="Quem Votar? ES 2026"></a>
   <nav class="desktop-nav" aria-label="Navegação principal">
-    <a class="active" href="candidatos.html?cargo=federal">Candidatos</a>
-    <a href="temas.html">Temas</a>
+    <a class="active" href="candidatos.html?cargo=federal">Pessoas</a>
+    <a href="temas.html">Assuntos</a>
     <a href="comparar.html">Comparar</a>
-    <a href="sobre.html">Sobre o projeto</a>
+    <a href="sobre.html">Como funciona</a>
   </nav>
   <div class="header-actions">
     <button class="text-size" id="textSizeButton" type="button" aria-label="Aumentar tamanho do texto">A+</button>
@@ -28,20 +28,20 @@
 <aside class="drawer" id="drawer" aria-hidden="true">
   <button class="drawer-close" id="closeMenu" type="button">Fechar</button>
   <a href="index.html">Início</a>
-  <a href="candidatos.html?cargo=federal">Candidatos</a>
-  <a href="temas.html">Temas</a>
+  <a href="candidatos.html?cargo=federal">Pessoas</a>
+  <a href="temas.html">Assuntos</a>
   <a href="comparar.html">Comparar</a>
-  <a href="sobre.html">Sobre o projeto</a>
+  <a href="sobre.html">Como funciona</a>
 </aside>
 <div class="backdrop" id="backdrop" hidden></div>
 <main id="conteudo" class="page-shell">
   <header class="page-intro">
     <div>
-      <p class="eyebrow">CANDIDATURAS · ESPÍRITO SANTO</p>
-      <h1>Encontre quem você procura.</h1>
-      <p>Busque pelo nome, número ou partido. Abra filtros só quando precisar.</p>
+      <p class="eyebrow">PESSOAS · ESPÍRITO SANTO</p>
+      <h1>Procure uma pessoa.</h1>
+      <p>Digite nome, número ou partido. O resto aparece só se você quiser aprofundar.</p>
     </div>
-    <div class="snapshot-inline"><span id="listUpdate">Carregando snapshot…</span><a data-tse-source href="https://dadosabertos.tse.jus.br/dataset/candidatos-2026" target="_blank" rel="noopener">Fonte TSE</a></div>
+    <div class="snapshot-inline"><span id="listUpdate">Carregando atualização…</span><a data-tse-source href="https://dadosabertos.tse.jus.br/dataset/candidatos-2026" target="_blank" rel="noopener">Dados do TSE</a></div>
   </header>
 
   <div class="office-switch" role="tablist" aria-label="Cargo">
@@ -59,14 +59,14 @@
     </div>
     <div id="secondaryFilters" class="secondary-filters" hidden>
       <label><span>Partido</span><select id="partyFilter"><option value="">Todos os partidos</option></select></label>
-      <label><span>Tema documentado</span><select id="topicFilter"><option value="">Todos os temas documentados</option></select></label>
-      <label><span>Registro institucional</span><select id="institutionalFilter"><option value="">Todos</option><option value="1">Com registro integrado</option></select></label>
+      <label><span>Assunto</span><select id="topicFilter"><option value="">Todos os assuntos</option></select></label>
+      <label><span>Atuação pública</span><select id="institutionalFilter"><option value="">Todas</option><option value="1">Com atuação pública na base</option></select></label>
       <button id="clearFilters" class="clear-button" type="button">Limpar filtros</button>
     </div>
   </section>
 
   <div class="results-head">
-    <div><strong id="resultCount">Carregando…</strong><span>Resultados do recorte atual</span></div>
+    <div><strong id="resultCount">Carregando…</strong><span>Pessoas encontradas</span></div>
     <span id="pageStatus"></span>
   </div>
 
@@ -79,9 +79,9 @@
   <div><button id="clearCompare" type="button">Limpar</button><a id="openCompare" href="comparar.html">Comparar</a></div>
 </div>
 <footer class="site-footer">
-  <div><strong>Quem Votar? · Espírito Santo 2026</strong><span>Informação pública organizada para consulta.</span></div>
-  <div><span>Snapshot <b data-snapshot-date>—</b></span><a data-tse-source href="https://dadosabertos.tse.jus.br/dataset/candidatos-2026" target="_blank" rel="noopener">TSE Dados Abertos</a></div>
+  <div><strong>Quem Votar? · Espírito Santo 2026</strong><span>Informação pública, em linguagem normal.</span></div>
+  <div><span>Atualizado em <b data-snapshot-date>—</b></span><a data-tse-source href="https://dadosabertos.tse.jus.br/dataset/candidatos-2026" target="_blank" rel="noopener">Dados do TSE</a></div>
 </footer>
-<script src="app.js?v=5.2.0" defer></script>
+<script src="app.js?v=5.3.0" defer></script>
 </body>
 </html>

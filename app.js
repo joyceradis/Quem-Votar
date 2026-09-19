@@ -15,7 +15,7 @@ const params=()=>new URLSearchParams(location.search);
 
 async function getJSON(path,fallback=[]){
   try{
-    const response=await fetch(path+"?v=5",{cache:"no-store"});
+    const response=await fetch(path+"?v=5.3",{cache:"no-store"});
     return response.ok?await response.json():fallback;
   }catch{
     return fallback;
@@ -46,6 +46,18 @@ function hasInstitutional(candidate){
   return Boolean(candidate?.current_mandate||(candidate?.institutional_evidence||[]).length);
 }
 
+function currentActivity(candidate,kind){
+  if(candidate?.current_mandate){
+    return kind==="federal"?"Deputado federal em exercício":"Mandato atual confirmado";
+  }
+  if(candidate?.occupation)return `Trabalho informado ao TSE: ${candidate.occupation}`;
+  return "Atuação atual ainda não confirmada nesta base";
+}
+
+function practicalAreas(candidate){
+  const ids=[...new Set(topicEvidence(candidate).map(item=>item.topic_id).filter(Boolean))];
+  return ids.map(id=>topicById(id)).filter(Boolean);
+}
 function formatSnapshot(iso){
   if(!iso)return "data não disponível";
   try{
@@ -203,7 +215,7 @@ async function initHome(){
     mount.innerHTML=TOPICS.topics.map(topic=>`
       <a href="temas.html#${encodeURIComponent(topic.id)}">
         <span>${esc(topic.label)}</span>
-        <small>Ver tema</small>
+        <small>${esc((topic.life_areas||[]).slice(0,2).join(" · "))}</small>
       </a>
     `).join("");
   }
@@ -213,25 +225,23 @@ function candidateCard(candidate,kind,selectedIds){
   const name=candidate.ballot_name||candidate.full_name||"Nome não disponível";
   const selected=selectedIds.includes(String(candidate.tse_id));
   const profileUrl=`candidato.html?id=${encodeURIComponent(candidate.tse_id)}&cargo=${kind}`;
-  const evidenceCount=topicEvidence(candidate).length;
-  const meta=[
-    candidate.occupation?`Ocupação declarada: ${candidate.occupation}`:null,
-    hasInstitutional(candidate)?"Registro institucional integrado":null,
-    evidenceCount?`${evidenceCount} evidência${evidenceCount===1?"":"s"} temática${evidenceCount===1?"":"s"}`:null
-  ].filter(Boolean);
+  const proposalCount=topicEvidence(candidate).length;
+  const today=currentActivity(candidate,kind);
 
   return `
     <article class="candidate-card" data-profile-url="${profileUrl}">
-      <a class="candidate-photo-link" href="${profileUrl}" aria-label="Abrir perfil de ${esc(name)}">
+      <a class="candidate-photo-link" href="${profileUrl}" aria-label="Entender candidatura de ${esc(name)}">
         <div class="candidate-photo">${photoMarkup(candidate)}</div>
       </a>
       <div class="candidate-body">
+        <p class="candidate-kicker">${kind==="federal"?"DEPUTADO FEDERAL":"DEPUTADO ESTADUAL"}</p>
         <h3><a href="${profileUrl}">${esc(name)}</a></h3>
-        <p class="candidate-electoral">${kind==="federal"?"Deputado Federal":"Deputado Estadual"} · ${esc(candidate.party||"Partido não informado")} · nº ${esc(candidate.number||"—")}</p>
-        ${meta.length?`<p class="candidate-occupation">${meta.map(esc).join(" · ")}</p>`:""}
+        <p class="candidate-electoral">${esc(candidate.party||"Partido não informado")} · nº ${esc(candidate.number||"—")}</p>
+        <p class="candidate-now">${esc(today)}</p>
+        ${proposalCount?`<p class="candidate-proposals">${proposalCount} proposta${proposalCount===1?"":"s"} ou declaração${proposalCount===1?"":"ões"} com fonte</p>`:""}
       </div>
       <div class="candidate-actions">
-        <a class="profile-link" href="${profileUrl}">Ver perfil</a>
+        <a class="profile-link" href="${profileUrl}">Entender</a>
         <button class="compare-button${selected?" selected":""}" data-compare-id="${esc(candidate.tse_id)}" type="button">
           ${selected?"Remover":"Comparar"}
         </button>
@@ -239,7 +249,6 @@ function candidateCard(candidate,kind,selectedIds){
     </article>
   `;
 }
-
 function renderPagination(total,page,onPage){
   const mount=$("pagination");
   if(!mount)return;
@@ -303,8 +312,8 @@ async function initCandidates(){
   $("institutionalFilter").value=url.get("institucional")==="1"?"1":"";
   $("federalCount").textContent=federal.length;
   $("estadualCount").textContent=estadual.length;
-  $("listUpdate").textContent=`Snapshot ${formatSnapshot(meta?.collected_at)}`;
-  $("topicFilter").innerHTML='<option value="">Todos os temas documentados</option>'+
+  $("listUpdate").textContent=`Atualizado em ${formatSnapshot(meta?.collected_at)}`;
+  $("topicFilter").innerHTML='<option value="">Todos os assuntos</option>'+
     TOPICS.topics.map(topic=>`<option value="${esc(topic.id)}">${esc(topic.label)}</option>`).join("");
   $("topicFilter").value=url.get("tema")||"";
 
@@ -388,11 +397,11 @@ async function initCandidates(){
     const visible=rows.slice(start,start+PAGE_SIZE);
     const selected=getCompareIds();
 
-    $("resultCount").textContent=`${rows.length} candidatura${rows.length===1?"":"s"}`;
+    $("resultCount").textContent=`${rows.length} pessoa${rows.length===1?"":"s"}`;
     $("pageStatus").textContent=rows.length?`Página ${page} de ${pages}`:"Nenhum resultado";
     $("cards").innerHTML=visible.length
       ? visible.map(candidate=>candidateCard(candidate,kind,selected)).join("")
-      : `<div class="empty">${activeFilters().topic?"Nenhuma evidência temática integrada para este tema e cargo no snapshot atual. Isso não significa ausência de posição do candidato.":"Nenhuma candidatura encontrada com esses filtros."}</div>`;
+      : `<div class="empty">${activeFilters().topic?"Ainda não encontramos fala, proposta ou atuação com fonte para este assunto e cargo. Isso não significa que a pessoa não tenha posição.":"Ninguém encontrado com esses filtros."}</div>`;
 
     $("cards").querySelectorAll(".candidate-card[data-profile-url]").forEach(card=>{
       const open=()=>location.href=card.dataset.profileUrl;
@@ -478,24 +487,23 @@ async function initTopics(){
     $("topicCards").innerHTML=TOPICS.topics.map(topic=>{
       const row=stats[topic.id];
       const count=row.candidates.size;
-      const evidence=row.evidence;
       return `
         <article class="topic-row" id="${esc(topic.id)}">
-          <div>
+          <div class="topic-main">
             <h2>${esc(topic.label)}</h2>
             <p>${esc(topic.description)}</p>
+            <div class="life-areas">${(topic.life_areas||[]).map(area=>`<span>${esc(area)}</span>`).join("")}</div>
           </div>
-          <div class="topic-count">
+          <div class="topic-status">
             <strong>${count?count:"—"}</strong>
-            <span>${count?`candidatura${count===1?"":"s"} · ${evidence} evidência${evidence===1?"":"s"}`:"Cobertura ainda não publicada"}</span>
+            <span>${count?`pessoa${count===1?"":"s"} com fonte neste assunto`:"Ainda sem pessoas conectadas a fontes deste assunto"}</span>
           </div>
-          ${count?`<a href="candidatos.html?tema=${encodeURIComponent(topic.id)}">Ver candidaturas</a>`:""}
+          ${count?`<a href="candidatos.html?tema=${encodeURIComponent(topic.id)}">Ver pessoas</a>`:""}
         </article>
       `;
     }).join("");
   });
 }
-
 function definitionRow(label,value){
   return `<div class="definition-row"><dt>${esc(label)}</dt><dd>${esc(value||"Não disponível")}</dd></div>`;
 }
@@ -503,7 +511,7 @@ function definitionRow(label,value){
 function historicalList(items,mapper){
   return items?.length
     ? `<div class="timeline-list">${items.map(mapper).join("")}</div>`
-    : '<div class="evidence-empty">Ainda não integrado nesta camada.</div>';
+    : '<div class="evidence-empty">Ainda não disponível nesta base.</div>';
 }
 
 function profileSection(id,title,subtitle,content,open=false){
@@ -521,174 +529,77 @@ function profileSection(id,title,subtitle,content,open=false){
 async function initProfile(){
   const id=params().get("id");
   const requested=params().get("cargo");
+  const[{federal,estadual,meta},chamber,topics]=await Promise.all([loadCore(),getJSON(DATA.chamber),loadTopics()]);
+  applyGlobalMeta(meta); TOPICS=topics;
 
-  const[{federal,estadual,meta},chamber,topics]=await Promise.all([
-    loadCore(),
-    getJSON(DATA.chamber),
-    loadTopics()
-  ]);
-
-  applyGlobalMeta(meta);
-  TOPICS=topics;
-
-  if(!id){
-    $("profileMount").className="empty";
-    $("profileMount").innerHTML="Candidato não informado.";
-    return;
-  }
-
-  const all=[
-    ...federal.map(item=>({...item,_kind:"federal"})),
-    ...estadual.map(item=>({...item,_kind:"estadual"}))
-  ];
-
+  if(!id){ $("profileMount").className="empty"; $("profileMount").innerHTML="Pessoa não informada."; return; }
+  const all=[...federal.map(item=>({...item,_kind:"federal"})),...estadual.map(item=>({...item,_kind:"estadual"}))];
   const candidate=all.find(item=>String(item.tse_id)===String(id));
-
-  if(!candidate){
-    $("profileMount").className="empty";
-    $("profileMount").innerHTML="Candidato não encontrado no snapshot atual.";
-    return;
-  }
+  if(!candidate){ $("profileMount").className="empty"; $("profileMount").innerHTML="Pessoa não encontrada na base atual."; return; }
 
   const kind=candidate._kind||requested||"federal";
   const name=candidate.ballot_name||candidate.full_name||"Candidato";
   const institutional=candidate.current_mandate||null;
-  const chamberRow=kind==="federal"
-    ? chamber.find(item=>String(item.candidate_id||item.tse_id||"")===String(id))||null
-    : null;
+  const chamberRow=kind==="federal"?chamber.find(item=>String(item.candidate_id||item.tse_id||"")===String(id))||null:null;
   const historyItems=candidate.previous_elections||[];
   const institutionalEvidence=candidate.institutional_evidence||[];
-    const thematicEvidence=topicEvidence(candidate);
+  const thematicEvidence=topicEvidence(candidate);
+  const impactTopics=practicalAreas(candidate);
 
   document.title=`${name} · Quem Votar?`;
 
-    const generalContent=`
-    <dl class="definition-list">
-      ${definitionRow("Nome completo",candidate.full_name)}
-      ${definitionRow("Cargo",kind==="federal"?"Deputado Federal":"Deputado Estadual")}
-      ${definitionRow("Partido",candidate.party)}
-      ${definitionRow("Número",candidate.number)}
-      ${definitionRow("Ocupação",candidate.occupation)}
-      ${definitionRow("Escolaridade",candidate.education)}
-      ${definitionRow("Situação da candidatura",candidate.registration_status||"Ainda não integrada")}
-    </dl>
-    ${institutional?`
-      <div class="subsection">
-        <h3>Registro institucional integrado</h3>
-        <dl class="definition-list">
-          ${definitionRow("Instituição",kind==="federal"?"Câmara dos Deputados":"ALES")}
-          ${definitionRow("Partido institucional",institutional.party)}
-          ${definitionRow("Situação",institutional.status)}
-        </dl>
-      </div>
-    `:""}
-  `;
+  const todayContent=institutional||institutionalEvidence.length?`
+    ${institutional?`<div class="plain-fact"><span>Hoje</span><strong>${esc(currentActivity(candidate,kind))}</strong><small>${esc([institutional.party,institutional.status].filter(Boolean).join(" · "))}</small></div>`:""}
+    ${institutionalEvidence.length?`<div class="public-records">${institutionalEvidence.map(item=>`<article><span>${esc(item.reference_date||"Data não informada")}</span><strong>${esc(item.institution||"Órgão público")}</strong><p>${esc([item.legislature,item.type].filter(Boolean).join(" · "))}</p>${item.source?.url?`<a target="_blank" rel="noopener" href="${esc(item.source.url)}">Abrir fonte</a>`:""}</article>`).join("")}</div>`:""}
+  `:`<p class="plain-empty">Não encontramos atuação pública atual confirmada nesta base. Isso não significa que ela não exista.</p>`;
 
-  const historyContent=`
-    <div class="subsection">
-      <h3>Histórico eleitoral</h3>
-      ${historicalList(historyItems,item=>`
-        <div class="timeline-item">
-          <strong>${esc(item.year||"Data não disponível")}</strong>
-          <div>${esc(item.office||"Cargo")}<small>${esc([item.party,item.location,item.result].filter(Boolean).join(" · "))}</small></div>
-        </div>
-      `)}
-    </div>
-    <div class="subsection">
-      <h3>Atuação institucional documentada</h3>
-      ${historicalList(institutionalEvidence,item=>`
-        <div class="timeline-item">
-          <strong>${esc(item.reference_date||"Data não informada")}</strong>
-          <div>${esc(item.institution||"Instituição")}<small>${esc([item.legislature,item.type].filter(Boolean).join(" · "))}</small></div>
-        </div>
-      `)}
-    </div>
-  `;
+  const promisesContent=thematicEvidence.length?`<div class="promise-list">${thematicEvidence.map(item=>{
+      const topic=topicById(item.topic_id);
+      return `<article><span>${esc(topic?.label||item.topic_id||"Assunto")}</span><h3>${esc(item.quote_or_summary||item.statement||"Declaração documentada")}</h3><p>${esc(item.evidence_type||"Fonte documentada")}</p>${item.source_url?`<a target="_blank" rel="noopener" href="${esc(item.source_url)}">Ver fonte</a>`:""}</article>`;
+    }).join("")}</div>`:`<div class="plain-empty"><strong>Ainda não coletamos uma proposta ou declaração de campanha desta pessoa.</strong><p>Não vamos adivinhar posição pelo partido, profissão ou histórico.</p></div>`;
 
-  const topicsContent=thematicEvidence.length
-    ? `<div class="timeline-list">${thematicEvidence.map(item=>`
-        <div class="timeline-item">
-          <strong>${esc(topicById(item.topic_id)?.label||item.topic_id||"Tema")}</strong>
-          <div>
-            <b>${esc(item.evidence_type||"Evidência documentada")}</b>
-            <small>${esc(item.quote_or_summary||item.statement||"")}</small>
-            ${item.source_url?`<a class="plain-link" target="_blank" rel="noopener" href="${esc(item.source_url)}">Abrir fonte</a>`:""}
-          </div>
-        </div>
-      `).join("")}</div>`
-    : '<div class="evidence-empty">Esta camada ainda não foi integrada para esta candidatura. Isso não significa ausência de proposta, posição ou atuação.</div>';
+  const impactContent=impactTopics.length?`<div class="impact-list">${impactTopics.map(topic=>`<article><h3>${esc(topic.practical_question||topic.label)}</h3><div class="life-areas">${(topic.life_areas||[]).map(area=>`<span>${esc(area)}</span>`).join("")}</div></article>`).join("")}</div><p class="impact-note">Essas são áreas que a proposta pode atingir. O site não classifica o efeito como bom ou ruim para você.</p>`:`<div class="plain-empty"><strong>Sem proposta ou declaração documentada, não dá para afirmar impacto específico.</strong><p>Quando houver fonte, esta área mostra onde o assunto pode aparecer na vida real.</p></div>`;
 
-  const sourcesContent=`
-    <div class="source-list">
-      <div class="source-item">
-        <div><strong>TSE · Dados Abertos</strong><span>Snapshot ${esc(formatSnapshot(meta?.collected_at))}</span></div>
-        ${candidate.source?.official_portal?`<a target="_blank" rel="noopener" href="${esc(candidate.source.official_portal)}">Abrir fonte</a>`:""}
-      </div>
-      ${candidate.photo_source?.official_archive_url?`
-        <div class="source-item">
-          <div><strong>TSE · Fotografias</strong><span>${esc(candidate.photo_source.dataset||"Arquivo oficial de fotos")}</span></div>
-          <a target="_blank" rel="noopener" href="${esc(candidate.photo_source.official_archive_url)}">Abrir fonte</a>
-        </div>
-      `:""}
-      ${(candidate.current_mandate?.profile_url||chamberRow?.profile_url)?`
-        <div class="source-item">
-          <div><strong>Câmara dos Deputados</strong><span>Perfil institucional</span></div>
-          <a target="_blank" rel="noopener" href="${esc(candidate.current_mandate?.profile_url||chamberRow?.profile_url)}">Abrir fonte</a>
-        </div>
-      `:""}
-      ${institutionalEvidence.map(item=>item.source?.url?`
-        <div class="source-item">
-          <div><strong>${esc(item.institution||"Fonte institucional")}</strong><span>${esc(item.reference_date||"")}</span></div>
-          <a target="_blank" rel="noopener" href="${esc(item.source.url)}">Abrir fonte</a>
-        </div>
-      `:"").join("")}
-    </div>
-  `;
+  const historyContent=historyItems.length?`<div class="timeline-list">${historyItems.map(item=>`<div class="timeline-item"><strong>${esc(item.year||"Data não disponível")}</strong><div>${esc(item.office||"Cargo")}<small>${esc([item.party,item.location,item.result].filter(Boolean).join(" · "))}</small></div></div>`).join("")}</div>`:`<p class="plain-empty">Histórico eleitoral detalhado ainda não está disponível nesta base.</p>`;
+
+  const sources=[
+    candidate.source?.official_portal?{name:"TSE · cadastro eleitoral",detail:`Atualizado em ${formatSnapshot(meta?.collected_at)}`,url:candidate.source.official_portal}:null,
+    candidate.photo_source?.official_archive_url?{name:"TSE · foto",detail:candidate.photo_source.dataset||"Arquivo oficial",url:candidate.photo_source.official_archive_url}:null,
+    (candidate.current_mandate?.profile_url||chamberRow?.profile_url)?{name:"Câmara dos Deputados",detail:"Perfil público",url:candidate.current_mandate?.profile_url||chamberRow?.profile_url}:null,
+    ...institutionalEvidence.filter(item=>item.source?.url).map(item=>({name:item.institution||"Fonte pública",detail:item.reference_date||"",url:item.source.url})),
+    ...thematicEvidence.filter(item=>item.source_url).map(item=>({name:topicById(item.topic_id)?.label||"Proposta/declaração",detail:item.source_publisher||item.published_at||"",url:item.source_url}))
+  ].filter(Boolean);
 
   $("profileMount").className="";
   $("profileMount").innerHTML=`
-    <a class="back-link" href="candidatos.html?cargo=${kind}">Voltar aos candidatos</a>
-
-    <section class="profile-header">
+    <a class="back-link" href="candidatos.html?cargo=${kind}">Voltar para pessoas</a>
+    <section class="profile-hero">
+      <div class="profile-photo-wrap">${photoMarkup(candidate,true)}</div>
       <div class="profile-copy">
         <p class="eyebrow">${kind==="federal"?"DEPUTADO FEDERAL":"DEPUTADO ESTADUAL"} · ESPÍRITO SANTO</p>
         <h1>${esc(name)}</h1>
         <p class="full-name">${esc(candidate.full_name||"")}</p>
-
-        <div class="profile-summary">
-          <div><span>Número</span><strong>${esc(candidate.number||"—")}</strong></div>
-          <div><span>Partido</span><strong>${esc(candidate.party||"Não disponível")}</strong></div>
-          <div><span>Situação</span><strong>${esc(candidate.registration_status||"Ainda não integrada")}</strong></div>
-        </div>
-
-        <button id="profileCompare" class="profile-compare" type="button" data-candidate-id="${esc(candidate.tse_id)}">${getCompareIds().includes(String(candidate.tse_id))?"Remover da comparação":"Adicionar à comparação"}</button>
+        <div class="identity-line"><strong>${esc(candidate.party||"Partido não informado")}</strong><span>nº ${esc(candidate.number||"—")}</span><span>${esc(candidate.occupation||"Ocupação não informada")}</span></div>
+        <button id="profileCompare" class="profile-compare" type="button" data-candidate-id="${esc(candidate.tse_id)}">${getCompareIds().includes(String(candidate.tse_id))?"Remover da comparação":"Comparar"}</button>
       </div>
-      ${photoMarkup(candidate,true)}
     </section>
 
-    <nav class="profile-jump" aria-label="Conteúdo desta ficha">
-      <a href="#visao-geral">Visão geral</a>
-      <a href="#trajetoria">Trajetória</a>
-      <a href="#temas">Temas e propostas</a>
-      <a href="#registros">Registros públicos</a>
-      <a href="#fontes">Fontes e limitações</a>
+    <nav class="profile-jump" aria-label="Ir para uma pergunta">
+      <a href="#faz-hoje">O que faz hoje?</a><a href="#vai-fazer">O que diz que vai fazer?</a><a href="#impacto">Onde isso mexe?</a><a href="#historico">Histórico</a><a href="#fontes">Fontes</a>
     </nav>
 
-    <section class="profile-stack">
-      ${profileSection("visao-geral","Visão geral","Dados da candidatura e registros institucionais já integrados",generalContent,true)}
-      ${profileSection("trajetoria","Trajetória","Histórico eleitoral e atuação institucional disponível",historyContent)}
-      ${profileSection("temas","Temas e propostas","Evidências temáticas documentadas quando disponíveis",topicsContent)}
-      ${profileSection("registros","Registros públicos","Somente registros documentados e juridicamente qualificados",'<div class="evidence-empty">Ainda não integrada nesta versão. A ausência desta camada não implica ausência de registros.</div>')}
-      ${profileSection("fontes","Fontes e limitações","Origem dos dados exibidos e limites de cobertura desta ficha",sourcesContent)}
-    </section>
+    <section class="answer-section" id="faz-hoje"><p class="section-number">01</p><div><h2>O que essa pessoa faz hoje?</h2>${todayContent}</div></section>
+    <section class="answer-section" id="vai-fazer"><p class="section-number">02</p><div><h2>O que ela diz que vai fazer?</h2>${promisesContent}</div></section>
+    <section class="answer-section impact-section" id="impacto"><p class="section-number">03</p><div><h2>Onde isso pode mexer na vida real?</h2>${impactContent}</div></section>
+    <section class="answer-section secondary-answer" id="historico"><p class="section-number">04</p><div><h2>Histórico</h2>${historyContent}</div></section>
+    <section class="answer-section secondary-answer" id="fontes"><p class="section-number">05</p><div><h2>De onde saiu isso?</h2><div class="source-list">${sources.map(s=>`<div class="source-item"><div><strong>${esc(s.name)}</strong><span>${esc(s.detail)}</span></div><a target="_blank" rel="noopener" href="${esc(s.url)}">Abrir</a></div>`).join("")||'<p class="plain-empty">Nenhuma fonte adicional disponível.</p>'}</div></div></section>
   `;
 
   $("profileCompare")?.addEventListener("click",event=>{
     const ids=toggleCompare(event.currentTarget.dataset.candidateId);
-    event.currentTarget.textContent=ids.includes(String(candidate.tse_id))?"Remover da comparação":"Adicionar à comparação";
+    event.currentTarget.textContent=ids.includes(String(candidate.tse_id))?"Remover da comparação":"Comparar";
   });
 }
-
 async function initCompare(){
   const[{all,meta},topics]=await Promise.all([loadCore(),loadTopics()]);
   TOPICS=topics;
@@ -701,9 +612,9 @@ async function initCompare(){
   if(!selected.length){
     $("compareMount").innerHTML=`
       <div class="compare-empty">
-        <h2>Nenhum candidato selecionado.</h2>
-        <p>Abra a lista e use “Comparar” em até três candidaturas.</p>
-        <a href="candidatos.html?cargo=federal">Escolher candidatos</a>
+        <h2>Ninguém selecionado.</h2>
+        <p>Abra a lista e escolha até três pessoas para comparar.</p>
+        <a href="candidatos.html?cargo=federal">Escolher pessoas</a>
       </div>
     `;
     return;
@@ -732,13 +643,13 @@ async function initCompare(){
         `).join("")}
 
         ${row("Cargo",candidate=>`<div class="compare-value">${candidate._kind==="federal"?"Deputado Federal":"Deputado Estadual"}</div>`)}
-        ${row("Ocupação declarada",candidate=>`<div class="compare-value">${esc(candidate.occupation||"Não disponível")}</div>`)}
+        ${row("Hoje",candidate=>`<div class="compare-value">${esc(currentActivity(candidate,candidate._kind))}</div>`)}
                 ${row("Escolaridade",candidate=>`<div class="compare-value">${esc(candidate.education||"Não disponível")}</div>`)}
-        ${row("Registro institucional",candidate=>`<div class="compare-value">${hasInstitutional(candidate)?"Há registro integrado":"Ainda não integrado como vínculo atual"}</div>`)}
-        ${row("Evidências temáticas",candidate=>`<div class="compare-value">${topicEvidence(candidate).length?`${topicEvidence(candidate).length} registro(s) documentado(s)`:"Ainda não integrada"}</div>`)}
+        ${row("Atuação pública",candidate=>`<div class="compare-value">${hasInstitutional(candidate)?"Há informação pública disponível":"Ainda não encontramos atuação pública atual"}</div>`)}
+        ${row("O que diz que vai fazer",candidate=>`<div class="compare-value">${topicEvidence(candidate).length?practicalAreas(candidate).map(t=>esc(t.label)).join(" · "):"Ainda sem proposta ou declaração com fonte"}</div>`)}
       </div>
     </div>
-    <p class="comparison-note">A comparação mostra campos disponíveis no snapshot de ${esc(formatSnapshot(meta?.collected_at))}. “Ainda não integrada” não significa ausência de proposta, posição ou experiência.</p>
+    <p class="comparison-note">Dados disponíveis em ${esc(formatSnapshot(meta?.collected_at))}. Falta de informação aqui não significa ausência de proposta, posição ou experiência.</p>
   `;
 }
 

@@ -6,13 +6,17 @@ Data-base: 2026-09-19.
 
 Evitar que uma mudança válida gere uma sequência de commits intermediários, deploys cancelados, cache divergente ou interface que herde camadas antigas de CSS.
 
+## Norte de produto
+
+Antes de qualquer decisão visual ou de copy, ler `docs/PRODUCT_NORTH_STAR.md`.
+
 ## Contrato visual humano
 
 A direção aprovada para a interface pública é:
 
 - identidade capixaba em **azul, branco e rosa**;
-- home com a pergunta **“Em quem eu vou votar?”**;
-- experiência editorial premium, simples e limpa, com referência de linguagem visual semelhante à Apple;
+- home orientada às três perguntas práticas definidas no norte de produto;
+- experiência de produto de consumo, simples, jovem e limpa;
 - tipografia forte, bastante espaço útil, imagens limpas e motion discreto;
 - menu principal lateral que abre e fecha;
 - poucos containers, cards, badges e ícones;

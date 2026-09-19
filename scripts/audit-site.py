@@ -58,7 +58,7 @@ def main() -> None:
     assert "visual depth pass" not in styles.lower(), "override visual legado reapareceu"
     assert "--green:" not in styles, "verde não faz parte da paleta estrutural azul/branco/rosa"
     assert all(token in styles for token in ("--blue:", "--blue-dark:", "--pink:", "--white:")), "tokens da identidade ES incompletos"
-    assert "Em quem eu vou votar?" in home, "Home deve manter a pergunta principal aprovada"
+    assert "Tá, mas o que esse candidato pode mudar na sua vida?" in home, "Home deve manter a pergunta prática principal"
     assert re.search(r"\.desktop-nav\s*\{[^}]*display\s*:\s*none", styles), "navegação principal deve ficar no menu lateral"
     assert "\n  push:" not in sync_workflow, "sincronização de dados não deve rodar a cada push de interface"
     assert "cancel-in-progress: false" in quality_workflow, "Quality deve enfileirar em vez de cancelar"
@@ -75,14 +75,15 @@ def main() -> None:
     assert public_markup.count('id="drawer"') == len(REQUIRED_PAGES), "menu lateral deve existir em todas as páginas"
     assert public_markup.count('id="menuButton"') == len(REQUIRED_PAGES), "botão do menu lateral deve existir em todas as páginas"
     assert "✓" not in public_markup, "UI pública não deve usar check como indicador visual"
+    assert "selo" not in public_markup.lower(), 'UI pública não deve expor jargão "selo"'
     assert "topic-icon" not in public_markup and "step-no" not in public_markup, "ícones decorativos antigos reapareceram"
     assert "office-card.estadual" not in styles, "cargo estadual não pode receber cor partidária/semântica própria"
     assert "profile-tab" not in public_markup, "V5 não usa abas estreitas na ficha"
-    assert "profile-disclosure" in app, "V5 deve manter ficha vertical expansível"
-    assert "data-snapshot-date" in home, "Home deve expor snapshot datado"
+    assert "O que essa pessoa faz hoje?" in app and "O que ela diz que vai fazer?" in app and "Onde isso pode mexer na vida real?" in app, "ficha deve responder as três perguntas práticas"
+    assert "data-snapshot-date" in home, "Home deve expor data de atualização"
     assert 'id="filterToggle"' in candidates_page and 'id="secondaryFilters"' in candidates_page, "filtros secundários devem usar divulgação progressiva"
     assert 'data-profile-url' in app, "cards devem oferecer navegação por toda a área útil"
-    assert 'profileSection("registros","Registros públicos"' in app, "ficha deve expor camada de registros públicos sem inferir conteúdo"
+    assert "Não vamos adivinhar posição pelo partido, profissão ou histórico." in app, "ficha deve explicitar limite contra inferência"
     assert "Orientação política" not in public_markup and "ideology" not in public_markup.lower(), "V5 não integra classificação ideológica própria"
     assert "Área profissional" not in public_markup, "V5 não usa profissão como tema público"
     assert 'id="topicFilter"' in candidates_page, "filtro temático documentado ausente"
@@ -94,6 +95,7 @@ def main() -> None:
     assert topics.get("topics"), "taxonomia de temas vazia"
     topic_ids = [x.get("id") for x in topics["topics"]]
     assert len(topic_ids) == len(set(topic_ids)), "id de tema duplicado"
+    assert all(x.get("life_areas") for x in topics["topics"]), "todo assunto deve explicar onde pode aparecer na vida real"
     assert {"saude", "seguranca", "educacao", "economia"}.issubset(topic_ids), "temas essenciais ausentes"
 
     federal = json.loads(read(DATA / "candidates-federal.json"))

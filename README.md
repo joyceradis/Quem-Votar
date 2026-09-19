@@ -4,7 +4,7 @@ Plataforma cívica open source para consulta factual e rastreável de candidatur
 
 **Produção:** https://joyceradis.github.io/Quem-Votar/
 
-**Baseline visual:** `V5` · assets `5.2.0`
+**Baseline visual:** `V5.3` · assets `5.3.0`
 
 ## Recorte desta versão
 
@@ -30,7 +30,7 @@ O próprio site mostra:
 
 A data é exibida no fuso `America/Sao_Paulo`.
 
-## Experiência pública V5
+## Experiência pública V5.3
 
 ### Home
 - escolha de cargo e busca no primeiro viewport;
@@ -91,6 +91,7 @@ Leia antes de alterar:
 - `AGENTS.md`
 - `docs/GOVERNANCE.md`
 - `docs/DELIVERY_GOVERNANCE.md`
+- `docs/PRODUCT_NORTH_STAR.md`
 - `docs/CHECKPOINT_CURRENT.md`
 - `docs/FILTERS.md`
 - `docs/DATA_MODEL.md`

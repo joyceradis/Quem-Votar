@@ -6,7 +6,7 @@ Data: 2026-09-19.
 
 Branch: `main`.
 
-Baseline visual: `V5`. Cache de assets: `5.2.0`.
+Baseline visual: `V5.3`. Cache de assets: `5.3.0`.
 
 Este checkpoint não cria sozinho um GitHub Release formal.
 
@@ -29,8 +29,10 @@ Taxonomia temática pública: `data/reference/policy-topics.json`.
 
 ## Interface
 
-- home com a pergunta “Em quem eu vou votar?” e hero azul com acento rosa;
+- home orientada às perguntas “o que faz hoje?”, “o que diz que vai fazer?” e “onde isso mexe na vida real?”;
 - menu principal lateral em todas as larguras;
+- linguagem pública sem jargão de auditoria no primeiro nível;
+- assuntos explicam áreas da vida potencialmente afetadas sem classificar benefício ou prejuízo;
 - stylesheet canônico sem camadas de override herdadas;
 - cargo e busca dominam o primeiro viewport;
 - filtros secundários aparecem sob demanda;
