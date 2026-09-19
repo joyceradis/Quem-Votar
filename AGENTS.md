@@ -392,3 +392,45 @@ A interface pública prioriza três perguntas: o que a pessoa faz hoje, o que di
 Não transformar essa terceira pergunta em recomendação personalizada, score, ranking ou conclusão de benefício/prejuízo. A explicação de impacto é descritiva e vinculada a propostas/documentos com fonte.
 
 Jargão técnico de governança de dados fica fora do primeiro nível da interface.
+
+
+## 22. Limites do feature freeze e camada de sustentabilidade
+
+Durante o feature freeze da V5.5, o congelamento se aplica ao **núcleo eleitoral do produto**, não a toda e qualquer superfície operacional do repositório.
+
+### Núcleo eleitoral congelado
+
+Permanecem congelados, salvo correção, segurança, acessibilidade, disponibilidade, atualização factual ou proveniência:
+
+- busca e navegação eleitoral;
+- fichas de candidaturas;
+- comparação;
+- temas e taxonomia política;
+- regras editoriais;
+- `topic_evidence` e sua semântica;
+- pipeline de publicação canônica;
+- qualquer mudança que altere ordem, visibilidade, tratamento ou interpretação de candidaturas.
+
+### Camada de sustentabilidade isolada
+
+Pode evoluir durante o freeze quando a alteração for estritamente separada do conteúdo eleitoral:
+
+- `.github/FUNDING.yml`;
+- GitHub Sponsors;
+- seção de apoio no README;
+- rota estática `apoio.html`;
+- botão local de copiar PIX;
+- documentação de transparência e sustentabilidade;
+- link secundário de apoio em rodapé.
+
+### Invariantes da camada financeira
+
+- apoio financeiro nunca altera fontes, dados, metodologia, classificação, ordem ou apresentação de candidaturas;
+- nenhum CTA financeiro pode aparecer dentro de ficha de candidato, busca, comparação ou páginas temáticas;
+- não usar trackers publicitários, personalização política ou segmentação;
+- valor financeiro não determina destaque;
+- candidatura, campanha, partido, federação, coligação, comitê eleitoral ou intermediário desses atores não deve ser tratado como apoiador institucional neutro;
+- a camada financeira não escreve nem modifica `data/reference/topic-evidence.json`;
+- nenhuma mudança dessa camada reduz os gates humanos exigidos para publicação de evidência política.
+
+A prioridade operacional durante o freeze continua sendo factualidade, proveniência e a frente de evidências #5/#2.
