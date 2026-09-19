@@ -1,0 +1,41 @@
+{
+  "version": "1.0.0",
+  "note": "A classificação por área profissional usa apenas a ocupação declarada no cadastro eleitoral. Não representa posição política nem proposta de campanha.",
+  "topics": [
+    {
+      "id": "saude",
+      "label": "Saúde",
+      "short": "Saúde",
+      "description": "Profissões de saúde e, quando houver evidência, propostas ou atuação documentada em saúde.",
+      "keywords": ["MEDICO", "MEDICA", "ENFERMEIRO", "ENFERMEIRA", "TECNICO DE ENFERMAGEM", "DENTISTA", "ODONTOLOG", "FARMACEUT", "FISIOTERAPEUTA", "PSICOLOG", "NUTRICION", "BIOMEDIC", "VETERINAR", "AGENTE COMUNITARIO DE SAUDE", "AGENTE DE SAUDE"]
+    },
+    {
+      "id": "seguranca",
+      "label": "Segurança pública",
+      "short": "Segurança",
+      "description": "Profissões ligadas à segurança pública e, quando houver evidência, atuação ou posições documentadas no tema.",
+      "keywords": ["POLICIAL", "MILITAR", "BOMBEIRO", "DELEGADO", "DELEGADA", "GUARDA MUNICIPAL", "AGENTE PENITENCIARIO", "POLICIA", "FORCAS ARMADAS"]
+    },
+    {
+      "id": "educacao",
+      "label": "Educação",
+      "short": "Educação",
+      "description": "Profissões de educação e, quando houver evidência, propostas ou atuação documentada em educação.",
+      "keywords": ["PROFESSOR", "PROFESSORA", "PEDAGOG", "DIRETOR DE ESTABELECIMENTO DE ENSINO"]
+    },
+    {
+      "id": "direito",
+      "label": "Direito e justiça",
+      "short": "Direito",
+      "description": "Profissões jurídicas e atuação pública relacionada à Justiça.",
+      "keywords": ["ADVOGADO", "ADVOGADA", "PROMOTOR", "PROCURADOR", "JUIZ", "JUIZA", "DEFENSOR PUBLICO", "DELEGADO", "DELEGADA"]
+    },
+    {
+      "id": "gestao",
+      "label": "Gestão e negócios",
+      "short": "Gestão",
+      "description": "Profissões declaradas de gestão, administração e atividade empresarial.",
+      "keywords": ["ADMINISTRADOR", "ADMINISTRADORA", "EMPRESARIO", "EMPRESARIA", "COMERCIANTE", "ECONOMISTA", "CONTADOR", "CONTADORA", "GESTOR"]
+    }
+  ]
+}

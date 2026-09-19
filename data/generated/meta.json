@@ -1,0 +1,43 @@
+{
+  "collected_at": "2026-09-19T18:09:40.816658+00:00",
+  "uf": "ES",
+  "election_year": 2026,
+  "counts": {
+    "federal": 137,
+    "estadual": 410,
+    "federal_current_mandates_linked": 7,
+    "ales_2025_evidence_linked": 26
+  },
+  "sources": {
+    "primary_tse_dataset": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+    "primary_tse_candidate_zip": "https://cdn.tse.jus.br/estatistica/sead/odsele/consulta_cand/consulta_cand_2026.zip",
+    "primary_tse_photo_zip_es": "https://cdn.tse.jus.br/estatistica/sead/eleicoes/eleicoes2026/fotos/foto_cand2026_ES_div.zip",
+    "photo_transport_mirror": "https://realidadebrasil.com.br/media/photos",
+    "operational_mirror": {
+      "federal": {
+        "repository": "herminiotorres/dossie-cidadao",
+        "path": "docs/data/tse/candidatos/ES/deputado-federal.json",
+        "blob_sha": "98f9a76a22f0a1f0c9c097dc105f9552bbf3cfde",
+        "html_url": "https://github.com/herminiotorres/dossie-cidadao/blob/main/docs/data/tse/candidatos/ES/deputado-federal.json",
+        "raw_url": "https://raw.githubusercontent.com/herminiotorres/dossie-cidadao/main/docs/data/tse/candidatos/ES/deputado-federal.json"
+      },
+      "estadual": {
+        "repository": "herminiotorres/dossie-cidadao",
+        "path": "docs/data/tse/candidatos/ES/deputado-estadual.json",
+        "blob_sha": "c0bab86798042fca4d05617ad8309ef79b0ec60f",
+        "html_url": "https://github.com/herminiotorres/dossie-cidadao/blob/main/docs/data/tse/candidatos/ES/deputado-estadual.json",
+        "raw_url": "https://raw.githubusercontent.com/herminiotorres/dossie-cidadao/main/docs/data/tse/candidatos/ES/deputado-estadual.json"
+      }
+    },
+    "camara_federal": "https://dadosabertos.camara.leg.br/api/v2/deputados?siglaUf=ES&ordem=ASC&ordenarPor=nome&itens=100",
+    "ales": "https://www.al.es.gov.br/"
+  },
+  "data_quality": {
+    "registration_status": "O arquivo básico espelhado retorna #NE para a situação de candidatura dos registros ES; o sistema publica null em vez de atribuir significado.",
+    "assets": "Patrimônio não é publicado até haver ingestão auditável do bem_candidato_2026.",
+    "photos": "A fonte primária é o pacote ES - Fotos de candidatos do TSE. Como o CDN oficial bloqueia o runner, a UI usa temporariamente um cache público por SQ_CANDIDATO; falhas de imagem caem para placeholder.",
+    "electoral_history": "Histórico eleitoral TSE ainda não é incorporado automaticamente neste snapshot; histórico institucional federal é obtido da Câmara.",
+    "state_current_mandate": "Não inferido automaticamente; a composição da ALES requer validação institucional datada."
+  },
+  "normalizer_version": "3.0.0"
+}

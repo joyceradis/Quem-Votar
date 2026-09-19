@@ -1,0 +1,99 @@
+name: Sincronizar dados eleitorais ES
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 */6 * * *"
+  push:
+    branches: [main]
+    paths:
+      - "scripts/sync-data.py"
+      - "app.js"
+      - "data/reference/**"
+      - ".github/workflows/sync-data.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-dados-eleitorais
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validar sintaxe
+        run: |
+          python -m py_compile scripts/sync-data.py
+          node --check app.js
+
+      - name: Sincronizar candidaturas ES e Câmara
+        run: python scripts/sync-data.py
+
+      - name: Auditar snapshots antes de publicar
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          base = Path("data/generated")
+          federal = json.loads((base / "candidates-federal.json").read_text())
+          estadual = json.loads((base / "candidates-estadual.json").read_text())
+          meta = json.loads((base / "meta.json").read_text())
+
+          assert federal, "snapshot federal vazio"
+          assert estadual, "snapshot estadual vazio"
+          assert all(x.get("office") == "DEPUTADO FEDERAL" for x in federal)
+          assert all(x.get("office") == "DEPUTADO ESTADUAL" for x in estadual)
+          assert all(x.get("uf") == "ES" for x in federal + estadual)
+          assert meta["counts"]["federal"] == len(federal)
+          assert meta["counts"]["estadual"] == len(estadual)
+
+          ids = [x.get("tse_id") for x in federal + estadual]
+          assert all(ids), "candidato sem SQ_CANDIDATO"
+          assert len(ids) == len(set(ids)), "SQ_CANDIDATO duplicado"
+
+          # Não publicar campos pessoais usados apenas em bases de origem.
+          forbidden = {
+              "cpf", "nr_cpf_candidato", "titulo_eleitoral", "nr_titulo_eleitoral",
+              "email", "birth_date", "dt_nascimento", "race_color", "gender",
+              "marital_status", "nationality"
+          }
+          blob = json.dumps({"federal": federal, "estadual": estadual}).lower()
+          assert not any(f'"{key}"' in blob for key in forbidden), "campo pessoal não necessário no snapshot"
+
+          # #NE e #NULO são códigos de ausência na origem, não situação jurídica.
+          assert "#NE" not in blob and "#NULO" not in blob, "sentinela TSE vazou para a interface"
+
+          # Proveniência: TSE continua explicitamente como fonte primária.
+          assert all(x.get("source", {}).get("institution") == "TSE" for x in federal + estadual)
+          assert meta.get("sources", {}).get("operational_mirror"), "fallback sem proveniência"
+
+          print(
+              f"Validação OK: {len(federal)} federais / {len(estadual)} estaduais / "
+              f"{meta['counts'].get('federal_current_mandates_linked', 0)} vínculos Câmara"
+          )
+          PY
+
+      - name: Persistir snapshot
+        run: |
+          git config user.name "quem-votar-data-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/generated
+          if git diff --cached --quiet; then
+            echo "Sem alterações"
+          else
+            git commit -m "dados: atualiza snapshot ES 2026 [skip ci]"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi

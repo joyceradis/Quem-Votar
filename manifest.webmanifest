@@ -1,0 +1,11 @@
+{
+  "name": "Quem Votar? — Espírito Santo 2026",
+  "short_name": "Quem Votar?",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0A3146",
+  "icons": [
+    {"src":"assets/favicon.svg","sizes":"any","type":"image/svg+xml","purpose":"any"}
+  ]
+}

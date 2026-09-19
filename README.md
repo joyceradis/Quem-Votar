@@ -1,63 +1,98 @@
-# Quem-Votar — Espírito Santo
+# Quem Votar? — Espírito Santo 2026
 
-Plataforma cívica para consulta factual das candidaturas do Espírito Santo nas Eleições 2026.
+Plataforma cívica open source para consulta factual e rastreável de candidaturas a Deputado Federal e Deputado Estadual no Espírito Santo.
 
-## Escopo
+**Produção:** https://joyceradis.github.io/Quem-Votar/
 
-O projeto separa explicitamente:
+**Versão de interface:** `5.0.0-rc.1`
 
-- **Deputado Federal** — candidaturas do ES e histórico institucional na Câmara dos Deputados.
-- **Deputado Estadual** — candidaturas do ES e histórico institucional na Assembleia Legislativa do Espírito Santo (ALES).
+## Recorte desta versão
 
-A plataforma não atribui nota, ranking, recomendação, “melhor candidato” ou indicação de voto. A ordenação padrão é alfabética. A comparação, quando utilizada, mostra apenas dados documentais lado a lado.
+A versão atual cobre:
+- Deputado Federal;
+- Deputado Estadual;
+- Espírito Santo;
+- Eleições Gerais de 2026.
 
-## Camadas de informação
+Outros cargos não aparecem na interface desta versão.
 
-### 1. Candidatura 2026
-Nome de urna, número, partido/federação, cargo, situação do registro, patrimônio declarado e demais campos publicados pela Justiça Eleitoral.
+## Snapshot
 
-### 2. Histórico eleitoral
-Participações em eleições anteriores e situações registradas pelo TSE.
+A interface não publica contagens como números permanentes. Ela lê, no carregamento, a data e os totais do snapshot em:
 
-### 3. Histórico de mandato
-Para quem exerce ou exerceu mandato: legislaturas, cargos, filiações partidárias documentadas, votações nominais, despesas, presença, emendas e demais dados institucionais quando houver fonte pública verificável.
+`data/generated/meta.json`
 
-## Fontes prioritárias
+O próprio site mostra:
+- data e hora do snapshot;
+- total federal;
+- total estadual;
+- link para a fonte primária do TSE.
 
-1. TSE / DivulgaCandContas / Dados Abertos
-2. TRE-ES
-3. Câmara dos Deputados / Dados Abertos
-4. ALES
-5. Diários oficiais e portais públicos de transparência
-6. Imprensa somente como apoio, identificada como fonte secundária
+A data é exibida no fuso `America/Sao_Paulo`.
 
-Cada informação deve preservar **fonte, data de atualização e natureza do dado**.
+## Experiência pública V5
 
-## Situação jurídica da candidatura
+### Home
+- escolha de cargo e busca no primeiro viewport;
+- contagens e snapshot ligados à fonte TSE;
+- três caminhos simples: nome, tema ou comparação;
+- temas de política pública, sem inferência por profissão.
 
-A situação eleitoral não é reduzida a “aprovado/reprovado”. Estados como **sub judice, indeferido com recurso, pendente de julgamento** e equivalentes devem ser exibidos conforme a terminologia da Justiça Eleitoral e acompanhados da data da consulta.
+### Candidatos
+- 12 resultados por página;
+- busca dominante;
+- filtros secundários sob demanda;
+- partido;
+- tema documentado;
+- registro institucional integrado;
+- seleção de até 3 candidaturas para comparação.
 
-## Atualização
+### Temas
+`Saúde`, `Educação`, `Segurança`, `Economia` e os demais temas representam **propostas, declarações ou atuação documentada** da candidatura.
 
-O workflow em `.github/workflows/sync-data.yml` consulta as fontes estruturadas e grava snapshots em `data/generated/`.
+A taxonomia pública fica em:
 
-## Estrutura
+`data/reference/policy-topics.json`
 
-- `index.html` — interface
-- `styles.css` — apresentação responsiva
-- `app.js` — filtros, fichas e comparação factual
-- `data/incumbents.json` — parlamentares em exercício e metadados de mandato
-- `data/generated/` — snapshots automáticos
-- `scripts/sync-data.mjs` — ingestão e normalização
-- `METODOLOGIA.md` — governança e proveniência
-- `AUDITORIA.md` — diagnóstico e riscos de dados
+Profissão/ocupação declarada ao TSE é apenas metadado da ficha e não associa uma candidatura a um tema.
 
-## Uso local
+### Ficha individual
+Leitura em camadas:
+- Visão geral;
+- Trajetória;
+- Temas e propostas;
+- Registros públicos;
+- Fontes e limitações.
 
-O site é estático. Sirva a raiz por HTTP. Para atualizar dados:
+### Comparação
+Até 3 candidaturas lado a lado, com os mesmos campos factuais/documentais.
 
-`node scripts/sync-data.mjs`
+Não existe score, ranking, vencedor ou recomendação de voto.
+## Fontes e proveniência
 
-## Nota metodológica
+### TSE
+Fonte eleitoral primária e origem das fotografias.
 
-Dados eleitorais e jurídicos podem mudar durante o processo eleitoral. A interface sempre deve exibir a data da última sincronização e fornecer link para a fonte oficial correspondente.
+### Câmara dos Deputados
+Dados institucionais federais vinculados de forma conservadora.
+
+### ALES
+Evidências documentais estaduais datadas. Evidência histórica não é promovida automaticamente a situação atual.
+
+Quando uma imagem ou dado usa transporte intermediário por limitação operacional, a origem e o transporte ficam registrados separadamente.
+
+## Regra de integridade
+
+**Uma lacuna permanece lacuna até existir fonte identificável, vínculo justificável e tratamento documentado.**
+
+## Governança
+
+Leia antes de alterar:
+- `AGENTS.md`
+- `docs/GOVERNANCE.md`
+- `docs/CHECKPOINT_CURRENT.md`
+- `docs/FILTERS.md`
+- `docs/DATA_MODEL.md`
+- `docs/SITE_MAP.md`
+- `METODOLOGIA.md`
+- `AUDITORIA.md`

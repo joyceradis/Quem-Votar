@@ -1,0 +1,41 @@
+name: Qualidade do site
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "*.html"
+      - "styles.css"
+      - "app.js"
+      - "scripts/**"
+      - "data/generated/**"
+      - ".github/workflows/quality.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quality-site
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validar sintaxe
+        run: |
+          python -m py_compile scripts/sync-data.py scripts/audit-site.py
+          node --check app.js
+
+      - name: Auditar contratos de dados e interface
+        run: python scripts/audit-site.py

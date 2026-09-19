@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="330" height="52" viewBox="0 0 330 52" role="img" aria-labelledby="title desc">
+  <title id="title">Quem Votar?</title>
+  <desc id="desc">Marca do projeto Quem Votar? Espírito Santo 2026</desc>
+  <text x="0" y="32" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="800" letter-spacing="-1.4" fill="#11212B">QUEM</text>
+  <text x="84" y="32" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="800" letter-spacing="-1.4" fill="#2D88B8">VOTAR?</text>
+  <line x1="208" y1="12" x2="208" y2="38" stroke="#C8D5DC" stroke-width="1"/>
+  <text x="224" y="31" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" letter-spacing="1.8" fill="#687984">ES 2026</text>
+</svg>

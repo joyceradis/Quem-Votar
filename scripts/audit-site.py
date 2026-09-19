@@ -1,0 +1,122 @@
+#!/usr/bin/env python3
+"""Auditoria rápida do estado publicável do Quem-Votar.
+
+Valida contratos mínimos entre arquitetura, dados e interface. Não coleta dados,
+não altera snapshots e não produz classificações políticas.
+"""
+from __future__ import annotations
+
+import json
+import re
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+DATA = ROOT / "data" / "generated"
+
+REQUIRED_PAGES = {
+    "index.html": 'data-page="home"',
+    "candidatos.html": 'data-page="candidates"',
+    "candidato.html": 'data-page="profile"',
+    "temas.html": 'data-page="topics"',
+    "comparar.html": 'data-page="compare"',
+    "sobre.html": 'data-page="about"',
+}
+
+FORBIDDEN_FIELDS = {
+    "cpf", "nr_cpf_candidato", "titulo_eleitoral", "nr_titulo_eleitoral",
+    "email", "birth_date", "dt_nascimento", "telefone", "endereco",
+}
+
+def read(path: Path) -> str:
+    assert path.exists(), f"arquivo obrigatório ausente: {path.relative_to(ROOT)}"
+    return path.read_text(encoding="utf-8")
+
+def main() -> None:
+    versions = set()
+    for name, marker in REQUIRED_PAGES.items():
+        text = read(ROOT / name)
+        assert marker in text, f"{name}: marcador de página ausente"
+        css = re.search(r'styles\.css\?v=([0-9.]+)', text)
+        js = re.search(r'app\.js\?v=([0-9.]+)', text)
+        assert css and js, f"{name}: assets sem versão explícita"
+        assert css.group(1) == js.group(1), f"{name}: CSS/JS com versões diferentes"
+        versions.add(css.group(1))
+    assert len(versions) == 1, f"páginas com versões de assets divergentes: {sorted(versions)}"
+
+    home = read(ROOT / "index.html")
+    candidates_page = read(ROOT / "candidatos.html")
+    compare_page = read(ROOT / "comparar.html")
+    topics_page = read(ROOT / "temas.html")
+    app = read(ROOT / "app.js")
+    styles = read(ROOT / "styles.css")
+
+    assert 'id="cards"' not in home, "Home voltou a concentrar a listagem"
+    assert 'id="cards"' in candidates_page, "listagem sem mount de cards"
+    assert 'id="pagination"' in candidates_page, "listagem sem paginação"
+    assert 'id="compareMount"' in compare_page, "comparação sem mount próprio"
+    assert 'id="topicCards"' in topics_page, "áreas/temas sem mount próprio"
+    assert "const PAGE_SIZE=12" in app, "paginação deve permanecer explícita e auditável"
+    public_markup = "\n".join(read(ROOT / name) for name in REQUIRED_PAGES) + "\n" + app
+    assert "✓" not in public_markup, "UI pública não deve usar check como indicador visual"
+    assert "topic-icon" not in public_markup and "step-no" not in public_markup, "ícones decorativos antigos reapareceram"
+    assert "office-card.estadual" not in styles, "cargo estadual não pode receber cor partidária/semântica própria"
+    assert "profile-tab" not in public_markup, "V5 não usa abas estreitas na ficha"
+    assert "profile-disclosure" in app, "V5 deve manter ficha vertical expansível"
+    assert "data-snapshot-date" in home, "Home deve expor snapshot datado"
+    assert 'id="filterToggle"' in candidates_page and 'id="secondaryFilters"' in candidates_page, "filtros secundários devem usar divulgação progressiva"
+    assert 'data-profile-url' in app, "cards devem oferecer navegação por toda a área útil"
+    assert 'profileSection("registros","Registros públicos"' in app, "ficha deve expor camada de registros públicos sem inferir conteúdo"
+    assert "Orientação política" not in public_markup and "ideology" not in public_markup.lower(), "V5 não integra classificação ideológica própria"
+    assert "Área profissional" not in public_markup, "V5 não usa profissão como tema público"
+    assert 'id="topicFilter"' in candidates_page, "filtro temático documentado ausente"
+    assert "policy-topics.json" in app, "UI deve usar taxonomia de temas de política pública"
+    for init in ("initHome", "initCandidates", "initTopics", "initProfile", "initCompare", "initAbout"):
+        assert f"function {init}" in app, f"controlador ausente: {init}"
+
+    topics = json.loads(read(ROOT / "data" / "reference" / "policy-topics.json"))
+    assert topics.get("topics"), "taxonomia de temas vazia"
+    topic_ids = [x.get("id") for x in topics["topics"]]
+    assert len(topic_ids) == len(set(topic_ids)), "id de tema duplicado"
+    assert {"saude", "seguranca", "educacao", "economia"}.issubset(topic_ids), "temas essenciais ausentes"
+
+    federal = json.loads(read(DATA / "candidates-federal.json"))
+    estadual = json.loads(read(DATA / "candidates-estadual.json"))
+    meta = json.loads(read(DATA / "meta.json"))
+    rows = federal + estadual
+
+    assert federal and estadual, "snapshot eleitoral vazio"
+    assert meta["counts"]["federal"] == len(federal), "contagem federal divergente"
+    assert meta["counts"]["estadual"] == len(estadual), "contagem estadual divergente"
+    assert all(x.get("office") == "DEPUTADO FEDERAL" for x in federal)
+    assert all(x.get("office") == "DEPUTADO ESTADUAL" for x in estadual)
+    assert all(x.get("uf") == "ES" for x in rows)
+
+    ids = [str(x.get("tse_id") or "") for x in rows]
+    assert all(ids), "registro sem SQ_CANDIDATO"
+    assert len(ids) == len(set(ids)), "SQ_CANDIDATO duplicado"
+
+    blob = json.dumps(rows, ensure_ascii=False).lower()
+    assert "#ne" not in blob and "#nulo" not in blob, "sentinela TSE vazou no snapshot"
+    assert not any(f'"{field}"' in blob for field in FORBIDDEN_FIELDS), "campo pessoal proibido no snapshot"
+    assert all(x.get("source", {}).get("institution") == "TSE" for x in rows), "origem eleitoral inconsistente"
+    assert all(x.get("photo_source", {}).get("institution") == "TSE" for x in rows), "origem da foto não rastreável ao TSE"
+
+    with_photo_url = sum(bool(x.get("photo_url")) for x in rows)
+    assert with_photo_url == len(rows), f"URLs de transporte de foto: {with_photo_url}/{len(rows)}"
+
+    linked_federal = sum(bool(x.get("current_mandate")) for x in federal)
+    linked_ales = sum(len(x.get("institutional_evidence") or []) for x in rows)
+    assert linked_federal == meta["counts"].get("federal_current_mandates_linked"), "cobertura Câmara divergente"
+    assert linked_ales == meta["counts"].get("ales_2025_evidence_linked"), "cobertura ALES divergente"
+
+    print(
+        "AUDITORIA OK | "
+        f"assets v{next(iter(versions))} | "
+        f"{len(federal)} federais | {len(estadual)} estaduais | "
+        f"{with_photo_url}/{len(rows)} URLs de foto | "
+        f"{linked_federal} vínculos Câmara | {linked_ales} evidências ALES | "
+        f"{len(topic_ids)} temas de política pública"
+    )
+
+if __name__ == "__main__":
+    main()
