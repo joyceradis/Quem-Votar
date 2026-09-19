@@ -1,37 +1,35 @@
 # Roadmap V1 — Eleições 2026 / Espírito Santo
 
-Este arquivo mostra **a sequência de evolução do produto**.  
+Este arquivo mostra **a sequência macro de evolução do produto**.  
 As tarefas executáveis, decisões e critérios de pronto ficam nas [Issues](https://github.com/joyceradis/Quem-Votar/issues).
 
 ## Estado atual
 
-### ✅ P0 — Fundação
-Entregue como base da V5/V5.4:
+### ✅ P0 — Fundação e baseline público
+
+Entregue como base da V5/V5.5:
+
 - identidade capixaba;
 - navegação mobile;
 - Home orientada à tarefa;
 - busca;
 - separação Federal/Estadual;
 - deep link de candidato;
+- comparação;
 - indicadores de cobertura;
 - governança para agentes;
-- auditoria e CI contra regressão.
+- auditoria e CI contra regressão;
+- sistema visual editorial V5.5;
+- tags temáticas somente quando existe evidência documentada.
 
-A Issue [#1](https://github.com/joyceradis/Quem-Votar/issues/1) está concluída.
-
-### 🚧 Prioridade imediata — fechar V5.4
-Issue [#3](https://github.com/joyceradis/Quem-Votar/issues/3).
-
-Próximos pontos:
-- revisar os critérios de aceitação ainda não comprovados;
-- concluir compartilhamento/preview onde o GitHub Pages limitar metadados dinâmicos;
-- validar mobile, teclado e comportamento visual;
-- fechar a issue apenas quando os gates e critérios restantes estiverem comprovados.
+As frentes de fundação visual e estrutural já estão consolidadas. A V5.5 é o baseline atual; evolução futura deve preservar seus contratos de neutralidade, legibilidade e desempenho.
 
 ### 🚧 P4 — Temas e posições documentadas
-Esta frente foi antecipada porque a utilidade temática da V5 depende de evidência real por candidatura.
+
+Esta é a frente prioritária porque a utilidade temática da interface depende de evidência real por candidatura.
 
 Objetivo:
+
 - manter a taxonomia temática;
 - coletar propostas, declarações e atuação com fonte;
 - preservar vínculo por `SQ_CANDIDATO`;
@@ -39,16 +37,20 @@ Objetivo:
 - medir cobertura sem tratar ausência de dado como ausência de posição.
 
 Trabalho ativo:
-- [#5 — coletor de evidências](https://github.com/joyceradis/Quem-Votar/issues/5): coleta automatizada deve produzir **staging auditável**, não publicar interpretação diretamente na fonte canônica;
+
+- [#5 — coletor de evidências](https://github.com/joyceradis/Quem-Votar/issues/5): coleta automatizada produz **staging auditável** antes de qualquer promoção canônica;
 - [#2 — integração de evidências](https://github.com/joyceradis/Quem-Votar/issues/2): validar, integrar e ampliar a cobertura em `data/reference/topic-evidence.json`.
 
-Fluxo desejado:
+Fluxo vigente:
 
-`fonte oficial → coleta bruta → staging → validação → topic-evidence.json → sync → interface`
+`fonte permitida → coleta bruta → staging → validação → revisão semântica → promoção explícita → topic-evidence.json → sync → interface`
+
+A infraestrutura atual já suporta HTML, texto e PDF textual sem OCR automático. A cobertura canônica permanece separada da coleta até aprovação explícita.
 
 ## Próximas frentes
 
 ### ⏳ P1 — Histórico
+
 - histórico eleitoral TSE;
 - histórico partidário;
 - mandatos anteriores;
@@ -57,6 +59,7 @@ Fluxo desejado:
 - histórico federal preservado mesmo com falha transitória de API.
 
 ### ⏳ P2 — Transparência eleitoral
+
 - bens declarados;
 - receitas de campanha;
 - despesas de campanha;
@@ -64,7 +67,9 @@ Fluxo desejado:
 - redes sociais declaradas ao TSE.
 
 ### ⏳ P3 — Atuação parlamentar
+
 Federal:
+
 - proposições;
 - votações;
 - órgãos/comissões;
@@ -72,6 +77,7 @@ Federal:
 - despesas.
 
 Estadual:
+
 - proposições;
 - votações;
 - presença quando houver fonte apropriada;
@@ -79,6 +85,7 @@ Estadual:
 - despesas/emendas quando houver fonte estruturada.
 
 ### ⏳ P5 — Expansão
+
 - Senado ES;
 - Governo ES;
 - Presidência;
@@ -89,7 +96,10 @@ Estadual:
 
 - **README** = o que o projeto é e qual é o estado estável.
 - **Roadmap** = para onde o projeto vai e em que ordem.
-- **Issue** = uma tarefa concreta que pode ser discutida, implementada e fechada.
+- **Checkpoint** = estado técnico datado da `main`.
+- **Issue** = tarefa concreta que pode ser discutida, implementada e fechada.
 - **Comment** = atualização, decisão ou descoberta dentro de uma Issue.
 - **Commit** = alteração efetivamente gravada no código.
 - **PR** = pacote de alterações proposto para entrar na branch principal.
+
+O Roadmap não deve ser atualizado a cada micro-PR. Atualize quando uma fase fecha, uma prioridade muda ou uma descoberta altera a sequência macro.
