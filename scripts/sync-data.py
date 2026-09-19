@@ -36,6 +36,8 @@ DIVULGACAND = "https://divulgacandcontas.tse.jus.br/divulga/"
 CAMARA = "https://dadosabertos.camara.leg.br/api/v2"
 ALES = "https://www.al.es.gov.br/"
 ALES_REFERENCE_FILE = ROOT / "data" / "reference" / "ales-20a-legislatura-2025.json"
+TOPIC_REFERENCE_FILE = ROOT / "data" / "reference" / "policy-topics.json"
+TOPIC_EVIDENCE_FILE = ROOT / "data" / "reference" / "topic-evidence.json"
 
 MIRROR_REPO = "herminiotorres/dossie-cidadao"
 MIRROR_BASE = "https://raw.githubusercontent.com/herminiotorres/dossie-cidadao/main/docs/data/tse/candidatos/ES"
@@ -434,6 +436,92 @@ def enrich_ales_reference(groups):
     return linked
 
 
+
+def enrich_topic_evidence(groups):
+    """Anexa evidências temáticas curadas por SQ_CANDIDATO.
+
+    A fonte canônica fica em data/reference/topic-evidence.json para que um
+    novo sync eleitoral não apague propostas/declarações já validadas.
+    """
+    candidates = [item for group in groups for item in group]
+    by_id = {str(c.get("tse_id")): c for c in candidates if c.get("tse_id")}
+
+    for candidate in candidates:
+        candidate["topic_evidence"] = []
+
+    if not TOPIC_EVIDENCE_FILE.exists():
+        return 0
+
+    payload = json.loads(TOPIC_EVIDENCE_FILE.read_text(encoding="utf-8"))
+    entries = payload.get("entries") or []
+
+    topic_payload = json.loads(TOPIC_REFERENCE_FILE.read_text(encoding="utf-8"))
+    topic_ids = {item.get("id") for item in topic_payload.get("topics", []) if item.get("id")}
+    allowed_types = {"proposta", "declaração", "atuação"}
+    allowed_status = {"verified", "dated", "secondary_source"}
+    seen = set()
+
+    for index, item in enumerate(entries, start=1):
+        candidate_id = clean(item.get("candidate_id"))
+        topic_id = clean(item.get("topic_id"))
+        evidence_type = clean(item.get("evidence_type"))
+        source_url = clean(item.get("source_url"))
+        source_title = clean(item.get("source_title"))
+        source_publisher = clean(item.get("source_publisher"))
+        captured_at = clean(item.get("captured_at"))
+        verification_status = clean(item.get("verification_status"))
+        statement = clean(item.get("statement"))
+        quote_or_summary = clean(item.get("quote_or_summary"))
+
+        if candidate_id not in by_id:
+            raise RuntimeError(f"topic-evidence #{index}: SQ_CANDIDATO inexistente: {candidate_id}")
+        if topic_id not in topic_ids:
+            raise RuntimeError(f"topic-evidence #{index}: tema inexistente: {topic_id}")
+        if evidence_type not in allowed_types:
+            raise RuntimeError(f"topic-evidence #{index}: evidence_type inválido: {evidence_type}")
+        if verification_status not in allowed_status:
+            raise RuntimeError(
+                f"topic-evidence #{index}: verification_status inválido: {verification_status}"
+            )
+        if not source_url or not source_url.startswith("https://"):
+            raise RuntimeError(f"topic-evidence #{index}: source_url HTTPS obrigatório")
+        if not source_title or not source_publisher or not captured_at:
+            raise RuntimeError(
+                f"topic-evidence #{index}: source_title, source_publisher e captured_at obrigatórios"
+            )
+        if not statement and not quote_or_summary:
+            raise RuntimeError(f"topic-evidence #{index}: conteúdo documental ausente")
+
+        dedupe_key = (
+            candidate_id,
+            topic_id,
+            evidence_type,
+            source_url,
+            clean(item.get("published_at")),
+            statement or quote_or_summary,
+        )
+        if dedupe_key in seen:
+            raise RuntimeError(f"topic-evidence #{index}: registro duplicado")
+        seen.add(dedupe_key)
+
+        record = {
+            "topic_id": topic_id,
+            "evidence_type": evidence_type,
+            "statement": statement,
+            "source_url": source_url,
+            "source_title": source_title,
+            "source_publisher": source_publisher,
+            "published_at": clean(item.get("published_at")),
+            "captured_at": captured_at,
+            "scope": clean(item.get("scope")),
+            "quote_or_summary": quote_or_summary,
+            "verification_status": verification_status,
+        }
+        by_id[candidate_id]["topic_evidence"].append(record)
+
+    return len(entries)
+
+
 def write_json(name, value):
     (OUT / name).write_text(
         json.dumps(value, ensure_ascii=False, indent=2) + "\n",
@@ -455,6 +543,7 @@ def main():
         print(f"[aviso] Câmara indisponível: {exc}")
 
     ales_links = enrich_ales_reference([federal, estadual])
+    topic_evidence_count = enrich_topic_evidence([federal, estadual])
 
     key = lambda c: norm(c.get("ballot_name") or c.get("full_name"))
     federal.sort(key=key)
@@ -477,6 +566,7 @@ def main():
                     1 for c in federal if c.get("current_mandate")
                 ),
                 "ales_2025_evidence_linked": ales_links,
+                "topic_evidence": topic_evidence_count,
             },
             "sources": {
                 "primary_tse_dataset": TSE_DATASET,
@@ -518,7 +608,8 @@ def main():
         f"{len(estadual)} a deputado estadual; "
         f"{sum(1 for c in federal if c.get('current_mandate'))} "
         "vínculos atuais com a Câmara confirmados; "
-        f"{ales_links} vínculos históricos ALES documentados."
+        f"{ales_links} vínculos históricos ALES documentados; "
+        f"{topic_evidence_count} evidências temáticas curadas."
     )
 
 

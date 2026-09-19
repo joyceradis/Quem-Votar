@@ -68,3 +68,11 @@ Antes de considerar a V5 estável:
 3. workflow Quality verde;
 4. GitHub Pages verde;
 5. navegação Home -> Candidatos -> Ficha -> Comparar verificada.
+
+## Camada de propostas e declarações
+
+Fonte canônica: `data/reference/topic-evidence.json`.
+
+O sync eleitoral anexa essa camada por `SQ_CANDIDATO` sem apagá-la. No checkpoint atual, a cobertura é **0 registros**, portanto a interface deve declarar a lacuna em vez de inferir posição.
+
+A expansão dessa camada é acompanhada pela issue #2.

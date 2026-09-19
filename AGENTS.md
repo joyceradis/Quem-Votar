@@ -76,6 +76,8 @@ Nunca converter ausência em zero.
 
 A futura camada temática deve armazenar evidências, não rótulos opinativos.
 
+Fonte canônica para evidências curadas: `data/reference/topic-evidence.json`. O sync deve anexar essa camada por `SQ_CANDIDATO` sem editá-la.
+
 Modelo mínimo:
 - `topic_id`
 - `candidate_id`

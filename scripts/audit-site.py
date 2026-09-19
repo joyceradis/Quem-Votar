@@ -92,6 +92,7 @@ def main() -> None:
         assert f"function {init}" in app, f"controlador ausente: {init}"
 
     topics = json.loads(read(ROOT / "data" / "reference" / "policy-topics.json"))
+    topic_evidence_source = json.loads(read(ROOT / "data" / "reference" / "topic-evidence.json"))
     assert topics.get("topics"), "taxonomia de temas vazia"
     topic_ids = [x.get("id") for x in topics["topics"]]
     assert len(topic_ids) == len(set(topic_ids)), "id de tema duplicado"
@@ -114,6 +115,24 @@ def main() -> None:
     assert all(ids), "registro sem SQ_CANDIDATO"
     assert len(ids) == len(set(ids)), "SQ_CANDIDATO duplicado"
 
+    source_entries = topic_evidence_source.get("entries") or []
+    allowed_evidence_types = {"proposta", "declaração", "atuação"}
+    allowed_evidence_status = {"verified", "dated", "secondary_source"}
+    candidate_ids = set(ids)
+    for index, item in enumerate(source_entries, start=1):
+        candidate_id = str(item.get("candidate_id") or "")
+        assert candidate_id in candidate_ids, f"topic-evidence #{index}: candidato inexistente"
+        assert item.get("topic_id") in topic_ids, f"topic-evidence #{index}: tema inexistente"
+        assert item.get("evidence_type") in allowed_evidence_types, f"topic-evidence #{index}: tipo inválido"
+        assert item.get("verification_status") in allowed_evidence_status, f"topic-evidence #{index}: status inválido"
+        assert str(item.get("source_url") or "").startswith("https://"), f"topic-evidence #{index}: fonte HTTPS obrigatória"
+        assert item.get("source_title") and item.get("source_publisher") and item.get("captured_at"), f"topic-evidence #{index}: metadados de fonte incompletos"
+        assert item.get("statement") or item.get("quote_or_summary"), f"topic-evidence #{index}: conteúdo vazio"
+
+    generated_evidence = [item for row in rows for item in (row.get("topic_evidence") or [])]
+    assert len(generated_evidence) == len(source_entries), "sync perdeu ou duplicou evidência temática"
+
+
     blob = json.dumps(rows, ensure_ascii=False).lower()
     assert "#ne" not in blob and "#nulo" not in blob, "sentinela TSE vazou no snapshot"
     assert not any(f'"{field}"' in blob for field in FORBIDDEN_FIELDS), "campo pessoal proibido no snapshot"
@@ -134,7 +153,7 @@ def main() -> None:
         f"{len(federal)} federais | {len(estadual)} estaduais | "
         f"{with_photo_url}/{len(rows)} URLs de foto | "
         f"{linked_federal} vínculos Câmara | {linked_ales} evidências ALES | "
-        f"{len(topic_ids)} temas de política pública"
+        f"{len(topic_ids)} temas de política pública | {len(source_entries)} evidências temáticas"
     )
 
 if __name__ == "__main__":

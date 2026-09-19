@@ -92,6 +92,7 @@ Leia antes de alterar:
 - `docs/GOVERNANCE.md`
 - `docs/DELIVERY_GOVERNANCE.md`
 - `docs/PRODUCT_NORTH_STAR.md`
+- `docs/TOPIC_EVIDENCE.md`
 - `docs/CHECKPOINT_CURRENT.md`
 - `docs/FILTERS.md`
 - `docs/DATA_MODEL.md`
