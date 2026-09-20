@@ -37,6 +37,9 @@ RETRYABLE_REASONS = {
 
 DATA_QUALITY_REASONS = {
     "insufficient_text",
+    "dummy_text",
+    "suspected_spam_content",
+    "link_aggregator_internal_content",
     "unsupported_document_type",
     "invalid_declared_seed",
     "source_unavailable",
@@ -57,6 +60,12 @@ def classify_error(error: str, fallback: str = "source_content_mismatch") -> str
     if not text:
         return fallback
 
+    if "quality_quarantine:suspected_spam_content" in text:
+        return "suspected_spam_content"
+    if "quality_reject:dummy_text" in text:
+        return "dummy_text"
+    if "quality_reject:link_aggregator_internal_content" in text:
+        return "link_aggregator_internal_content"
     if "ocr não é executado" in text or "ocr nao e executado" in text:
         return "needs_ocr"
     if "conteúdo textual insuficiente" in text or "conteudo textual insuficiente" in text:
@@ -131,6 +140,30 @@ def candidate_name_map(candidates: dict[str, dict[str, Any]]) -> dict[str, str]:
     }
 
 
+def disposition_for(reason: str) -> str:
+    if reason == "suspected_spam_content":
+        return "quarantine"
+    if reason in {"dummy_text", "link_aggregator_internal_content"}:
+        return "reject"
+    if reason in RETRYABLE_REASONS:
+        return "retry"
+    if reason in HUMAN_REASONS:
+        return "human_review"
+    return "data_quality"
+
+
+def trusted_institutional_attribution(draft: dict[str, Any]) -> bool:
+    origin = draft.get("source_origin") or {}
+    return (
+        clean(draft.get("source_kind")) == "institutional"
+        and clean(draft.get("attribution_trust")) == "official_author_api"
+        and clean(origin.get("institution")) == "Câmara dos Deputados"
+        and clean(origin.get("discovery_method")) == "api_idDeputadoAutor"
+        and bool(clean(origin.get("chamber_id")))
+        and bool(clean(origin.get("proposition_id")))
+    )
+
+
 def make_exception(
     *,
     candidate_id: str,
@@ -158,6 +191,7 @@ def make_exception(
         "stage": clean(stage),
         "reason": reason,
         "queue_class": kind,
+        "disposition": disposition_for(reason),
         "requires_human": kind == "human_review",
         "source_url": clean(source_url),
         "draft_id": clean(draft_id),
@@ -236,7 +270,7 @@ def from_drafts(
             "source_url": clean(draft.get("source_url")),
             "draft_id": clean(draft.get("draft_id")),
         }
-        if draft.get("candidate_mentioned") is False:
+        if draft.get("candidate_mentioned") is False and not trusted_institutional_attribution(draft):
             out.append(
                 make_exception(
                     **common,

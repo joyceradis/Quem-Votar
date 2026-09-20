@@ -173,6 +173,7 @@ def run_batch(
     eligible: list[tuple[str, dict[str, Any], bool, int]] = []
     skipped_collected = 0
     skipped_exhausted = 0
+    skipped_permanent = 0
     for sid in sorted(exact_by_id):
         item = exact_by_id[sid]
         entry = states.get(sid, {})
@@ -181,6 +182,9 @@ def run_batch(
 
         if not force and clean(entry.get("status")) == "collected":
             skipped_collected += 1
+            continue
+        if not force and clean(entry.get("status")) in {"quarantined", "rejected"}:
+            skipped_permanent += 1
             continue
         if not force and attempts_before >= max_attempts:
             skipped_exhausted += 1
@@ -239,6 +243,8 @@ def run_batch(
     failures: list[dict[str, Any]] = []
     collected = 0
     failed = 0
+    quarantined = 0
+    rejected = 0
     content_changed = 0
 
     def save_checkpoint() -> None:
@@ -296,27 +302,37 @@ def run_batch(
                 collected += 1
                 content_changed += int(changed)
             else:
+                normalized_error = clean(error)
+                if normalized_error.startswith("quality_quarantine:"):
+                    failure_status = "quarantined"
+                    quarantined += 1
+                elif normalized_error.startswith("quality_reject:"):
+                    failure_status = "rejected"
+                    rejected += 1
+                else:
+                    failure_status = "failed"
+                    failed += 1
+
                 entry.update(
                     {
-                        "status": "failed",
+                        "status": failure_status,
                         "draft_id": clean(previous.get("draft_id")),
                         "source_sha256": clean(previous.get("source_sha256")),
                         "content_sha256": clean(previous.get("content_sha256")),
                         "previous_content_sha256": clean(previous.get("previous_content_sha256")),
                         "content_changed": bool(previous.get("content_changed")),
-                        "last_error": clean(error)[:1000],
+                        "last_error": normalized_error[:1000],
                     }
                 )
                 states[sid] = entry
-                failures.append(
-                    stable_failure(
-                        source_id=sid,
-                        item=item,
-                        error=error,
-                        attempts_used=attempts_used,
-                    )
+                failure = stable_failure(
+                    source_id=sid,
+                    item=item,
+                    error=error,
+                    attempts_used=attempts_used,
                 )
-                failed += 1
+                failure["processing_status"] = failure_status
+                failures.append(failure)
 
             save_checkpoint()
 
@@ -329,8 +345,11 @@ def run_batch(
         "candidates_queued": len({clean(row[1].get("candidate_id")) for row in queue}),
         "collected": collected,
         "failed": failed,
+        "quarantined": quarantined,
+        "rejected": rejected,
         "skipped_collected": skipped_collected,
         "skipped_exhausted": skipped_exhausted,
+        "skipped_permanent": skipped_permanent,
         "drafts_total": len(drafts),
         "state_records": len(states),
         "content_changed": content_changed,
