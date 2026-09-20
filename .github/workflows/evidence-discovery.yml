@@ -1,0 +1,115 @@
+name: Evidence discovery — artifact only
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/discover_evidence_sources.py"
+      - "tests/test_discover_evidence_sources.py"
+      - ".github/workflows/evidence-discovery.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: evidence-discovery
+  cancel-in-progress: false
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install evidence dependencies
+        run: python -m pip install -r requirements-evidence.txt
+
+      - name: Validate code and tests
+        run: |
+          python -m py_compile scripts/coletor_evidencias.py scripts/discover_evidence_sources.py scripts/evidence_coverage_report.py
+          python -m unittest discover -s tests -p 'test_*.py' -v
+
+      - name: Prepare ephemeral workspace
+        id: workspace
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="$RUNNER_TEMP/evidence-discovery"
+          mkdir -p "$OUT"
+          echo "path=$OUT" >> "$GITHUB_OUTPUT"
+
+      - name: Run source-first discovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="${{ steps.workspace.outputs.path }}"
+          python scripts/discover_evidence_sources.py             --output-sources "$OUT/topic-evidence-sources.json"             --output-rejections "$OUT/discovery-rejections.json"             --metrics "$OUT/discovery-metrics.json"             --site-workers 8             --max-links-per-site 20             | tee "$OUT/discovery.log"
+
+      - name: Validate source queue deterministically
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="${{ steps.workspace.outputs.path }}"
+          python - "$OUT/topic-evidence-sources.json" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+          sys.path.insert(0, "scripts")
+          import coletor_evidencias as collector
+
+          payload = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+          candidates = collector.load_candidates()
+          for item in payload.get("sources", []):
+              collector.validate_source_entry(item, candidates=candidates, resolve_dns=False)
+          print(f"validated_sources={len(payload.get('sources', []))}")
+          PY
+
+      - name: Generate coverage ledger
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="${{ steps.workspace.outputs.path }}"
+          python scripts/evidence_coverage_report.py             --sources "$OUT/topic-evidence-sources.json"             --output "$OUT/evidence-coverage-ledger.json"             | tee "$OUT/coverage.log"
+
+      - name: Provenance manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="${{ steps.workspace.outputs.path }}"
+          (
+            cd "$OUT"
+            sha256sum *.json *.log > SHA256SUMS.txt
+          )
+          {
+            echo "repository=${GITHUB_REPOSITORY}"
+            echo "commit=${GITHUB_SHA}"
+            echo "run_id=${GITHUB_RUN_ID}"
+            echo "run_attempt=${GITHUB_RUN_ATTEMPT}"
+          } > "$OUT/RUN_METADATA.txt"
+
+      - name: Assert repository remained unchanged
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -n "$(git status --porcelain --untracked-files=no)" ]]; then
+            git status --short
+            echo "::error::Evidence discovery modified tracked repository files."
+            exit 1
+          fi
+
+      - name: Upload non-canonical discovery artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: evidence-discovery-${{ github.run_id }}
+          path: ${{ steps.workspace.outputs.path }}
+          if-no-files-found: error
+          retention-days: 7
