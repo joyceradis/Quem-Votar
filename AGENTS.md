@@ -450,3 +450,59 @@ Regras críticas precisam de enforcement técnico sempre que a plataforma permit
 - testes do pipeline fazem parte do significado de `CI verde`.
 
 A proteção/ruleset da branch `main` é uma configuração externa do GitHub. Enquanto não estiver ativa, essa ausência deve permanecer registrada como lacuna de governança e não pode ser confundida com proteção efetiva.
+
+
+## 24. Topologia canônica de trabalho
+
+A documentação e as Issues têm responsabilidades diferentes e não devem competir como fontes de verdade.
+
+### Função de cada artefato
+
+- `README.md`: estado estável do produto; não é backlog;
+- `AGENTS.md` e `docs/GOVERNANCE.md`: regras normativas;
+- `docs/ROADMAP_V1.md`: ordem macro, dependências e frentes;
+- `docs/CHECKPOINT_CURRENT.md`: estado técnico datado da `main`;
+- Issue de produto: resultado que precisa existir;
+- Tracking Issue: coordena uma frente e suas dependências;
+- Issue executável: uma responsabilidade principal com critério de pronto próprio;
+- comentário: progresso, descoberta ou decisão dentro da Issue;
+- PR/commit: implementação efetivamente proposta/persistida.
+
+### Antes de criar Issue
+
+1. pesquisar Issues abertas e fechadas por termos equivalentes;
+2. identificar se a necessidade pertence a uma Issue existente;
+3. se for nova, escolher uma única responsabilidade principal;
+4. registrar relação com parent/tracking quando existir;
+5. não duplicar critérios de pronto de outra Issue.
+
+### Regra de decomposição
+
+Uma Issue não deve misturar, salvo tracking explícito:
+
+- descoberta de fontes;
+- coleta;
+- confiabilidade/reprocessamento;
+- revisão semântica;
+- fila de exceções;
+- publicação canônica;
+- decisão arquitetural;
+- governança do repositório.
+
+Essas responsabilidades possuem risco e critérios de pronto diferentes.
+
+### Regra de escala
+
+Não criar código específico por candidatura (`candidato_x.py`, fluxos especiais ou exceções codificadas por nome).
+
+O modelo é:
+
+`candidate → source → draft → review → evidence`
+
+e a execução ocorre sobre o universo de `SQ_CANDIDATO`.
+
+### Regra de prioridade
+
+Dependência explícita prevalece sobre conveniência. Uma Issue marcada como bloqueada não deve ser executada em massa contornando a Issue que a bloqueia.
+
+Se um agente encontrar uma dependência ausente, deve registrá-la e ajustar o mapa de execução antes de escalar o trabalho.

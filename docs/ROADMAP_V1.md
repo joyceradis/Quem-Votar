@@ -26,32 +26,47 @@ As frentes de fundação visual e estrutural já estão consolidadas. A V5.5 é 
 
 ### 🚧 P4 — Temas e posições documentadas
 
-Esta é a frente prioritária porque a utilidade temática da interface depende de evidência real por candidatura.
+Esta é a frente prioritária de conteúdo. O resultado de produto é acompanhado pela **#2**; a engenharia de escala é coordenada pela **#34**.
 
-Objetivo:
+### Ordem canônica de execução
 
-- manter a taxonomia temática;
-- coletar propostas, declarações e atuação com fonte;
-- preservar vínculo por `SQ_CANDIDATO`;
-- não inferir posição por profissão, partido ou associação;
-- medir cobertura sem tratar ausência de dado como ausência de posição.
+**P0 de governança**
+- #36 — concluir proteção de `main` + caminho autorizado do sync;
+- #45 — topologia multiagente e disciplina de Issues/documentação;
+- #44 — Governance Sentinel para detectar drift automaticamente.
 
-Infraestrutura concluída:
+**Preflight de escala**
+1. #38 — coverage ledger e relatório read-only;
+2. #39 — descoberta de fontes em lote;
+3. #40 — idempotência, retomada e reprocessamento seguro;
+4. #41 — fila de exceções para casos ambíguos.
 
-- [#5 — coletor de evidências](https://github.com/joyceradis/Quem-Votar/issues/5): concluída; coleta automatizada produz **staging auditável** antes de qualquer promoção canônica.
+**Avaliação em paralelo**
+5. #42 — benchmark de revisão semântica em shadow mode.
 
-Trabalho ativo:
+**Execução operacional**
+6. #35 — full candidate evidence coverage pass, somente após o preflight mínimo #38–#41.
 
-- [#36 — governança executável](https://github.com/joyceradis/Quem-Votar/issues/36): hardening de CI, regressões e control plane;
-- [#2 — integração de evidências](https://github.com/joyceradis/Quem-Votar/issues/2): integrar e ampliar a cobertura em `data/reference/topic-evidence.json`;
-- [#35 — importação e cobertura](https://github.com/joyceradis/Quem-Votar/issues/35): processar o universo atual sem converter ausência de achado em posição;
-- [#34 — escalabilidade em shadow mode](https://github.com/joyceradis/Quem-Votar/issues/34): reduzir trabalho humano repetitivo sem alterar o contrato V5.5.
+**Decisão pós-freeze**
+7. #43 — ADR de orquestração da pipeline após resultados medidos e fim do freeze.
 
-Fluxo vigente:
+### Arquitetura vigente
 
-`fonte permitida → coleta bruta → staging → validação → revisão semântica → promoção explícita → topic-evidence.json → sync → interface`
+Infraestrutura entregue pela #5:
 
-A infraestrutura atual já suporta HTML, texto e PDF textual sem OCR automático. A cobertura canônica permanece separada da coleta até aprovação explícita.
+`source → staging → deterministic validation → semantic review → explicit promotion → sync → public interface`
+
+Princípios:
+
+- `SQ_CANDIDATO` é a identidade eleitoral canônica;
+- descoberta/coleta em lote substitui projetos manuais por candidatura;
+- perfis/homepages são seeds, não evidências;
+- ausência de achado permanece ausência de dado;
+- processamento, cobertura de evidência e publicação canônica são métricas distintas;
+- revisão humana continua obrigatória para promoção canônica;
+- nenhuma Issue desta frente autoriza score, ranking, recomendação ou inferência política automática.
+
+A #34 é tracking; critérios executáveis vivem nas Issues-filhas.
 
 ## Próximas frentes
 
