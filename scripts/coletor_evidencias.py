@@ -450,13 +450,16 @@ def parse_pdf_document(raw: bytes) -> dict[str, Any]:
     total_chars = 0
     for page_number, page in enumerate(reader.pages, start=1):
         try:
-            try:
-                page_text = page.extract_text(
-                    extraction_mode="layout",
-                    layout_mode_space_vertically=False,
-                )
-            except TypeError:
-                page_text = page.extract_text()
+            if "/Contents" not in page:
+                page_text = ""
+            else:
+                try:
+                    page_text = page.extract_text(
+                        extraction_mode="layout",
+                        layout_mode_space_vertically=False,
+                    )
+                except TypeError:
+                    page_text = page.extract_text()
         except Exception as exc:
             raise RuntimeError(
                 f"falha ao extrair texto da página {page_number}: {exc}"
