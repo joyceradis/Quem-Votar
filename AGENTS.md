@@ -434,3 +434,19 @@ Pode evoluir durante o freeze quando a alteração for estritamente separada do 
 - nenhuma mudança dessa camada reduz os gates humanos exigidos para publicação de evidência política.
 
 A prioridade operacional durante o freeze continua sendo factualidade, proveniência e a frente de evidências #5/#2.
+
+
+## 23. Governança executável
+
+Regras críticas precisam de enforcement técnico sempre que a plataforma permitir.
+
+- indisponibilidade transitória de fonte institucional não pode apagar enriquecimento previamente validado;
+- sem estado anterior seguro, pipelines de snapshot devem falhar fechados em vez de publicar vazio;
+- mudanças de governança, control plane ou evidência canônica em PR devem referenciar uma Issue de autorização por `Authorization-Issue: #N`;
+- a Issue de autorização deve conter decisão explícita da mantenedora;
+- `[skip ci]` é proibido em commits que alterem o estado público;
+- rebase pós-auditoria é proibido: se `main` avançar durante um sync, o run deve abortar e ser regenerado;
+- espelhos de dados devem usar revisão imutável e hash do conteúdo efetivamente processado;
+- testes do pipeline fazem parte do significado de `CI verde`.
+
+A proteção/ruleset da branch `main` é uma configuração externa do GitHub. Enquanto não estiver ativa, essa ausência deve permanecer registrada como lacuna de governança e não pode ser confundida com proteção efetiva.

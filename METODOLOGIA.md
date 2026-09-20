@@ -132,3 +132,21 @@ O workflow bloqueia publicação quando:
 ## Apresentação
 
 A interface oferece busca textual, filtros documentais, ficha individual, data e links de fonte. A ordenação padrão é alfabética.
+
+
+## Continuidade de enriquecimento e proveniência — 20/09/2026
+
+Uma falha transitória de fonte institucional não é evidência de que um vínculo deixou de existir.
+
+Para a camada Câmara:
+
+- resposta indisponível não é convertida em zero;
+- último vínculo previamente validado pode ser preservado sem promover estado novo;
+- sem estado anterior seguro, o sync aborta;
+- retorno posterior da fonte atualiza a camada normalmente.
+
+Para o espelho operacional do cadastro eleitoral:
+
+- a revisão upstream é resolvida antes da leitura;
+- os bytes são lidos por commit imutável;
+- commit SHA, blob SHA e SHA-256 do conteúdo processado são registrados no metadata.
