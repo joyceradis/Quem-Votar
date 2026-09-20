@@ -47,14 +47,148 @@ jobs:
           mkdir -p "$OUT"
           echo "path=$OUT" >> "$GITHUB_OUTPUT"
 
-      - name: Discover TSE-declared social seeds
+      - name: Discover TSE-declared social seeds with immutable fallback
         shell: bash
         run: |
           set -euo pipefail
           OUT="${{ steps.workspace.outputs.path }}"
+          OFFICIAL_OUT="$OUT/tse-social-seeds-official.json"
+          FINAL_OUT="$OUT/tse-social-seeds.json"
+          MIRROR_JSON="$OUT/tse-social-mirror.json"
+          MIRROR_URL="https://raw.githubusercontent.com/pedrorosemberg/eleicoes.metadax.org/f40924558a99cd1b57da1024dc9dc67ad13a9950/data/2026/redes-sociais/ES.json"
+
+          set +e
           python scripts/coletor_evidencias.py discover-tse-socials \
-            --output "$OUT/tse-social-seeds.json" \
-            | tee "$OUT/tse-social-discovery.log"
+            --output "$OFFICIAL_OUT" \
+            >"$OUT/tse-social-official.log" 2>&1
+          OFFICIAL_STATUS=$?
+          set -e
+
+          if [[ "$OFFICIAL_STATUS" -eq 0 ]]; then
+            echo "official_tse=success" | tee "$OUT/tse-social-discovery.log"
+            python - "$OFFICIAL_OUT" "$FINAL_OUT" "$OUT/tse-social-invalid-declarations.json" <<'PY'
+          import json
+          import sys
+          import urllib.parse
+          from pathlib import Path
+
+          source_path, output_path, invalid_path = map(Path, sys.argv[1:4])
+          payload = json.loads(source_path.read_text(encoding="utf-8"))
+          valid, invalid = [], []
+          for item in payload.get("sources", []):
+              raw = str(item.get("seed_url") or "").strip()
+              parsed = urllib.parse.urlparse(raw)
+              if parsed.scheme.lower() in {"http", "https"} and parsed.hostname:
+                  valid.append(item)
+              else:
+                  invalid.append({
+                      "candidate_id": item.get("candidate_id"),
+                      "candidate_name": item.get("candidate_name"),
+                      "raw_value": raw,
+                      "reason": "declared_value_is_not_http_url",
+                      "source_origin": item.get("source_origin"),
+                  })
+          payload["sources"] = valid
+          payload["semantics"] += " Valores declarados não-URL ficam em artifact separado e não são inferidos."
+          output_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+          invalid_path.write_text(json.dumps({"rejections": invalid}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+          print(f"valid_seeds={len(valid)} invalid_declared_values={len(invalid)}")
+          PY
+          else
+            echo "official_tse=failed status=$OFFICIAL_STATUS; using immutable public mirror transport" | tee "$OUT/tse-social-discovery.log"
+            cat "$OUT/tse-social-official.log" >> "$OUT/tse-social-discovery.log"
+            curl --fail --silent --show-error --location "$MIRROR_URL" -o "$MIRROR_JSON"
+
+            python - "$MIRROR_JSON" "$FINAL_OUT" "$OUT/tse-social-invalid-declarations.json" <<'PY'
+          import json
+          import sys
+          import urllib.parse
+          from pathlib import Path
+
+          mirror_path, output_path, invalid_path = map(Path, sys.argv[1:4])
+          candidates = {}
+          for path in (
+              Path("data/generated/candidates-federal.json"),
+              Path("data/generated/candidates-estadual.json"),
+          ):
+              for row in json.loads(path.read_text(encoding="utf-8")):
+                  candidates[str(row.get("tse_id") or "")] = row
+
+          rows = json.loads(mirror_path.read_text(encoding="utf-8"))
+          seen = set()
+          sources, invalid = [], []
+          mirror_commit = "f40924558a99cd1b57da1024dc9dc67ad13a9950"
+          mirror_repo = "pedrorosemberg/eleicoes.metadax.org"
+          mirror_source_path = "data/2026/redes-sociais/ES.json"
+          official_dataset = "https://dadosabertos.tse.jus.br/dataset/candidatos-2026"
+          official_resource = "https://cdn.tse.jus.br/estatistica/sead/odsele/consulta_cand/rede_social_candidato_2026.zip"
+
+          for row in rows:
+              cid = str(row.get("sqCandidato") or "").strip()
+              raw = str(row.get("url") or "").strip()
+              if cid not in candidates or not raw:
+                  continue
+              parsed = urllib.parse.urlparse(raw)
+              if parsed.scheme.lower() not in {"http", "https"} or not parsed.hostname:
+                  invalid.append({
+                      "candidate_id": cid,
+                      "candidate_name": candidates[cid].get("ballot_name") or candidates[cid].get("full_name"),
+                      "raw_value": raw,
+                      "reason": "declared_value_is_not_http_url",
+                      "source_origin": {
+                          "institution": "TSE",
+                          "dataset_url": official_dataset,
+                          "resource_url": official_resource,
+                          "transport": {
+                              "mode": "immutable_public_mirror",
+                              "repository": mirror_repo,
+                              "commit_sha": mirror_commit,
+                              "path": mirror_source_path,
+                          },
+                      },
+                  })
+                  continue
+
+              key = (cid, raw)
+              if key in seen:
+                  continue
+              seen.add(key)
+              candidate = candidates[cid]
+              sources.append({
+                  "candidate_id": cid,
+                  "candidate_name": candidate.get("ballot_name") or candidate.get("full_name"),
+                  "source_kind": "tse_declared_social",
+                  "discovery_status": "seed",
+                  "seed_url": raw,
+                  "source_url": "",
+                  "source_publisher": parsed.hostname.lower().removeprefix("www."),
+                  "source_origin": {
+                      "institution": "TSE",
+                      "dataset_url": official_dataset,
+                      "resource_url": official_resource,
+                      "transport": {
+                          "mode": "immutable_public_mirror",
+                          "repository": mirror_repo,
+                          "commit_sha": mirror_commit,
+                          "path": mirror_source_path,
+                      },
+                  },
+              })
+
+          sources.sort(key=lambda x: (str(x.get("candidate_name") or ""), str(x.get("seed_url") or "")))
+          output = {
+              "version": "1.0.0",
+              "semantics": (
+                  "Ephemeral TSE-declared social discovery seeds. TSE remains the origin; "
+                  "the pinned public repository is transport fallback only. Profiles are not evidence."
+              ),
+              "sources": sources,
+          }
+          output_path.write_text(json.dumps(output, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+          invalid_path.write_text(json.dumps({"rejections": invalid}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+          print(f"fallback_valid_seeds={len(sources)} invalid_declared_values={len(invalid)}")
+          PY
+          fi
 
       - name: Merge baseline exact sources with overnight seeds
         shell: bash
