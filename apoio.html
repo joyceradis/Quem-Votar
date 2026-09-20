@@ -4,82 +4,145 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0B456F">
-<meta name="description" content="Apoio voluntário, transparência financeira e independência editorial do Quem Votar?.">
+<meta name="description" content="Apoie a manutenção e o desenvolvimento do Quem Votar? por Pix ou GitHub Sponsors.">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="stylesheet" href="styles.css?v=5.5.0">
-<title>Apoio e transparência · Quem Votar?</title>
+<title>Apoie o Quem Votar?</title>
 <style>
-.support-shell{max-width:980px;margin:0 auto;padding:64px 24px 86px}.support-hero{padding-bottom:42px;border-bottom:1px solid rgba(17,59,86,.12)}.support-hero h1{margin:0;max-width:820px;font-size:clamp(3rem,6vw,5.7rem);line-height:.93;letter-spacing:-.065em}.support-hero p:not(.eyebrow){max-width:760px;margin:20px 0 0;color:#536b79}.support-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:26px;border-top:1px solid rgba(17,59,86,.12)}.support-block{padding:34px 30px 34px 0;border-bottom:1px solid rgba(17,59,86,.12)}.support-block:nth-child(even){padding-left:30px;border-left:1px solid rgba(17,59,86,.12)}.support-block h2{margin:0 0 10px;font-size:1.45rem}.support-block p{margin:0 0 14px;color:#536b79}.support-key{display:grid;gap:5px;margin:18px 0}.support-key span{font-size:.72rem;font-weight:900;letter-spacing:.06em;text-transform:uppercase;color:#536b79}.support-key code{font-size:.96rem;overflow-wrap:anywhere}.support-actions{display:flex;flex-wrap:wrap;gap:10px}.support-button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border:0;border-radius:999px;background:#2A75D3;color:#fff;font:inherit;font-weight:900;text-decoration:none;cursor:pointer}.support-button.secondary{background:#f8fafc;color:#0B456F;border:1px solid rgba(17,59,86,.18)}.support-feedback{min-height:1.2em;margin-top:10px;color:#536b79;font-size:.78rem}.support-status{display:inline-block;margin-top:8px;padding:8px 11px;border:1px solid rgba(17,59,86,.16);border-radius:8px;color:#536b79;font-size:.82rem}.support-policy{margin-top:44px}.support-policy h2{font-size:2rem;margin:0 0 18px}.support-policy ul{padding-left:20px;color:#536b79}.support-policy li+li{margin-top:8px}.support-note{margin-top:28px;padding:20px;border-left:4px solid #1679b6;background:#f8fafc;color:#536b79}.support-note strong{color:#173244}.support-links{display:flex;flex-wrap:wrap;gap:18px;margin-top:28px}.support-links a{color:#1679b6;font-weight:850;text-decoration:none}@media(max-width:700px){.support-shell{padding:42px 16px 70px}.support-grid{grid-template-columns:1fr}.support-block,.support-block:nth-child(even){padding:26px 0;border-left:0}.support-hero h1{font-size:clamp(2.8rem,14vw,4.2rem)}}
+.support-shell{max-width:900px;margin:0 auto;padding:46px 24px 80px}
+.support-back{display:inline-flex;margin-bottom:34px;color:#2A75D3;font-weight:850;text-decoration:none}
+.support-hero{max-width:720px;margin-bottom:34px}
+.support-hero h1{margin:0 0 12px;font-size:clamp(2.6rem,7vw,4.9rem);line-height:.96;letter-spacing:-.055em}
+.support-hero p{max-width:650px;margin:0;color:#536b79;font-size:1.05rem}
+.support-grid{display:grid;grid-template-columns:1fr;gap:18px}
+.support-card{padding:26px;border:1px solid rgba(17,59,86,.14);border-radius:18px;background:#fff}
+.support-card-primary{border-color:rgba(42,117,211,.4);background:#f8fafc}
+.support-card h2{margin:0 0 8px;font-size:1.45rem}
+.support-card>p{margin:0 0 18px;color:#536b79}
+.pix-layout{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;align-items:center}
+.pix-qr{width:min(220px,72vw);aspect-ratio:1;margin:0 auto;padding:10px;background:#fff;border:1px solid rgba(17,59,86,.14);border-radius:14px}
+.pix-qr img{display:block;width:100%;height:100%;object-fit:contain}
+.pix-key{margin:0 0 14px}
+.pix-key span{display:block;margin-bottom:5px;color:#536b79;font-size:.72rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+.pix-key code{font-size:.94rem;overflow-wrap:anywhere}
+.support-actions{display:grid;gap:9px}
+.support-button{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 16px;border:0;border-radius:999px;background:#2A75D3;color:#fff;font:inherit;font-weight:900;text-decoration:none;cursor:pointer;text-align:center}
+.support-button.secondary{background:#fff;color:#0B456F;border:1px solid rgba(17,59,86,.18)}
+.support-button:focus-visible,.support-back:focus-visible,summary:focus-visible{outline:3px solid rgba(42,117,211,.38);outline-offset:3px}
+.support-feedback{min-height:1.2em;margin:10px 0 0;color:#536b79;font-size:.8rem}
+.support-trust{margin:24px 0 0;padding:16px 18px;border-left:4px solid #2A75D3;background:#f8fafc;color:#536b79}
+.support-trust strong{color:#173244}
+.governance-details{margin-top:26px;border-top:1px solid rgba(17,59,86,.14);border-bottom:1px solid rgba(17,59,86,.14)}
+.governance-details summary{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 0;color:#173244;font-weight:900;cursor:pointer;list-style:none}
+.governance-details summary::-webkit-details-marker{display:none}
+.governance-details summary::after{content:"+";font-size:1.35rem;color:#2A75D3}
+.governance-details[open] summary::after{content:"−"}
+.governance-content{padding:0 0 22px;color:#536b79}
+.governance-content ul{margin:0;padding-left:20px}
+.governance-content li+li{margin-top:9px}
+.governance-links{display:flex;flex-wrap:wrap;gap:16px;margin-top:20px}
+.governance-links a{color:#2A75D3;font-weight:850;text-decoration:none}
+@media(min-width:760px){
+  .support-grid{grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr)}
+  .pix-layout{grid-template-columns:220px minmax(0,1fr)}
+}
+@media(max-width:700px){
+  .support-shell{padding:34px 16px 64px}
+  .support-card{padding:22px}
+}
 </style>
 </head>
 <body>
 <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
 <header class="site-header">
   <a class="brand" href="index.html" aria-label="Quem Votar? início"><img src="assets/logo.svg" alt="Quem Votar? ES 2026"></a>
-  <div class="header-actions"><a href="index.html" style="color:#1679b6;font-weight:850;text-decoration:none">Voltar ao site</a></div>
+  <div class="header-actions"><a href="index.html" style="color:#2A75D3;font-weight:850;text-decoration:none">Voltar ao site</a></div>
 </header>
+
 <main id="conteudo" class="support-shell">
+  <a class="support-back" href="index.html">← Voltar para a consulta</a>
+
   <section class="support-hero">
-    <p class="eyebrow">APOIO E TRANSPARÊNCIA</p>
-    <h1>O projeto é gratuito. A independência editorial continua intacta.</h1>
-    <p>Contribuições ajudam a manter software, dados, documentação e infraestrutura. Apoio financeiro não compra influência sobre candidaturas, fontes, temas, ordem, classificação ou apresentação das informações.</p>
+    <p class="eyebrow">APOIO AO PROJETO</p>
+    <h1>Apoie o Quem Votar?</h1>
+    <p>O projeto é gratuito e open source. Se ele foi útil para você, contribua com a coleta e o processamento de dados, a manutenção e o desenvolvimento.</p>
   </section>
 
   <section class="support-grid" aria-label="Formas de apoio">
-    <article class="support-block">
-      <h2>Apoio via PIX</h2>
-      <p>Quem quiser contribuir diretamente com a manutenção do projeto pode usar a chave abaixo.</p>
-      <div class="support-key">
-        <span>Chave PIX · e-mail</span>
-        <code id="pixKey">contato@drajoyceradis.com</code>
+    <article class="support-card support-card-primary">
+      <h2>Pix</h2>
+      <p>Escaneie o QR Code ou use uma das opções de cópia.</p>
+
+      <div class="pix-layout">
+        <div class="pix-qr">
+          <img src="assets/pix-apoio.svg" alt="QR Code Pix para apoiar o Quem Votar?">
+        </div>
+
+        <div>
+          <div class="pix-key">
+            <span>Chave Pix · e-mail</span>
+            <code id="pixEmail">contato@drajoyceradis.com</code>
+          </div>
+
+          <div class="support-actions">
+            <button class="support-button" id="copyPayload" type="button">Copiar Pix Copia e Cola</button>
+            <button class="support-button secondary" id="copyEmail" type="button">Copiar chave por e-mail</button>
+          </div>
+          <p class="support-feedback" id="pixFeedback" aria-live="polite"></p>
+        </div>
       </div>
-      <div class="support-actions">
-        <button class="support-button" id="copyPix" type="button">Copiar chave PIX</button>
-      </div>
-      <p class="support-feedback" id="pixFeedback" aria-live="polite"></p>
     </article>
 
-    <article class="support-block">
+    <article class="support-card">
       <h2>GitHub Sponsors</h2>
-      <p>O perfil GitHub Sponsors da mantenedora está ativo e público. Você pode apoiar o desenvolvimento open source diretamente pelo GitHub.</p>
+      <p>Prefere apoiar o desenvolvimento open source pelo GitHub? O perfil Sponsors da mantenedora está ativo.</p>
       <div class="support-actions">
-        <a class="support-button secondary" href="https://github.com/sponsors/joyceradis" target="_blank" rel="noopener">Apoiar pelo GitHub Sponsors</a>
+        <a class="support-button secondary" href="https://github.com/sponsors/joyceradis" target="_blank" rel="noopener noreferrer">Apoiar no GitHub Sponsors ↗</a>
       </div>
-      <span class="support-status">Perfil GitHub Sponsors ativo e público.</span>
     </article>
   </section>
 
-  <section class="support-policy">
-    <h2>Regra de independência</h2>
-    <ul>
-      <li>Apoio financeiro não altera seleção, ordem, redação, fontes, temas ou visibilidade de candidaturas.</li>
-      <li>Não tratamos candidaturas, campanhas, partidos, federações, coligações, comitês eleitorais ou intermediários desses atores como apoiadores institucionais neutros.</li>
-      <li>Apoiadores não recebem acesso antecipado, veto, aprovação editorial ou destaque dentro de fichas, busca, comparação ou páginas temáticas.</li>
-      <li>Nenhuma contribuição escreve ou modifica a camada canônica de evidências eleitorais.</li>
-      <li>Não usamos trackers publicitários, personalização política ou segmentação baseada em apoio financeiro.</li>
-    </ul>
-    <div class="support-note"><strong>Separação de camadas.</strong> Apoio sustenta a operação. Evidência sustenta o conteúdo. Os dois fluxos permanecem tecnicamente e editorialmente separados.</div>
-    <div class="support-links"><a href="sobre.html">Como o projeto funciona</a><a href="docs/SUSTAINABILITY.md">Arquitetura de sustentabilidade</a><a href="docs/LICENSING.md">Licenciamento</a></div>
-  </section>
+  <p class="support-trust"><strong>Independência preservada.</strong> Apoio financeiro não interfere em candidaturas, fontes, metodologia, ordem ou apresentação dos dados.</p>
+
+  <details class="governance-details">
+    <summary>Como garantimos a independência?</summary>
+    <div class="governance-content">
+      <ul>
+        <li>As mesmas regras editoriais e de apresentação se aplicam às candidaturas. A plataforma não produz score, ranking ou recomendação de voto.</li>
+        <li>Apoio financeiro não altera seleção, redação, fontes, temas, ordem ou visibilidade de candidaturas.</li>
+        <li>Apoiadores não recebem acesso antecipado, veto, aprovação editorial ou destaque dentro de fichas, busca, comparação ou páginas temáticas.</li>
+        <li>Nenhuma contribuição escreve ou modifica a camada canônica de evidências eleitorais.</li>
+        <li>Toda afirmação política publicada deve ser rastreável a uma fonte identificável, com prioridade para fontes oficiais.</li>
+        <li>Não usamos trackers publicitários, personalização política ou segmentação baseada em apoio financeiro.</li>
+      </ul>
+
+      <div class="governance-links">
+        <a href="sobre.html">Como o projeto funciona</a>
+        <a href="docs/SUSTAINABILITY.md">Arquitetura de sustentabilidade</a>
+        <a href="docs/LICENSING.md">Licenciamento</a>
+      </div>
+    </div>
+  </details>
 </main>
+
 <footer class="site-footer">
   <div><strong>Quem Votar? · Espírito Santo 2026</strong><span>Informação pública, em linguagem normal.</span></div>
   <div><a href="apoio.html">Apoio e transparência</a><a href="LICENSE">AGPL-3.0-only</a></div>
 </footer>
+
 <script>
 (() => {
-  const button = document.getElementById("copyPix");
-  const key = document.getElementById("pixKey");
+  const PIX_PAYLOAD = "00020126580014br.gov.bcb.pix0136e5d18663-c4e4-4d42-9696-8827dbafb3245204000053039865802BR5925JOYCE_RADIS_DE_SOUZA_DE_O6005Serra610929161-78662290525MCDY32430233178986346970463043652";
+  const PIX_EMAIL = "contato@drajoyceradis.com";
   const feedback = document.getElementById("pixFeedback");
-  if (!button || !key || !feedback) return;
 
-  button.addEventListener("click", async () => {
-    const value = key.textContent.trim();
+  async function copyText(value, button, originalLabel) {
+    let copied = false;
+
     try {
       await navigator.clipboard.writeText(value);
-      feedback.textContent = "Chave PIX copiada.";
-      button.textContent = "Copiado";
+      copied = true;
     } catch {
       const input = document.createElement("textarea");
       input.value = value;
@@ -88,16 +151,29 @@
       input.style.opacity = "0";
       document.body.appendChild(input);
       input.select();
-      const copied = document.execCommand("copy");
+      copied = document.execCommand("copy");
       input.remove();
-      feedback.textContent = copied ? "Chave PIX copiada." : "Não foi possível copiar automaticamente. Selecione a chave acima.";
-      if (copied) button.textContent = "Copiado";
     }
+
+    if (!copied) {
+      feedback.textContent = "Não foi possível copiar automaticamente. Selecione a chave por e-mail acima.";
+      return;
+    }
+
+    button.textContent = "Copiado";
+    feedback.textContent = "Copiado para a área de transferência.";
+
     setTimeout(() => {
-      button.textContent = "Copiar chave PIX";
+      button.textContent = originalLabel;
       feedback.textContent = "";
     }, 2200);
-  });
+  }
+
+  const payloadButton = document.getElementById("copyPayload");
+  const emailButton = document.getElementById("copyEmail");
+
+  payloadButton.addEventListener("click", () => copyText(PIX_PAYLOAD, payloadButton, "Copiar Pix Copia e Cola"));
+  emailButton.addEventListener("click", () => copyText(PIX_EMAIL, emailButton, "Copiar chave por e-mail"));
 })();
 </script>
 </body>
