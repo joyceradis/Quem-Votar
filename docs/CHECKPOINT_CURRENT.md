@@ -114,7 +114,7 @@ A infraestrutura entregue pela issue #5 mantém coleta separada da publicação 
 
 ### Governança
 
-- #36: bloqueada apenas pela configuração administrativa de proteção/ruleset da `main` e pelo desenho do caminho autorizado do sync;
+- #36: caminho do sync endurecido para artifact read-only; permanece bloqueada apenas pela ativação administrativa do ruleset/proteção da `main`;
 - #45: em andamento; topologia canônica multiagente e disciplina documental;
 - #44: pronta; Governance Sentinel ainda não implementado.
 
@@ -209,7 +209,8 @@ Os 7 vínculos previamente validados foram restaurados após rechecagem instituc
 - aborta se a fonte falhar e não existir estado anterior seguro;
 - impede rebase pós-auditoria;
 - não usa `[skip ci]`;
-- executa a suíte do pipeline antes da publicação;
+- executa a suíte do pipeline antes da exportação;
+- não faz commit/push direto em `main`; exporta snapshot candidato auditável como artifact;
 - resolve o espelho eleitoral por revisão imutável e hash do conteúdo processado.
 
-Quality do commit crítico `28eb787` concluiu com sucesso. A proteção/ruleset da branch `main` continua sendo configuração externa do GitHub e permanece requisito aberto do hardening até ser ativada.
+Quality do commit crítico `28eb787` concluiu com sucesso. O sync foi posteriormente convertido para runtime read-only/artifact-only, eliminando a necessidade de bypass permanente do bot. A proteção/ruleset da branch `main` continua sendo configuração externa do GitHub e permanece requisito aberto do hardening até ser ativada.

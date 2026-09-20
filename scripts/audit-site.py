@@ -53,6 +53,8 @@ def main() -> None:
     quality_workflow = read(ROOT / ".github" / "workflows" / "quality.yml")
     sync_workflow = read(ROOT / ".github" / "workflows" / "sync-data.yml")
     delivery_governance = read(ROOT / "docs" / "DELIVERY_GOVERNANCE.md")
+    governance = read(ROOT / "docs" / "GOVERNANCE.md")
+    agents = read(ROOT / "AGENTS.md")
     agent_fence = read(ROOT / ".github" / "workflows" / "agent-fence.yml")
     codeowners = read(ROOT / ".github" / "CODEOWNERS")
 
@@ -68,8 +70,14 @@ def main() -> None:
     assert "git pull --rebase" not in sync_workflow, "sync não pode rebasear snapshot depois da auditoria"
     assert "python -m unittest discover" in quality_workflow, "Quality precisa executar testes"
     assert "requirements-evidence.txt" in quality_workflow, "Quality precisa instalar dependências do coletor"
-    assert "python scripts/audit-site.py" in sync_workflow, "sync precisa auditar antes do push"
-    assert "python -m unittest discover" in sync_workflow, "sync precisa testar antes do push"
+    assert "python scripts/audit-site.py" in sync_workflow, "sync precisa auditar o snapshot candidato"
+    assert "python -m unittest discover" in sync_workflow, "sync precisa testar antes de exportar snapshot"
+    assert "contents: read" in sync_workflow, "sync deve operar com contents read-only"
+    assert "git push" not in sync_workflow and "git commit" not in sync_workflow, "sync não pode escrever diretamente em main"
+    assert "actions/upload-artifact@v4" in sync_workflow, "sync deve exportar snapshot candidato como artifact"
+    assert "\n    paths:" not in quality_workflow, "Quality deve rodar em todo push para main"
+    assert "diretamente para `main`" not in agents, "AGENTS ainda autoriza escrita direta em main"
+    assert "commit direto em `main`" not in governance, "GOVERNANCE ainda autoriza escrita direta em main"
     assert "Authorization-Issue:" in agent_fence, "mudança protegida precisa de autorização rastreável"
     assert "data/reference/topic-evidence\\.json" in agent_fence, "evidência canônica fora da cerca elétrica"
     assert "/data/reference/topic-evidence.json @joyceradis" in codeowners, "CODEOWNERS não cobre evidência canônica"
