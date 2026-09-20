@@ -146,6 +146,7 @@ def run_batch(
     retries_per_run: int = 2,
     workers: int = 6,
     limit: int | None = None,
+    per_candidate_limit: int | None = None,
     reprocess_source_ids: set[str] | None = None,
     reprocess_candidate_ids: set[str] | None = None,
     fetcher=collector.fetch_bytes,
@@ -169,7 +170,7 @@ def run_batch(
             continue
         exact_by_id.setdefault(sid, item)
 
-    queue: list[tuple[str, dict[str, Any], bool, int]] = []
+    eligible: list[tuple[str, dict[str, Any], bool, int]] = []
     skipped_collected = 0
     skipped_exhausted = 0
     for sid in sorted(exact_by_id):
@@ -188,10 +189,51 @@ def run_batch(
         remaining = retries_per_run if force else min(
             retries_per_run, max(1, max_attempts - attempts_before)
         )
-        queue.append((sid, item, force, remaining))
+        eligible.append((sid, item, force, remaining))
 
-    if limit is not None:
-        queue = queue[: max(0, limit)]
+    # Fair batching: round-robin by SQ_CANDIDATO so a candidate with hundreds
+    # of institutional documents cannot monopolize one processing cycle.
+    by_candidate: dict[str, list[tuple[str, dict[str, Any], bool, int]]] = {}
+    priority = {
+        "official_candidate": 0,
+        "official_party": 1,
+        "institutional": 2,
+        "secondary": 3,
+        "tse_declared_social": 4,
+    }
+    for row in eligible:
+        cid = clean(row[1].get("candidate_id"))
+        by_candidate.setdefault(cid, []).append(row)
+    for cid in by_candidate:
+        by_candidate[cid].sort(
+            key=lambda row: (
+                priority.get(clean(row[1].get("source_kind")), 9),
+                clean(row[1].get("source_url")),
+                row[0],
+            )
+        )
+
+    queue: list[tuple[str, dict[str, Any], bool, int]] = []
+    taken: dict[str, int] = {cid: 0 for cid in by_candidate}
+    candidate_ids = sorted(by_candidate)
+    while candidate_ids:
+        next_round: list[str] = []
+        for cid in candidate_ids:
+            rows = by_candidate[cid]
+            if per_candidate_limit is not None and taken[cid] >= max(0, per_candidate_limit):
+                continue
+            if not rows:
+                continue
+            queue.append(rows.pop(0))
+            taken[cid] += 1
+            if rows and (per_candidate_limit is None or taken[cid] < max(0, per_candidate_limit)):
+                next_round.append(cid)
+            if limit is not None and len(queue) >= max(0, limit):
+                next_round = []
+                break
+        candidate_ids = next_round
+        if limit is not None and len(queue) >= max(0, limit):
+            break
 
     new_drafts: list[dict[str, Any]] = []
     failures: list[dict[str, Any]] = []
@@ -282,7 +324,9 @@ def run_batch(
     state["updated_at"] = utc_now()
     metrics = {
         "exact_sources": len(exact_by_id),
+        "eligible_before_fair_batch": len(eligible),
         "queued": len(queue),
+        "candidates_queued": len({clean(row[1].get("candidate_id")) for row in queue}),
         "collected": collected,
         "failed": failed,
         "skipped_collected": skipped_collected,
@@ -347,6 +391,7 @@ def main() -> int:
     parser.add_argument("--retries-per-run", type=int, default=2)
     parser.add_argument("--workers", type=int, default=6)
     parser.add_argument("--limit", type=int, default=None)
+    parser.add_argument("--per-candidate-limit", type=int, default=None)
     parser.add_argument("--reprocess-source-id", action="append", default=[])
     parser.add_argument("--reprocess-candidate-id", action="append", default=[])
     args = parser.parse_args()
@@ -384,6 +429,7 @@ def main() -> int:
         retries_per_run=max(1, args.retries_per_run),
         workers=max(1, args.workers),
         limit=args.limit,
+        per_candidate_limit=args.per_candidate_limit,
         reprocess_source_ids=set(args.reprocess_source_id),
         reprocess_candidate_ids=set(args.reprocess_candidate_id),
         checkpoint=checkpoint,

@@ -159,6 +159,71 @@ class ReliableBatchTests(unittest.TestCase):
         statuses = {v["status"] for v in state["sources"].values()}
         self.assertEqual({"collected", "failed"}, statuses)
 
+    def test_fair_batch_round_robins_candidates(self):
+        candidates = {
+            "1": {**candidate(), "tse_id": "1", "ballot_name": "A"},
+            "2": {**candidate(), "tse_id": "2", "ballot_name": "B"},
+            "3": {**candidate(), "tse_id": "3", "ballot_name": "C"},
+        }
+        rows = []
+        for cid in ("1", "2", "3"):
+            for index in range(5):
+                row = source(f"https://example.org/propostas/{cid}/{index}")
+                row["candidate_id"] = cid
+                row["candidate_name"] = candidates[cid]["ballot_name"]
+                rows.append(row)
+
+        seen = []
+        def fetch(url: str, **kwargs):
+            seen.append(url)
+            cid = url.split("/")[-2]
+            body = f"<html><body><p>{candidates[cid]['ballot_name']} apresentou proposta documentada para o estado.</p></body></html>".encode()
+            return body, url, "text/html"
+
+        _, _, _, metrics = batch.run_batch(
+            source_payload={"sources": rows},
+            candidates=candidates,
+            existing_drafts=[],
+            limit=3,
+            per_candidate_limit=2,
+            retries_per_run=1,
+            fetcher=fetch,
+            workers=1,
+        )
+        self.assertEqual(3, metrics["queued"])
+        self.assertEqual(3, metrics["candidates_queued"])
+        processed_candidates = {url.split("/")[-2] for url in seen}
+        self.assertEqual({"1", "2", "3"}, processed_candidates)
+
+    def test_per_candidate_limit_caps_dominant_candidate(self):
+        candidates = {
+            "1": {**candidate(), "tse_id": "1", "ballot_name": "A"},
+            "2": {**candidate(), "tse_id": "2", "ballot_name": "B"},
+        }
+        rows = []
+        for cid, count in (("1", 8), ("2", 1)):
+            for index in range(count):
+                row = source(f"https://example.org/propostas/{cid}/{index}")
+                row["candidate_id"] = cid
+                row["candidate_name"] = candidates[cid]["ballot_name"]
+                rows.append(row)
+
+        def fetch(url: str, **kwargs):
+            cid = url.split("/")[-2]
+            body = f"<html><body><p>{candidates[cid]['ballot_name']} apresentou proposta documentada para o estado.</p></body></html>".encode()
+            return body, url, "text/html"
+
+        _, _, _, metrics = batch.run_batch(
+            source_payload={"sources": rows},
+            candidates=candidates,
+            existing_drafts=[],
+            per_candidate_limit=2,
+            retries_per_run=1,
+            fetcher=fetch,
+            workers=1,
+        )
+        self.assertEqual(3, metrics["queued"])
+
     def test_duplicate_source_rows_are_processed_once(self):
         item = source()
         counter = [0]
