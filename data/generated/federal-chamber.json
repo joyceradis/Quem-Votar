@@ -1,1 +1,789 @@
-[]
+[
+  {
+    "chamber_id": 204356,
+    "parliamentary_name": "Amaro Neto",
+    "civil_name": "AMARO ROCHA NASCIMENTO NETO",
+    "party": "PP",
+    "uf": "ES",
+    "legislature_id": 57,
+    "condition": "Titular",
+    "status": "Exercício",
+    "profile_url": "https://www.camara.leg.br/deputados/204356",
+    "api_url": "https://dadosabertos.camara.leg.br/api/v2/deputados/204356",
+    "history": [
+      {
+        "legislature_id": 57,
+        "party": "REPUBLICANOS",
+        "condition": null,
+        "status": null,
+        "status_date": null
+      },
+      {
+        "legislature_id": 57,
+        "party": "REPUBLICANOS",
+        "condition": "Titular",
+        "status": "Exercício",
+        "status_date": null
+      },
+      {
+        "legislature_id": 57,
+        "party": "PP",
+        "condition": "Titular",
+        "status": "Exercício",
+        "status_date": null
+      },
+      {
+        "legislature_id": 56,
+        "party": "PRB",
+        "condition": "Titular",
+        "status": "Exercício",
+        "status_date": null
+      },
+      {
+        "legislature_id": 56,
+        "party": "REPUBLICANOS",
+        "condition": "Titular",
+        "status": "Exercício",
+        "status_date": null
+      },
+      {
+        "legislature_id": 56,
+        "party": "REPUBLICANOS",
+        "condition": "Titular",
+        "status": "FIM_MANDATO",
+        "status_date": null
+      },
+      {
+        "legislature_id": 56,
+        "party": "REPUBLICANOS",
+        "condition": null,
+        "status": null,
+        "status_date": null
+      }
+    ],
+    "external_mandates": [
+      {
+        "office": "Deputado(a) Estadual",
+        "uf": null,
+        "municipality": null,
+        "party": null,
+        "start_year": "2015",
+        "end_year": "2019"
+      }
+    ],
+    "data_links": {
+      "expenses": "https://dadosabertos.camara.leg.br/api/v2/deputados/204356/despesas",
+      "events": "https://dadosabertos.camara.leg.br/api/v2/deputados/204356/eventos",
+      "speeches": "https://dadosabertos.camara.leg.br/api/v2/deputados/204356/discursos",
+      "bodies": "https://dadosabertos.camara.leg.br/api/v2/deputados/204356/orgaos"
+    }
+  },
+  {
+    "chamber_id": 204355,
+    "parliamentary_name": "Da Vitoria",
+    "civil_name": "JOSIAS MARIO DA VITORIA",
+    "party": "PP",
+    "uf": "ES",
+    "legislature_id": 57,
+    "condition": "Titular",
+    "status": "Exercício",
+    "profile_url": "https://www.camara.leg.br/deputados/204355",
+    "api_url": "https://dadosabertos.camara.leg.br/api/v2/deputados/204355",
+    "history": [
+      {
+        "legislature_id": 57,
+        "party": "PP",
+        "condition": null,
+        "status": null,
+        "status_date": null
+      },
+      {
+        "legislature_id": 57,
+        "party": "PP",
+        "condition": "Titular",
+        "status": "Exercício",
+        "status_date": null
+      },
+      {
+        "legislature_id": 56,
+        "party": "PPS",
+        "condition": "Titular",
+        "status": "Exercício",
+        "status_date": null
+      },
+      {
+        "legislature_id": 56,
+        "party": "CIDADANIA",
+        "condition": "Titular",
+        "status": "Exercício",
+        "status_date": null
+      },
+      {
+        "legislature_id": 56,
+        "party": "PP",
+        "condition": "Titular",
+        "status": "Exercício",
+        "status_date": null
+      },
+      {
+        "legislature_id": 56,
+        "party": "PP",
+        "condition": "Titular",
+        "status": "FIM_MANDATO",
+        "status_date": null
+      },
+      {
+        "legislature_id": 56,
+        "party": "PP",
+        "condition": null,
+        "status": null,
+        "status_date": null
+      }
+    ],
+    "external_mandates": [
+      {
+        "office": "Deputado(a) Estadual",
+        "uf": null,
+        "municipality": null,
+        "party": null,
+        "start_year": "2007",
+        "end_year": "2010"
+      },
+      {
+        "office": "Deputado(a) Estadual",
+        "uf": null,
+        "municipality": null,
+        "party": null,
+        "start_year": "2011",
+        "end_year": "2014"
+      },
+      {
+        "office": "Deputado(a) Estadual",
+        "uf": null,
+        "municipality": null,
+        "party": null,
+        "start_year": "2015",
+        "end_year": "2018"
+      }
+    ],
+    "data_links": {
+      "expenses": "https://dadosabertos.camara.leg.br/api/v2/deputados/204355/despesas",
+      "events": "https://dadosabertos.camara.leg.br/api/v2/deputados/204355/eventos",
+      "speeches": "https://dadosabertos.camara.leg.br/api/v2/deputados/204355/discursos",
+      "bodies": "https://dadosabertos.camara.leg.br/api/v2/deputados/204355/orgaos"
+    }
+  },
+  {
+    "chamber_id": 220528,
+    "parliamentary_name": "Dr. Victor Linhalis",
+    "civil_name": "VICTOR GAROZI LINHALIS",
+    "party": "PSB",
+    "uf": "ES",
+    "legislature_id": 57,
+    "condition": "Titular",
+    "status": "Exercício",
+    "profile_url": "https://www.camara.leg.br/deputados/220528",
+    "api_url": "https://dadosabertos.camara.leg.br/api/v2/deputados/220528",
+    "history": [
+      {
+        "legislature_id": 57,
+        "party": "PODE",
+        "condition": "Titular",
+        "status": "Exercício",
+        "status_date": null
+      },
+      {
+        "legislature_id": 57,
+        "party": "PODE",
+        "condition": null,
+        "status": null,
+        "status_date": null
+      },
+      {
+        "legislature_id": 57,
+        "party": "PODE",
+        "condition": "Titular",
+        "status": "Exercício",
+        "status_date": null
+      },
+      {
+        "legislature_id": 57,
+        "party": "PSB",
+        "condition": "Titular",
+        "status": "Exercício",
+        "status_date": null
+      }
+    ],
+    "external_mandates": [
+      {
+        "office": "Vice-Prefeito(a)",
+        "uf": null,
+        "municipality": "Vila Velha",
+        "party": null,
+        "start_year": "2020",
+        "end_year": "2022"
+      }
+    ],
+    "data_links": {
+      "expenses": "https://dadosabertos.camara.leg.br/api/v2/deputados/220528/despesas",
+      "events": "https://dadosabertos.camara.leg.br/api/v2/deputados/220528/eventos",
+      "speeches": "https://dadosabertos.camara.leg.br/api/v2/deputados/220528/discursos",
+      "bodies": "https://dadosabertos.camara.leg.br/api/v2/deputados/220528/orgaos"
+    }
+  },
+  {
+    "chamber_id": 178871,
+    "parliamentary_name": "Evair Vieira de Melo",
+    "civil_name": "EVAIR VIEIRA DE MELO",
+    "party": "REPUBLICANOS",
+    "uf": "ES",
+    "legislature_id": 57,
+    "condition": "Titular",
+    "status": "Exercício",
+    "profile_url": "https://www.camara.leg.br/deputados/178871",
+    "api_url": "https://dadosabertos.camara.leg.br/api/v2/deputados/178871",
+    "history": [
+      {
+        "legislature_id": 57,
+        "party": "PP",
+        "condition": null,
+        "status": null,
+        "status_date": null
+      },
+      {
+        "legislature_id": 57,
+        "party": "PP",
+        "condition": "Titular",
+        "status": "Exercício",
+        "status_date": null
+      },
+      {
+        "legislature_id": 57,
+        "party": "REPUBLICANOS",
+        "condition": "Titular",
+        "status": "Exercício",
+        "status_date": null
+      },
+      {
+        "legislature_id": 56,
+        "party": "PP",
+        "condition": "Titular",
+        "status": "Exercício",
+        "status_date": null
+      },
+      {
+        "legislature_id": 56,
+        "party": "PP",
+        "condition": "Titular",
+        "status": "FIM_MANDATO",
+        "status_date": null
+      },
+      {
+        "legislature_id": 56,
+        "party": "PP",
+        "condition": null,
+        "status": null,
+        "status_date": null
+      },
+      {
+        "legislature_id": 55,
+        "party": "PV",
+        "condition": "Titular",
+        "status": "Exercício",
+        "status_date": null
+      },
+      {
+        "legislature_id": 55,
+        "party": "PV",
+        "condition": "Titular",
+        "status": "Exercício",
+        "status_date": null
+      },
+      {
+        "legislature_id": 55,
+        "party": "PP",
+        "condition": "Titular",
+        "status": "Exercício",
+        "status_date": null
+      },
+      {
+        "legislature_id": 55,
+        "party": "PP",
+        "condition": "Titular",
+        "status": "Exercício",
+        "status_date": null
+      },
+      {
+        "legislature_id": 55,
+        "party": "PP",
+        "condition": "Titular",
+        "status": "FIM_MANDATO",
+        "status_date": null
+      },
+      {
+        "legislature_id": 55,
+        "party": "PP",
+        "condition": null,
+        "status": null,
+        "status_date": null
+      }
+    ],
+    "external_mandates": [],
+    "data_links": {
+      "expenses": "https://dadosabertos.camara.leg.br/api/v2/deputados/178871/despesas",
+      "events": "https://dadosabertos.camara.leg.br/api/v2/deputados/178871/eventos",
+      "speeches": "https://dadosabertos.camara.leg.br/api/v2/deputados/178871/discursos",
+      "bodies": "https://dadosabertos.camara.leg.br/api/v2/deputados/178871/orgaos"
+    }
+  },
+  {
+    "chamber_id": 220529,
+    "parliamentary_name": "Gilson Daniel",
+    "civil_name": "GILSON DANIEL BATISTA",
+    "party": "PODE",
+    "uf": "ES",
+    "legislature_id": 57,
+    "condition": "Titular",
+    "status": "Exercício",
+    "profile_url": "https://www.camara.leg.br/deputados/220529",
+    "api_url": "https://dadosabertos.camara.leg.br/api/v2/deputados/220529",
+    "history": [
+      {
+        "legislature_id": 57,
+        "party": "PODE",
+        "condition": null,
+        "status": null,
+        "status_date": null
+      },
+      {
+        "legislature_id": 57,
+        "party": "PODE",
+        "condition": "Titular",
+        "status": "Exercício",
+        "status_date": null
+      }
+    ],
+    "external_mandates": [
+      {
+        "office": "Prefeito(a)",
+        "uf": null,
+        "municipality": "Viana",
+        "party": null,
+        "start_year": "2013",
+        "end_year": "2016"
+      },
+      {
+        "office": "Prefeito(a)",
+        "uf": null,
+        "municipality": "Viana",
+        "party": null,
+        "start_year": "2017",
+        "end_year": "2020"
+      },
+      {
+        "office": "Vereador(a)",
+        "uf": null,
+        "municipality": "Viana",
+        "party": null,
+        "start_year": "2009",
+        "end_year": "2012"
+      }
+    ],
+    "data_links": {
+      "expenses": "https://dadosabertos.camara.leg.br/api/v2/deputados/220529/despesas",
+      "events": "https://dadosabertos.camara.leg.br/api/v2/deputados/220529/eventos",
+      "speeches": "https://dadosabertos.camara.leg.br/api/v2/deputados/220529/discursos",
+      "bodies": "https://dadosabertos.camara.leg.br/api/v2/deputados/220529/orgaos"
+    }
+  },
+  {
+    "chamber_id": 220526,
+    "parliamentary_name": "Gilvan da Federal",
+    "civil_name": "GILVAN AGUIAR COSTA",
+    "party": "PL",
+    "uf": "ES",
+    "legislature_id": 57,
+    "condition": "Titular",
+    "status": "Exercício",
+    "profile_url": "https://www.camara.leg.br/deputados/220526",
+    "api_url": "https://dadosabertos.camara.leg.br/api/v2/deputados/220526",
+    "history": [
+      {
+        "legislature_id": 57,
+        "party": "PL",
+        "condition": null,
+        "status": null,
+        "status_date": null
+      },
+      {
+        "legislature_id": 57,
+        "party": "PL",
+        "condition": "Titular",
+        "status": "Exercício",
+        "status_date": null
+      },
+      {
+        "legislature_id": 57,
+        "party": "PL",
+        "condition": "Titular",
+        "status": "SUSPENSO",
+        "status_date": null
+      },
+      {
+        "legislature_id": 57,
+        "party": "PL",
+        "condition": "Titular",
+        "status": "Exercício",
+        "status_date": null
+      }
+    ],
+    "external_mandates": [
+      {
+        "office": "Vereador(a)",
+        "uf": null,
+        "municipality": "Vitória",
+        "party": null,
+        "start_year": "2020",
+        "end_year": "2022"
+      }
+    ],
+    "data_links": {
+      "expenses": "https://dadosabertos.camara.leg.br/api/v2/deputados/220526/despesas",
+      "events": "https://dadosabertos.camara.leg.br/api/v2/deputados/220526/eventos",
+      "speeches": "https://dadosabertos.camara.leg.br/api/v2/deputados/220526/discursos",
+      "bodies": "https://dadosabertos.camara.leg.br/api/v2/deputados/220526/orgaos"
+    }
+  },
+  {
+    "chamber_id": 178873,
+    "parliamentary_name": "Helder Salomão",
+    "civil_name": "HELDER IGNACIO SALOMAO",
+    "party": "PT",
+    "uf": "ES",
+    "legislature_id": 57,
+    "condition": "Titular",
+    "status": "Exercício",
+    "profile_url": "https://www.camara.leg.br/deputados/178873",
+    "api_url": "https://dadosabertos.camara.leg.br/api/v2/deputados/178873",
+    "history": [
+      {
+        "legislature_id": 57,
+        "party": "PT",
+        "condition": null,
+        "status": null,
+        "status_date": null
+      },
+      {
+        "legislature_id": 57,
+        "party": "PT",
+        "condition": "Titular",
+        "status": "Exercício",
+        "status_date": null
+      },
+      {
+        "legislature_id": 56,
+        "party": "PT",
+        "condition": "Titular",
+        "status": "Exercício",
+        "status_date": null
+      },
+      {
+        "legislature_id": 56,
+        "party": "PT",
+        "condition": "Titular",
+        "status": "FIM_MANDATO",
+        "status_date": null
+      },
+      {
+        "legislature_id": 56,
+        "party": "PT",
+        "condition": null,
+        "status": null,
+        "status_date": null
+      },
+      {
+        "legislature_id": 55,
+        "party": "PT",
+        "condition": "Titular",
+        "status": "Exercício",
+        "status_date": null
+      },
+      {
+        "legislature_id": 55,
+        "party": "PT",
+        "condition": "Titular",
+        "status": "FIM_MANDATO",
+        "status_date": null
+      },
+      {
+        "legislature_id": 55,
+        "party": "PT",
+        "condition": null,
+        "status": null,
+        "status_date": null
+      }
+    ],
+    "external_mandates": [
+      {
+        "office": "Vereador(a)",
+        "uf": null,
+        "municipality": "Cariacica",
+        "party": null,
+        "start_year": "1993",
+        "end_year": "1996"
+      },
+      {
+        "office": "Deputado(a) Estadual",
+        "uf": null,
+        "municipality": null,
+        "party": null,
+        "start_year": "2003",
+        "end_year": "2004"
+      },
+      {
+        "office": "Prefeito(a)",
+        "uf": null,
+        "municipality": "Cariacica",
+        "party": null,
+        "start_year": "2009",
+        "end_year": "2012"
+      },
+      {
+        "office": "Prefeito(a)",
+        "uf": null,
+        "municipality": "Cariacica",
+        "party": null,
+        "start_year": "2005",
+        "end_year": "2008"
+      }
+    ],
+    "data_links": {
+      "expenses": "https://dadosabertos.camara.leg.br/api/v2/deputados/178873/despesas",
+      "events": "https://dadosabertos.camara.leg.br/api/v2/deputados/178873/eventos",
+      "speeches": "https://dadosabertos.camara.leg.br/api/v2/deputados/178873/discursos",
+      "bodies": "https://dadosabertos.camara.leg.br/api/v2/deputados/178873/orgaos"
+    }
+  },
+  {
+    "chamber_id": 220527,
+    "parliamentary_name": "Jack Rocha",
+    "civil_name": "JACKELINE OLIVEIRA ROCHA",
+    "party": "PT",
+    "uf": "ES",
+    "legislature_id": 57,
+    "condition": "Titular",
+    "status": "Exercício",
+    "profile_url": "https://www.camara.leg.br/deputados/220527",
+    "api_url": "https://dadosabertos.camara.leg.br/api/v2/deputados/220527",
+    "history": [
+      {
+        "legislature_id": 57,
+        "party": "PT",
+        "condition": null,
+        "status": null,
+        "status_date": null
+      },
+      {
+        "legislature_id": 57,
+        "party": "PT",
+        "condition": "Titular",
+        "status": "Exercício",
+        "status_date": null
+      }
+    ],
+    "external_mandates": [],
+    "data_links": {
+      "expenses": "https://dadosabertos.camara.leg.br/api/v2/deputados/220527/despesas",
+      "events": "https://dadosabertos.camara.leg.br/api/v2/deputados/220527/eventos",
+      "speeches": "https://dadosabertos.camara.leg.br/api/v2/deputados/220527/discursos",
+      "bodies": "https://dadosabertos.camara.leg.br/api/v2/deputados/220527/orgaos"
+    }
+  },
+  {
+    "chamber_id": 220530,
+    "parliamentary_name": "Messias Donato",
+    "civil_name": "Manoel Messias Donato Bezerra",
+    "party": "UNIÃO",
+    "uf": "ES",
+    "legislature_id": 57,
+    "condition": "Titular",
+    "status": "Exercício",
+    "profile_url": "https://www.camara.leg.br/deputados/220530",
+    "api_url": "https://dadosabertos.camara.leg.br/api/v2/deputados/220530",
+    "history": [
+      {
+        "legislature_id": 57,
+        "party": "REPUBLICANOS",
+        "condition": null,
+        "status": null,
+        "status_date": null
+      },
+      {
+        "legislature_id": 57,
+        "party": "REPUBLICANOS",
+        "condition": "Titular",
+        "status": "Exercício",
+        "status_date": null
+      },
+      {
+        "legislature_id": 57,
+        "party": "UNIÃO",
+        "condition": "Titular",
+        "status": "Exercício",
+        "status_date": null
+      }
+    ],
+    "external_mandates": [
+      {
+        "office": "Vereador(a)",
+        "uf": null,
+        "municipality": "Cariacica",
+        "party": null,
+        "start_year": "2013",
+        "end_year": "2017"
+      }
+    ],
+    "data_links": {
+      "expenses": "https://dadosabertos.camara.leg.br/api/v2/deputados/220530/despesas",
+      "events": "https://dadosabertos.camara.leg.br/api/v2/deputados/220530/eventos",
+      "speeches": "https://dadosabertos.camara.leg.br/api/v2/deputados/220530/discursos",
+      "bodies": "https://dadosabertos.camara.leg.br/api/v2/deputados/220530/orgaos"
+    }
+  },
+  {
+    "chamber_id": 160517,
+    "parliamentary_name": "Paulo Folletto",
+    "civil_name": "PAULO ROBERTO FOLLETTO",
+    "party": "PSB",
+    "uf": "ES",
+    "legislature_id": 57,
+    "condition": "Titular",
+    "status": "Exercício",
+    "profile_url": "https://www.camara.leg.br/deputados/160517",
+    "api_url": "https://dadosabertos.camara.leg.br/api/v2/deputados/160517",
+    "history": [
+      {
+        "legislature_id": 57,
+        "party": "PSB",
+        "condition": null,
+        "status": null,
+        "status_date": null
+      },
+      {
+        "legislature_id": 57,
+        "party": "PSB",
+        "condition": "Titular",
+        "status": "Exercício",
+        "status_date": null
+      },
+      {
+        "legislature_id": 57,
+        "party": "PSB",
+        "condition": "Titular",
+        "status": "Exercício",
+        "status_date": null
+      },
+      {
+        "legislature_id": 56,
+        "party": "PSB",
+        "condition": "Titular",
+        "status": "Exercício",
+        "status_date": null
+      },
+      {
+        "legislature_id": 56,
+        "party": "PSB",
+        "condition": "Titular",
+        "status": "Licença",
+        "status_date": null
+      },
+      {
+        "legislature_id": 56,
+        "party": "PSB",
+        "condition": "Titular",
+        "status": "Exercício",
+        "status_date": null
+      },
+      {
+        "legislature_id": 56,
+        "party": "PSB",
+        "condition": "Titular",
+        "status": "FIM_MANDATO",
+        "status_date": null
+      },
+      {
+        "legislature_id": 56,
+        "party": "PSB",
+        "condition": null,
+        "status": null,
+        "status_date": null
+      },
+      {
+        "legislature_id": 55,
+        "party": "PSB",
+        "condition": "Titular",
+        "status": "Exercício",
+        "status_date": null
+      },
+      {
+        "legislature_id": 55,
+        "party": "PSB",
+        "condition": "Titular",
+        "status": "FIM_MANDATO",
+        "status_date": null
+      },
+      {
+        "legislature_id": 55,
+        "party": "PSB",
+        "condition": null,
+        "status": null,
+        "status_date": null
+      },
+      {
+        "legislature_id": 54,
+        "party": "PSB",
+        "condition": "Titular",
+        "status": "Exercício",
+        "status_date": null
+      },
+      {
+        "legislature_id": 54,
+        "party": "PSB",
+        "condition": "Titular",
+        "status": "FIM_MANDATO",
+        "status_date": null
+      },
+      {
+        "legislature_id": 54,
+        "party": "PSB",
+        "condition": null,
+        "status": null,
+        "status_date": null
+      }
+    ],
+    "external_mandates": [
+      {
+        "office": "Deputado(a) Estadual",
+        "uf": null,
+        "municipality": null,
+        "party": null,
+        "start_year": "2003",
+        "end_year": "2010"
+      },
+      {
+        "office": "Vereador(a)",
+        "uf": null,
+        "municipality": "Colatina",
+        "party": null,
+        "start_year": "1993",
+        "end_year": "1996"
+      }
+    ],
+    "data_links": {
+      "expenses": "https://dadosabertos.camara.leg.br/api/v2/deputados/160517/despesas",
+      "events": "https://dadosabertos.camara.leg.br/api/v2/deputados/160517/eventos",
+      "speeches": "https://dadosabertos.camara.leg.br/api/v2/deputados/160517/discursos",
+      "bodies": "https://dadosabertos.camara.leg.br/api/v2/deputados/160517/orgaos"
+    }
+  }
+]

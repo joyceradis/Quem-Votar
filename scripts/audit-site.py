@@ -53,6 +53,8 @@ def main() -> None:
     quality_workflow = read(ROOT / ".github" / "workflows" / "quality.yml")
     sync_workflow = read(ROOT / ".github" / "workflows" / "sync-data.yml")
     delivery_governance = read(ROOT / "docs" / "DELIVERY_GOVERNANCE.md")
+    agent_fence = read(ROOT / ".github" / "workflows" / "agent-fence.yml")
+    codeowners = read(ROOT / ".github" / "CODEOWNERS")
 
     # Contrato visual e de entrega: impede herança silenciosa e tempestade de commits.
     assert len(re.findall(r":root\s*\{", styles)) == 1, "styles.css deve ter um único :root canônico"
@@ -62,6 +64,15 @@ def main() -> None:
     assert "Tá, mas o que esse candidato pode mudar na sua vida?" in home, "Home deve manter a pergunta prática principal"
     assert re.search(r"\.desktop-nav\s*\{[^}]*display\s*:\s*none", styles), "navegação principal deve ficar no menu lateral"
     assert "\n  push:" not in sync_workflow, "sincronização de dados não deve rodar a cada push de interface"
+    assert "[skip ci]" not in sync_workflow, "snapshot automático não pode pular CI"
+    assert "git pull --rebase" not in sync_workflow, "sync não pode rebasear snapshot depois da auditoria"
+    assert "python -m unittest discover" in quality_workflow, "Quality precisa executar testes"
+    assert "requirements-evidence.txt" in quality_workflow, "Quality precisa instalar dependências do coletor"
+    assert "python scripts/audit-site.py" in sync_workflow, "sync precisa auditar antes do push"
+    assert "python -m unittest discover" in sync_workflow, "sync precisa testar antes do push"
+    assert "Authorization-Issue:" in agent_fence, "mudança protegida precisa de autorização rastreável"
+    assert "data/reference/topic-evidence\\.json" in agent_fence, "evidência canônica fora da cerca elétrica"
+    assert "/data/reference/topic-evidence.json @joyceradis" in codeowners, "CODEOWNERS não cobre evidência canônica"
     assert "cancel-in-progress: false" in quality_workflow, "Quality deve enfileirar em vez de cancelar"
     assert "cancel-in-progress: false" in sync_workflow, "Sync deve enfileirar em vez de cancelar"
     assert "commit atômico" in delivery_governance.lower(), "governança de entrega atômica ausente"
@@ -146,6 +157,16 @@ def main() -> None:
     assert not any(f'"{field}"' in blob for field in FORBIDDEN_FIELDS), "campo pessoal proibido no snapshot"
     assert all(x.get("source", {}).get("institution") == "TSE" for x in rows), "origem eleitoral inconsistente"
     assert all(x.get("photo_source", {}).get("institution") == "TSE" for x in rows), "origem da foto não rastreável ao TSE"
+
+    mirrors = meta.get("sources", {}).get("operational_mirror") or {}
+    assert mirrors, "fallback sem proveniência"
+    if meta.get("normalizer_version") == "3.1.0":
+        for kind in ("federal", "estadual"):
+            mirror = mirrors.get(kind) or {}
+            assert mirror.get("commit_sha"), f"{kind}: commit imutável do espelho ausente"
+            assert mirror.get("blob_sha"), f"{kind}: blob SHA do espelho ausente"
+            assert mirror.get("content_sha256"), f"{kind}: hash dos bytes processados ausente"
+    assert meta.get("sources", {}).get("camara_federal"), "fonte Câmara ausente: preservar último estado ou falhar fechado"
 
     with_photo_url = sum(bool(x.get("photo_url")) for x in rows)
     assert with_photo_url == len(rows), f"URLs de transporte de foto: {with_photo_url}/{len(rows)}"

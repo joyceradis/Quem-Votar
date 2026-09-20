@@ -3,7 +3,7 @@ name: 🛡️ Cerca Elétrica para Agentes de IA
 on:
   pull_request:
     branches: [ "main" ]
-    types: [opened, synchronize, reopened, ready_for_review]
+    types: [opened, synchronize, reopened, ready_for_review, labeled, unlabeled]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
@@ -12,69 +12,64 @@ concurrency:
 permissions:
   contents: read
   pull-requests: write
+  issues: read
 
 jobs:
   vigia-de-agentes:
     name: 🛑 Inspetor de Regras da IA
     runs-on: ubuntu-latest
     timeout-minutes: 8
-
     steps:
       - name: 📥 Baixar código e histórico necessário
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           fetch-depth: 0
 
-      - name: 🚫 Proteger governança e control plane
+      - name: 🧭 Mapear arquivos protegidos
         id: governance
         shell: bash
         run: |
           set -euo pipefail
-
           BASE_SHA="${{ github.event.pull_request.base.sha }}"
           HEAD_SHA="${{ github.event.pull_request.head.sha }}"
-
           git diff --name-only "$BASE_SHA" "$HEAD_SHA" | sort -u > /tmp/arquivos-alterados.txt
-
-          echo "Arquivos alterados no PR:"
-          cat /tmp/arquivos-alterados.txt
-
-          PROTEGIDOS='^(AGENTS\.md|AUDITORIA\.md|METODOLOGIA\.md|scripts/audit-site\.py|docs/(GOVERNANCE|DELIVERY_GOVERNANCE|PRODUCT_NORTH_STAR|TOPIC_EVIDENCE)\.md|\.github/(CODEOWNERS|workflows/))'
-
+          PROTEGIDOS='^(AGENTS\.md|AUDITORIA\.md|METODOLOGIA\.md|scripts/(audit-site|sync-data|coletor_evidencias)\.py|data/reference/topic-evidence\.json|data/staging/topic-evidence-reviews\.json|docs/(GOVERNANCE|DELIVERY_GOVERNANCE|PRODUCT_NORTH_STAR|TOPIC_EVIDENCE|DATA_MODEL)\.md|\.github/(CODEOWNERS|workflows/))'
           VIOLACOES=$(grep -E "$PROTEGIDOS" /tmp/arquivos-alterados.txt || true)
-
           if [[ -n "$VIOLACOES" ]]; then
-            echo "❌ ALTERAÇÃO BLOQUEADA."
-            echo "Este PR altera arquivos de governança ou do control plane:"
-            echo "$VIOLACOES"
-            echo
-            echo "Esses arquivos não podem ser modificados por PR automatizado."
-            echo "Mudanças deliberadas de governança devem ser feitas explicitamente pela mantenedora fora deste fluxo."
-            exit 1
+            {
+              echo "protected=true"
+              echo "violations<<EOF"
+              echo "$VIOLACOES"
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
+          else
+            echo "protected=false" >> "$GITHUB_OUTPUT"
           fi
 
-          echo "✅ Nenhuma violação de governança/control plane detectada."
-
-      - name: 💬 Explicar bloqueio no PR
-        if: failure() && steps.governance.outcome == 'failure'
+      - name: 🔐 Validar autorização explícita de governança
+        if: steps.governance.outputs.protected == 'true'
         uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
         with:
           script: |
-            const body = [
-              "🛑 **Cerca elétrica acionada**",
-              "",
-              "Este PR tentou alterar um arquivo protegido de governança ou do control plane.",
-              "Arquivos protegidos incluem AGENTS.md, AUDITORIA.md, METODOLOGIA.md, scripts/audit-site.py, documentos normativos em docs/, CODEOWNERS e workflows em .github/workflows/.",
-              "",
-              "A alteração precisa ser deliberada pela mantenedora e feita fora deste fluxo automatizado."
-            ].join("\n");
-
-            await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-              body
-            });
+            const body = context.payload.pull_request.body || "";
+            const match = body.match(/Authorization-Issue:\s*#(\d+)/i);
+            if (!match) {
+              core.setFailed("PR protegido sem Authorization-Issue: #N no corpo.");
+              return;
+            }
+            const issue_number = Number(match[1]);
+            const { data: issue } = await github.rest.issues.get({ owner: context.repo.owner, repo: context.repo.repo, issue_number });
+            const labels = issue.labels.map(x => typeof x === "string" ? x : x.name);
+            const comments = await github.paginate(github.rest.issues.listComments, { owner: context.repo.owner, repo: context.repo.repo, issue_number, per_page: 100 });
+            const humanDecision = comments.some(comment =>
+              comment.user?.login === "joyceradis" && /##\s*Decisão técnica após revisão/i.test(comment.body || "")
+            );
+            const authorized = issue.user?.login === 'joyceradis' && labels.includes('decision-recorded') && labels.includes('risk:high') && humanDecision;
+            if (!authorized) {
+              core.setFailed("Issue de autorização sem decisão explícita rastreável da mantenedora.");
+              return;
+            }
+            core.info("Autorização validada pela issue #" + issue_number);
 
       - name: 🔗 Validar links internos
         uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2
@@ -90,11 +85,9 @@ jobs:
           fail: true
 
       - name: 🧹 Validar sintaxe determinística
-        shell: bash
         run: |
-          set -euo pipefail
           node --check app.js
-          python -m py_compile scripts/sync-data.py scripts/audit-site.py
+          python -m py_compile scripts/sync-data.py scripts/audit-site.py scripts/coletor_evidencias.py
 
       - name: 🧪 Rodar auditoria nativa do projeto
         run: python scripts/audit-site.py

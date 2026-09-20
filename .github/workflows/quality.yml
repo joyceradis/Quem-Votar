@@ -11,14 +11,17 @@ on:
       - "styles.css"
       - "app.js"
       - "scripts/**"
+      - "tests/**"
       - "data/generated/**"
       - "data/reference/**"
-      - "docs/DELIVERY_GOVERNANCE.md"
-      - "docs/PRODUCT_NORTH_STAR.md"
-      - "docs/TOPIC_EVIDENCE.md"
+      - "data/staging/**"
+      - "docs/**"
       - "AGENTS.md"
-      - ".github/workflows/quality.yml"
-      - ".github/workflows/sync-data.yml"
+      - "AUDITORIA.md"
+      - "METODOLOGIA.md"
+      - "requirements-evidence.txt"
+      - ".github/CODEOWNERS"
+      - ".github/workflows/**"
 
 permissions:
   contents: read
@@ -30,7 +33,7 @@ concurrency:
 jobs:
   audit:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 12
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -40,10 +43,16 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Instalar dependências de evidências
+        run: python -m pip install -r requirements-evidence.txt
+
       - name: Validar sintaxe
         run: |
-          python -m py_compile scripts/sync-data.py scripts/audit-site.py
+          python -m py_compile scripts/sync-data.py scripts/audit-site.py scripts/coletor_evidencias.py
           node --check app.js
+
+      - name: Executar testes determinísticos
+        run: python -m unittest discover -s tests -p 'test_*.py' -v
 
       - name: Auditar contratos de dados, interface e entrega
         run: python scripts/audit-site.py

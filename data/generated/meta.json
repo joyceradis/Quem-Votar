@@ -5,7 +5,7 @@
   "counts": {
     "federal": 137,
     "estadual": 410,
-    "federal_current_mandates_linked": 0,
+    "federal_current_mandates_linked": 7,
     "ales_2025_evidence_linked": 26,
     "topic_evidence": 1
   },
@@ -30,7 +30,7 @@
         "raw_url": "https://raw.githubusercontent.com/herminiotorres/dossie-cidadao/main/docs/data/tse/candidatos/ES/deputado-estadual.json"
       }
     },
-    "camara_federal": null,
+    "camara_federal": "https://dadosabertos.camara.leg.br/api/v2/deputados?siglaUf=ES&ordem=ASC&ordenarPor=nome&itens=100",
     "ales": "https://www.al.es.gov.br/"
   },
   "data_quality": {
@@ -38,7 +38,8 @@
     "assets": "Patrimônio não é publicado até haver ingestão auditável do bem_candidato_2026.",
     "photos": "A fonte primária é o pacote ES - Fotos de candidatos do TSE. Como o CDN oficial bloqueia o runner, a UI usa temporariamente um cache público por SQ_CANDIDATO; falhas de imagem caem para placeholder.",
     "electoral_history": "Histórico eleitoral TSE ainda não é incorporado automaticamente neste snapshot; histórico institucional federal é obtido da Câmara.",
-    "state_current_mandate": "Não inferido automaticamente; a composição da ALES requer validação institucional datada."
+    "state_current_mandate": "Não inferido automaticamente; a composição da ALES requer validação institucional datada.",
+    "chamber": "Sete vínculos federais previamente validados foram restaurados após regressão por indisponibilidade transitória da Câmara; o sincronizador agora preserva o último estado validado ou falha fechado."
   },
   "normalizer_version": "3.0.0"
 }

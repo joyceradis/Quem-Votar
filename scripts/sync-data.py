@@ -12,9 +12,11 @@ A plataforma não gera ranking, score ou recomendação.
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 import unicodedata
+import urllib.parse
 import urllib.request
 from collections import defaultdict
 from datetime import datetime, timezone
@@ -40,8 +42,8 @@ TOPIC_REFERENCE_FILE = ROOT / "data" / "reference" / "policy-topics.json"
 TOPIC_EVIDENCE_FILE = ROOT / "data" / "reference" / "topic-evidence.json"
 
 MIRROR_REPO = "herminiotorres/dossie-cidadao"
-MIRROR_BASE = "https://raw.githubusercontent.com/herminiotorres/dossie-cidadao/main/docs/data/tse/candidatos/ES"
-MIRROR_API_BASE = "https://api.github.com/repos/herminiotorres/dossie-cidadao/contents/docs/data/tse/candidatos/ES"
+MIRROR_PATH_BASE = "docs/data/tse/candidatos/ES"
+MIRROR_API = f"https://api.github.com/repos/{MIRROR_REPO}"
 
 MIRROR_FILES = {
     "federal": ("deputado-federal.json", "DEPUTADO FEDERAL"),
@@ -93,18 +95,52 @@ def norm(value):
     return re.sub(r"\s+", " ", value).strip()
 
 
-def mirror_metadata(filename):
+def request_bytes(url: str, timeout: int = 20) -> bytes:
+    req = urllib.request.Request(
+        url,
+        headers={
+            "User-Agent": UA,
+            "Accept": "application/octet-stream, application/json, */*",
+            "Accept-Language": "pt-BR,pt;q=0.9",
+        },
+    )
+    with urllib.request.urlopen(req, timeout=timeout) as response:
+        return response.read()
+
+
+def mirror_snapshot(filename: str):
+    """Resolve uma revisão imutável e lê exatamente os bytes dessa revisão."""
+    path = f"{MIRROR_PATH_BASE}/{filename}"
+    query = urllib.parse.urlencode({"path": path, "per_page": 1})
+    commits = request_json(f"{MIRROR_API}/commits?{query}")
+    if not isinstance(commits, list) or not commits:
+        raise RuntimeError(f"Não foi possível resolver revisão do espelho: {path}")
+    commit_sha = clean(commits[0].get("sha"))
+    if not commit_sha:
+        raise RuntimeError(f"Commit do espelho ausente: {path}")
+    encoded_ref = urllib.parse.quote(commit_sha, safe="")
+    meta = request_json(f"{MIRROR_API}/contents/{path}?ref={encoded_ref}")
+    blob_sha = clean(meta.get("sha"))
+    if not blob_sha:
+        raise RuntimeError(f"Blob SHA do espelho ausente: {path}")
+    raw_url = f"https://raw.githubusercontent.com/{MIRROR_REPO}/{commit_sha}/{path}"
+    raw = request_bytes(raw_url)
+    content_sha256 = hashlib.sha256(raw).hexdigest()
     try:
-        meta = request_json(f"{MIRROR_API_BASE}/{filename}?ref=main")
-        return {
-            "repository": MIRROR_REPO,
-            "path": meta.get("path"),
-            "blob_sha": meta.get("sha"),
-            "html_url": meta.get("html_url"),
-            "raw_url": meta.get("download_url"),
-        }
+        rows = json.loads(raw.decode("utf-8"))
     except Exception as exc:
-        return {"repository": MIRROR_REPO, "path": filename, "error": str(exc)}
+        raise RuntimeError(f"JSON inválido no espelho imutável {path}: {exc}") from exc
+    if not isinstance(rows, list):
+        raise RuntimeError(f"Espelho inválido: {raw_url}")
+    return rows, {
+        "repository": MIRROR_REPO,
+        "path": path,
+        "commit_sha": commit_sha,
+        "blob_sha": blob_sha,
+        "content_sha256": content_sha256,
+        "html_url": f"https://github.com/{MIRROR_REPO}/blob/{commit_sha}/{path}",
+        "raw_url": raw_url,
+    }
 
 
 def normalize_candidate(row, office, mirror_info):
@@ -167,11 +203,7 @@ def load_mirror():
     result = {"federal": [], "estadual": []}
     mirror_meta = {}
     for kind, (filename, office) in MIRROR_FILES.items():
-        raw_url = f"{MIRROR_BASE}/{filename}"
-        rows = request_json(raw_url)
-        if not isinstance(rows, list):
-            raise RuntimeError(f"Espelho inválido: {raw_url}")
-        info = mirror_metadata(filename)
+        rows, info = mirror_snapshot(filename)
         mirror_meta[kind] = info
         normalized = [
             normalize_candidate(row, office, info)
@@ -242,7 +274,31 @@ def enrich_federal(candidates):
             if key:
                 by_name[key].append(candidate)
 
-    list_url, deputies = chamber_current_es()
+    try:
+        list_url, deputies = chamber_current_es()
+        if not deputies:
+            raise RuntimeError("lista atual da Câmara retornou vazia")
+    except Exception as exc:
+        preserved = 0
+        for candidate in candidates:
+            previous_candidate = previous_candidates_by_tse.get(candidate.get("tse_id")) or {}
+            previous_mandate = previous_candidate.get("current_mandate")
+            if previous_mandate:
+                candidate["current_mandate"] = previous_mandate
+                candidate["institutional_history"] = previous_candidate.get("institutional_history")
+                preserved += 1
+        if not previous_chamber_rows or preserved == 0:
+            raise RuntimeError(
+                "Câmara indisponível e não existe snapshot federal previamente validado "
+                "para preservação; sync abortado para evitar regressão"
+            ) from exc
+        list_url = f"{CAMARA}/deputados?siglaUf=ES&ordem=ASC&ordenarPor=nome&itens=100"
+        print(
+            f"[aviso] Câmara indisponível; preservando {preserved} vínculos "
+            "previamente validados sem promover estado novo."
+        )
+        return list_url, previous_chamber_rows
+
     exported = []
     exported_by_id = {}
     current_chamber_ids = set()
@@ -535,12 +591,7 @@ def main():
     federal = candidates["federal"]
     estadual = candidates["estadual"]
 
-    chamber_url = None
-    chamber_rows = []
-    try:
-        chamber_url, chamber_rows = enrich_federal(federal)
-    except Exception as exc:
-        print(f"[aviso] Câmara indisponível: {exc}")
+    chamber_url, chamber_rows = enrich_federal(federal)
 
     ales_links = enrich_ales_reference([federal, estadual])
     topic_evidence_count = enrich_topic_evidence([federal, estadual])
@@ -600,7 +651,7 @@ def main():
                     "institucional datada."
                 ),
             },
-            "normalizer_version": "3.0.0",
+            "normalizer_version": "3.1.0",
         },
     )
     print(

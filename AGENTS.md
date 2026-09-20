@@ -146,7 +146,7 @@ Usar prefixos:
 - `ux:`
 - `refactor:`
 
-Commits de snapshots automáticos usam `[skip ci]`.
+Commits de snapshots automáticos **não** usam `[skip ci]`. O próprio sync deve executar testes e auditoria antes do push, e o HEAD resultante deve disparar o workflow Quality normalmente.
 
 
 ## 12. Código de terceiros

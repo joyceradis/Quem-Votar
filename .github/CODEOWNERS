@@ -1,13 +1,20 @@
-# Arquivos de governança e control plane exigem atenção explícita da mantenedora.
-# A exigência de review por CODEOWNER depende de uma regra de proteção/ruleset no GitHub.
+# Arquivos de governança, evidência e control plane exigem atenção explícita da mantenedora.
+# A exigência de review por CODEOWNER depende de proteção/ruleset no GitHub.
 
 /AGENTS.md @joyceradis
 /AUDITORIA.md @joyceradis
 /METODOLOGIA.md @joyceradis
 /scripts/audit-site.py @joyceradis
+/scripts/sync-data.py @joyceradis
+/scripts/coletor_evidencias.py @joyceradis
+/data/reference/topic-evidence.json @joyceradis
+/data/staging/topic-evidence-reviews.json @joyceradis
 /docs/GOVERNANCE.md @joyceradis
 /docs/DELIVERY_GOVERNANCE.md @joyceradis
 /docs/PRODUCT_NORTH_STAR.md @joyceradis
 /docs/TOPIC_EVIDENCE.md @joyceradis
+/docs/DATA_MODEL.md @joyceradis
+/tests/ @joyceradis
+/requirements-evidence.txt @joyceradis
 /.github/CODEOWNERS @joyceradis
 /.github/workflows/ @joyceradis
