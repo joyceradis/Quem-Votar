@@ -21,6 +21,20 @@ Cada documento tem uma função diferente:
 
 O trabalho executável deve ser acompanhado nas [Issues do repositório](https://github.com/joyceradis/Quem-Votar/issues). O README não replica uma lista de Issues ativas porque esse estado muda com frequência.
 
+### Entrada canônica para agentes e contribuidores
+
+Antes de alterar o projeto:
+
+1. leia `AGENTS.md` e `docs/GOVERNANCE.md`;
+2. leia `docs/ROADMAP_V1.md` para entender a ordem macro;
+3. leia `docs/CHECKPOINT_CURRENT.md` para saber o estado datado da `main`;
+4. pesquise Issues existentes antes de criar uma nova;
+5. trabalhe na Issue de responsabilidade mais específica aplicável.
+
+Uma Issue executável deve ter **uma responsabilidade principal**. Tracking Issues coordenam dependências, mas não substituem os critérios de pronto das Issues-filhas.
+
+Não criar pipeline, script ou modelo específico por candidatura. O processamento é orientado por dados e usa `SQ_CANDIDATO` como identidade canônica.
+
 ## Recorte atual
 
 A versão pública cobre:

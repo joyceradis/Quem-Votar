@@ -235,3 +235,27 @@ Controles obrigatórios:
 - espelhos devem ser resolvidos para revisão imutável antes da leitura e registrar commit, blob e hash dos bytes processados;
 - alterações de governança, control plane e evidência canônica precisam estar ligadas a uma decisão humana rastreável;
 - testes automatizados do pipeline são gates de entrega.
+
+
+## Topologia de execução e decomposição de Issues
+
+A governança multiagente depende de separação clara entre direção, estado e execução.
+
+Regras:
+
+- pesquisar Issues existentes antes de abrir nova tarefa;
+- uma Issue executável possui uma responsabilidade principal;
+- Tracking Issues coordenam dependências e não acumulam implementação heterogênea;
+- dependências devem ser explícitas no corpo da Issue e no Roadmap quando alterarem a ordem macro;
+- README não replica backlog;
+- Checkpoint não contém plano futuro como se fosse estado atual;
+- Roadmap não replica detalhes de implementação das Issues;
+- decisão pós-freeze fica separada de manutenção permitida durante o freeze;
+- nenhum agente cria arquitetura paralela para acelerar uma candidatura isolada;
+- enriquecimento em escala é `source-first`, orientado por modelo e rastreado por `SQ_CANDIDATO`.
+
+Para a camada de evidências, a separação operacional mínima é:
+
+`coverage/report → batch discovery → reliable processing → exception queue → operational pass`
+
+Avaliação semântica automatizada permanece em shadow mode até decisão pós-freeze autorizada.

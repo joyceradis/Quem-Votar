@@ -45,6 +45,22 @@ body:
     validations:
       required: true
 
+
+  - type: textarea
+    id: relations
+    attributes:
+      label: Issue relacionada / parent
+      description: Pesquise Issues existentes antes de abrir esta tarefa. Informe parent/tracking ou dependências quando existirem.
+      placeholder: "Ex.: Parent #34; depende de #38."
+
+  - type: checkboxes
+    id: discipline
+    attributes:
+      label: Disciplina de escopo
+      options:
+        - label: Esta Issue tem uma responsabilidade principal e não duplica uma Issue existente.
+          required: true
+
   - type: textarea
     id: preserve
     attributes:

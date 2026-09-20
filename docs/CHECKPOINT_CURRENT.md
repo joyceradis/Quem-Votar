@@ -90,13 +90,13 @@ Fonte canônica: `data/reference/topic-evidence.json`.
 
 O sync eleitoral anexa essa camada por `SQ_CANDIDATO` sem apagá-la.
 
-No checkpoint atual, a cobertura canônica é **1 registro**. Isso significa apenas que ainda não há evidência promovida para a camada pública; não significa ausência de propostas ou posições das candidaturas.
+No checkpoint atual, a cobertura canônica é **1 registro promovido**. Isso valida o fluxo ponta a ponta, mas não representa cobertura temática suficiente e não permite inferir ausência de propostas nas demais candidaturas.
 
 A expansão dessa camada é acompanhada pela issue #2.
 
 ## Coleta em staging
 
-A issue #5 mantém a infraestrutura de coleta separada da publicação canônica:
+A infraestrutura entregue pela issue #5 mantém coleta separada da publicação canônica:
 
 - `scripts/coletor_evidencias.py` lê os `SQ_CANDIDATO` do snapshot atual;
 - redes sociais declaradas ao TSE entram como sementes de descoberta, não como evidência;
@@ -112,14 +112,43 @@ A issue #5 mantém a infraestrutura de coleta separada da publicação canônica
 
 ## Estado das frentes
 
+### Governança
+
+- #36: bloqueada apenas pela configuração administrativa de proteção/ruleset da `main` e pelo desenho do caminho autorizado do sync;
+- #45: em andamento; topologia canônica multiagente e disciplina documental;
+- #44: pronta; Governance Sentinel ainda não implementado.
+
+### Evidências
+
+- #5: concluída; infraestrutura de coleta/staging/revisão/promoção entregue;
+- #2: em andamento; resultado de produto da camada temática;
+- #34: tracking em andamento da engenharia de escala;
+- #38: pronta; coverage ledger/report;
+- #39: pronta; batch source discovery;
+- #40: pronta; idempotência/retomada/reprocessamento;
+- #41: pronta; exception-driven review;
+- #42: pronta; benchmark semântico em shadow mode;
+- #35: **bloqueada** até o preflight mínimo #38–#41;
+- #43: bloqueada para decisão pós-freeze.
+
+### Cobertura operacional atual
+
+Snapshot eleitoral: **547 candidaturas**.
+
+Estado atual da nova pipeline temática:
+
+- sources em staging: 1;
+- drafts: 1;
+- reviews aprovadas: 1;
+- evidências canônicas: 1.
+
+Esses números medem estados diferentes e não devem ser tratados como uma única “cobertura”.
+
+### Baseline
+
 - V5.4: concluída;
 - V5.5 / Issue #11: concluída e consolidada em `main`;
-- Issue #5: concluída; infraestrutura de coleta/staging/promoção entregue;
-- Issue #2: aberta como frente de integração de evidências;
-- Issue #34: aberta para escalabilidade e shadow mode;
-- Issue #35: aberta para importação/cobertura operacional;
-- Issue #36: hardening crítico de governança em execução;
-- Issue #13: concluída; README sincronizado e com regra explícita de manutenção documental.
+- Issue #13: concluída; regra documental do README consolidada.
 
 ## Regra documental
 
