@@ -75,7 +75,7 @@ Quando vários arquivos fazem parte da mesma entrega, eles devem ser preparados 
 
 ### Quality
 
-Roda em mudanças de interface, auditoria ou governança. Execuções são enfileiradas; não canceladas para “dar lugar” a commits posteriores.
+Roda em todo PR para `main` e em todo push para `main`. Execuções são enfileiradas; não canceladas para “dar lugar” a commits posteriores.
 
 ### Sync eleitoral
 
@@ -84,7 +84,7 @@ Roda somente:
 - por agenda;
 - por acionamento manual.
 
-Mudança de interface não dispara escrita de snapshot.
+O runtime usa `contents: read`, produz um snapshot candidato auditado como artifact e **não escreve em `main`**. A integração de atualização eleitoral passa por PR rastreável; não existe bypass permanente para o bot de sync.
 
 ## Pós-auditoria obrigatória
 
@@ -111,9 +111,10 @@ Logs antigos de GitHub Actions são registros do servidor e podem continuar vis�
 Para snapshots automáticos:
 
 - proibido usar `[skip ci]`;
-- o workflow de sync executa testes e auditoria antes do push;
-- se `main` avançar depois do checkout, o run aborta em vez de usar `git pull --rebase`;
-- o commit resultante dispara Quality normalmente;
+- o workflow de sync executa testes e auditoria antes de exportar o artifact;
+- o sync não cria commit nem faz push direto para `main`;
+- o artifact registra o SHA-base, hashes dos arquivos gerados e patch do snapshot candidato;
+- qualquer integração posterior em `main` ocorre por PR e dispara Quality;
 - indisponibilidade da Câmara preserva estado federal previamente validado; sem estado seguro, o sync falha fechado;
 - proveniência do espelho deve ser vinculada a revisão imutável e ao hash dos bytes processados.
 

@@ -97,7 +97,7 @@ Quando algum elo não existir, registrar a cobertura como pendente em vez de pre
 
 ### Mudanças rápidas
 O projeto tem prazo curto, portanto a governança deve ser proporcional ao risco:
-- CSS, copy e interação local: commit direto em `main` + validação + deploy;
+- CSS, copy e interação local: PR curto, validação aplicável e deploy após integração;
 - normalizador/pipeline: validação do snapshot e regressão antes de concluir;
 - identidade, vínculo entre bases ou regra editorial: evidência + revisão explícita;
 - mudança estrutural destrutiva: branch isolada/checkpoint recuperável.

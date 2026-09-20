@@ -6,7 +6,7 @@ on:
     - cron: "17 */6 * * *"
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: sync-dados-eleitorais
@@ -30,14 +30,14 @@ jobs:
 
       - name: Validar sintaxe e testes antes da coleta
         run: |
-          python -m py_compile scripts/sync-data.py scripts/audit-site.py scripts/coletor_evidencias.py
+          python -m py_compile scripts/sync-data.py scripts/audit-site.py scripts/coletor_evidencias.py scripts/evidence_coverage_report.py
           node --check app.js
           python -m unittest discover -s tests -p 'test_*.py' -v
 
       - name: Sincronizar candidaturas ES e Câmara
         run: python scripts/sync-data.py
 
-      - name: Auditar snapshots antes de publicar
+      - name: Auditar snapshot candidato
         run: |
           python scripts/audit-site.py
           python - <<'PY'
@@ -61,19 +61,50 @@ jobs:
           print(f"Validação OK: {len(federal)} federais / {len(estadual)} estaduais / {meta['counts'].get('federal_current_mandates_linked', 0)} vínculos Câmara")
           PY
 
-      - name: Persistir snapshot sem rebase pós-auditoria
+      - name: Garantir que o sync só alterou data/generated
+        shell: bash
         run: |
-          git config user.name "quem-votar-data-bot"
-          git config user.email "actions@users.noreply.github.com"
-          git add data/generated
-          if git diff --cached --quiet; then
-            echo "Sem alterações"
-          else
-            git commit -m "data: atualiza snapshot ES 2026"
-            git fetch origin main
-            if [[ "$(git rev-parse origin/main)" != "${GITHUB_SHA}" ]]; then
-              echo "::error::main avançou durante a execução. Snapshot não será rebaseado sem nova geração/auditoria."
+          set -euo pipefail
+          CHANGED="$(git status --porcelain | awk '{print $2}')"
+          if [[ -n "$CHANGED" ]]; then
+            INVALID="$(printf '%s\n' "$CHANGED" | grep -Ev '^data/generated/' || true)"
+            if [[ -n "$INVALID" ]]; then
+              echo "::error::sync tentou alterar arquivo fora de data/generated:"
+              printf '%s\n' "$INVALID"
               exit 1
             fi
-            git push origin HEAD:main
           fi
+
+      - name: Empacotar snapshot candidato sem escrever em main
+        id: package
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="$RUNNER_TEMP/sync-data-candidate"
+          mkdir -p "$OUT/data-generated"
+          cp -R data/generated/. "$OUT/data-generated/"
+          git diff -- data/generated > "$OUT/data-generated.patch"
+          git diff --stat -- data/generated > "$OUT/DIFFSTAT.txt"
+          {
+            echo "repository=${GITHUB_REPOSITORY}"
+            echo "base_sha=${GITHUB_SHA}"
+            echo "run_id=${GITHUB_RUN_ID}"
+            echo "run_attempt=${GITHUB_RUN_ATTEMPT}"
+          } > "$OUT/RUN_METADATA.txt"
+          (
+            cd "$OUT/data-generated"
+            sha256sum *.json > ../SHA256SUMS.txt
+          )
+          if git diff --quiet -- data/generated; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Publicar artifact auditável do snapshot candidato
+        uses: actions/upload-artifact@v4
+        with:
+          name: sync-data-candidate-${{ github.run_id }}
+          path: ${{ runner.temp }}/sync-data-candidate
+          if-no-files-found: error
+          retention-days: 7

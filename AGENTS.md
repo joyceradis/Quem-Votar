@@ -146,7 +146,7 @@ Usar prefixos:
 - `ux:`
 - `refactor:`
 
-Commits de snapshots automáticos **não** usam `[skip ci]`. O próprio sync deve executar testes e auditoria antes do push, e o HEAD resultante deve disparar o workflow Quality normalmente.
+Snapshots automáticos **não** usam `[skip ci]`. O sync executa testes e auditoria em modo read-only, gera um snapshot candidato como artifact e não escreve diretamente em `main`. A integração do snapshot na branch canônica ocorre por PR rastreável, sujeito aos mesmos gates da entrega.
 
 
 ## 12. Código de terceiros
@@ -325,7 +325,7 @@ Antes de qualquer mudança substancial, o agente deve:
 Nenhum agente pode “corrigir” um estado que não compreendeu. Falta de contexto não autoriza reconstrução, rollback, substituição de arquitetura ou inferência.
 
 ### Risco proporcional
-- **baixo risco**: CSS, copy, acessibilidade, documentação e bug local podem ir diretamente para `main` quando autorizados, após validação aplicável;
+- **baixo risco**: CSS, copy, acessibilidade, documentação e bug local usam PR de menor escopo, após validação aplicável;
 - **médio risco**: filtros, comparação, navegação, estrutura de página e comportamento de UI exigem preservação dos contratos e auditoria antes de serem declarados prontos;
 - **alto risco**: pipeline eleitoral, normalização, `SQ_CANDIDATO`, vínculo TSE/Câmara/ALES, proveniência, privacidade e semântica de evidências exigem checkpoint e revisão explícita antes de consolidação.
 

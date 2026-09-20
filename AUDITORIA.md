@@ -317,6 +317,8 @@ Correções implantadas no commit `28eb787`:
 - redução do trecho bruto persistido pelo coletor de 9.000 para 3.000 caracteres;
 - pinagem do espelho por commit + blob + SHA-256;
 - expansão de CODEOWNERS para pipeline e evidência canônica;
-- Agent Fence passa a exigir vínculo com Issue de autorização para mudanças de governança/control plane/evidência canônica.
+- Agent Fence passa a exigir vínculo com Issue de autorização para mudanças de governança/control plane/evidência canônica;
+- o sync eleitoral deixa de escrever diretamente em `main` e passa a produzir artifact de snapshot candidato com runtime `contents: read`;
+- Quality passa a executar em todo push para `main`, removendo lacunas por filtro de paths.
 
 A proteção de branch/ruleset permanece uma configuração externa do GitHub e não é substituída por documentação ou CI.
