@@ -1,6 +1,22 @@
 {
   "version": "1.0.0",
-  "updated_at": "2026-09-19T00:00:00+00:00",
+  "updated_at": "2026-09-20T01:41:47+00:00",
   "semantics": "Decisões de revisão semântica sobre rascunhos. Aprovação aqui ainda precisa passar pela validação determinística antes da promoção.",
-  "reviews": []
+  "reviews": [
+    {
+      "draft_id": "2cea3b522948d161a1be",
+      "status": "approved",
+      "attempts": 1,
+      "topic_id": "infraestrutura",
+      "evidence_type": "atuação",
+      "statement": "Apresentou o Projeto de Lei nº 20/2026, que propõe a concessão de duas passagens gratuitas por mês em ônibus intermunicipais convencionais para jovens de baixa renda no Espírito Santo.",
+      "quote_or_summary": "O Projeto de Lei nº 20/2026, atribuído pela fonte a Alexandre Xambinho, propõe duas passagens gratuitas por mês em ônibus intermunicipais convencionais para jovens de baixa renda.",
+      "scope": "estadual",
+      "verification_status": "secondary_source",
+      "support_text": "O Projeto de Lei 20/2026, de autoria do deputado Alexandre Xambinho (Podemos), propõe a concessão de duas passagens gratuitas por mês em ônibus intermunicipais convencionais.",
+      "attribution_basis": "A matéria identifica nominalmente Alexandre Xambinho como autor do Projeto de Lei 20/2026.",
+      "reviewed_at": "2026-09-20T01:41:47Z",
+      "reviewer": "joyceradis"
+    }
+  ]
 }
