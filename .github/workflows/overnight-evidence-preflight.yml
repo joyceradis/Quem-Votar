@@ -2,6 +2,8 @@ name: Overnight V5.5 Evidence Preflight — read only
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "17 * * * *"
   push:
     branches: [main]
     paths:
@@ -11,13 +13,46 @@ on:
 
 permissions:
   contents: read
+  issues: read
 
 concurrency:
   group: overnight-v55-evidence-preflight
   cancel-in-progress: false
 
 jobs:
+  window-gate:
+    runs-on: ubuntu-latest
+    outputs:
+      stop: ${{ steps.check.outputs.stop }}
+    steps:
+      - name: Check #34 overnight window
+        id: check
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: 34,
+              per_page: 100
+            });
+
+            const stopped = comments.some(comment =>
+              comment.user?.login === "joyceradis" &&
+              /^\s*\/stop-overnight\b/im.test(comment.body || "")
+            );
+
+            core.setOutput("stop", stopped ? "true" : "false");
+
+            if (stopped) {
+              core.notice("Overnight window closed by maintainer signal in #34.");
+            } else {
+              core.notice("Overnight window remains open.");
+            }
+
   preflight:
+    needs: window-gate
+    if: ${{ needs.window-gate.outputs.stop != 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
 
