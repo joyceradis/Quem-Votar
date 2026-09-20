@@ -36,10 +36,16 @@ Objetivo:
 - não inferir posição por profissão, partido ou associação;
 - medir cobertura sem tratar ausência de dado como ausência de posição.
 
+Infraestrutura concluída:
+
+- [#5 — coletor de evidências](https://github.com/joyceradis/Quem-Votar/issues/5): concluída; coleta automatizada produz **staging auditável** antes de qualquer promoção canônica.
+
 Trabalho ativo:
 
-- [#5 — coletor de evidências](https://github.com/joyceradis/Quem-Votar/issues/5): coleta automatizada produz **staging auditável** antes de qualquer promoção canônica;
-- [#2 — integração de evidências](https://github.com/joyceradis/Quem-Votar/issues/2): validar, integrar e ampliar a cobertura em `data/reference/topic-evidence.json`.
+- [#36 — governança executável](https://github.com/joyceradis/Quem-Votar/issues/36): hardening de CI, regressões e control plane;
+- [#2 — integração de evidências](https://github.com/joyceradis/Quem-Votar/issues/2): integrar e ampliar a cobertura em `data/reference/topic-evidence.json`;
+- [#35 — importação e cobertura](https://github.com/joyceradis/Quem-Votar/issues/35): processar o universo atual sem converter ausência de achado em posição;
+- [#34 — escalabilidade em shadow mode](https://github.com/joyceradis/Quem-Votar/issues/34): reduzir trabalho humano repetitivo sem alterar o contrato V5.5.
 
 Fluxo vigente:
 

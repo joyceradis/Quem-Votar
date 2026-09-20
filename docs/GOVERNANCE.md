@@ -119,8 +119,10 @@ Isso é o equivalente leve, para este projeto, ao checkpoint recuperável usado 
 
 A navegação pode ser simplificada por filtros factuais sem transformar a plataforma em recomendador eleitoral.
 
-### Área profissional
-Pode ser derivada da ocupação declarada ao TSE por taxonomia pública e versionada. O rótulo significa apenas “ocupação relacionada à área”.
+### Ocupação profissional
+A ocupação declarada ao TSE é metadado factual secundário. Ela não gera tema político, posição, afinidade, recomendação nem filtro temático público.
+
+Uma taxonomia profissional interna, quando necessária para auditoria ou normalização, não pode ser reutilizada como evidência temática.
 
 ### Tema político
 Uma candidatura só pode receber posição temática quando existir evidência individualizada com:
@@ -217,3 +219,19 @@ Essa camada não pode:
 Apoio individual deve ser apresentado como contribuição à manutenção do software, dados, documentação e infraestrutura do projeto, nunca como contribuição a candidatura, partido ou campanha.
 
 A configuração financeira deve usar o menor acoplamento possível com o núcleo eleitoral. Sempre que possível, preferir mecanismos nativos do repositório e componentes estáticos sem terceiros ou trackers.
+
+
+## Governança executável e fail-closed
+
+A governança não é satisfeita apenas por documentação.
+
+Controles obrigatórios:
+
+- falha transitória de API não pode reduzir silenciosamente cobertura institucional previamente validada;
+- quando a atualidade não puder ser confirmada e houver estado anterior verificável, preservar o último estado sem promover informação nova;
+- quando não houver estado anterior seguro, abortar publicação em vez de publicar vazio;
+- snapshots públicos não usam `[skip ci]`;
+- um snapshot auditado não pode ser rebaseado sobre HEAD diferente sem nova geração e auditoria;
+- espelhos devem ser resolvidos para revisão imutável antes da leitura e registrar commit, blob e hash dos bytes processados;
+- alterações de governança, control plane e evidência canônica precisam estar ligadas a uma decisão humana rastreável;
+- testes automatizados do pipeline são gates de entrega.

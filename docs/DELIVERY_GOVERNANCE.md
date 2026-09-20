@@ -104,3 +104,17 @@ Falhas reais devem ser corrigidas na causa.
 Commits intermediários produzidos pela mesma entrega não devem permanecer na história canônica quando puderem ser consolidados com segurança, preservando exatamente o tree final.
 
 Logs antigos de GitHub Actions são registros do servidor e podem continuar visíveis na aba Actions mesmo após um commit deixar a história de `main`. Isso não transforma o commit em parte do estado canônico.
+
+
+## Hardening de dados — 20/09/2026
+
+Para snapshots automáticos:
+
+- proibido usar `[skip ci]`;
+- o workflow de sync executa testes e auditoria antes do push;
+- se `main` avançar depois do checkout, o run aborta em vez de usar `git pull --rebase`;
+- o commit resultante dispara Quality normalmente;
+- indisponibilidade da Câmara preserva estado federal previamente validado; sem estado seguro, o sync falha fechado;
+- proveniência do espelho deve ser vinculada a revisão imutável e ao hash dos bytes processados.
+
+`Pages success` isoladamente não equivale a governança concluída.

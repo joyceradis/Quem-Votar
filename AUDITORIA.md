@@ -301,3 +301,22 @@ A V4 mantém:
 - pipeline TSE/Câmara/ALES não reescrito;
 - origem e transporte de fotos preservados;
 - V5 é mudança de interface e semântica de apresentação, não reinterpretação do snapshot.
+
+## 19. Hardening de governança — 20/09/2026
+
+A auditoria da Issue #36 identificou regressão real: um sync automático publicou queda de **7 para 0** vínculos federais após indisponibilidade da Câmara.
+
+Correções implantadas no commit `28eb787`:
+
+- restauração dos 7 vínculos previamente validados após rechecagem institucional;
+- fail-closed quando a Câmara estiver indisponível e não houver estado anterior seguro;
+- preservação do último estado validado quando a falha for transitória;
+- remoção de `[skip ci]` dos snapshots;
+- proibição de `git pull --rebase` após geração/auditoria;
+- execução da suíte `tests/` no Quality e no sync;
+- redução do trecho bruto persistido pelo coletor de 9.000 para 3.000 caracteres;
+- pinagem do espelho por commit + blob + SHA-256;
+- expansão de CODEOWNERS para pipeline e evidência canônica;
+- Agent Fence passa a exigir vínculo com Issue de autorização para mudanças de governança/control plane/evidência canônica.
+
+A proteção de branch/ruleset permanece uma configuração externa do GitHub e não é substituída por documentação ou CI.

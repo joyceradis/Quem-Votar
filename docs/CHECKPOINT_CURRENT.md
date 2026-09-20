@@ -1,6 +1,6 @@
 # Checkpoint atual — V5.5
 
-Data: 2026-09-19.
+Data: 2026-09-20.
 
 ## Estado canônico
 
@@ -90,7 +90,7 @@ Fonte canônica: `data/reference/topic-evidence.json`.
 
 O sync eleitoral anexa essa camada por `SQ_CANDIDATO` sem apagá-la.
 
-No checkpoint atual, a cobertura canônica é **0 registros**. Isso significa apenas que ainda não há evidência promovida para a camada pública; não significa ausência de propostas ou posições das candidaturas.
+No checkpoint atual, a cobertura canônica é **1 registro**. Isso significa apenas que ainda não há evidência promovida para a camada pública; não significa ausência de propostas ou posições das candidaturas.
 
 A expansão dessa camada é acompanhada pela issue #2.
 
@@ -108,14 +108,17 @@ A issue #5 mantém a infraestrutura de coleta separada da publicação canônica
 - hash do arquivo bruto e hash do texto extraído são preservados;
 - promoção é `dry-run` por padrão e exige `--write-canonical` explicitamente;
 - revisão aprovada precisa estar ancorada em trecho coletado e respeitar o limite de até 3 tentativas;
-- a cobertura canônica permanece em **0 registros** até existirem evidências reais aprovadas.
+- a cobertura canônica contém **1 registro aprovado**, usado para validar o pipeline ponta a ponta; isso não representa cobertura temática suficiente.
 
 ## Estado das frentes
 
 - V5.4: concluída;
 - V5.5 / Issue #11: concluída e consolidada em `main`;
-- Issue #5: em andamento;
+- Issue #5: concluída; infraestrutura de coleta/staging/promoção entregue;
 - Issue #2: aberta como frente de integração de evidências;
+- Issue #34: aberta para escalabilidade e shadow mode;
+- Issue #35: aberta para importação/cobertura operacional;
+- Issue #36: hardening crítico de governança em execução;
 - Issue #13: concluída; README sincronizado e com regra explícita de manutenção documental.
 
 ## Regra documental
@@ -165,3 +168,19 @@ Essa camada não pode escrever na fonte canônica de evidências, aparecer como 
 Toda mudança durante o freeze deve usar o menor escopo efetivo possível.
 
 Baseline canônico durante o freeze: **V5.5**.
+
+
+## Hardening de governança — 20/09/2026
+
+A auditoria da #36 confirmou regressão anterior de 7 → 0 vínculos federais quando a API da Câmara ficou indisponível.
+
+Os 7 vínculos previamente validados foram restaurados após rechecagem institucional, e o sincronizador agora:
+
+- preserva o último estado federal validado quando a lista da Câmara estiver temporariamente indisponível;
+- aborta se a fonte falhar e não existir estado anterior seguro;
+- impede rebase pós-auditoria;
+- não usa `[skip ci]`;
+- executa a suíte do pipeline antes da publicação;
+- resolve o espelho eleitoral por revisão imutável e hash do conteúdo processado.
+
+Quality do commit crítico `28eb787` concluiu com sucesso. A proteção/ruleset da branch `main` continua sendo configuração externa do GitHub e permanece requisito aberto do hardening até ser ativada.
