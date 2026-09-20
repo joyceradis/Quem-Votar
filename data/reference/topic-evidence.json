@@ -4,18 +4,60 @@
   "semantics": "Evidências temáticas curadas por SQ_CANDIDATO. A ausência de entrada não significa ausência de proposta ou posição.",
   "entries": [
     {
-      "candidate_id": "80002537487",
-      "topic_id": "infraestrutura",
+      "candidate_id": "80002542403",
+      "topic_id": "economia",
       "evidence_type": "atuação",
-      "statement": "Apresentou o Projeto de Lei nº 20/2026, que propõe a concessão de duas passagens gratuitas por mês em ônibus intermunicipais convencionais para jovens de baixa renda no Espírito Santo.",
-      "quote_or_summary": "O Projeto de Lei nº 20/2026, atribuído pela fonte a Alexandre Xambinho, propõe duas passagens gratuitas por mês em ônibus intermunicipais convencionais para jovens de baixa renda.",
-      "source_url": "https://www.conexaoes.com.br/noticia/projeto-quer-garantir-passagens-gratuitas-para-jovens-de-baixa-renda-no-es",
-      "source_title": "Projeto quer garantir passagens gratuitas para jovens de baixa renda no ES",
-      "source_publisher": "Conexão ES",
-      "published_at": "2026-03-04",
-      "captured_at": "2026-09-20T01:33:58+00:00",
-      "scope": "estadual",
-      "verification_status": "secondary_source"
+      "statement": "Parecer do relator Amaro Neto na Comissão de Indústria, Comércio e Serviços (17/06/2025) pela rejeição da matéria analisada.",
+      "quote_or_summary": "",
+      "source_url": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2526647",
+      "source_title": "PRL 1/ — Parecer do Relator, Dep. Amaro Neto (REPUBLIC-ES), pela rejeição.",
+      "source_publisher": "Câmara dos Deputados",
+      "published_at": "2025-06-17",
+      "captured_at": "2026-09-20T14:20:13+00:00",
+      "scope": "federal",
+      "verification_status": "verified"
+    },
+    {
+      "candidate_id": "80002542403",
+      "topic_id": "economia",
+      "evidence_type": "proposta",
+      "statement": "Propõe regulamentar a atuação de assessores de investimentos, com obrigações, transparência, dever fiduciário, regras de remuneração, fiscalização e penalidades.",
+      "quote_or_summary": "",
+      "source_url": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2531269",
+      "source_title": "PL 3193/2025 — Dispõe sobre a regulamentação da atuação de assessores de investimentos no mercado financeiro brasileiro, estabelecendo obrigações, transparência, dever fiduciário, modelos de remuneração, fiscalização e penalidades, visando a proteção dos investidores e a valorização dos profissionai",
+      "source_publisher": "Câmara dos Deputados",
+      "published_at": "2025-07-02",
+      "captured_at": "2026-09-20T14:20:20+00:00",
+      "scope": "federal",
+      "verification_status": "verified"
+    },
+    {
+      "candidate_id": "80002542403",
+      "topic_id": "economia",
+      "evidence_type": "proposta",
+      "statement": "Propõe a livre escolha do valor de recarga em planos de telefonia móvel pré-paga e um prazo mínimo de validade dos créditos.",
+      "quote_or_summary": "",
+      "source_url": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2531284",
+      "source_title": "PL 3194/2025 — Dispõe sobre a livre escolha de valor de recarga de créditos em planos de telefonia móvel pré-paga, estabelece prazo mínimo de validade dos créditos, e dá outras providências.",
+      "source_publisher": "Câmara dos Deputados",
+      "published_at": "2025-07-02",
+      "captured_at": "2026-09-20T14:20:22+00:00",
+      "scope": "federal",
+      "verification_status": "verified"
+    },
+    {
+      "candidate_id": "80002542403",
+      "topic_id": "educacao",
+      "evidence_type": "proposta",
+      "statement": "Propõe regras de transparência, integridade e fiscalização nos concursos públicos para cargos acadêmicos em instituições públicas de ensino superior.",
+      "quote_or_summary": "",
+      "source_url": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2531925",
+      "source_title": "PL 3241/2025 — Dispõe sobre a transparência, integridade e fiscalização dos concursos públicos para cargos acadêmicos em instituições públicas de ensino superior e dá outras providências.",
+      "source_publisher": "Câmara dos Deputados",
+      "published_at": "2025-07-03",
+      "captured_at": "2026-09-20T14:20:23+00:00",
+      "scope": "federal",
+      "verification_status": "verified"
     }
   ]
 }
