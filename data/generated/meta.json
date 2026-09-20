@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-09-20T04:57:36.713529+00:00",
+  "collected_at": "2026-09-20T11:28:16.789813+00:00",
   "uf": "ES",
   "election_year": 2026,
   "counts": {
@@ -18,16 +18,20 @@
       "federal": {
         "repository": "herminiotorres/dossie-cidadao",
         "path": "docs/data/tse/candidatos/ES/deputado-federal.json",
+        "commit_sha": "1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2",
         "blob_sha": "98f9a76a22f0a1f0c9c097dc105f9552bbf3cfde",
-        "html_url": "https://github.com/herminiotorres/dossie-cidadao/blob/main/docs/data/tse/candidatos/ES/deputado-federal.json",
-        "raw_url": "https://raw.githubusercontent.com/herminiotorres/dossie-cidadao/main/docs/data/tse/candidatos/ES/deputado-federal.json"
+        "content_sha256": "332f8ad41ca4ea53151e873bd674ccfd34333775763424f5eba371a5c25ccc84",
+        "html_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/deputado-federal.json",
+        "raw_url": "https://raw.githubusercontent.com/herminiotorres/dossie-cidadao/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/deputado-federal.json"
       },
       "estadual": {
         "repository": "herminiotorres/dossie-cidadao",
         "path": "docs/data/tse/candidatos/ES/deputado-estadual.json",
+        "commit_sha": "1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2",
         "blob_sha": "c0bab86798042fca4d05617ad8309ef79b0ec60f",
-        "html_url": "https://github.com/herminiotorres/dossie-cidadao/blob/main/docs/data/tse/candidatos/ES/deputado-estadual.json",
-        "raw_url": "https://raw.githubusercontent.com/herminiotorres/dossie-cidadao/main/docs/data/tse/candidatos/ES/deputado-estadual.json"
+        "content_sha256": "1de4c1f7d4dde801285e7cca69458c1430b80dbfabecaa470abc4683e197f5e7",
+        "html_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/deputado-estadual.json",
+        "raw_url": "https://raw.githubusercontent.com/herminiotorres/dossie-cidadao/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/deputado-estadual.json"
       }
     },
     "camara_federal": "https://dadosabertos.camara.leg.br/api/v2/deputados?siglaUf=ES&ordem=ASC&ordenarPor=nome&itens=100",
@@ -38,8 +42,7 @@
     "assets": "Patrimônio não é publicado até haver ingestão auditável do bem_candidato_2026.",
     "photos": "A fonte primária é o pacote ES - Fotos de candidatos do TSE. Como o CDN oficial bloqueia o runner, a UI usa temporariamente um cache público por SQ_CANDIDATO; falhas de imagem caem para placeholder.",
     "electoral_history": "Histórico eleitoral TSE ainda não é incorporado automaticamente neste snapshot; histórico institucional federal é obtido da Câmara.",
-    "state_current_mandate": "Não inferido automaticamente; a composição da ALES requer validação institucional datada.",
-    "chamber": "Sete vínculos federais previamente validados foram restaurados após regressão por indisponibilidade transitória da Câmara; o sincronizador agora preserva o último estado validado ou falha fechado."
+    "state_current_mandate": "Não inferido automaticamente; a composição da ALES requer validação institucional datada."
   },
-  "normalizer_version": "3.0.0"
+  "normalizer_version": "3.1.0"
 }
