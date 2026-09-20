@@ -290,7 +290,7 @@ def looks_like_exact_content(url: str, anchor_text: str = "") -> bool:
     if re.search(r"\.(pdf|docx?|odt)$", path, re.I):
         return True
 
-    normalized = collector.norm(path + " " + anchor_text)
+    normalized = re.sub(r"[^a-z0-9]+", " ", collector.norm(path + " " + anchor_text))
     tokens = set(normalized.split())
     hints = CONTENT_HINTS.intersection(tokens)
     if not hints:
@@ -301,7 +301,7 @@ def looks_like_exact_content(url: str, anchor_text: str = "") -> bool:
     if len(segments) >= 2:
         return True
 
-    single = collector.norm(segments[0])
+    single = re.sub(r"[^a-z0-9]+", " ", collector.norm(segments[0]))
     return any(hint in single for hint in CONTENT_HINTS)
 
 
