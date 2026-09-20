@@ -4,82 +4,154 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0B456F">
-<meta name="description" content="Apoio voluntário, transparência financeira e independência editorial do Quem Votar?.">
+<meta name="description" content="Apoie a manutenção e o desenvolvimento do Quem Votar? por Pix ou GitHub Sponsors.">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="stylesheet" href="styles.css?v=5.5.0">
-<title>Apoio e transparência · Quem Votar?</title>
+<title>Apoie o Quem Votar?</title>
 <style>
-.support-shell{max-width:980px;margin:0 auto;padding:64px 24px 86px}.support-hero{padding-bottom:42px;border-bottom:1px solid rgba(17,59,86,.12)}.support-hero h1{margin:0;max-width:820px;font-size:clamp(3rem,6vw,5.7rem);line-height:.93;letter-spacing:-.065em}.support-hero p:not(.eyebrow){max-width:760px;margin:20px 0 0;color:#536b79}.support-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:26px;border-top:1px solid rgba(17,59,86,.12)}.support-block{padding:34px 30px 34px 0;border-bottom:1px solid rgba(17,59,86,.12)}.support-block:nth-child(even){padding-left:30px;border-left:1px solid rgba(17,59,86,.12)}.support-block h2{margin:0 0 10px;font-size:1.45rem}.support-block p{margin:0 0 14px;color:#536b79}.support-key{display:grid;gap:5px;margin:18px 0}.support-key span{font-size:.72rem;font-weight:900;letter-spacing:.06em;text-transform:uppercase;color:#536b79}.support-key code{font-size:.96rem;overflow-wrap:anywhere}.support-actions{display:flex;flex-wrap:wrap;gap:10px}.support-button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border:0;border-radius:999px;background:#2A75D3;color:#fff;font:inherit;font-weight:900;text-decoration:none;cursor:pointer}.support-button.secondary{background:#f8fafc;color:#0B456F;border:1px solid rgba(17,59,86,.18)}.support-feedback{min-height:1.2em;margin-top:10px;color:#536b79;font-size:.78rem}.support-status{display:inline-block;margin-top:8px;padding:8px 11px;border:1px solid rgba(17,59,86,.16);border-radius:8px;color:#536b79;font-size:.82rem}.support-policy{margin-top:44px}.support-policy h2{font-size:2rem;margin:0 0 18px}.support-policy ul{padding-left:20px;color:#536b79}.support-policy li+li{margin-top:8px}.support-note{margin-top:28px;padding:20px;border-left:4px solid #1679b6;background:#f8fafc;color:#536b79}.support-note strong{color:#173244}.support-links{display:flex;flex-wrap:wrap;gap:18px;margin-top:28px}.support-links a{color:#1679b6;font-weight:850;text-decoration:none}@media(max-width:700px){.support-shell{padding:42px 16px 70px}.support-grid{grid-template-columns:1fr}.support-block,.support-block:nth-child(even){padding:26px 0;border-left:0}.support-hero h1{font-size:clamp(2.8rem,14vw,4.2rem)}}
+.support-shell{max-width:900px;margin:0 auto;padding:46px 24px 80px}
+.support-back{display:inline-flex;margin-bottom:34px;color:#2A75D3;font-weight:850;text-decoration:none}
+.support-hero{max-width:720px;margin-bottom:34px}
+.support-hero h1{margin:0 0 12px;font-size:clamp(2.6rem,7vw,4.9rem);line-height:.96;letter-spacing:-.055em}
+.support-hero p{max-width:650px;margin:0;color:#536b79;font-size:1.05rem}
+.support-grid{display:grid;grid-template-columns:1fr;gap:18px}
+.support-card{padding:26px;border:1px solid rgba(17,59,86,.14);border-radius:18px;background:#fff}
+.support-card-primary{border-color:rgba(42,117,211,.4);background:#f8fafc;text-align:center}
+.support-card-primary .support-actions{justify-items:center}
+.support-card-primary .support-button{width:min(100%,360px);margin-inline:auto}
+.support-card-primary .pix-key{text-align:center}
+.support-card h2{margin:0 0 8px;font-size:1.45rem}
+.support-card>p{margin:0 0 18px;color:#536b79}
+.pix-layout{display:flex;flex-direction:column;gap:18px;align-items:stretch}
+.pix-qr{display:block;width:min(220px,72vw);height:min(220px,72vw);margin:2px auto 0;padding:10px;background:#fff;border:1px solid rgba(17,59,86,.14);border-radius:14px}
+.pix-qr svg{display:block;width:100%;height:100%;overflow:visible}
+.pix-copy-primary{display:block;width:100%;margin:0 0 4px}
+.pix-key{margin:0 0 14px}
+.pix-key span{display:block;margin-bottom:5px;color:#536b79;font-size:.72rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+.pix-key code{font-size:.94rem;overflow-wrap:anywhere}
+.support-actions{display:grid;gap:9px}
+.support-button{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 16px;border:0;border-radius:999px;background:#2A75D3;color:#fff;font:inherit;font-weight:900;text-decoration:none;cursor:pointer;text-align:center}
+.support-button.secondary{background:#fff;color:#0B456F;border:1px solid rgba(17,59,86,.18)}
+.support-button:focus-visible,.support-back:focus-visible,summary:focus-visible{outline:3px solid rgba(42,117,211,.38);outline-offset:3px}
+.support-feedback{min-height:1.2em;margin:10px 0 0;color:#536b79;font-size:.8rem}
+.support-trust{margin:24px 0 0;padding:16px 18px;border-left:4px solid #2A75D3;background:#f8fafc;color:#536b79}
+.support-trust strong{color:#173244}
+.governance-details{margin-top:26px;border-top:1px solid rgba(17,59,86,.14);border-bottom:1px solid rgba(17,59,86,.14)}
+.governance-details summary{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 0;color:#173244;font-weight:900;cursor:pointer;list-style:none}
+.governance-details summary::-webkit-details-marker{display:none}
+.governance-details summary::after{content:"+";font-size:1.35rem;color:#2A75D3}
+.governance-details[open] summary::after{content:"−"}
+.governance-content{padding:0 0 22px;color:#536b79}
+.governance-content ul{margin:0;padding-left:20px}
+.governance-content li+li{margin-top:9px}
+.governance-links{display:flex;flex-wrap:wrap;gap:16px;margin-top:20px}
+.governance-links a{color:#2A75D3;font-weight:850;text-decoration:none}
+@media(min-width:760px){
+  .support-grid{grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr)}
+  .pix-layout{display:grid;grid-template-columns:220px minmax(0,1fr);align-items:center}
+  .pix-copy-primary{grid-column:2}
+}
+@media(max-width:700px){
+  .support-shell{padding:34px 16px 64px}
+  .support-card{padding:22px}
+}
 </style>
 </head>
 <body>
 <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
 <header class="site-header">
   <a class="brand" href="index.html" aria-label="Quem Votar? início"><img src="assets/logo.svg" alt="Quem Votar? ES 2026"></a>
-  <div class="header-actions"><a href="index.html" style="color:#1679b6;font-weight:850;text-decoration:none">Voltar ao site</a></div>
+  <div class="header-actions"><a href="index.html" style="color:#2A75D3;font-weight:850;text-decoration:none">Voltar ao site</a></div>
 </header>
+
 <main id="conteudo" class="support-shell">
+  <a class="support-back" href="index.html">← Voltar para a consulta</a>
+
   <section class="support-hero">
-    <p class="eyebrow">APOIO E TRANSPARÊNCIA</p>
-    <h1>O projeto é gratuito. A independência editorial continua intacta.</h1>
-    <p>Contribuições ajudam a manter software, dados, documentação e infraestrutura. Apoio financeiro não compra influência sobre candidaturas, fontes, temas, ordem, classificação ou apresentação das informações.</p>
+    <p class="eyebrow">APOIO AO PROJETO</p>
+    <h1>Apoie o Quem Votar?</h1>
+    <p>O projeto é gratuito e open source. Se ele foi útil para você, contribua com a coleta e o processamento de dados, a manutenção e o desenvolvimento.</p>
   </section>
 
   <section class="support-grid" aria-label="Formas de apoio">
-    <article class="support-block">
-      <h2>Apoio via PIX</h2>
-      <p>Quem quiser contribuir diretamente com a manutenção do projeto pode usar a chave abaixo.</p>
-      <div class="support-key">
-        <span>Chave PIX · e-mail</span>
-        <code id="pixKey">contato@drajoyceradis.com</code>
+    <article class="support-card support-card-primary">
+      <h2>Pix</h2>
+      <p>Escaneie o QR Code ou use uma das opções de cópia.</p>
+
+      <div class="pix-layout">
+        <div class="pix-copy-primary">
+          <button class="support-button" id="copyPayload" type="button">Copiar Pix Copia e Cola</button>
+          <p class="support-feedback" id="pixFeedback" aria-live="polite"></p>
+        </div>
+
+        <div class="pix-qr" role="img" aria-label="QR Code Pix para apoiar o Quem Votar?">
+          <svg viewBox="0 0 57 57" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+            <rect width="57" height="57" fill="#fff"/><path d="M4 4h7v1H4zM12 4h4v1H12zM17 4h6v1H17zM24 4h1v1H24zM30 4h1v1H30zM32 4h3v1H32zM37 4h1v1H37zM44 4h1v1H44zM46 4h7v1H46zM4 5h1v1H4zM10 5h1v1H10zM12 5h1v1H12zM14 5h2v1H14zM17 5h2v1H17zM21 5h2v1H21zM24 5h1v1H24zM26 5h1v1H26zM30 5h2v1H30zM33 5h1v1H33zM35 5h1v1H35zM37 5h1v1H37zM40 5h1v1H40zM42 5h3v1H42zM46 5h1v1H46zM52 5h1v1H52zM4 6h1v1H4zM6 6h3v1H6zM10 6h1v1H10zM15 6h1v1H15zM17 6h1v1H17zM19 6h1v1H19zM21 6h1v1H21zM23 6h2v1H23zM29 6h4v1H29zM38 6h2v1H38zM41 6h1v1H41zM43 6h2v1H43zM46 6h1v1H46zM48 6h3v1H48zM52 6h1v1H52zM4 7h1v1H4zM6 7h3v1H6zM10 7h1v1H10zM12 7h1v1H12zM14 7h3v1H14zM18 7h2v1H18zM31 7h1v1H31zM35 7h1v1H35zM37 7h2v1H37zM40 7h1v1H40zM43 7h1v1H43zM46 7h1v1H46zM48 7h3v1H48zM52 7h1v1H52zM4 8h1v1H4zM6 8h3v1H6zM10 8h1v1H10zM13 8h1v1H13zM15 8h1v1H15zM21 8h3v1H21zM26 8h5v1H26zM36 8h1v1H36zM39 8h1v1H39zM41 8h1v1H41zM46 8h1v1H46zM48 8h3v1H48zM52 8h1v1H52zM4 9h1v1H4zM10 9h1v1H10zM13 9h1v1H13zM16 9h3v1H16zM20 9h1v1H20zM23 9h2v1H23zM26 9h1v1H26zM30 9h3v1H30zM34 9h1v1H34zM39 9h1v1H39zM42 9h1v1H42zM46 9h1v1H46zM52 9h1v1H52zM4 10h7v1H4zM12 10h1v1H12zM14 10h1v1H14zM16 10h1v1H16zM18 10h1v1H18zM20 10h1v1H20zM22 10h1v1H22zM24 10h1v1H24zM26 10h1v1H26zM28 10h1v1H28zM30 10h1v1H30zM32 10h1v1H32zM34 10h1v1H34zM36 10h1v1H36zM38 10h1v1H38zM40 10h1v1H40zM42 10h1v1H42zM44 10h1v1H44zM46 10h7v1H46zM12 11h1v1H12zM15 11h1v1H15zM21 11h1v1H21zM23 11h1v1H23zM26 11h1v1H26zM30 11h2v1H30zM35 11h1v1H35zM38 11h1v1H38zM40 11h3v1H40zM44 11h1v1H44zM4 12h1v1H4zM6 12h2v1H6zM9 12h3v1H9zM13 12h1v1H13zM16 12h1v1H16zM19 12h1v1H19zM24 12h1v1H24zM26 12h5v1H26zM32 12h4v1H32zM37 12h2v1H37zM41 12h1v1H41zM43 12h2v1H43zM46 12h1v1H46zM49 12h1v1H49zM51 12h2v1H51zM5 13h1v1H5zM8 13h1v1H8zM11 13h6v1H11zM18 13h1v1H18zM20 13h3v1H20zM27 13h2v1H27zM31 13h4v1H31zM36 13h2v1H36zM43 13h3v1H43zM49 13h1v1H49zM51 13h1v1H51zM6 14h5v1H6zM12 14h3v1H12zM16 14h2v1H16zM22 14h3v1H22zM28 14h2v1H28zM33 14h2v1H33zM36 14h3v1H36zM41 14h1v1H41zM43 14h1v1H43zM46 14h1v1H46zM48 14h1v1H48zM50 14h2v1H50zM4 15h6v1H4zM11 15h2v1H11zM17 15h2v1H17zM21 15h1v1H21zM25 15h1v1H25zM27 15h3v1H27zM31 15h1v1H31zM33 15h1v1H33zM35 15h6v1H35zM44 15h1v1H44zM52 15h1v1H52zM6 16h3v1H6zM10 16h1v1H10zM12 16h4v1H12zM26 16h2v1H26zM33 16h3v1H33zM37 16h1v1H37zM39 16h3v1H39zM44 16h3v1H44zM48 16h2v1H48zM51 16h2v1H51zM5 17h2v1H5zM8 17h1v1H8zM14 17h1v1H14zM17 17h1v1H17zM21 17h1v1H21zM24 17h1v1H24zM29 17h3v1H29zM34 17h1v1H34zM37 17h1v1H37zM39 17h2v1H39zM43 17h3v1H43zM47 17h1v1H47zM49 17h1v1H49zM52 17h1v1H52zM6 18h1v1H6zM8 18h1v1H8zM10 18h1v1H10zM13 18h1v1H13zM15 18h1v1H15zM18 18h2v1H18zM21 18h1v1H21zM23 18h1v1H23zM25 18h3v1H25zM33 18h2v1H33zM36 18h1v1H36zM38 18h1v1H38zM44 18h4v1H44zM49 18h1v1H49zM6 19h1v1H6zM13 19h1v1H13zM15 19h2v1H15zM18 19h1v1H18zM21 19h2v1H21zM25 19h1v1H25zM27 19h3v1H27zM34 19h1v1H34zM37 19h2v1H37zM42 19h1v1H42zM45 19h2v1H45zM48 19h2v1H48zM52 19h1v1H52zM4 20h1v1H4zM6 20h5v1H6zM13 20h1v1H13zM15 20h1v1H15zM17 20h1v1H17zM19 20h1v1H19zM21 20h7v1H21zM29 20h2v1H29zM32 20h6v1H32zM39 20h1v1H39zM42 20h1v1H42zM44 20h1v1H44zM47 20h2v1H47zM50 20h2v1H50zM5 21h1v1H5zM7 21h1v1H7zM9 21h1v1H9zM13 21h2v1H13zM18 21h3v1H18zM25 21h2v1H25zM28 21h1v1H28zM30 21h1v1H30zM37 21h2v1H37zM43 21h2v1H43zM47 21h1v1H47zM50 21h1v1H50zM52 21h1v1H52zM4 22h1v1H4zM6 22h1v1H6zM8 22h1v1H8zM10 22h2v1H10zM13 22h1v1H13zM16 22h1v1H16zM18 22h2v1H18zM23 22h2v1H23zM28 22h4v1H28zM34 22h1v1H34zM40 22h2v1H40zM43 22h1v1H43zM45 22h1v1H45zM47 22h1v1H47zM49 22h1v1H49zM52 22h1v1H52zM4 23h2v1H4zM11 23h1v1H11zM14 23h2v1H14zM21 23h1v1H21zM24 23h1v1H24zM28 23h1v1H28zM32 23h2v1H32zM36 23h5v1H36zM42 23h2v1H42zM45 23h1v1H45zM47 23h1v1H47zM52 23h1v1H52zM4 24h2v1H4zM7 24h1v1H7zM10 24h1v1H10zM13 24h2v1H13zM18 24h1v1H18zM20 24h2v1H20zM23 24h3v1H23zM29 24h2v1H29zM33 24h2v1H33zM41 24h1v1H41zM43 24h1v1H43zM45 24h3v1H45zM49 24h1v1H49zM51 24h1v1H51zM4 25h1v1H4zM9 25h1v1H9zM12 25h1v1H12zM14 25h1v1H14zM17 25h4v1H17zM22 25h1v1H22zM24 25h2v1H24zM27 25h1v1H27zM29 25h2v1H29zM33 25h2v1H33zM39 25h2v1H39zM43 25h1v1H43zM46 25h1v1H46zM49 25h1v1H49zM52 25h1v1H52zM4 26h1v1H4zM8 26h8v1H8zM19 26h1v1H19zM26 26h6v1H26zM33 26h4v1H33zM38 26h1v1H38zM41 26h1v1H41zM43 26h8v1H43zM7 27h2v1H7zM12 27h1v1H12zM15 27h2v1H15zM21 27h2v1H21zM26 27h1v1H26zM30 27h1v1H30zM33 27h1v1H33zM36 27h5v1H36zM44 27h1v1H44zM48 27h1v1H48zM50 27h1v1H50zM52 27h1v1H52zM4 28h2v1H4zM7 28h2v1H7zM10 28h1v1H10zM12 28h4v1H12zM18 28h9v1H18zM28 28h1v1H28zM30 28h1v1H30zM34 28h1v1H34zM37 28h2v1H37zM40 28h1v1H40zM44 28h1v1H44zM46 28h1v1H46zM48 28h3v1H48zM52 28h1v1H52zM6 29h3v1H6zM12 29h3v1H12zM16 29h1v1H16zM18 29h2v1H18zM24 29h1v1H24zM26 29h1v1H26zM30 29h1v1H30zM32 29h1v1H32zM36 29h1v1H36zM42 29h1v1H42zM44 29h1v1H44zM48 29h2v1H48zM52 29h1v1H52zM5 30h1v1H5zM7 30h6v1H7zM18 30h1v1H18zM20 30h1v1H20zM22 30h1v1H22zM26 30h7v1H26zM34 30h3v1H34zM40 30h1v1H40zM42 30h1v1H42zM44 30h5v1H44zM50 30h1v1H50zM5 31h5v1H5zM15 31h2v1H15zM18 31h1v1H18zM21 31h2v1H21zM25 31h2v1H25zM28 31h1v1H28zM30 31h5v1H30zM36 31h1v1H36zM41 31h1v1H41zM43 31h2v1H43zM49 31h1v1H49zM4 32h1v1H4zM6 32h10v1H6zM19 32h1v1H19zM22 32h1v1H22zM24 32h2v1H24zM27 32h2v1H27zM30 32h2v1H30zM36 32h1v1H36zM42 32h2v1H42zM45 32h1v1H45zM47 32h2v1H47zM50 32h1v1H50zM4 33h3v1H4zM9 33h1v1H9zM12 33h2v1H12zM18 33h1v1H18zM22 33h2v1H22zM28 33h2v1H28zM32 33h1v1H32zM35 33h2v1H35zM41 33h1v1H41zM44 33h1v1H44zM47 33h6v1H47zM6 34h1v1H6zM10 34h1v1H10zM12 34h1v1H12zM14 34h2v1H14zM17 34h4v1H17zM23 34h1v1H23zM26 34h1v1H26zM31 34h1v1H31zM33 34h1v1H33zM35 34h1v1H35zM39 34h4v1H39zM46 34h1v1H46zM49 34h2v1H49zM52 34h1v1H52zM12 35h3v1H12zM16 35h1v1H16zM18 35h2v1H18zM21 35h1v1H21zM23 35h1v1H23zM25 35h1v1H25zM28 35h2v1H28zM31 35h2v1H31zM34 35h3v1H34zM41 35h3v1H41zM47 35h1v1H47zM4 36h1v1H4zM9 36h2v1H9zM13 36h5v1H13zM19 36h1v1H19zM23 36h1v1H23zM25 36h3v1H25zM29 36h4v1H29zM34 36h1v1H34zM36 36h4v1H36zM41 36h4v1H41zM49 36h2v1H49zM8 37h1v1H8zM11 37h2v1H11zM16 37h2v1H16zM19 37h1v1H19zM22 37h1v1H22zM25 37h5v1H25zM35 37h1v1H35zM38 37h1v1H38zM40 37h1v1H40zM43 37h2v1H43zM47 37h1v1H47zM49 37h1v1H49zM51 37h2v1H51zM6 38h1v1H6zM10 38h1v1H10zM13 38h2v1H13zM16 38h3v1H16zM20 38h1v1H20zM23 38h1v1H23zM25 38h1v1H25zM27 38h1v1H27zM29 38h2v1H29zM32 38h4v1H32zM44 38h2v1H44zM47 38h1v1H47zM4 39h1v1H4zM6 39h1v1H6zM13 39h3v1H13zM17 39h2v1H17zM20 39h2v1H20zM23 39h1v1H23zM27 39h1v1H27zM29 39h1v1H29zM31 39h2v1H31zM36 39h6v1H36zM43 39h5v1H43zM50 39h1v1H50zM52 39h1v1H52zM8 40h1v1H8zM10 40h2v1H10zM13 40h1v1H13zM17 40h2v1H17zM22 40h5v1H22zM28 40h2v1H28zM35 40h2v1H35zM38 40h2v1H38zM43 40h6v1H43zM50 40h3v1H50zM4 41h2v1H4zM8 41h2v1H8zM16 41h1v1H16zM18 41h3v1H18zM23 41h1v1H23zM26 41h3v1H26zM30 41h2v1H30zM33 41h1v1H33zM35 41h3v1H35zM42 41h1v1H42zM44 41h2v1H44zM48 41h4v1H48zM5 42h1v1H5zM9 42h5v1H9zM15 42h6v1H15zM22 42h1v1H22zM24 42h2v1H24zM31 42h2v1H31zM34 42h1v1H34zM39 42h1v1H39zM42 42h2v1H42zM48 42h4v1H48zM5 43h3v1H5zM11 43h2v1H11zM15 43h2v1H15zM18 43h1v1H18zM20 43h1v1H20zM22 43h4v1H22zM27 43h2v1H27zM31 43h2v1H31zM34 43h3v1H34zM38 43h2v1H38zM52 43h1v1H52zM4 44h3v1H4zM10 44h1v1H10zM16 44h1v1H16zM19 44h2v1H19zM23 44h1v1H23zM25 44h7v1H25zM33 44h2v1H33zM36 44h2v1H36zM39 44h1v1H39zM44 44h5v1H44zM50 44h1v1H50zM12 45h1v1H12zM17 45h2v1H17zM20 45h1v1H20zM22 45h2v1H22zM26 45h1v1H26zM30 45h4v1H30zM35 45h1v1H35zM38 45h2v1H38zM41 45h1v1H41zM44 45h1v1H44zM48 45h5v1H48zM4 46h7v1H4zM12 46h4v1H12zM17 46h1v1H17zM20 46h2v1H20zM26 46h1v1H26zM28 46h1v1H28zM30 46h2v1H30zM36 46h1v1H36zM38 46h2v1H38zM42 46h1v1H42zM44 46h1v1H44zM46 46h1v1H46zM48 46h1v1H48zM52 46h1v1H52zM4 47h1v1H4zM10 47h1v1H10zM12 47h1v1H12zM16 47h1v1H16zM19 47h6v1H19zM26 47h1v1H26zM30 47h3v1H30zM35 47h1v1H35zM37 47h1v1H37zM40 47h5v1H40zM48 47h1v1H48zM51 47h1v1H51zM4 48h1v1H4zM6 48h3v1H6zM10 48h1v1H10zM13 48h1v1H13zM15 48h1v1H15zM17 48h2v1H17zM21 48h1v1H21zM23 48h1v1H23zM26 48h7v1H26zM37 48h2v1H37zM41 48h1v1H41zM44 48h5v1H44zM52 48h1v1H52zM4 49h1v1H4zM6 49h3v1H6zM10 49h1v1H10zM12 49h1v1H12zM21 49h1v1H21zM24 49h4v1H24zM30 49h4v1H30zM35 49h3v1H35zM39 49h3v1H39zM46 49h4v1H46zM52 49h1v1H52zM4 50h1v1H4zM6 50h3v1H6zM10 50h1v1H10zM12 50h5v1H12zM19 50h2v1H19zM22 50h1v1H22zM27 50h1v1H27zM29 50h1v1H29zM31 50h2v1H31zM34 50h2v1H34zM37 50h3v1H37zM41 50h2v1H41zM46 50h1v1H46zM48 50h1v1H48zM50 50h1v1H50zM4 51h1v1H4zM10 51h1v1H10zM13 51h1v1H13zM15 51h2v1H15zM18 51h2v1H18zM25 51h1v1H25zM27 51h1v1H27zM30 51h1v1H30zM32 51h1v1H32zM34 51h1v1H34zM36 51h3v1H36zM40 51h3v1H40zM45 51h1v1H45zM47 51h2v1H47zM50 51h1v1H50zM4 52h7v1H4zM12 52h1v1H12zM14 52h1v1H14zM18 52h1v1H18zM22 52h1v1H22zM25 52h1v1H25zM28 52h1v1H28zM30 52h3v1H30zM34 52h1v1H34zM37 52h4v1H37zM43 52h1v1H43zM45 52h2v1H45zM49 52h1v1H49zM51 52h2v1H51z" fill="#000"/>
+          </svg>
+        </div>
+
+        <div>
+          <div class="pix-key">
+            <span>Chave Pix · e-mail</span>
+            <code id="pixEmail">contato@drajoyceradis.com</code>
+          </div>
+          <div class="support-actions">
+            <button class="support-button secondary" id="copyEmail" type="button">Copiar chave por e-mail</button>
+          </div>
+        </div>
       </div>
-      <div class="support-actions">
-        <button class="support-button" id="copyPix" type="button">Copiar chave PIX</button>
-      </div>
-      <p class="support-feedback" id="pixFeedback" aria-live="polite"></p>
     </article>
 
-    <article class="support-block">
+    <article class="support-card">
       <h2>GitHub Sponsors</h2>
-      <p>O perfil GitHub Sponsors da mantenedora está ativo e público. Você pode apoiar o desenvolvimento open source diretamente pelo GitHub.</p>
+      <p>Prefere apoiar o desenvolvimento open source pelo GitHub? O perfil Sponsors da mantenedora está ativo.</p>
       <div class="support-actions">
-        <a class="support-button secondary" href="https://github.com/sponsors/joyceradis" target="_blank" rel="noopener">Apoiar pelo GitHub Sponsors</a>
+        <a class="support-button secondary" href="https://github.com/sponsors/joyceradis" target="_blank" rel="noopener noreferrer">Apoiar no GitHub Sponsors ↗</a>
       </div>
-      <span class="support-status">Perfil GitHub Sponsors ativo e público.</span>
     </article>
   </section>
 
-  <section class="support-policy">
-    <h2>Regra de independência</h2>
-    <ul>
-      <li>Apoio financeiro não altera seleção, ordem, redação, fontes, temas ou visibilidade de candidaturas.</li>
-      <li>Não tratamos candidaturas, campanhas, partidos, federações, coligações, comitês eleitorais ou intermediários desses atores como apoiadores institucionais neutros.</li>
-      <li>Apoiadores não recebem acesso antecipado, veto, aprovação editorial ou destaque dentro de fichas, busca, comparação ou páginas temáticas.</li>
-      <li>Nenhuma contribuição escreve ou modifica a camada canônica de evidências eleitorais.</li>
-      <li>Não usamos trackers publicitários, personalização política ou segmentação baseada em apoio financeiro.</li>
-    </ul>
-    <div class="support-note"><strong>Separação de camadas.</strong> Apoio sustenta a operação. Evidência sustenta o conteúdo. Os dois fluxos permanecem tecnicamente e editorialmente separados.</div>
-    <div class="support-links"><a href="sobre.html">Como o projeto funciona</a><a href="docs/SUSTAINABILITY.md">Arquitetura de sustentabilidade</a><a href="docs/LICENSING.md">Licenciamento</a></div>
-  </section>
+  <p class="support-trust"><strong>Independência preservada.</strong> Apoio financeiro não interfere em candidaturas, fontes, metodologia, ordem ou apresentação dos dados.</p>
+
+  <details class="governance-details">
+    <summary>Como garantimos a independência?</summary>
+    <div class="governance-content">
+      <ul>
+        <li>As mesmas regras editoriais e de apresentação se aplicam às candidaturas. A plataforma não produz score, ranking ou recomendação de voto.</li>
+        <li>Apoio financeiro não altera seleção, redação, fontes, temas, ordem ou visibilidade de candidaturas.</li>
+        <li>Apoiadores não recebem acesso antecipado, veto, aprovação editorial ou destaque dentro de fichas, busca, comparação ou páginas temáticas.</li>
+        <li>Nenhuma contribuição escreve ou modifica a camada canônica de evidências eleitorais.</li>
+        <li>Toda afirmação política publicada deve ser rastreável a uma fonte identificável, com prioridade para fontes oficiais.</li>
+        <li>Não usamos trackers publicitários, personalização política ou segmentação baseada em apoio financeiro.</li>
+      </ul>
+
+      <div class="governance-links">
+        <a href="sobre.html">Como o projeto funciona</a>
+        <a href="docs/SUSTAINABILITY.md">Arquitetura de sustentabilidade</a>
+        <a href="docs/LICENSING.md">Licenciamento</a>
+      </div>
+    </div>
+  </details>
 </main>
+
 <footer class="site-footer">
   <div><strong>Quem Votar? · Espírito Santo 2026</strong><span>Informação pública, em linguagem normal.</span></div>
   <div><a href="apoio.html">Apoio e transparência</a><a href="LICENSE">AGPL-3.0-only</a></div>
 </footer>
+
 <script>
 (() => {
-  const button = document.getElementById("copyPix");
-  const key = document.getElementById("pixKey");
+  const PIX_PAYLOAD = "00020126580014br.gov.bcb.pix0136e5d18663-c4e4-4d42-9696-8827dbafb3245204000053039865802BR5925JOYCE_RADIS_DE_SOUZA_DE_O6005Serra610929161-78662290525MCDY32430233178986346970463043652";
+  const PIX_EMAIL = "contato@drajoyceradis.com";
   const feedback = document.getElementById("pixFeedback");
-  if (!button || !key || !feedback) return;
 
-  button.addEventListener("click", async () => {
-    const value = key.textContent.trim();
+  async function copyText(value, button, originalLabel) {
+    let copied = false;
+
     try {
       await navigator.clipboard.writeText(value);
-      feedback.textContent = "Chave PIX copiada.";
-      button.textContent = "Copiado";
+      copied = true;
     } catch {
       const input = document.createElement("textarea");
       input.value = value;
@@ -88,16 +160,29 @@
       input.style.opacity = "0";
       document.body.appendChild(input);
       input.select();
-      const copied = document.execCommand("copy");
+      copied = document.execCommand("copy");
       input.remove();
-      feedback.textContent = copied ? "Chave PIX copiada." : "Não foi possível copiar automaticamente. Selecione a chave acima.";
-      if (copied) button.textContent = "Copiado";
     }
+
+    if (!copied) {
+      feedback.textContent = "Não foi possível copiar automaticamente. Selecione a chave por e-mail acima.";
+      return;
+    }
+
+    button.textContent = "Copiado";
+    feedback.textContent = "Copiado para a área de transferência.";
+
     setTimeout(() => {
-      button.textContent = "Copiar chave PIX";
+      button.textContent = originalLabel;
       feedback.textContent = "";
     }, 2200);
-  });
+  }
+
+  const payloadButton = document.getElementById("copyPayload");
+  const emailButton = document.getElementById("copyEmail");
+
+  payloadButton.addEventListener("click", () => copyText(PIX_PAYLOAD, payloadButton, "Copiar Pix Copia e Cola"));
+  emailButton.addEventListener("click", () => copyText(PIX_EMAIL, emailButton, "Copiar chave por e-mail"));
 })();
 </script>
 </body>
