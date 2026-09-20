@@ -32,7 +32,7 @@ jobs:
 
       - name: Validar sintaxe
         run: |
-          python -m py_compile scripts/sync-data.py scripts/audit-site.py scripts/coletor_evidencias.py scripts/evidence_coverage_report.py scripts/discover_evidence_sources.py
+          python -m py_compile scripts/sync-data.py scripts/audit-site.py scripts/coletor_evidencias.py scripts/evidence_coverage_report.py scripts/discover_evidence_sources.py scripts/process_evidence_batch.py
           node --check app.js
 
       - name: Executar testes determinísticos
