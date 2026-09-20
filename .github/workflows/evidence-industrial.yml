@@ -1,0 +1,301 @@
+name: Evidence industrial full pass — artifact only
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "37 * * * *"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/evidence-industrial.yml"
+      - "scripts/discover_evidence_sources.py"
+      - "scripts/process_evidence_batch.py"
+      - "scripts/build_exception_queue.py"
+      - "scripts/evidence_coverage_report.py"
+
+permissions:
+  contents: read
+  issues: read
+
+concurrency:
+  group: evidence-industrial-full-pass
+  cancel-in-progress: false
+
+jobs:
+  window-gate:
+    runs-on: ubuntu-latest
+    outputs:
+      stop: ${{ steps.check.outputs.stop }}
+    steps:
+      - name: Check #35 full-pass window
+        id: check
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: 35,
+              per_page: 100
+            });
+            const stopped = comments.some(comment =>
+              comment.user?.login === "joyceradis" &&
+              /^\s*\/stop-full-pass\b/im.test(comment.body || "")
+            );
+            core.setOutput("stop", stopped ? "true" : "false");
+            if (stopped) {
+              core.notice("Full-pass window closed by maintainer signal in #35.");
+            }
+
+  industrial:
+    needs: window-gate
+    if: ${{ needs.window-gate.outputs.stop != 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout read-only
+        uses: actions/checkout@v4
+
+      - name: Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install evidence dependencies
+        run: python -m pip install -r requirements-evidence.txt
+
+      - name: Validate pipeline before processing
+        run: |
+          python -m py_compile             scripts/coletor_evidencias.py             scripts/discover_evidence_sources.py             scripts/process_evidence_batch.py             scripts/build_exception_queue.py             scripts/evidence_coverage_report.py
+          python -m unittest discover -s tests -p 'test_*.py' -v
+          python scripts/audit-site.py
+
+      - name: Prepare workspaces
+        id: ws
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="$RUNNER_TEMP/evidence-industrial-output"
+          STATE="$RUNNER_TEMP/evidence-industrial-state"
+          mkdir -p "$OUT" "$STATE"
+          echo "out=$OUT" >> "$GITHUB_OUTPUT"
+          echo "state=$STATE" >> "$GITHUB_OUTPUT"
+
+      - name: Restore non-canonical processing state
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ steps.ws.outputs.state }}
+          key: evidence-industrial-v1-${{ github.run_id }}
+          restore-keys: |
+            evidence-industrial-v1-
+
+      - name: Initialize state if absent
+        shell: bash
+        run: |
+          set -euo pipefail
+          STATE="${{ steps.ws.outputs.state }}"
+
+          if [[ ! -f "$STATE/drafts.json" ]]; then
+            cp data/staging/topic-evidence-drafts.json "$STATE/drafts.json"
+          fi
+
+          if [[ ! -f "$STATE/processing-state.json" ]]; then
+            cat > "$STATE/processing-state.json" <<'JSON'
+          {
+            "version": "1.0.0",
+            "semantics": "Non-canonical operational state for reliable evidence processing.",
+            "sources": {}
+          }
+          JSON
+          fi
+
+          if [[ ! -f "$STATE/exception-queue.json" ]]; then
+            cat > "$STATE/exception-queue.json" <<'JSON'
+          {
+            "version": "1.0.0",
+            "semantics": "Non-canonical exception history.",
+            "exceptions": []
+          }
+          JSON
+          fi
+
+      - name: Discover candidate-specific sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="${{ steps.ws.outputs.out }}"
+          python scripts/discover_evidence_sources.py             --output-sources "$OUT/topic-evidence-sources.json"             --output-rejections "$OUT/discovery-rejections.json"             --metrics "$OUT/discovery-metrics.json"             --site-workers 8             --max-links-per-site 20             | tee "$OUT/discovery.log"
+
+      - name: Process exact-content fairly and resumably
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="${{ steps.ws.outputs.out }}"
+          STATE="${{ steps.ws.outputs.state }}"
+          python scripts/process_evidence_batch.py             --sources "$OUT/topic-evidence-sources.json"             --existing-drafts "$STATE/drafts.json"             --state "$STATE/processing-state.json"             --output-drafts "$STATE/drafts.json"             --output-failures "$OUT/processing-failures-current.json"             --metrics "$OUT/processing-metrics.json"             --max-attempts 3             --retries-per-run 2             --workers 8             --limit 200             --per-candidate-limit 12             | tee "$OUT/processing.log"
+
+      - name: Materialize persistent processing failures
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="${{ steps.ws.outputs.out }}"
+          STATE="${{ steps.ws.outputs.state }}"
+          python - "$STATE/processing-state.json" "$OUT/processing-failures.json" <<'PY'
+          import hashlib
+          import json
+          import sys
+          from pathlib import Path
+
+          state = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+          failures = []
+          for source_id, row in (state.get("sources") or {}).items():
+              if row.get("status") != "failed":
+                  continue
+              error = str(row.get("last_error") or "")
+              failure_id = hashlib.sha256(
+                  f"{source_id}\n{error}".encode("utf-8")
+              ).hexdigest()[:20]
+              failures.append({
+                  "failure_id": failure_id,
+                  "source_id": source_id,
+                  "candidate_id": row.get("candidate_id"),
+                  "source_url": row.get("source_url"),
+                  "stage": "collection",
+                  "error": error,
+                  "attempts_used": row.get("attempts", 0),
+              })
+          Path(sys.argv[2]).write_text(
+              json.dumps({
+                  "version": "1.0.0",
+                  "semantics": "Persistent operational failures from processing state.",
+                  "failures": failures,
+              }, ensure_ascii=False, indent=2) + "\n",
+              encoding="utf-8",
+          )
+          print(f"persistent_failures={len(failures)}")
+          PY
+
+      - name: Build exception queue with history
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="${{ steps.ws.outputs.out }}"
+          STATE="${{ steps.ws.outputs.state }}"
+          python scripts/build_exception_queue.py build             --discovery-rejections "$OUT/discovery-rejections.json"             --processing-failures "$OUT/processing-failures.json"             --drafts "$STATE/drafts.json"             --previous "$STATE/exception-queue.json"             --output "$STATE/exception-queue-next.json"             --metrics "$OUT/exception-metrics.json"             | tee "$OUT/exceptions.log"
+          mv "$STATE/exception-queue-next.json" "$STATE/exception-queue.json"
+
+      - name: Generate scoped coverage ledger
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="${{ steps.ws.outputs.out }}"
+          STATE="${{ steps.ws.outputs.state }}"
+          python scripts/evidence_coverage_report.py             --sources "$OUT/topic-evidence-sources.json"             --drafts "$STATE/drafts.json"             --processing-state "$STATE/processing-state.json"             --exception-queue "$STATE/exception-queue.json"             --output "$OUT/evidence-coverage-ledger.json"             | tee "$OUT/coverage.log"
+
+      - name: Prepare human-review handoff
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="${{ steps.ws.outputs.out }}"
+          STATE="${{ steps.ws.outputs.state }}"
+          python - "$STATE/exception-queue.json" "$STATE/drafts.json" "$OUT/human-review-handoff.json" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          queue = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+          drafts = json.loads(Path(sys.argv[2]).read_text(encoding="utf-8"))
+          human = [
+              row for row in queue.get("exceptions", [])
+              if row.get("status") == "open" and row.get("requires_human") is True
+          ]
+          human_draft_ids = {row.get("draft_id") for row in human if row.get("draft_id")}
+          draft_rows = [
+              row for row in drafts.get("drafts", [])
+              if row.get("draft_id") in human_draft_ids
+          ]
+          result = {
+              "semantics": (
+                  "Human review handoff only. No entry is approved or canonical. "
+                  "Retryable/data-quality failures are intentionally excluded."
+              ),
+              "human_review_count": len(human),
+              "exceptions": human,
+              "related_drafts": draft_rows,
+          }
+          Path(sys.argv[3]).write_text(
+              json.dumps(result, ensure_ascii=False, indent=2) + "\n",
+              encoding="utf-8",
+          )
+          print(f"human_review_count={len(human)}")
+          PY
+
+      - name: Validate persistent state
+        shell: bash
+        run: |
+          set -euo pipefail
+          STATE="${{ steps.ws.outputs.state }}"
+          python - "$STATE" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          base = Path(sys.argv[1])
+          state = json.loads((base / "processing-state.json").read_text(encoding="utf-8"))
+          drafts = json.loads((base / "drafts.json").read_text(encoding="utf-8"))
+          queue = json.loads((base / "exception-queue.json").read_text(encoding="utf-8"))
+          assert isinstance(state.get("sources"), dict)
+          assert isinstance(drafts.get("drafts"), list)
+          assert isinstance(queue.get("exceptions"), list)
+          draft_ids = [x.get("draft_id") for x in drafts["drafts"]]
+          assert all(draft_ids) and len(draft_ids) == len(set(draft_ids))
+          print(
+              f"state_ok sources={len(state['sources'])} "
+              f"drafts={len(drafts['drafts'])} exceptions={len(queue['exceptions'])}"
+          )
+          PY
+
+      - name: Export state snapshot and provenance
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="${{ steps.ws.outputs.out }}"
+          STATE="${{ steps.ws.outputs.state }}"
+          cp "$STATE/processing-state.json" "$OUT/processing-state.json"
+          cp "$STATE/drafts.json" "$OUT/topic-evidence-drafts.json"
+          cp "$STATE/exception-queue.json" "$OUT/exception-queue.json"
+          (
+            cd "$OUT"
+            sha256sum *.json *.log > SHA256SUMS.txt
+          )
+          {
+            echo "repository=${GITHUB_REPOSITORY}"
+            echo "commit=${GITHUB_SHA}"
+            echo "run_id=${GITHUB_RUN_ID}"
+            echo "run_attempt=${GITHUB_RUN_ATTEMPT}"
+          } > "$OUT/RUN_METADATA.txt"
+
+      - name: Assert repository remained unchanged
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -n "$(git status --porcelain --untracked-files=no)" ]]; then
+            git status --short
+            echo "::error::Industrial evidence pass modified tracked repository files."
+            exit 1
+          fi
+
+      - name: Save non-canonical processing state
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ steps.ws.outputs.state }}
+          key: evidence-industrial-v1-${{ github.run_id }}
+
+      - name: Upload industrial evidence artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: evidence-industrial-${{ github.run_id }}
+          path: ${{ steps.ws.outputs.out }}
+          if-no-files-found: error
+          retention-days: 7
