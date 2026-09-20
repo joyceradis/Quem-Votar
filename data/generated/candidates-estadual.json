@@ -690,21 +690,7 @@
       "current_mandate_verified": false,
       "note": "Mandato estadual atual não é inferido por ocupação nem por snapshot histórico. Evidências datadas da ALES aparecem separadamente quando há vínculo nominal exato."
     },
-    "topic_evidence": [
-      {
-        "topic_id": "infraestrutura",
-        "evidence_type": "atuação",
-        "statement": "Apresentou o Projeto de Lei nº 20/2026, que propõe a concessão de duas passagens gratuitas por mês em ônibus intermunicipais convencionais para jovens de baixa renda no Espírito Santo.",
-        "source_url": "https://www.conexaoes.com.br/noticia/projeto-quer-garantir-passagens-gratuitas-para-jovens-de-baixa-renda-no-es",
-        "source_title": "Projeto quer garantir passagens gratuitas para jovens de baixa renda no ES",
-        "source_publisher": "Conexão ES",
-        "published_at": "2026-03-04",
-        "captured_at": "2026-09-20T01:33:58+00:00",
-        "scope": "estadual",
-        "quote_or_summary": "O Projeto de Lei nº 20/2026, atribuído pela fonte a Alexandre Xambinho, propõe duas passagens gratuitas por mês em ônibus intermunicipais convencionais para jovens de baixa renda.",
-        "verification_status": "secondary_source"
-      }
-    ]
+    "topic_evidence": []
   },
   {
     "tse_id": "80002537488",
