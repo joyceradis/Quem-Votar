@@ -38,6 +38,8 @@ SOCIAL_MIRROR_FALLBACK_COMMIT = "f40924558a99cd1b57da1024dc9dc67ad13a9950"
 CHAMBER_API = "https://dadosabertos.camara.leg.br/api/v2"
 CHAMBER_PAGE = "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao"
 
+LINK_AGGREGATOR_HOSTS = {"linktr.ee"}
+
 SOCIAL_HOST_SUFFIXES = {
     "instagram.com",
     "facebook.com",
@@ -117,6 +119,17 @@ def host_of(url: str) -> str:
 def is_social_host(url: str) -> bool:
     host = host_of(url)
     return any(host == suffix or host.endswith("." + suffix) for suffix in SOCIAL_HOST_SUFFIXES)
+
+
+def is_link_aggregator(url: str) -> bool:
+    return host_of(url) in LINK_AGGREGATOR_HOSTS
+
+
+def is_blocked_aggregator_content(url: str) -> bool:
+    parsed = urllib.parse.urlsplit(url)
+    host = (parsed.hostname or "").lower().removeprefix("www.")
+    path = (parsed.path or "/").casefold()
+    return host == "linktr.ee" and (path == "/blog" or path.startswith("/blog/"))
 
 
 def normalize_declared_value(raw: str) -> tuple[str, str]:
@@ -283,6 +296,8 @@ class LinkExtractor(HTMLParser):
 
 def looks_like_exact_content(url: str, anchor_text: str = "") -> bool:
     parsed = urllib.parse.urlsplit(url)
+    if is_link_aggregator(url) or is_blocked_aggregator_content(url):
+        return False
     path = parsed.path.casefold()
     segments = [x for x in path.split("/") if x]
     if not segments:
@@ -360,12 +375,72 @@ def discover_site(
         return exact, rejected
 
     final_host = host_of(final_url)
+
+    # Linktree is a link aggregator, not a candidate-content publisher. Never
+    # ingest linktr.ee/blog or other Linktree-owned pages as candidate evidence.
+    # Instead, preserve external destinations as derived seeds and, when a
+    # destination is already a specific content URL, emit that destination.
+    if final_host in LINK_AGGREGATOR_HOSTS:
+        found: list[dict[str, Any]] = []
+        seen_destinations: set[str] = set()
+        for href, label in parser.links:
+            absolute = canonicalize_url(urllib.parse.urljoin(final_url, href))
+            if not absolute or not absolute.startswith("https://"):
+                continue
+            if is_link_aggregator(absolute) or is_blocked_aggregator_content(absolute):
+                continue
+            if absolute in seen_destinations:
+                continue
+            seen_destinations.add(absolute)
+
+            derived_seed = {
+                "candidate_id": cid,
+                "candidate_name": collector.candidate_display_name(candidate),
+                "source_kind": "official_candidate",
+                "discovery_status": "seed",
+                "seed_url": absolute,
+                "source_url": "",
+                "source_publisher": host_of(absolute),
+                "source_origin": {
+                    "institution": "TSE-declared candidate channel",
+                    "discovery_method": "link_aggregator_outbound",
+                    "aggregator_url": seed_url,
+                },
+            }
+            found.append(derived_seed)
+
+            if looks_like_exact_content(absolute, label):
+                found.append(
+                    exact_source_from_site(
+                        candidate,
+                        derived_seed,
+                        absolute,
+                        label,
+                        discovery_method="link_aggregator_outbound_exact",
+                        aggregator_url=seed_url,
+                    )
+                )
+            elif not is_social_host(absolute):
+                nested, nested_rejected = discover_site(
+                    derived_seed,
+                    candidates,
+                    max(1, min(max_links, 5)),
+                )
+                found.extend(nested)
+                rejected.extend(nested_rejected)
+
+            if len(seen_destinations) >= max_links:
+                break
+        return found, rejected
+
     seen_urls = {canonicalize_url(x.get("source_url", "")) for x in exact}
     for href, label in parser.links:
         absolute = canonicalize_url(urllib.parse.urljoin(final_url, href))
         if not absolute or not absolute.startswith("https://"):
             continue
         if host_of(absolute) != final_host:
+            continue
+        if is_blocked_aggregator_content(absolute):
             continue
         if absolute in seen_urls:
             continue
@@ -384,6 +459,9 @@ def exact_source_from_site(
     seed: dict[str, Any],
     url: str,
     label: str,
+    *,
+    discovery_method: str = "same_host_content_link",
+    aggregator_url: str = "",
 ) -> dict[str, Any]:
     return {
         "candidate_id": clean(candidate.get("tse_id")),
@@ -401,8 +479,9 @@ def exact_source_from_site(
         ),
         "source_origin": {
             "institution": "TSE-declared candidate channel",
-            "discovery_method": "same_host_content_link",
+            "discovery_method": discovery_method,
             "seed_url": clean(seed.get("seed_url")),
+            "aggregator_url": clean(aggregator_url),
         },
     }
 
@@ -470,8 +549,14 @@ def discover_chamber(
                         clean(item.get("dataApresentacao"))
                     ),
                     "collection_notes": (
-                        "Proposição localizada pela API oficial usando idDeputadoAutor; "
-                        "autoria deve continuar sujeita à validação do conteúdo coletado."
+                        "Proposição localizada pela API oficial usando idDeputadoAutor. "
+                        "A atribuição institucional deriva do identificador oficial do autor; "
+                        "o conteúdo permanece sujeito à curadoria semântica."
+                    ),
+                    "attribution_trust": "official_author_api",
+                    "attribution_basis_hint": (
+                        f"Câmara dos Deputados API: idDeputadoAutor={chamber_id}; "
+                        f"idProposicao={prop_id}."
                     ),
                     "source_origin": {
                         "institution": "Câmara dos Deputados",

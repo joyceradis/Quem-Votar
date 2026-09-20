@@ -65,6 +65,57 @@ ALLOWED_SOURCE_KINDS = {
 }
 ALLOWED_DISCOVERY_STATUS = {"seed", "exact_content"}
 
+DUMMY_TEXT_PATTERNS = (
+    r"\blorem\s+ipsum\b",
+    r"\bdolor\s+sit\s+amet\b",
+)
+
+SPAM_GAMBLING_PATTERNS = (
+    r"\bonline\s+casino\b",
+    r"\bkrypto[-\s]?casinos?\b",
+    r"\bcasino\s+en\s+ligne\b",
+    r"\bno\s+wager\s+bonus\b",
+    r"\bslot\s+sites?\b",
+    r"\bfree\s+spins?\b",
+    r"\bjackpot\b",
+    r"\bher(?:n|m)[yíi]ch?\s+ponuk\b",
+)
+
+FOREIGN_SPAM_MARKERS = (
+    "anonyme", "deutschland", "meilleur", "classement", "porovnanie",
+    "najlepsich", "wager", "slot sites", "free spins",
+)
+
+
+def detect_content_quality_issue(
+    *,
+    title: str,
+    text: str,
+    source_kind: str,
+) -> tuple[str, str]:
+    """Return (reason, disposition) for deterministic quality failures.
+
+    This is deliberately conservative. A single Portuguese mention of casino,
+    betting or gambling is not sufficient to classify a political document as
+    spam. Strong SEO/gambling patterns or a gambling marker combined with clear
+    foreign-language SEO markers are required, and only candidate/party sites
+    are subject to the spam quarantine heuristic.
+    """
+    joined = norm(f"{title}\n{text}")
+    for pattern in DUMMY_TEXT_PATTERNS:
+        if re.search(pattern, joined, re.I):
+            return "dummy_text", "reject"
+
+    if source_kind in {"official_candidate", "official_party"}:
+        hits = sum(bool(re.search(pattern, joined, re.I)) for pattern in SPAM_GAMBLING_PATTERNS)
+        foreign_hits = sum(marker in joined for marker in FOREIGN_SPAM_MARKERS)
+        generic_gambling = bool(re.search(r"\b(casino|casinos|betting|slots?)\b", joined, re.I))
+        if hits >= 1 or (generic_gambling and foreign_hits >= 1):
+            return "suspected_spam_content", "quarantine"
+
+    return "", ""
+
+
 MAX_FETCH_BYTES = 8 * 1024 * 1024
 MAX_TSE_ZIP_BYTES = 64 * 1024 * 1024
 MAX_EXCERPT_CHARS = 3000
@@ -784,10 +835,24 @@ def collect_source(
     if len(normalized_text) < 40:
         raise RuntimeError("conteúdo textual insuficiente para revisão")
 
+    final_parsed = urllib.parse.urlparse(final_url)
+    final_host = (final_parsed.hostname or "").lower().removeprefix("www.")
+    final_path = (final_parsed.path or "/").casefold()
+    if final_host == "linktr.ee" and (final_path == "/blog" or final_path.startswith("/blog/")):
+        raise RuntimeError("quality_reject:link_aggregator_internal_content")
+
+    source_title = clean(item.get("source_title") or page.get("title"))
+    quality_reason, quality_disposition = detect_content_quality_issue(
+        title=source_title,
+        text=normalized_text,
+        source_kind=clean(item.get("source_kind")),
+    )
+    if quality_reason:
+        raise RuntimeError(f"quality_{quality_disposition}:{quality_reason}")
+
     source_hash = hashlib.sha256(body).hexdigest()
     content_hash = hashlib.sha256(normalized_text.encode("utf-8")).hexdigest()
     excerpt = build_excerpt(page.get("blocks") or [], candidate)
-    source_title = clean(item.get("source_title") or page.get("title"))
     source_publisher = clean(
         item.get("source_publisher") or page.get("publisher") or source_host_label(final_url)
     )
@@ -813,9 +878,18 @@ def collect_source(
         "source_sha256": source_hash,
         "content_sha256": content_hash,
         "candidate_mentioned": candidate_mentioned(normalized_text, candidate),
-        "raw_excerpt": excerpt,
+        "raw_excerpt": (
+            clean(item.get("source_title")) + "\n\n" + excerpt
+            if clean(item.get("attribution_trust")) == "official_author_api"
+            and clean(item.get("source_title"))
+            and clean(item.get("source_title")) not in excerpt
+            else excerpt
+        ),
         "review_status": "pending",
         "collection_notes": clean(item.get("collection_notes")),
+        "source_origin": item.get("source_origin") or {},
+        "attribution_trust": clean(item.get("attribution_trust")),
+        "attribution_basis_hint": clean(item.get("attribution_basis_hint")),
     }
 
 

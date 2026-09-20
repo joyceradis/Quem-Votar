@@ -86,9 +86,9 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: ${{ steps.ws.outputs.state }}
-          key: evidence-industrial-v1-${{ github.run_id }}
+          key: evidence-industrial-v2-quality-${{ github.run_id }}
           restore-keys: |
-            evidence-industrial-v1-
+            evidence-industrial-v2-quality-
 
       - name: Initialize state if absent
         shell: bash
@@ -150,7 +150,7 @@ jobs:
           state = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
           failures = []
           for source_id, row in (state.get("sources") or {}).items():
-              if row.get("status") != "failed":
+              if row.get("status") not in {"failed", "quarantined", "rejected"}:
                   continue
               error = str(row.get("last_error") or "")
               failure_id = hashlib.sha256(
@@ -164,6 +164,7 @@ jobs:
                   "stage": "collection",
                   "error": error,
                   "attempts_used": row.get("attempts", 0),
+                  "processing_status": row.get("status"),
               })
           Path(sys.argv[2]).write_text(
               json.dumps({
@@ -290,7 +291,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: ${{ steps.ws.outputs.state }}
-          key: evidence-industrial-v1-${{ github.run_id }}
+          key: evidence-industrial-v2-quality-${{ github.run_id }}
 
       - name: Upload industrial evidence artifact
         uses: actions/upload-artifact@v4
