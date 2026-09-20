@@ -36,6 +36,43 @@ class EvidenceCoverageReportTests(unittest.TestCase):
         self.assertEqual(1, result["metrics"]["candidates_with_seed"])
         self.assertEqual(1, result["metrics"]["candidates_with_exact_content"])
 
+    def test_negative_discovery_outcome_is_scoped_and_timestamped(self):
+        candidates = [{"tse_id": "1", "ballot_name": "A", "office": "DEPUTADO ESTADUAL", "party": "X"}]
+        result = reporter.build_report(
+            candidates, [], [], [], [],
+            discovery_checked_at="2026-09-20T14:00:00+00:00",
+        )
+        row = result["ledger"][0]
+        self.assertEqual(
+            "no_seed_or_exact_content_found_in_checked_sources",
+            row["discovery"]["outcome"],
+        )
+        self.assertEqual(
+            "2026-09-20T14:00:00+00:00",
+            row["discovery"]["checked_at"],
+        )
+        self.assertIn("tse_declared_channels", row["discovery"]["sources_checked"])
+        self.assertIn("não implica ausência exaustiva", row["discovery"]["scope_note"])
+
+    def test_processing_and_exception_counts_are_candidate_scoped(self):
+        candidates = [{"tse_id": "1", "ballot_name": "A", "office": "DEPUTADO ESTADUAL", "party": "X"}]
+        result = reporter.build_report(
+            candidates, [], [], [], [],
+            processing_state={"sources": {"s1": {"candidate_id": "1", "status": "failed"}}},
+            exception_queue={
+                "exceptions": [
+                    {
+                        "candidate_id": "1",
+                        "status": "open",
+                        "queue_class": "retryable",
+                    }
+                ]
+            },
+        )
+        row = result["ledger"][0]
+        self.assertEqual(1, row["processing_failed"])
+        self.assertEqual(1, row["exceptions_retryable"])
+
     def test_unknown_candidate_fails_closed(self):
         candidates = [{"tse_id": "1", "ballot_name": "A"}]
         with self.assertRaisesRegex(RuntimeError, "unknown candidate"):
