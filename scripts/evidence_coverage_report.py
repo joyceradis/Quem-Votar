@@ -46,6 +46,26 @@ def list_field(path: Path, key: str) -> list[dict[str, Any]]:
     return items
 
 
+SOCIAL_SUFFIXES = {
+    "instagram.com", "facebook.com", "threads.net", "threads.com", "x.com",
+    "twitter.com", "youtube.com", "youtu.be", "tiktok.com", "linkedin.com",
+    "whatsapp.com",
+}
+
+
+def host_of(url: str) -> str:
+    from urllib.parse import urlsplit
+    try:
+        return (urlsplit(clean(url)).hostname or "").lower().removeprefix("www.")
+    except ValueError:
+        return ""
+
+
+def is_social_seed(url: str) -> bool:
+    host = host_of(url)
+    return any(host == suffix or host.endswith("." + suffix) for suffix in SOCIAL_SUFFIXES)
+
+
 def state_for(counts: Counter[str]) -> str:
     if counts["canonical"]:
         return "canonical_published"
@@ -72,14 +92,22 @@ def build_report(
     drafts: list[dict[str, Any]],
     reviews: list[dict[str, Any]],
     canonical: list[dict[str, Any]],
+    *,
+    discovery_checked_at: str = "",
+    processing_state: dict[str, Any] | None = None,
+    exception_queue: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     by_candidate: dict[str, Counter[str]] = defaultdict(Counter)
     draft_to_candidate: dict[str, str] = {}
+    processing_by_candidate: dict[str, Counter[str]] = defaultdict(Counter)
+    exceptions_by_candidate: dict[str, Counter[str]] = defaultdict(Counter)
+    seed_urls_by_candidate: dict[str, list[str]] = defaultdict(list)
 
     for source in sources:
         cid = clean(source.get("candidate_id"))
         if source.get("discovery_status") == "seed":
             by_candidate[cid]["seeds"] += 1
+            seed_urls_by_candidate[cid].append(clean(source.get("seed_url")))
         elif source.get("discovery_status") == "exact_content":
             by_candidate[cid]["exact_sources"] += 1
 
@@ -100,6 +128,28 @@ def build_report(
         cid = clean(entry.get("candidate_id"))
         by_candidate[cid]["canonical"] += 1
 
+    if processing_state:
+        states = processing_state.get("sources", {})
+        if not isinstance(states, dict):
+            raise RuntimeError("processing_state.sources must be an object")
+        for row in states.values():
+            cid = clean(row.get("candidate_id"))
+            status = clean(row.get("status"))
+            if cid and status:
+                processing_by_candidate[cid][status] += 1
+
+    if exception_queue:
+        exceptions = exception_queue.get("exceptions", [])
+        if not isinstance(exceptions, list):
+            raise RuntimeError("exception_queue.exceptions must be a list")
+        for row in exceptions:
+            if clean(row.get("status")) != "open":
+                continue
+            cid = clean(row.get("candidate_id"))
+            qclass = clean(row.get("queue_class"))
+            if cid and qclass:
+                exceptions_by_candidate[cid][qclass] += 1
+
     ledger = []
     state_counts: Counter[str] = Counter()
     known_ids = {clean(x.get("tse_id")) for x in candidates}
@@ -113,6 +163,23 @@ def build_report(
         counts = by_candidate[cid]
         state = state_for(counts)
         state_counts[state] += 1
+        checked_routes: list[str] = []
+        if discovery_checked_at:
+            checked_routes.append("tse_declared_channels")
+            if any(url and not is_social_seed(url) for url in seed_urls_by_candidate[cid]):
+                checked_routes.append("declared_official_site_links")
+            if (candidate.get("current_mandate") or {}).get("chamber_id"):
+                checked_routes.append("camara_propositions_by_official_id")
+
+        if counts["exact_sources"]:
+            discovery_outcome = "exact_content_found"
+        elif counts["seeds"]:
+            discovery_outcome = "no_exact_content_found_in_checked_sources"
+        elif discovery_checked_at:
+            discovery_outcome = "no_seed_or_exact_content_found_in_checked_sources"
+        else:
+            discovery_outcome = "not_checked"
+
         ledger.append(
             {
                 "candidate_id": cid,
@@ -120,9 +187,23 @@ def build_report(
                 "office": clean(candidate.get("office")),
                 "party": clean(candidate.get("party")),
                 "state": state,
+                "discovery": {
+                    "checked_at": discovery_checked_at,
+                    "sources_checked": checked_routes,
+                    "outcome": discovery_outcome,
+                    "scope_note": (
+                        "Resultado restrito às rotas listadas; não implica ausência exaustiva "
+                        "de propostas, declarações ou atuação."
+                    ),
+                },
                 "seeds": counts["seeds"],
                 "exact_sources": counts["exact_sources"],
                 "drafts": counts["drafts"],
+                "processing_collected": processing_by_candidate[cid]["collected"],
+                "processing_failed": processing_by_candidate[cid]["failed"],
+                "exceptions_human_review": exceptions_by_candidate[cid]["human_review"],
+                "exceptions_retryable": exceptions_by_candidate[cid]["retryable"],
+                "exceptions_data_quality": exceptions_by_candidate[cid]["data_quality"],
                 "review_pending": counts["review_pending"],
                 "review_approved": counts["review_approved"],
                 "review_quarantine": counts["review_quarantine"],
@@ -143,7 +224,7 @@ def build_report(
     candidates_with_canonical = sum(1 for x in ledger if x["canonical"] > 0)
 
     return {
-        "version": "1.0.0",
+        "version": "1.1.0",
         "generated_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
         "semantics": (
             "Operational coverage only. It does not rank candidates, infer political positions, "
@@ -161,6 +242,15 @@ def build_report(
             "draft_records": len(drafts),
             "review_records": len(reviews),
             "canonical_records": len(canonical),
+            "candidates_discovery_checked": sum(1 for x in ledger if x["discovery"]["checked_at"]),
+            "candidates_no_exact_content_in_checked_sources": sum(
+                1 for x in ledger
+                if x["discovery"]["outcome"] == "no_exact_content_found_in_checked_sources"
+            ),
+            "candidates_no_seed_or_exact_in_checked_sources": sum(
+                1 for x in ledger
+                if x["discovery"]["outcome"] == "no_seed_or_exact_content_found_in_checked_sources"
+            ),
             "state_counts": dict(sorted(state_counts.items())),
         },
         "ledger": ledger,
@@ -175,15 +265,34 @@ def main() -> int:
     parser.add_argument("--drafts", type=Path, default=DEFAULT_DRAFTS)
     parser.add_argument("--reviews", type=Path, default=DEFAULT_REVIEWS)
     parser.add_argument("--canonical", type=Path, default=DEFAULT_CANONICAL)
+    parser.add_argument("--processing-state", type=Path)
+    parser.add_argument("--exception-queue", type=Path)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
 
+    sources_payload = read_json(args.sources)
+    source_rows = sources_payload.get("sources", [])
+    if not isinstance(source_rows, list):
+        raise RuntimeError(f"{args.sources}: sources must be a list")
+    processing_state = (
+        read_json(args.processing_state)
+        if args.processing_state and args.processing_state.exists()
+        else None
+    )
+    exception_queue = (
+        read_json(args.exception_queue)
+        if args.exception_queue and args.exception_queue.exists()
+        else None
+    )
     report = build_report(
         candidate_rows(args.federal, args.estadual),
-        list_field(args.sources, "sources"),
+        source_rows,
         list_field(args.drafts, "drafts"),
         list_field(args.reviews, "reviews"),
         list_field(args.canonical, "entries"),
+        discovery_checked_at=clean(sources_payload.get("updated_at")),
+        processing_state=processing_state,
+        exception_queue=exception_queue,
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
