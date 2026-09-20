@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "updated_at": "2026-09-20T01:20:00+00:00",
+  "updated_at": "2026-09-20T01:36:00+00:00",
   "semantics": "Fila de fontes para descoberta/coleta. Perfis declarados ao TSE são sementes, não evidências publicáveis.",
   "sources": [
     {
@@ -9,17 +9,15 @@
       "source_kind": "secondary",
       "discovery_status": "exact_content",
       "seed_url": "",
-      "source_url": "https://bancodeleis.unale.org.br/Arquivo/Documents/16/PLO/PLO202026.pdf",
-      "source_title": "Processo 988/2026 — Projeto de Lei nº 20/2026",
-      "source_publisher": "UNALE — Banco de Leis (espelho de autos da ALES)",
-      "published_at": "2026-02-02",
-      "collection_notes": "Fonte de 2026 selecionada para substituir o smoke test de 2025. O PDF espelha autos da ALES, contém autoria, assinatura eletrônica e tramitação do PL 20/2026. O host não é o portal oficial da ALES, portanto a fonte permanece marcada como secundária até eventual substituição por URL oficial equivalente.",
+      "source_url": "https://www.conexaoes.com.br/noticia/projeto-quer-garantir-passagens-gratuitas-para-jovens-de-baixa-renda-no-es",
+      "source_title": "Projeto quer garantir passagens gratuitas para jovens de baixa renda no ES",
+      "source_publisher": "Conexão ES",
+      "published_at": "2026-03-04",
+      "collection_notes": "Fallback operacional do smoke test da Issue #5. A fonte reproduz e atribui nominalmente o PL 20/2026 a Alexandre Xambinho. O PDF espelhado da UNALE foi rejeitado pelo runner por timeout e não foi promovido.",
       "source_origin": {
-        "institution": "Assembleia Legislativa do Estado do Espírito Santo",
-        "mirror": "UNALE — Banco de Leis",
-        "process_number": "988/2026",
-        "proposition": "PL 20/2026",
-        "discovery_method": "pesquisa pública em fonte legislativa agregadora"
+        "institution": "Conexão ES",
+        "discovery_method": "pesquisa pública",
+        "related_primary_process": "ALES — Processo 988/2026 / PL 20/2026"
       }
     }
   ]
