@@ -540,7 +540,64 @@
         "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/deputado-federal.json"
       }
     },
-    "topic_evidence": []
+    "topic_evidence": [
+      {
+        "candidate_id": "80002542403",
+        "topic_id": "economia",
+        "evidence_type": "atuação",
+        "statement": "Parecer do relator Amaro Neto na Comissão de Indústria, Comércio e Serviços (17/06/2025) pela rejeição da matéria analisada.",
+        "quote_or_summary": "",
+        "source_url": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2526647",
+        "source_title": "PRL 1/ — Parecer do Relator, Dep. Amaro Neto (REPUBLIC-ES), pela rejeição.",
+        "source_publisher": "Câmara dos Deputados",
+        "published_at": "2025-06-17",
+        "captured_at": "2026-09-20T14:20:13+00:00",
+        "scope": "federal",
+        "verification_status": "verified"
+      },
+      {
+        "candidate_id": "80002542403",
+        "topic_id": "economia",
+        "evidence_type": "proposta",
+        "statement": "Propõe regulamentar a atuação de assessores de investimentos, com obrigações, transparência, dever fiduciário, regras de remuneração, fiscalização e penalidades.",
+        "quote_or_summary": "",
+        "source_url": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2531269",
+        "source_title": "PL 3193/2025 — Dispõe sobre a regulamentação da atuação de assessores de investimentos no mercado financeiro brasileiro, estabelecendo obrigações, transparência, dever fiduciário, modelos de remuneração, fiscalização e penalidades, visando a proteção dos investidores e a valorização dos profissionai",
+        "source_publisher": "Câmara dos Deputados",
+        "published_at": "2025-07-02",
+        "captured_at": "2026-09-20T14:20:20+00:00",
+        "scope": "federal",
+        "verification_status": "verified"
+      },
+      {
+        "candidate_id": "80002542403",
+        "topic_id": "economia",
+        "evidence_type": "proposta",
+        "statement": "Propõe a livre escolha do valor de recarga em planos de telefonia móvel pré-paga e um prazo mínimo de validade dos créditos.",
+        "quote_or_summary": "",
+        "source_url": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2531284",
+        "source_title": "PL 3194/2025 — Dispõe sobre a livre escolha de valor de recarga de créditos em planos de telefonia móvel pré-paga, estabelece prazo mínimo de validade dos créditos, e dá outras providências.",
+        "source_publisher": "Câmara dos Deputados",
+        "published_at": "2025-07-02",
+        "captured_at": "2026-09-20T14:20:22+00:00",
+        "scope": "federal",
+        "verification_status": "verified"
+      },
+      {
+        "candidate_id": "80002542403",
+        "topic_id": "educacao",
+        "evidence_type": "proposta",
+        "statement": "Propõe regras de transparência, integridade e fiscalização nos concursos públicos para cargos acadêmicos em instituições públicas de ensino superior.",
+        "quote_or_summary": "",
+        "source_url": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2531925",
+        "source_title": "PL 3241/2025 — Dispõe sobre a transparência, integridade e fiscalização dos concursos públicos para cargos acadêmicos em instituições públicas de ensino superior e dá outras providências.",
+        "source_publisher": "Câmara dos Deputados",
+        "published_at": "2025-07-03",
+        "captured_at": "2026-09-20T14:20:23+00:00",
+        "scope": "federal",
+        "verification_status": "verified"
+      }
+    ]
   },
   {
     "tse_id": "80002549398",
