@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
-import importlib.util
 import sys
 import unittest
 from pathlib import Path
@@ -10,17 +9,10 @@ from unittest.mock import patch
 SCRIPTS = Path(__file__).resolve().parents[1] / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 
-def load(name: str, filename: str):
-    spec = importlib.util.spec_from_file_location(name, SCRIPTS / filename)
-    module = importlib.util.module_from_spec(spec)
-    assert spec.loader is not None
-    spec.loader.exec_module(module)
-    return module
-
-collector = load("collector_quality", "coletor_evidencias.py")
-discovery = load("discovery_quality", "discover_evidence_sources.py")
-batch = load("batch_quality", "process_evidence_batch.py")
-queue = load("queue_quality", "build_exception_queue.py")
+import coletor_evidencias as collector
+import discover_evidence_sources as discovery
+import process_evidence_batch as batch
+import build_exception_queue as queue
 
 
 def candidate(cid="123", name="MARIA SILVA"):
