@@ -90,3 +90,17 @@ Uma revisão aprovada precisa registrar, no máximo após 3 tentativas:
 - `reviewer`.
 
 Se houver ambiguidade relevante, usar `quarantine` ou `rejected`. Ausência de evidência não é convertida em posição política.
+
+## Metadado futuro fora da pipeline de evidências
+
+`candidate-political-spectrum.json` preserva, em staging, a coluna `ESPECTRO_POLÍTICO` fornecida pela mantenedora na matriz de curadoria.
+
+Esse arquivo:
+
+- não é `topic_evidence`;
+- não é produzido por inferência de partido, ocupação, religião, associação ou evidência temática;
+- não é consumido pela interface pública durante o Feature Freeze;
+- não altera ordenação, visibilidade, comparação ou recomendação de candidaturas;
+- registra os valores fornecidos pela mantenedora sem tratá-los como classificação independente do pipeline;
+- só pode ganhar uso público após decisão metodológica e de governança pós-freeze.
+

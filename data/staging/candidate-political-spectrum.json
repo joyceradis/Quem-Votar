@@ -1,0 +1,374 @@
+{
+  "version": "1.0.0",
+  "schema_status": "staged_future_metadata",
+  "public_use": false,
+  "future_canonical_key": "political_spectrum",
+  "semantics": "Maintainer-supplied political-spectrum metadata preserved verbatim for possible post-freeze use. These labels were not inferred, scored, ranked, or independently verified by the evidence pipeline or assistant. They must not affect V5.5 UI, filters, ordering, recommendations, topic evidence, or canonical evidence promotion.",
+  "source": {
+    "type": "maintainer_curated_google_sheet",
+    "spreadsheet_id": "1B27nL5D2JcA9WnDHCn2b8P_TYNzThJtSlPEpHfsbrjw",
+    "sheet_name": "enriched_curadoria",
+    "source_range": "A1:AC155",
+    "source_column": "ESPECTRO_POLÍTICO",
+    "mapping_basis": "industrial_draft_id_join_validated_before_import",
+    "snapshot_sha256_xlsx": "0e30b532b82323c822d54c00d1b8ba50018c5679a2b4eafca0d3c262045c5a81",
+    "imported_at": "2026-09-20T15:28:56+00:00",
+    "draft_rows": 154,
+    "candidate_count": 20
+  },
+  "classification": {
+    "origin": "maintainer_supplied",
+    "assistant_role": "transport_and_structure_only",
+    "verification_status": "not_independently_verified",
+    "derivation_prohibited": [
+      "party",
+      "occupation",
+      "religion",
+      "association",
+      "topic_evidence"
+    ],
+    "allowed_values_observed": [
+      "Centro",
+      "Centro-Direita",
+      "Centro-Esquerda",
+      "Direita",
+      "Esquerda"
+    ]
+  },
+  "entries": [
+    {
+      "candidate_id": "80002536278",
+      "candidate_name": "GILSON DANIEL",
+      "office": "DEPUTADO FEDERAL",
+      "political_spectrum": "Centro-Direita",
+      "source_draft_ids": [
+        "06c9c0e1beafbdbc0104",
+        "26455e8e69c1d23be625",
+        "36d38274343c1030bb54",
+        "37d04a2455b9f34bdcc5",
+        "42b8d197d5fbd4cdc38f",
+        "433a1a431663e8a4cdd8",
+        "4f8638c0fccdf0fbb6ce",
+        "5ad10ce4f8ac34a3fe89",
+        "6e5ef4505ffbadfff2c4",
+        "73223b83ca7cbc010058",
+        "b9a876d5f7caf1580a89",
+        "bb27be37d48b8641897d"
+      ],
+      "source_draft_count": 12
+    },
+    {
+      "candidate_id": "80002537485",
+      "candidate_name": "FABRÍCIO GANDINI",
+      "office": "DEPUTADO ESTADUAL",
+      "political_spectrum": "Centro-Direita",
+      "source_draft_ids": [
+        "69d7c81c11fe5a66dc9d"
+      ],
+      "source_draft_count": 1
+    },
+    {
+      "candidate_id": "80002537487",
+      "candidate_name": "ALEXANDRE XAMBINHO",
+      "office": "DEPUTADO ESTADUAL",
+      "political_spectrum": "Centro-Direita",
+      "source_draft_ids": [
+        "2cea3b522948d161a1be",
+        "61ee3e21ecd86e5d1507"
+      ],
+      "source_draft_count": 2
+    },
+    {
+      "candidate_id": "80002538196",
+      "candidate_name": "EDUARDO PINHEIRO",
+      "office": "DEPUTADO FEDERAL",
+      "political_spectrum": "Centro",
+      "source_draft_ids": [
+        "1e03d65aac140be72796",
+        "3166e9bf6798c5f27c46",
+        "36d1211af2c79affbd41",
+        "443600e60cda348505cf",
+        "9b022ab3553f9b72b8c9",
+        "df5e0a533dc0356c0e42"
+      ],
+      "source_draft_count": 6
+    },
+    {
+      "candidate_id": "80002541009",
+      "candidate_name": "DR. VICTOR",
+      "office": "DEPUTADO FEDERAL",
+      "political_spectrum": "Centro-Esquerda",
+      "source_draft_ids": [
+        "11af5eb93c8ba05b57fc",
+        "170d7045e2052afaba95",
+        "19c4a222122f1dbe50e0",
+        "30ee3348a9128408bd1a",
+        "40ca80626a33a3ebcaa4",
+        "649b3b7874f7523c73a8",
+        "67aeaf67d2e1c2a8222f",
+        "6bedbd5923465283166b",
+        "6fdb18ebc61cc9f22fbe",
+        "ac011c9e6a4d076fee72",
+        "c624e6afa9ba5fa3de6c",
+        "d00805267eb8c187698e"
+      ],
+      "source_draft_count": 12
+    },
+    {
+      "candidate_id": "80002541019",
+      "candidate_name": "ALOÍSIO VAREJÃO",
+      "office": "DEPUTADO ESTADUAL",
+      "political_spectrum": "Centro-Esquerda",
+      "source_draft_ids": [
+        "0f241c54aa89f73d0a8d",
+        "197e3782338de4ac563e",
+        "2c239d967961ac0963b9",
+        "5e711efbbb7a3d90dc13",
+        "6028df72b4564e7d7533",
+        "7932436f86ee44039047",
+        "9980c80ce62afbfecebd",
+        "a24450dc04664846976d",
+        "c1609527cf892c7d36be",
+        "da7bb04aee5edd2fc7ff",
+        "e7d640b9c6d779339f3f",
+        "f4fbe8d14eb922fdbd16"
+      ],
+      "source_draft_count": 12
+    },
+    {
+      "candidate_id": "80002541024",
+      "candidate_name": "PAULO FOLLETTO",
+      "office": "DEPUTADO ESTADUAL",
+      "political_spectrum": "Centro-Esquerda",
+      "source_draft_ids": [
+        "1f90694a4bc388802632",
+        "4acf9ce00432cd7d65ad",
+        "6959b900b9f94b205a25",
+        "73bc919b656741b6bb25",
+        "8e215217fb4f8cf5792a",
+        "aa38dd457a5d43ffeded",
+        "ad9c56beaaf388028804",
+        "aeb27ac888796804d2a9",
+        "b33cb01bcf99fc7beeae",
+        "bb1353790618a1e03579",
+        "d2e8cb33bf53f0bb34ce",
+        "ee5e5a596ebb8698e6cd"
+      ],
+      "source_draft_count": 12
+    },
+    {
+      "candidate_id": "80002541034",
+      "candidate_name": "ELIANE TURINI",
+      "office": "DEPUTADO ESTADUAL",
+      "political_spectrum": "Centro-Esquerda",
+      "source_draft_ids": [
+        "91eca5c60a65fdb22a3e",
+        "a162a33b389854726634",
+        "c5d7297e0b33f766925a"
+      ],
+      "source_draft_count": 3
+    },
+    {
+      "candidate_id": "80002541038",
+      "candidate_name": "PABLO LIRA",
+      "office": "DEPUTADO ESTADUAL",
+      "political_spectrum": "Centro-Esquerda",
+      "source_draft_ids": [
+        "17ceefdb7a2971e05b56",
+        "29f700cf2c0c953a9f44",
+        "4f15779d46fc7289c016",
+        "5988933e851ff02aecd1",
+        "5adbc284b97146701afc",
+        "62f444b3a8b252317aa8",
+        "a2914a4f267429eaa7ad",
+        "d7421d4159451806a69b",
+        "dbea8864f21580a6ae6f",
+        "e29d8d803c7cfa47528b",
+        "f2701c7ab069717a1a5b",
+        "fa764d728d2e110cc3ba"
+      ],
+      "source_draft_count": 12
+    },
+    {
+      "candidate_id": "80002542390",
+      "candidate_name": "CORONEL RAMALHO",
+      "office": "DEPUTADO FEDERAL",
+      "political_spectrum": "Direita",
+      "source_draft_ids": [
+        "23a2ee4735efb493cddc",
+        "34fdb0140a78b599dbe2",
+        "5c60832c6453880f7043",
+        "809992589cfa42b67a92",
+        "8b8ac28feedea1cf368d",
+        "8c10e8ccd0a65b4ae29b",
+        "a9c354ef5927e10f1d6f",
+        "cfd9570c57852978bd57",
+        "d23b81e0a630d89d12ed",
+        "d369c6eab2ccb50fc3c5",
+        "e2fb43bcae55d7c295de",
+        "f4b09900978b8d6c97c0"
+      ],
+      "source_draft_count": 12
+    },
+    {
+      "candidate_id": "80002542403",
+      "candidate_name": "AMARO NETO",
+      "office": "DEPUTADO FEDERAL",
+      "political_spectrum": "Direita",
+      "source_draft_ids": [
+        "05239e6b671ea6755dd8",
+        "288cd0fe4a955485e103",
+        "3bb66204464826e3028e",
+        "47375ab1d692efe4e663",
+        "668d7b5dcc3eb47ffcc4",
+        "87e75672c55adc4e6c00",
+        "93dec52d808f866f2efa",
+        "a4b24b14da84385f7cad",
+        "aa66a2b379eaf7b91e74",
+        "ac00f2036cd55c60ce20",
+        "ec8347097923c49e4b5d",
+        "fb878c46987ddc46dcf4"
+      ],
+      "source_draft_count": 12
+    },
+    {
+      "candidate_id": "80002542409",
+      "candidate_name": "DA VITÓRIA",
+      "office": "DEPUTADO FEDERAL",
+      "political_spectrum": "Direita",
+      "source_draft_ids": [
+        "19154378547409e6cfa0",
+        "28ea7b347a5447136afc",
+        "63aed657e8c55c864c39",
+        "6e3f0e89317e9d703aaf",
+        "6eef1ade8da3559f22bb",
+        "7b2d9305599badd37852",
+        "b562203b51fd15d08cc3",
+        "e419fc22a6325ddefdd2",
+        "f44509f47ce9929cd86c",
+        "f9b8d0e552daef846778"
+      ],
+      "source_draft_count": 10
+    },
+    {
+      "candidate_id": "80002542411",
+      "candidate_name": "MESSIAS DONATO",
+      "office": "DEPUTADO FEDERAL",
+      "political_spectrum": "Centro-Direita",
+      "source_draft_ids": [
+        "2ccbec38929a846612d9",
+        "487f400bc2cfc2c4d89f",
+        "6ab0fd1b8c0d1fb46dc1",
+        "c479bd732b4da341e81f",
+        "e3fbf5fdee957ead9f8a",
+        "ebdd9ce4f2de10421959",
+        "f3a8f9e7734177eb846d"
+      ],
+      "source_draft_count": 7
+    },
+    {
+      "candidate_id": "80002549069",
+      "candidate_name": "AÇUCENA",
+      "office": "DEPUTADO ESTADUAL",
+      "political_spectrum": "Esquerda",
+      "source_draft_ids": [
+        "088ea185d9e0d22fd5e4",
+        "11bfcec9d156020a7630",
+        "504a7b8ce18c56a4f040",
+        "64ec00d66386a274dc4a",
+        "829914f74ff28baacce9",
+        "9831f618fcfb89cefa3c",
+        "ae519f40c3bbe3d6ea42",
+        "c1216aa73568a20c0f27",
+        "dd2495f8b55d7e11d114",
+        "edf4322e112f05746818",
+        "ef92cf2244f06429dd7d",
+        "fb95957001b306a5907e"
+      ],
+      "source_draft_count": 12
+    },
+    {
+      "candidate_id": "80002549122",
+      "candidate_name": "DELEGADO PIQUET",
+      "office": "DEPUTADO ESTADUAL",
+      "political_spectrum": "Centro",
+      "source_draft_ids": [
+        "317e229ab7e5407173a9"
+      ],
+      "source_draft_count": 1
+    },
+    {
+      "candidate_id": "80002549450",
+      "candidate_name": "RAPHAELA MORAES",
+      "office": "DEPUTADO ESTADUAL",
+      "political_spectrum": "Direita",
+      "source_draft_ids": [
+        "602860a996df591d1ea7",
+        "7b37cf32d044d69d9bc7",
+        "8446746db57fd4098f45",
+        "93f22f04690eaae358ca",
+        "f90547a6131383c8b4d3"
+      ],
+      "source_draft_count": 5
+    },
+    {
+      "candidate_id": "80002549470",
+      "candidate_name": "JACK ROCHA",
+      "office": "DEPUTADO FEDERAL",
+      "political_spectrum": "Esquerda",
+      "source_draft_ids": [
+        "492297650fe5888e2fec",
+        "4b453f0f04164371da37",
+        "5143bb431c8c1995de7e",
+        "7c7edd15551c72dfb7c5",
+        "8c9501caca8eea2edaf5",
+        "922dbabf79b29c72aaff",
+        "9e524dfd04ef5c442c66",
+        "c9ab6e91a35905dd85f4",
+        "df017255d2904f613897"
+      ],
+      "source_draft_count": 9
+    },
+    {
+      "candidate_id": "80002549489",
+      "candidate_name": "CAMILA VALADÃO",
+      "office": "DEPUTADO ESTADUAL",
+      "political_spectrum": "Esquerda",
+      "source_draft_ids": [
+        "55c70928106493233bc4",
+        "9071d6bee4104b1020a8",
+        "c8a1742af70edf021e17"
+      ],
+      "source_draft_count": 3
+    },
+    {
+      "candidate_id": "80002549700",
+      "candidate_name": "GILVAN O FEDERAL DA DIREITA",
+      "office": "DEPUTADO FEDERAL",
+      "political_spectrum": "Direita",
+      "source_draft_ids": [
+        "0126ffee2bb154f052d6",
+        "08e8bd9df491fb061513",
+        "2fcf6f7e4fefa46d31d9",
+        "49802e0cd9e66741112a",
+        "5325fe1cce831c2d0702",
+        "552a85def8eecf70ae14",
+        "60b5e83b02dd41075085",
+        "ad5c39e5c69b103f9f54",
+        "c90ac3266671eca1bbda"
+      ],
+      "source_draft_count": 9
+    },
+    {
+      "candidate_id": "80002549987",
+      "candidate_name": "DAVI ESMAEL",
+      "office": "DEPUTADO ESTADUAL",
+      "political_spectrum": "Direita",
+      "source_draft_ids": [
+        "6821af8fb3fda6182e45",
+        "722bb39de8bef6088044"
+      ],
+      "source_draft_count": 2
+    }
+  ]
+}
