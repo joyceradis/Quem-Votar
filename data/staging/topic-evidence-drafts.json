@@ -1,6 +1,28 @@
 {
   "version": "1.0.0",
-  "updated_at": "2026-09-19T00:00:00+00:00",
+  "updated_at": "2026-09-20T01:33:58+00:00",
   "semantics": "Material bruto de staging. Nenhum registro deste arquivo é publicado na UI sem revisão e promoção explícitas.",
-  "drafts": []
+  "drafts": [
+    {
+      "draft_id": "2cea3b522948d161a1be",
+      "candidate_id": "80002537487",
+      "candidate_name": "ALEXANDRE XAMBINHO",
+      "office": "DEPUTADO ESTADUAL",
+      "party": "PODE",
+      "source_kind": "secondary",
+      "source_url": "https://www.conexaoes.com.br/noticia/projeto-quer-garantir-passagens-gratuitas-para-jovens-de-baixa-renda-no-es",
+      "source_title": "Projeto quer garantir passagens gratuitas para jovens de baixa renda no ES",
+      "source_publisher": "Conexão ES",
+      "published_at": "2026-03-04",
+      "captured_at": "2026-09-20T01:33:58+00:00",
+      "document_type": "html",
+      "page_count": null,
+      "source_sha256": "6658181dd499a5b4b8d483be4656451c53b83a27f67bdecfafb80d417d3fdc27",
+      "content_sha256": "6b541a26cf06ca9bd95d42e1cc444047b38e15e86724f6dbffb8283bf4f300ba",
+      "candidate_mentioned": true,
+      "raw_excerpt": "O Projeto de Lei 20/2026, de autoria do deputado Alexandre Xambinho (Podemos), propõe a concessão de duas passagens gratuitas por mês em ônibus intermunicipais convencionais.\n\n“Em muitas regiões do Estado, principalmente no interior, os serviços essenciais estão concentrados em polos urbanos maiores. Para muitas famílias, o valor da passagem se torna uma barreira”, afirmou Xambinho.",
+      "review_status": "pending",
+      "collection_notes": "Fallback operacional do smoke test da Issue #5. A fonte reproduz e atribui nominalmente o PL 20/2026 a Alexandre Xambinho. O PDF espelhado da UNALE foi rejeitado pelo runner por timeout e não foi promovido."
+    }
+  ]
 }
