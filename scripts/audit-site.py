@@ -142,6 +142,38 @@ def main() -> None:
     assert all(ids), "registro sem SQ_CANDIDATO"
     assert len(ids) == len(set(ids)), "SQ_CANDIDATO duplicado"
 
+    social_root = ROOT / "social"
+    social_manifest = json.loads(read(social_root / "manifest.json"))
+    assert social_manifest.get("candidate_count") == len(rows), (
+        "manifest de preview social diverge do snapshot"
+    )
+    assert social_manifest.get("candidate_ids") == sorted(ids), (
+        "IDs do preview social divergem do snapshot eleitoral"
+    )
+    actual_social_ids = sorted(
+        path.name
+        for path in social_root.iterdir()
+        if path.is_dir() and (path / "index.html").exists()
+    )
+    assert actual_social_ids == sorted(ids), (
+        "cobertura de preview social deve ser 1:1 por SQ_CANDIDATO"
+    )
+    candidate_kind = {
+        str(row.get("tse_id")): "federal" for row in federal
+    } | {
+        str(row.get("tse_id")): "estadual" for row in estadual
+    }
+    for cid in ids:
+        preview = read(social_root / cid / "index.html")
+        assert f'/social/{cid}/' in preview, f"{cid}: og:url social ausente"
+        assert f"id={cid}" in preview, f"{cid}: redirect para ficha ausente"
+        assert f"cargo={candidate_kind[cid]}" in preview, f"{cid}: cargo do redirect divergente"
+        assert 'property="og:title"' in preview, f"{cid}: og:title ausente"
+        assert 'property="og:description"' in preview, f"{cid}: og:description ausente"
+        assert "googletagmanager.com" not in preview, (
+            f"{cid}: wrapper social não deve carregar tracker"
+        )
+
     source_entries = topic_evidence_source.get("entries") or []
     allowed_evidence_types = {"proposta", "declaração", "atuação"}
     allowed_evidence_status = {"verified", "dated", "secondary_source"}
