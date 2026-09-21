@@ -6,6 +6,7 @@ on:
       - data/issue-86-tse-enrichment
     paths:
       - scripts/sync-data.py
+      - scripts/bootstrap-tse-enrichment.py
       - tests/test_tse_enrichment.py
       - .github/workflows/issue86-sync-branch.yml
 
@@ -40,27 +41,8 @@ jobs:
           python -m py_compile scripts/sync-data.py
           python -m unittest discover -s tests -p 'test_*.py' -v
 
-      - name: Materializar JSON-amostra do mirror
-        shell: bash
-        run: |
-          set -euo pipefail
-          python - <<'PY'
-          import json, pathlib, urllib.request
-          url='https://meuvoto.org.br/comparar/80002549439.json'
-          req=urllib.request.Request(url,headers={'User-Agent':'Quem-Votar-ES/4.0','Accept':'application/json'})
-          with urllib.request.urlopen(req,timeout=30) as response:
-              raw=response.read()
-          payload=json.loads(raw.decode('utf-8'))
-          print('keys',sorted(payload.keys()))
-          print(json.dumps(payload,ensure_ascii=False)[:12000])
-          path=pathlib.Path('data/staging/issue86-meuvoto-sample.json')
-          path.write_bytes(raw)
-          PY
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/staging/issue86-meuvoto-sample.json
-          git commit -m "chore: materialize issue86 mirror JSON sample [issue86-sample]"
-          git push origin HEAD:data/issue-86-tse-enrichment
+      - name: Gerar bootstrap TSE versionado
+        run: python scripts/bootstrap-tse-enrichment.py
       - name: Coletar snapshot oficial TSE
         run: python scripts/sync-data.py
 
@@ -71,18 +53,18 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          INVALID="$(git status --porcelain | awk '{print $2}' | grep -Ev '^data/generated/' || true)"
+          INVALID="$(git status --porcelain | awk '{print $2}' | grep -Ev '^(data/generated/|data/reference/tse-enrichment-bootstrap.json$)' || true)"
           if [[ -n "$INVALID" ]]; then
             echo "::error::sync alterou arquivo fora de data/generated"
             printf '%s\n' "$INVALID"
             exit 1
           fi
-          if git diff --quiet -- data/generated; then
-            echo "Nenhuma mudança em data/generated."
+          if git diff --quiet -- data/generated data/reference/tse-enrichment-bootstrap.json; then
+            echo "Nenhuma mudança no snapshot."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/generated
+          git add data/generated data/reference/tse-enrichment-bootstrap.json
           git commit -m "data: snapshot TSE enriquecido da #86 [issue86-generated]"
           git push origin HEAD:data/issue-86-tse-enrichment
