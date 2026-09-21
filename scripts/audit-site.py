@@ -69,6 +69,15 @@ def main() -> None:
     assert "[skip ci]" not in sync_workflow, "snapshot automático não pode pular CI"
     assert "git pull --rebase" not in sync_workflow, "sync não pode rebasear snapshot depois da auditoria"
     assert "python -m unittest discover" in quality_workflow, "Quality precisa executar testes"
+    assert "Exigir checkpoint junto com data/generated" in agent_fence, (
+        "Agent Fence precisa aplicar o acoplamento data/generated -> checkpoint"
+    )
+    assert "docs/CHECKPOINT_CURRENT.md" in agent_fence, (
+        "checkpoint deve participar do gate de proveniência"
+    )
+    assert "data/generated/" in agent_fence, (
+        "Agent Fence precisa detectar mudanças em data/generated"
+    )
     assert "requirements-evidence.txt" in quality_workflow, "Quality precisa instalar dependências do coletor"
     assert "python scripts/audit-site.py" in sync_workflow, "sync precisa auditar o snapshot candidato"
     assert "python -m unittest discover" in sync_workflow, "sync precisa testar antes de exportar snapshot"
