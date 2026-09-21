@@ -1,7 +1,7 @@
 :root{
   --blue:#2f98d4;--blue-strong:#1679b6;--blue-dark:#113b56;--blue-soft:#eaf7ff;
   --pink:#ee8fbd;--pink-accent:#ff6b8b;--pink-strong:#b33c72;--pink-soft:#fff0f7;
-  --ink:#173244;--ink-soft:#536b79;--muted:#758995;
+  --ink:#173244;--ink-soft:#536b79;--muted:#5c6f7a;
   --line:rgba(17,59,86,.12);--line-strong:rgba(17,59,86,.2);--white:#fff;
   --max:1160px;--base-font:17px;--shadow:0 24px 70px rgba(23,76,108,.13);--shadow-soft:0 12px 36px rgba(23,76,108,.08);
   font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter","Segoe UI",sans-serif;
