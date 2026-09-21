@@ -1,0 +1,41 @@
+{
+  "version": "1.0.0",
+  "date": "2026-09-21",
+  "source_workbook_sha256": "f7ab2370c58aeaa49990a181dd013ca15f712120adb0d165bace9f8124ce5c50",
+  "result": {
+    "approved_decisions": 26,
+    "v5_5_eligible": 22,
+    "held_by_frozen_taxonomy": 4,
+    "eligible_already_canonical": 22,
+    "new_canonical_additions": 0,
+    "canonical_before": 23,
+    "canonical_removals": 1,
+    "canonical_after": 22,
+    "removal_reason": "Previously published EMP 1/0 (Gilson Daniel) becomes QUARENTENA under current R2 because Emenda de Plenário is outside the allowed PL/Projeto de Lei/Requerimento/Parecer set.",
+    "removed_source_url": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2605709",
+    "held_orders": [
+      9,
+      22,
+      24,
+      27
+    ],
+    "held_topics": [
+      "gestao_transparencia",
+      "gestao_transparencia",
+      "gestao_transparencia",
+      "homenagens_cerimonial"
+    ],
+    "existing_canonical_topic_preserved": [
+      {
+        "order": 10,
+        "source_url": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2543050",
+        "workbook_topic": "educacao",
+        "canonical_topic": "infraestrutura",
+        "rationale": "Current request authorizes filling obvious blanks, not silently rewriting an already-published thematic classification."
+      }
+    ],
+    "autoapproval": false,
+    "schema_changed": false,
+    "taxonomy_changed": false
+  }
+}
