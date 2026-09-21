@@ -54,6 +54,7 @@ ALES = "https://www.al.es.gov.br/"
 ALES_REFERENCE_FILE = ROOT / "data" / "reference" / "ales-20a-legislatura-2025.json"
 TOPIC_REFERENCE_FILE = ROOT / "data" / "reference" / "policy-topics.json"
 TOPIC_EVIDENCE_FILE = ROOT / "data" / "reference" / "topic-evidence.json"
+TSE_ENRICHMENT_BOOTSTRAP_FILE = ROOT / "data" / "reference" / "tse-enrichment-bootstrap.json"
 
 MIRROR_REPO = "herminiotorres/dossie-cidadao"
 MIRROR_PATH_BASE = "docs/data/tse/candidatos/ES"
@@ -272,6 +273,51 @@ def _restore_field_from_previous(candidates, previous, field):
     return restored
 
 
+def _load_enrichment_bootstrap(candidate_ids):
+    if not TSE_ENRICHMENT_BOOTSTRAP_FILE.exists():
+        return {}, None
+    payload = json.loads(TSE_ENRICHMENT_BOOTSTRAP_FILE.read_text(encoding="utf-8"))
+    entries = payload.get("entries") or []
+    by_id = {
+        str(item.get("candidate_id")): item
+        for item in entries
+        if item.get("candidate_id")
+    }
+    expected = set(candidate_ids)
+    actual = set(by_id)
+    if actual != expected:
+        missing = sorted(expected - actual)
+        unknown = sorted(actual - expected)
+        raise RuntimeError(
+            "bootstrap TSE não corresponde ao universo atual: "
+            f"missing={missing[:8]} unknown={unknown[:8]}"
+        )
+    source = payload.get("source") or {}
+    if int(source.get("candidate_count") or 0) != len(expected):
+        raise RuntimeError("bootstrap TSE com candidate_count inconsistente")
+    if not clean(source.get("aggregate_sha256")):
+        raise RuntimeError("bootstrap TSE sem aggregate_sha256")
+    return by_id, {
+        "status": "bootstrap_mirror",
+        "captured_at": payload.get("captured_at"),
+        "source": source,
+        "semantics": payload.get("semantics"),
+    }
+
+
+def _apply_bootstrap_field(candidates, bootstrap, field):
+    if not bootstrap:
+        return 0
+    applied = 0
+    for candidate in candidates:
+        item = bootstrap.get(str(candidate.get("tse_id")))
+        if item is None or field not in item:
+            continue
+        candidate[field] = item.get(field)
+        applied += 1
+    return applied
+
+
 def _require_known_candidate_rows(rows, by_id, dataset, candidate_field="SQ_CANDIDATO"):
     matched = sum(
         1 for row in rows
@@ -319,6 +365,9 @@ def enrich_tse_open_data(groups):
         if candidate.get("tse_id")
     }
     previous = _previous_candidate_map()
+    previous_meta = read_existing_json("meta.json", {})
+    previous_enrichment_valid = str(previous_meta.get("normalizer_version") or "").startswith("4.")
+    bootstrap, bootstrap_meta = _load_enrichment_bootstrap(by_id)
     source_meta = {}
 
     for candidate in candidates:
@@ -378,17 +427,23 @@ def enrich_tse_open_data(groups):
                 if value is not None
             }
     else:
-        restored = _restore_field_from_previous(candidates, previous, "tse_additional")
-        for candidate in candidates:
-            old = previous.get(str(candidate.get("tse_id"))) or {}
-            if old.get("registration_status"):
-                candidate["registration_status"] = old.get("registration_status")
+        restored = (
+            _restore_field_from_previous(candidates, previous, "tse_additional")
+            if previous_enrichment_valid
+            else 0
+        )
+        if previous_enrichment_valid:
+            for candidate in candidates:
+                old = previous.get(str(candidate.get("tse_id"))) or {}
+                if old.get("registration_status"):
+                    candidate["registration_status"] = old.get("registration_status")
         if restored:
             source_meta["candidate_complement"]["status"] = "stale_preserved"
         else:
-            raise RuntimeError(
-                "Complementares TSE indisponíveis e sem snapshot anterior validado"
-            )
+            # O bootstrap secundário é usado apenas para bens/redes/histórico.
+            # Situação jurídica não é promovida a partir dele porque o espelho
+            # pode conter campos de julgamento e status em momentos distintos.
+            source_meta["candidate_complement"]["status"] = "unavailable_not_promoted"
 
     assets_rows = load_dataset(
         "candidate_assets",
@@ -434,11 +489,21 @@ def enrich_tse_open_data(groups):
                 },
             }
     else:
-        restored = _restore_field_from_previous(candidates, previous, "assets")
+        restored = (
+            _restore_field_from_previous(candidates, previous, "assets")
+            if previous_enrichment_valid
+            else 0
+        )
         if restored:
             source_meta["candidate_assets"]["status"] = "stale_preserved"
         else:
-            raise RuntimeError("Bens TSE indisponíveis e sem snapshot anterior validado")
+            applied = _apply_bootstrap_field(candidates, bootstrap, "assets")
+            if applied != len(candidates):
+                raise RuntimeError("Bens TSE indisponíveis e bootstrap incompleto")
+            source_meta["candidate_assets"] = {
+                **(bootstrap_meta or {}),
+                "dataset": "Bens de candidatos - 2026",
+            }
 
     social_rows = load_dataset(
         "candidate_social",
@@ -463,13 +528,21 @@ def enrich_tse_open_data(groups):
                 normalized.append(url)
             by_id[candidate_id]["social_links"] = normalized
     else:
-        restored = _restore_field_from_previous(candidates, previous, "social_links")
+        restored = (
+            _restore_field_from_previous(candidates, previous, "social_links")
+            if previous_enrichment_valid
+            else 0
+        )
         if restored:
             source_meta["candidate_social"]["status"] = "stale_preserved"
         else:
-            raise RuntimeError(
-                "Redes sociais TSE indisponíveis e sem snapshot anterior validado"
-            )
+            applied = _apply_bootstrap_field(candidates, bootstrap, "social_links")
+            if applied != len(candidates):
+                raise RuntimeError("Redes sociais TSE indisponíveis e bootstrap incompleto")
+            source_meta["candidate_social"] = {
+                **(bootstrap_meta or {}),
+                "dataset": "Redes sociais de candidatos - 2026",
+            }
 
     history_rows = load_dataset(
         "candidate_history",
@@ -546,13 +619,21 @@ def enrich_tse_open_data(groups):
                 records.append(record)
             by_id[candidate_id]["previous_elections"] = records
     else:
-        restored = _restore_field_from_previous(candidates, previous, "previous_elections")
+        restored = (
+            _restore_field_from_previous(candidates, previous, "previous_elections")
+            if previous_enrichment_valid
+            else 0
+        )
         if restored:
             source_meta["candidate_history"]["status"] = "stale_preserved"
         else:
-            raise RuntimeError(
-                "Histórico TSE indisponível e sem snapshot anterior validado"
-            )
+            applied = _apply_bootstrap_field(candidates, bootstrap, "previous_elections")
+            if applied != len(candidates):
+                raise RuntimeError("Histórico TSE indisponível e bootstrap incompleto")
+            source_meta["candidate_history"] = {
+                **(bootstrap_meta or {}),
+                "dataset": "Histórico de candidaturas",
+            }
 
     counts = {
         "candidates_with_assets": sum(
