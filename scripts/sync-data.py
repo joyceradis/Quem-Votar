@@ -1203,8 +1203,11 @@ def main():
                     "a ficha usa o julgamento da base oficial de informações complementares."
                 ),
                 "assets": (
-                    "Bens são incorporados somente do arquivo oficial bem_candidato_2026, "
-                    "com valores somados por SQ_CANDIDATO e proveniência registrada."
+                    "A fonte factual primária é o TSE. Quando o arquivo oficial "
+                    "bem_candidato_2026 não pode ser transportado pelo runner, o sync pode "
+                    "usar o bootstrap versionado de contingência, com transporte, freshness "
+                    "e hashes registrados em sources.tse_enrichment; ausência de registros "
+                    "não é interpretada como ausência de patrimônio."
                 ),
                 "photos": (
                     "A fonte primária é o pacote ES - Fotos de candidatos do TSE. "
@@ -1212,8 +1215,10 @@ def main():
                     "cache público por SQ_CANDIDATO; falhas de imagem caem para placeholder."
                 ),
                 "electoral_history": (
-                    "Histórico eleitoral é incorporado do recurso oficial Histórico de "
-                    "candidaturas e mantido separado do histórico institucional da Câmara."
+                    "A fonte factual primária é o TSE e o histórico permanece separado do "
+                    "histórico institucional da Câmara. Se o recurso oficial não puder ser "
+                    "transportado pelo runner, o sync pode usar o bootstrap versionado de "
+                    "contingência, com provenance e freshness explícitas."
                 ),
                 "state_current_mandate": (
                     "Não inferido automaticamente; a composição da ALES requer validação "
