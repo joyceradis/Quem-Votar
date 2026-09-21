@@ -543,6 +543,14 @@ async function initTopics(){
     }).join(""):'<div class="empty">Ainda não há propostas, declarações ou atuações temáticas integradas com fonte. A ausência de registro não significa ausência de posição.</div>';
   });
 }
+function registrationStatusLabel(value){
+  const normalized=String(value||"").trim().toLowerCase();
+  if(!normalized||normalized==="not_available"){
+    return "Ainda não disponível na fonte atual";
+  }
+  return value;
+}
+
 function definitionRow(label,value){
   return `<div class="definition-row"><dt>${esc(label)}</dt><dd>${esc(value||"Não disponível")}</dd></div>`;
 }
@@ -602,7 +610,7 @@ async function initProfile(){
     {label:"Federação / composição",value:organization},
     {label:"Escolaridade",value:candidate.education},
     {label:"Ocupação declarada",value:candidate.occupation},
-    {label:"Situação da candidatura",value:candidate.registration_status},
+    {label:"Situação da candidatura",value:registrationStatusLabel(candidate.registration_status)},
     {label:"Situação de totalização",value:candidate.totalization_status}
   ].filter(item=>item.value);
   const electoralFactsContent=electoralFacts.length?`

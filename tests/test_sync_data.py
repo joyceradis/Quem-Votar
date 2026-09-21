@@ -58,5 +58,19 @@ class SyncGovernanceTests(unittest.TestCase):
         self.assertIn(commit_sha,meta["raw_url"])
         self.assertIn(commit_sha,bytes_mock.call_args.args[0])
 
+    def test_registration_status_sentinel_becomes_explicit_not_available(self) -> None:
+        for raw in (None, "", "#NE", "#NULO", "-1", "-3", "NÃO DIVULGÁVEL"):
+            self.assertEqual(
+                "not_available",
+                sync.normalize_registration_status(raw),
+                raw,
+            )
+
+    def test_registration_status_real_value_is_preserved(self) -> None:
+        self.assertEqual(
+            "DEFERIDO",
+            sync.normalize_registration_status(" DEFERIDO "),
+        )
+
 if __name__ == '__main__':
     unittest.main()
