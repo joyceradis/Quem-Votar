@@ -1,0 +1,181 @@
+name: Evidence curated Câmara reacquisition — artifact only
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/evidence-reacquire-35.yml"
+      - "scripts/reacquire_curated_chamber.py"
+      - "data/staging/reacquisition-35-chamber.json"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: evidence-reacquire-35
+  cancel-in-progress: false
+
+jobs:
+  reacquire:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout read-only
+        uses: actions/checkout@v4
+
+      - name: Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install evidence dependencies
+        run: python -m pip install -r requirements-evidence.txt
+
+      - name: Validate pipeline before reacquisition
+        run: |
+          python -m py_compile \
+            scripts/coletor_evidencias.py \
+            scripts/discover_evidence_sources.py \
+            scripts/process_evidence_batch.py \
+            scripts/reacquire_curated_chamber.py
+          python -m unittest discover -s tests -p 'test_*.py' -v
+          python scripts/audit-site.py
+
+      - name: Prepare isolated workspace
+        id: ws
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="$RUNNER_TEMP/evidence-reacquire-output"
+          STATE="$RUNNER_TEMP/evidence-reacquire-state"
+          mkdir -p "$OUT" "$STATE"
+          echo "out=$OUT" >> "$GITHUB_OUTPUT"
+          echo "state=$STATE" >> "$GITHUB_OUTPUT"
+
+          cat > "$STATE/drafts.json" <<'JSON'
+          {
+            "version": "1.0.0",
+            "semantics": "Isolated drafts for #35 targeted reacquisition.",
+            "drafts": []
+          }
+          JSON
+
+          cat > "$STATE/processing-state.json" <<'JSON'
+          {
+            "version": "1.0.0",
+            "semantics": "Isolated operational state for #35 targeted reacquisition.",
+            "sources": {}
+          }
+          JSON
+
+      - name: Reanchor curated Câmara sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="${{ steps.ws.outputs.out }}"
+          python scripts/reacquire_curated_chamber.py \
+            --manifest data/staging/reacquisition-35-chamber.json \
+            --output-sources "$OUT/reacquired-sources.json" \
+            --output-rejections "$OUT/reacquisition-rejections.json" \
+            --metrics "$OUT/reacquisition-metrics.json" \
+            | tee "$OUT/reacquisition.log"
+
+      - name: Collect reanchored exact-content
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="${{ steps.ws.outputs.out }}"
+          STATE="${{ steps.ws.outputs.state }}"
+          python scripts/process_evidence_batch.py \
+            --sources "$OUT/reacquired-sources.json" \
+            --existing-drafts "$STATE/drafts.json" \
+            --state "$STATE/processing-state.json" \
+            --output-drafts "$STATE/drafts.json" \
+            --output-failures "$OUT/processing-failures.json" \
+            --metrics "$OUT/processing-metrics.json" \
+            --max-attempts 3 \
+            --retries-per-run 2 \
+            --workers 6 \
+            --limit 23 \
+            | tee "$OUT/processing.log"
+
+      - name: Validate isolated outputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="${{ steps.ws.outputs.out }}"
+          STATE="${{ steps.ws.outputs.state }}"
+          python - "$OUT" "$STATE" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          out = Path(sys.argv[1])
+          state = Path(sys.argv[2])
+          reacq = json.loads((out / "reacquisition-metrics.json").read_text(encoding="utf-8"))
+          proc = json.loads((out / "processing-metrics.json").read_text(encoding="utf-8"))
+          drafts = json.loads((state / "drafts.json").read_text(encoding="utf-8"))
+          source_rows = json.loads((out / "reacquired-sources.json").read_text(encoding="utf-8"))
+
+          assert reacq["requested"] == 23
+          assert len(source_rows.get("sources", [])) == reacq["reacquired"]
+          draft_ids = [row.get("draft_id") for row in drafts.get("drafts", [])]
+          assert all(draft_ids)
+          assert len(draft_ids) == len(set(draft_ids))
+
+          report = {
+              "requested": reacq["requested"],
+              "reacquired": reacq["reacquired"],
+              "institutional_rejections": reacq["rejected"],
+              "collected": proc["collected"],
+              "processing_failed": proc["failed"],
+              "processing_quarantined": proc.get("quarantined", 0),
+              "processing_rejected": proc.get("rejected", 0),
+              "drafts": len(draft_ids),
+              "canonical_writes": 0,
+          }
+          (out / "technical-report.json").write_text(
+              json.dumps(report, ensure_ascii=False, indent=2) + "\n",
+              encoding="utf-8",
+          )
+          print(json.dumps(report, ensure_ascii=False, indent=2))
+          PY
+
+      - name: Export isolated state and hashes
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="${{ steps.ws.outputs.out }}"
+          STATE="${{ steps.ws.outputs.state }}"
+          cp "$STATE/drafts.json" "$OUT/topic-evidence-drafts.json"
+          cp "$STATE/processing-state.json" "$OUT/processing-state.json"
+          (
+            cd "$OUT"
+            sha256sum *.json *.log > SHA256SUMS.txt
+          )
+          {
+            echo "repository=$GITHUB_REPOSITORY"
+            echo "commit=$GITHUB_SHA"
+            echo "run_id=$GITHUB_RUN_ID"
+            echo "mode=targeted-read-only-reacquisition"
+          } > "$OUT/RUN_METADATA.txt"
+
+      - name: Assert repository remained unchanged
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -n "$(git status --porcelain --untracked-files=no)" ]]; then
+            git status --short
+            echo "::error::Reacquisition modified tracked repository files."
+            exit 1
+          fi
+
+      - name: Upload reacquisition artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: evidence-reacquire-35-${{ github.run_id }}
+          path: ${{ steps.ws.outputs.out }}
+          if-no-files-found: error
+          retention-days: 7
