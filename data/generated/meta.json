@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-09-20T11:28:16.789813+00:00",
+  "collected_at": "2026-09-21T22:37:37.019140+00:00",
   "uf": "ES",
   "election_year": 2026,
   "counts": {
@@ -7,11 +7,84 @@
     "estadual": 410,
     "federal_current_mandates_linked": 7,
     "ales_2025_evidence_linked": 26,
-    "topic_evidence": 22
+    "topic_evidence": 22,
+    "candidates_with_assets": 356,
+    "asset_records": 1513,
+    "candidates_with_social_links": 447,
+    "social_links": 1266,
+    "candidates_with_previous_elections": 376,
+    "previous_election_records": 1138,
+    "candidates_with_registration_status": 0
   },
   "sources": {
     "primary_tse_dataset": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
     "primary_tse_candidate_zip": "https://cdn.tse.jus.br/estatistica/sead/odsele/consulta_cand/consulta_cand_2026.zip",
+    "primary_tse_complement_zip": "https://cdn.tse.jus.br/estatistica/sead/odsele/consulta_cand_complementar/consulta_cand_complementar_2026.zip",
+    "primary_tse_assets_zip": "https://cdn.tse.jus.br/estatistica/sead/odsele/bem_candidato/bem_candidato_2026.zip",
+    "primary_tse_social_zip": "https://cdn.tse.jus.br/estatistica/sead/odsele/consulta_cand/rede_social_candidato_2026.zip",
+    "primary_tse_history_zip": "https://cdn.tse.jus.br/estatistica/sead/odsele/historico_candidatura/historico_candidatura_2026.zip",
+    "tse_enrichment": {
+      "candidate_complement": {
+        "institution": "TSE",
+        "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/consulta_cand_complementar/consulta_cand_complementar_2026.zip",
+        "status": "unavailable_not_promoted",
+        "error": "RuntimeError: falha nas rotas oficiais TSE | https://cdn.tse.jus.br/estatistica/sead/odsele/consulta_cand_complementar/consulta_cand_complementar_2026.zip: HTTPError: HTTP Error 403: Forbidden | https://dadosabertos.tse.jus.br/dataset/candidatos-2026/resource/d58fc30b-4eea-4286-a330-15511029e00e/download/consulta_cand_complementar_2026.zip: HTTPError: HTTP Error 403: Forbidden"
+      },
+      "candidate_assets": {
+        "status": "bootstrap_mirror",
+        "captured_at": "2026-09-21T22:37:17.762039+00:00",
+        "source": {
+          "institution": "TSE",
+          "official_dataset": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+          "transport": "MeuVoto static candidate pages",
+          "transport_base": "https://meuvoto.org.br/candidato/",
+          "transport_api_docs": "https://meuvoto.org.br/api.html",
+          "observed_source_sync_at": [
+            "16/09/2026 às 16:35"
+          ],
+          "aggregate_sha256": "b9ae34bfa3fbc5dccf623c1352e4118a441001cbee3bf6bb9763a707719891e1",
+          "candidate_count": 547
+        },
+        "semantics": "Snapshot factual TSE transportado por páginas estáticas do MeuVoto porque os endpoints oficiais retornam HTTP 403 ao runner. Não contém ranking, inferência ou conteúdo editorial.",
+        "dataset": "Bens de candidatos - 2026"
+      },
+      "candidate_social": {
+        "status": "bootstrap_mirror",
+        "captured_at": "2026-09-21T22:37:17.762039+00:00",
+        "source": {
+          "institution": "TSE",
+          "official_dataset": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+          "transport": "MeuVoto static candidate pages",
+          "transport_base": "https://meuvoto.org.br/candidato/",
+          "transport_api_docs": "https://meuvoto.org.br/api.html",
+          "observed_source_sync_at": [
+            "16/09/2026 às 16:35"
+          ],
+          "aggregate_sha256": "b9ae34bfa3fbc5dccf623c1352e4118a441001cbee3bf6bb9763a707719891e1",
+          "candidate_count": 547
+        },
+        "semantics": "Snapshot factual TSE transportado por páginas estáticas do MeuVoto porque os endpoints oficiais retornam HTTP 403 ao runner. Não contém ranking, inferência ou conteúdo editorial.",
+        "dataset": "Redes sociais de candidatos - 2026"
+      },
+      "candidate_history": {
+        "status": "bootstrap_mirror",
+        "captured_at": "2026-09-21T22:37:17.762039+00:00",
+        "source": {
+          "institution": "TSE",
+          "official_dataset": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+          "transport": "MeuVoto static candidate pages",
+          "transport_base": "https://meuvoto.org.br/candidato/",
+          "transport_api_docs": "https://meuvoto.org.br/api.html",
+          "observed_source_sync_at": [
+            "16/09/2026 às 16:35"
+          ],
+          "aggregate_sha256": "b9ae34bfa3fbc5dccf623c1352e4118a441001cbee3bf6bb9763a707719891e1",
+          "candidate_count": 547
+        },
+        "semantics": "Snapshot factual TSE transportado por páginas estáticas do MeuVoto porque os endpoints oficiais retornam HTTP 403 ao runner. Não contém ranking, inferência ou conteúdo editorial.",
+        "dataset": "Histórico de candidaturas"
+      }
+    },
     "primary_tse_photo_zip_es": "https://cdn.tse.jus.br/estatistica/sead/eleicoes/eleicoes2026/fotos/foto_cand2026_ES_div.zip",
     "photo_transport_mirror": "https://realidadebrasil.com.br/media/photos",
     "operational_mirror": {
@@ -38,11 +111,11 @@
     "ales": "https://www.al.es.gov.br/"
   },
   "data_quality": {
-    "registration_status": "O arquivo básico espelhado retorna #NE para a situação de candidatura dos registros ES; o sistema publica null em vez de atribuir significado.",
-    "assets": "Patrimônio não é publicado até haver ingestão auditável do bem_candidato_2026.",
+    "registration_status": "O status básico pode vir como #NE no espelho; quando disponível, a ficha usa o julgamento da base oficial de informações complementares.",
+    "assets": "Bens são incorporados somente do arquivo oficial bem_candidato_2026, com valores somados por SQ_CANDIDATO e proveniência registrada.",
     "photos": "A fonte primária é o pacote ES - Fotos de candidatos do TSE. Como o CDN oficial bloqueia o runner, a UI usa temporariamente um cache público por SQ_CANDIDATO; falhas de imagem caem para placeholder.",
-    "electoral_history": "Histórico eleitoral TSE ainda não é incorporado automaticamente neste snapshot; histórico institucional federal é obtido da Câmara.",
+    "electoral_history": "Histórico eleitoral é incorporado do recurso oficial Histórico de candidaturas e mantido separado do histórico institucional da Câmara.",
     "state_current_mandate": "Não inferido automaticamente; a composição da ALES requer validação institucional datada."
   },
-  "normalizer_version": "3.1.0"
+  "normalizer_version": "4.0.0"
 }
