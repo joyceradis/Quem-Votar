@@ -214,7 +214,6 @@ O endpoint clássico de branch protection pode retornar 403 para a integração 
 - #35 — worker contínuo War Time;
 - #86 — bens, redes e histórico TSE em staging/validação;
 - #88 — prova operacional pós-merge do sync;
-- #95 — acoplamento obrigatório de checkpoint a `data/generated/*` — **concluída**.
 
 ### Ainda não consolidada
 
