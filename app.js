@@ -206,9 +206,12 @@ async function initHome(){
   TOPICS=topics;
   applyGlobalMeta(meta);
 
-  $("homeFederalCount").textContent=federal.length||"—";
-  $("homeEstadualCount").textContent=estadual.length||"—";
-  $("homeTotalCount").textContent=(federal.length+estadual.length)||"—";
+  const homeFederalCount=$("homeFederalCount");
+  const homeEstadualCount=$("homeEstadualCount");
+  const homeTotalCount=$("homeTotalCount");
+  if(homeFederalCount)homeFederalCount.textContent=federal.length||"—";
+  if(homeEstadualCount)homeEstadualCount.textContent=estadual.length||"—";
+  if(homeTotalCount)homeTotalCount.textContent=(federal.length+estadual.length)||"—";
 
   const evidencedTopicIds=new Set(all.flatMap(candidate=>candidateTopicIds(candidate)));
   const visibleTopics=TOPICS.topics.filter(topic=>evidencedTopicIds.has(topic.id));
