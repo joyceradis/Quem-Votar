@@ -26,54 +26,25 @@ def candidate(cid="123", chamber_id=999):
     }
 
 
-def manifest_record():
+def manifest_record(prop_id=456):
     return {
         "curation_order": 1,
         "candidate_id": "123",
         "chamber_id": 999,
-        "proposition_id": 456,
+        "proposition_id": prop_id,
         "source_url": (
             "https://www.camara.leg.br/proposicoesWeb/"
-            "fichadetramitacao?idProposicao=456"
+            f"fichadetramitacao?idProposicao={prop_id}"
         ),
     }
 
 
 class ReacquisitionTests(unittest.TestCase):
-    def test_author_matches_by_id_or_uri(self):
-        self.assertTrue(
-            reacquire.author_matches({"dados": [{"id": 999}]}, 999)
-        )
-        self.assertTrue(
-            reacquire.author_matches(
-                {
-                    "dados": [
-                        {
-                            "uri": (
-                                "https://dadosabertos.camara.leg.br/"
-                                "api/v2/deputados/999"
-                            )
-                        }
-                    ]
-                },
-                999,
-            )
-        )
-        self.assertIsNone(
-            reacquire.author_matches(
-                {"dados": [{"id": 111, "uri": "https://x/deputados/111"}]},
-                999,
-            )
-        )
-
     def test_snapshot_chamber_id_must_match_manifest(self):
         row = manifest_record()
         row["chamber_id"] = 1000
         with self.assertRaisesRegex(RuntimeError, "chamber_id diverge"):
-            reacquire.validate_record(
-                row,
-                candidates={"123": candidate()},
-            )
+            reacquire.validate_record(row, candidates={"123": candidate()})
 
     def test_source_url_must_match_proposition_id(self):
         row = manifest_record()
@@ -82,38 +53,44 @@ class ReacquisitionTests(unittest.TestCase):
             "fichadetramitacao?idProposicao=999"
         )
         with self.assertRaisesRegex(RuntimeError, "source_url não corresponde"):
-            reacquire.validate_record(
-                row,
-                candidates={"123": candidate()},
-            )
+            reacquire.validate_record(row, candidates={"123": candidate()})
 
-    def test_reacquire_requires_official_author_match(self):
+    def test_next_link_reads_official_pagination(self):
+        payload = {
+            "links": [
+                {"rel": "self", "href": "https://api.test/page=1"},
+                {"rel": "next", "href": "https://api.test/page=2"},
+            ]
+        }
+        self.assertEqual(
+            "https://api.test/page=2",
+            reacquire.next_link(payload),
+        )
+
+    def test_reacquire_paginates_filtered_author_query_until_target(self):
         calls = []
 
         def fake_json(url):
             calls.append(url)
-            if url.endswith("/autores"):
+            if "page=2" in url:
                 return {
                     "dados": [
                         {
-                            "id": 999,
-                            "nome": "Maria Silva",
-                            "uri": (
-                                "https://dadosabertos.camara.leg.br/"
-                                "api/v2/deputados/999"
-                            ),
+                            "id": 456,
+                            "siglaTipo": "PL",
+                            "numero": 10,
+                            "ano": 2026,
+                            "ementa": "Dispõe sobre tema de teste.",
+                            "dataApresentacao": "2026-01-15T10:00:00",
+                            "uri": "https://dados.test/proposicoes/456",
                         }
-                    ]
+                    ],
+                    "links": [],
                 }
+            self.assertIn("idDeputadoAutor=999", url)
             return {
-                "dados": {
-                    "id": 456,
-                    "siglaTipo": "PL",
-                    "numero": 10,
-                    "ano": 2026,
-                    "ementa": "Dispõe sobre tema de teste.",
-                    "dataApresentacao": "2026-01-15T10:00:00",
-                }
+                "dados": [{"id": 111, "siglaTipo": "PL", "numero": 1, "ano": 2026}],
+                "links": [{"rel": "next", "href": "https://api.test/page=2"}],
             }
 
         sources, rejections, metrics = reacquire.reacquire(
@@ -132,35 +109,18 @@ class ReacquisitionTests(unittest.TestCase):
         self.assertEqual("exact_content", row["discovery_status"])
         self.assertEqual("official_author_api", row["attribution_trust"])
         self.assertEqual(
-            "api_proposition_author_reacquisition",
+            "api_idDeputadoAutor_paginated_reacquisition",
             row["source_origin"]["discovery_method"],
         )
         self.assertEqual(456, row["source_origin"]["proposition_id"])
         self.assertEqual(999, row["source_origin"]["chamber_id"])
+        self.assertEqual(2, row["source_origin"]["api_page"])
 
-    def test_wrong_author_is_rejected_not_collected(self):
+    def test_missing_target_is_rejected_closed(self):
         def fake_json(url):
-            if url.endswith("/autores"):
-                return {
-                    "dados": [
-                        {
-                            "id": 111,
-                            "nome": "Outra Pessoa",
-                            "uri": (
-                                "https://dadosabertos.camara.leg.br/"
-                                "api/v2/deputados/111"
-                            ),
-                        }
-                    ]
-                }
             return {
-                "dados": {
-                    "id": 456,
-                    "siglaTipo": "PL",
-                    "numero": 10,
-                    "ano": 2026,
-                    "ementa": "Teste.",
-                }
+                "dados": [{"id": 111, "siglaTipo": "PL", "numero": 1, "ano": 2026}],
+                "links": [],
             }
 
         sources, rejections, metrics = reacquire.reacquire(
@@ -171,9 +131,26 @@ class ReacquisitionTests(unittest.TestCase):
         self.assertFalse(sources["sources"])
         self.assertEqual(1, metrics["rejected"])
         self.assertIn(
-            "autoria oficial não contém",
+            "não localizado",
             rejections["rejections"][0]["detail"],
         )
+
+    def test_max_page_failure_does_not_emit_source(self):
+        def fake_json(url):
+            return {
+                "dados": [{"id": 111}],
+                "links": [{"rel": "next", "href": "https://api.test/again"}],
+            }
+
+        sources, rejections, metrics = reacquire.reacquire(
+            manifest={"records": [manifest_record()]},
+            candidates={"123": candidate()},
+            fetch_json=fake_json,
+            max_pages=1,
+        )
+        self.assertFalse(sources["sources"])
+        self.assertEqual(1, metrics["rejected"])
+        self.assertIn("limite de paginação", rejections["rejections"][0]["detail"])
 
 
 if __name__ == "__main__":
