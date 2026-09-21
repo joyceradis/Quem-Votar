@@ -1,7 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Quem Votar?">
-  <path
-    fill="#D81B60"
-    d="M10 20.8C10 9.1 19.2 2 32 2c13.1 0 22 7 22 18.1 0 8.2-4.2 13.2-11.4 18.7-5.7 4.4-8 7.8-8 13.9v1.1H23.7v-2c0-8.7 3-14.2 10-19.7 6.3-5 9.4-7.8 9.4-12.5 0-5.3-4.1-8.8-10.7-8.8-6.8 0-11.2 3.8-11.2 10H10Z"
-  />
-  <circle cx="32" cy="59.5" r="5.3" fill="#D81B60"/>
+  <g transform="rotate(-8 32 32)">
+    <path d="M17 20.5C18 11.5 24.8 6 33.8 6c9.4 0 16.2 5.4 16.2 13.5 0 6.7-3.8 10.7-10 14.7-5.3 3.5-7.6 6.7-7.6 12" fill="none" stroke="#FF6B8B" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="31.8" cy="56.2" r="4.8" fill="#FF6B8B"/>
+  </g>
 </svg>
