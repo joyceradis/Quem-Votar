@@ -33,12 +33,15 @@ jobs:
 
       - name: Validar sintaxe e testes antes da coleta
         run: |
-          python -m py_compile scripts/sync-data.py scripts/audit-site.py scripts/coletor_evidencias.py scripts/evidence_coverage_report.py
+          python -m py_compile scripts/sync-data.py scripts/audit-site.py scripts/coletor_evidencias.py scripts/evidence_coverage_report.py scripts/generate-social-previews.py
           node --check app.js
           python -m unittest discover -s tests -p 'test_*.py' -v
 
       - name: Sincronizar candidaturas ES e Câmara
         run: python scripts/sync-data.py
+
+      - name: Regenerar previews sociais estáticos
+        run: python scripts/generate-social-previews.py
 
       - name: Auditar snapshot candidato
         run: |
@@ -64,15 +67,15 @@ jobs:
           print(f"Validação OK: {len(federal)} federais / {len(estadual)} estaduais / {meta['counts'].get('federal_current_mandates_linked', 0)} vínculos Câmara")
           PY
 
-      - name: Garantir que o sync só alterou data/generated
+      - name: Garantir que o sync só alterou snapshot e previews derivados
         shell: bash
         run: |
           set -euo pipefail
           CHANGED="$(git status --porcelain | awk '{print $2}')"
           if [[ -n "$CHANGED" ]]; then
-            INVALID="$(printf '%s\n' "$CHANGED" | grep -Ev '^data/generated/' || true)"
+            INVALID="$(printf '%s\n' "$CHANGED" | grep -Ev '^(data/generated/|social/)' || true)"
             if [[ -n "$INVALID" ]]; then
-              echo "::error::sync tentou alterar arquivo fora de data/generated:"
+              echo "::error::sync tentou alterar arquivo fora de data/generated ou social/:"
               printf '%s\n' "$INVALID"
               exit 1
             fi
@@ -84,10 +87,12 @@ jobs:
         run: |
           set -euo pipefail
           OUT="$RUNNER_TEMP/sync-data-candidate"
-          mkdir -p "$OUT/data-generated"
+          mkdir -p "$OUT/data-generated" "$OUT/social"
           cp -R data/generated/. "$OUT/data-generated/"
+          cp -R social/. "$OUT/social/"
           git diff -- data/generated > "$OUT/data-generated.patch"
-          git diff --stat -- data/generated > "$OUT/DIFFSTAT.txt"
+          git diff -- social > "$OUT/social-previews.patch"
+          git diff --stat -- data/generated social > "$OUT/DIFFSTAT.txt"
           {
             echo "repository=${GITHUB_REPOSITORY}"
             echo "base_sha=${GITHUB_SHA}"
@@ -95,10 +100,10 @@ jobs:
             echo "run_attempt=${GITHUB_RUN_ATTEMPT}"
           } > "$OUT/RUN_METADATA.txt"
           (
-            cd "$OUT/data-generated"
-            sha256sum *.json > ../SHA256SUMS.txt
+            cd "$OUT"
+            find data-generated social -type f -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS.txt
           )
-          if git diff --quiet -- data/generated; then
+          if git diff --quiet -- data/generated social; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"

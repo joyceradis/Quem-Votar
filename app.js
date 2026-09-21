@@ -632,9 +632,10 @@ async function initProfile(){
   profileUrl.searchParams.set("id",String(candidate.tse_id));
   profileUrl.searchParams.set("cargo",kind);
   const canonicalUrl=profileUrl.toString();
+  const socialUrl=new URL(`social/${encodeURIComponent(candidate.tse_id)}/`,location.href).toString();
   document.querySelector('meta[property="og:title"]')?.setAttribute("content",document.title);
   document.querySelector('meta[property="og:description"]')?.setAttribute("content",shareDescription);
-  document.querySelector('meta[property="og:url"]')?.setAttribute("content",canonicalUrl);
+  document.querySelector('meta[property="og:url"]')?.setAttribute("content",socialUrl);
   document.querySelector('meta[name="twitter:title"]')?.setAttribute("content",document.title);
   document.querySelector('meta[name="twitter:description"]')?.setAttribute("content",shareDescription);
   document.querySelector('link[rel="canonical"]')?.setAttribute("href",canonicalUrl);
@@ -701,10 +702,10 @@ async function initProfile(){
     const original=button.textContent;
     try{
       if(navigator.share){
-        await navigator.share({title:document.title,text:shareDescription,url:canonicalUrl});
+        await navigator.share({title:document.title,text:shareDescription,url:socialUrl});
         return;
       }
-      await navigator.clipboard.writeText(canonicalUrl);
+      await navigator.clipboard.writeText(socialUrl);
       button.textContent="Link copiado";
       setTimeout(()=>button.textContent=original,1800);
     }catch(error){
