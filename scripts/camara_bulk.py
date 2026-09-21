@@ -14,6 +14,7 @@ import json
 import os
 import re
 import tempfile
+import time
 import urllib.error
 import urllib.request
 from collections import defaultdict
@@ -85,12 +86,14 @@ def download_bulk_csv(
     *,
     cache_dir: Path,
     max_bytes: int = MAX_BULK_BYTES,
+    timeout: int = 180,
+    retries: int = 3,
 ) -> tuple[Path, dict[str, Any]]:
-    """Materialize one official daily CSV with an auditable local cache.
+    """Materialize one official daily CSV with auditable cache + bounded retry.
 
-    The GitHub workflow places cache_dir behind a date-scoped Actions cache, so
-    normal 5-minute watchdog runs reuse the same official bytes instead of
-    redownloading them.
+    Large yearly Câmara files can legitimately take longer than ordinary API
+    calls. Retries are transport-only: they never change semantic acceptance.
+    A successful file is hash-pinned before it is exposed to the join stage.
     """
     url = bulk_url(dataset, year)
     data_path, meta_path = cache_paths(cache_dir, dataset, year)
@@ -112,76 +115,103 @@ def download_bulk_csv(
         },
     )
 
-    tmp_fd, tmp_name = tempfile.mkstemp(
-        prefix=f".{dataset}-{year}-",
-        suffix=".part",
-        dir=str(cache_dir),
-    )
-    os.close(tmp_fd)
-    tmp_path = Path(tmp_name)
-    digest = hashlib.sha256()
-    size = 0
-    final_url = url
-    headers: dict[str, str] = {}
+    last_error: Exception | None = None
+    attempts = max(1, int(retries))
+    for attempt in range(1, attempts + 1):
+        tmp_fd, tmp_name = tempfile.mkstemp(
+            prefix=f".{dataset}-{year}-",
+            suffix=".part",
+            dir=str(cache_dir),
+        )
+        os.close(tmp_fd)
+        tmp_path = Path(tmp_name)
+        digest = hashlib.sha256()
+        size = 0
+        final_url = url
+        headers: dict[str, str] = {}
 
-    try:
-        with opener.open(request, timeout=60) as response, tmp_path.open("wb") as out:
-            final_url = clean(response.geturl())
-            collector.validate_public_https_url(final_url, resolve_dns=True)
-            declared = clean(response.headers.get("Content-Length"))
-            if declared.isdigit() and int(declared) > max_bytes:
-                raise RuntimeError(
-                    f"{dataset}-{year}: resposta excede limite de {max_bytes} bytes"
-                )
-            headers = {
-                "etag": clean(response.headers.get("ETag")),
-                "last_modified": clean(response.headers.get("Last-Modified")),
-                "content_type": clean(response.headers.get("Content-Type")),
-            }
-            while True:
-                chunk = response.read(CHUNK_SIZE)
-                if not chunk:
-                    break
-                size += len(chunk)
-                if size > max_bytes:
+        try:
+            with opener.open(request, timeout=max(30, int(timeout))) as response, tmp_path.open("wb") as out:
+                final_url = clean(response.geturl())
+                collector.validate_public_https_url(final_url, resolve_dns=True)
+                declared = clean(response.headers.get("Content-Length"))
+                if declared.isdigit() and int(declared) > max_bytes:
                     raise RuntimeError(
                         f"{dataset}-{year}: resposta excede limite de {max_bytes} bytes"
                     )
-                digest.update(chunk)
-                out.write(chunk)
-    except urllib.error.HTTPError as exc:
-        tmp_path.unlink(missing_ok=True)
-        raise RuntimeError(f"{dataset}-{year}: HTTP {exc.code}") from exc
-    except urllib.error.URLError as exc:
-        tmp_path.unlink(missing_ok=True)
-        raise RuntimeError(f"{dataset}-{year}: falha de rede: {exc.reason}") from exc
-    except Exception:
-        tmp_path.unlink(missing_ok=True)
-        raise
+                headers = {
+                    "etag": clean(response.headers.get("ETag")),
+                    "last_modified": clean(response.headers.get("Last-Modified")),
+                    "content_type": clean(response.headers.get("Content-Type")),
+                }
+                while True:
+                    chunk = response.read(CHUNK_SIZE)
+                    if not chunk:
+                        break
+                    size += len(chunk)
+                    if size > max_bytes:
+                        raise RuntimeError(
+                            f"{dataset}-{year}: resposta excede limite de {max_bytes} bytes"
+                        )
+                    digest.update(chunk)
+                    out.write(chunk)
 
-    if size <= 0:
-        tmp_path.unlink(missing_ok=True)
-        raise RuntimeError(f"{dataset}-{year}: arquivo vazio")
+            if size <= 0:
+                raise RuntimeError(f"{dataset}-{year}: arquivo vazio")
 
-    tmp_path.replace(data_path)
-    meta = {
-        "dataset": dataset,
-        "year": int(year),
-        "url": url,
-        "final_url": final_url,
-        "fetched_at": utc_now(),
-        "sha256": digest.hexdigest(),
-        "bytes": size,
-        "etag": headers.get("etag", ""),
-        "last_modified": headers.get("last_modified", ""),
-        "content_type": headers.get("content_type", ""),
-        "cache_hit": False,
-    }
-    meta_path.write_text(
-        json.dumps(meta, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
-    )
-    return data_path, meta
+            tmp_path.replace(data_path)
+            meta = {
+                "dataset": dataset,
+                "year": int(year),
+                "url": url,
+                "final_url": final_url,
+                "fetched_at": utc_now(),
+                "sha256": digest.hexdigest(),
+                "bytes": size,
+                "etag": headers.get("etag", ""),
+                "last_modified": headers.get("last_modified", ""),
+                "content_type": headers.get("content_type", ""),
+                "cache_hit": False,
+                "download_attempts": attempt,
+                "download_timeout_seconds": max(30, int(timeout)),
+            }
+            meta_path.write_text(
+                json.dumps(meta, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+            return data_path, meta
+
+        except urllib.error.HTTPError as exc:
+            tmp_path.unlink(missing_ok=True)
+            last_error = RuntimeError(f"{dataset}-{year}: HTTP {exc.code}")
+            retryable = exc.code in {408, 425, 429, 500, 502, 503, 504}
+            if not retryable or attempt >= attempts:
+                raise last_error from exc
+        except urllib.error.URLError as exc:
+            tmp_path.unlink(missing_ok=True)
+            last_error = RuntimeError(
+                f"{dataset}-{year}: falha de rede: {exc.reason}"
+            )
+            if attempt >= attempts:
+                raise last_error from exc
+        except TimeoutError as exc:
+            tmp_path.unlink(missing_ok=True)
+            last_error = RuntimeError(f"{dataset}-{year}: timeout")
+            if attempt >= attempts:
+                raise last_error from exc
+        except RuntimeError:
+            tmp_path.unlink(missing_ok=True)
+            raise
+        except Exception as exc:
+            tmp_path.unlink(missing_ok=True)
+            last_error = RuntimeError(f"{dataset}-{year}: falha de transporte: {exc}")
+            if attempt >= attempts:
+                raise last_error from exc
+
+        # Bounded backoff; transport recovery only.
+        time.sleep(min(15, 2 ** attempt))
+
+    raise last_error or RuntimeError(f"{dataset}-{year}: falha de transporte")
 
 
 def iter_csv(path: Path) -> Iterator[dict[str, str]]:
