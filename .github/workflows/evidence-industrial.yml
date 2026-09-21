@@ -1,9 +1,9 @@
-name: Evidence continuous worker — artifact only
+name: Evidence wartime worker — artifact only
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: "37 */6 * * *"
+    - cron: "2/5 * * * *"
   push:
     branches: [main]
     paths:
@@ -19,7 +19,7 @@ permissions:
   issues: read
 
 concurrency:
-  group: evidence-continuous-worker
+  group: evidence-wartime-worker
   cancel-in-progress: false
 
 jobs:
@@ -28,7 +28,7 @@ jobs:
     outputs:
       stop: ${{ steps.check.outputs.stop }}
     steps:
-      - name: Check #35 continuous-worker window
+      - name: Check #35 wartime-worker window
         id: check
         uses: actions/github-script@v7
         with:
@@ -45,14 +45,14 @@ jobs:
             );
             core.setOutput("stop", stopped ? "true" : "false");
             if (stopped) {
-              core.notice("Continuous-worker window closed by maintainer signal in #35.");
+              core.notice("Wartime worker closed by maintainer signal in #35.");
             }
 
   industrial:
     needs: window-gate
     if: ${{ needs.window-gate.outputs.stop != 'true' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 300
 
     steps:
       - name: Checkout read-only
@@ -128,13 +128,73 @@ jobs:
           OUT="${{ steps.ws.outputs.out }}"
           python scripts/discover_evidence_sources.py             --output-sources "$OUT/topic-evidence-sources.json"             --output-rejections "$OUT/discovery-rejections.json"             --metrics "$OUT/discovery-metrics.json"             --site-workers 8             --max-links-per-site 20             | tee "$OUT/discovery.log"
 
-      - name: Process exact-content fairly and resumably
+      - name: Drain exact-content backlog continuously
         shell: bash
         run: |
           set -euo pipefail
           OUT="${{ steps.ws.outputs.out }}"
           STATE="${{ steps.ws.outputs.state }}"
-          python scripts/process_evidence_batch.py             --sources "$OUT/topic-evidence-sources.json"             --existing-drafts "$STATE/drafts.json"             --state "$STATE/processing-state.json"             --output-drafts "$STATE/drafts.json"             --output-failures "$OUT/processing-failures-current.json"             --metrics "$OUT/processing-metrics.json"             --max-attempts 3             --retries-per-run 2             --workers 8             --limit 200             --per-candidate-limit 12             | tee "$OUT/processing.log"
+          : > "$OUT/processing.log"
+
+          cycle=0
+          max_cycles=100
+
+          while true; do
+            cycle=$((cycle + 1))
+            METRICS="$OUT/processing-metrics-cycle-${cycle}.json"
+
+            echo "=== wartime cycle ${cycle} ===" | tee -a "$OUT/processing.log"
+
+            python scripts/process_evidence_batch.py \
+              --sources "$OUT/topic-evidence-sources.json" \
+              --existing-drafts "$STATE/drafts.json" \
+              --state "$STATE/processing-state.json" \
+              --output-drafts "$STATE/drafts.json" \
+              --output-failures "$OUT/processing-failures-current.json" \
+              --metrics "$METRICS" \
+              --max-attempts 3 \
+              --retries-per-run 2 \
+              --workers 8 \
+              --limit 200 \
+              --per-candidate-limit 12 \
+              | tee -a "$OUT/processing.log"
+
+            cp "$METRICS" "$OUT/processing-metrics.json"
+
+            read -r queued eligible progressed <<<"$(python - "$METRICS" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          m = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+          queued = int(m.get("queued", 0))
+          eligible = int(m.get("eligible_before_fair_batch", 0))
+          progressed = sum(
+              int(m.get(k, 0))
+              for k in ("collected", "failed", "quarantined", "rejected")
+          )
+          print(queued, eligible, progressed)
+          PY
+            )"
+
+            echo "wartime_cycle=${cycle} queued=${queued} eligible=${eligible} progressed=${progressed}" \
+              | tee -a "$OUT/processing.log"
+
+            if [[ "$queued" -eq 0 ]]; then
+              echo "wartime_backlog_drained=true" | tee -a "$OUT/processing.log"
+              break
+            fi
+
+            if [[ "$progressed" -eq 0 ]]; then
+              echo "::error::Wartime worker made no progress with queued work remaining."
+              exit 1
+            fi
+
+            if [[ "$cycle" -ge "$max_cycles" ]]; then
+              echo "::error::Wartime safety cap reached before backlog drain."
+              exit 1
+            fi
+          done
 
       - name: Materialize persistent processing failures
         shell: bash
@@ -334,5 +394,5 @@ jobs:
               raise SystemExit(
                   f"cruise-mode incident: {count} actionable institutional failure(s)"
               )
-          print("cruise_mode_ok: silent success")
+          print("wartime_worker_ok: silent success")
           PY
