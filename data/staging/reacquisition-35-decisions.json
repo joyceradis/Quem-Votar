@@ -1,0 +1,208 @@
+{
+  "version": "1.0.0",
+  "semantics": "Semantic decisions already approved by the maintainer, rebound only to corrected institutional technical anchors. No new political judgment is introduced here.",
+  "source": {
+    "file": "base promovida.xlsx",
+    "sha256": "b51de281083a8e337413cfc5c8c01f95a50b177971d9a403ef656fd44ea53519",
+    "decision": "maintainer_human_curation"
+  },
+  "normalization": {
+    "mobilidade": "infraestrutura",
+    "meio_ambiente": "meio-ambiente"
+  },
+  "approved_for_technical_binding": [
+    {
+      "curation_order": 6,
+      "status": "approved",
+      "topic_id": "economia",
+      "evidence_type": "proposta",
+      "statement": "Propõe que o trabalhador possa escolher entre o INSS e produtos financeiros públicos ou privados para destinar suas contribuições previdenciárias.",
+      "scope": "federal",
+      "verification_status": "verified"
+    },
+    {
+      "curation_order": 7,
+      "status": "approved",
+      "topic_id": "economia",
+      "evidence_type": "proposta",
+      "statement": "Propõe instituir o Fundo Nacional de Educação Financeira e Proteção do Investidor, definindo sua estrutura, gestão, fontes de recursos e aplicação.",
+      "scope": "federal",
+      "verification_status": "verified"
+    },
+    {
+      "curation_order": 8,
+      "status": "approved",
+      "topic_id": "educacao",
+      "evidence_type": "proposta",
+      "statement": "Propõe tornar obrigatória a educação financeira no currículo de instituições públicas e privadas de todos os níveis, com diretrizes de capacitação docente e avaliação.",
+      "scope": "federal",
+      "verification_status": "verified"
+    },
+    {
+      "curation_order": 10,
+      "status": "approved",
+      "topic_id": "infraestrutura",
+      "evidence_type": "proposta",
+      "statement": "Propõe instituir a Política Nacional de Educação para o Trânsito nas escolas de ensino fundamental e médio, com ênfase no uso consciente de bicicletas, patinetes, skates e veículos elétricos.",
+      "scope": "federal",
+      "verification_status": "verified"
+    },
+    {
+      "curation_order": 11,
+      "status": "approved",
+      "topic_id": "economia",
+      "evidence_type": "proposta",
+      "statement": "Propõe declarar o Município de Ponto Belo (ES) Capital Nacional da Carne de Sol.",
+      "scope": "federal",
+      "verification_status": "verified"
+    },
+    {
+      "curation_order": 12,
+      "status": "approved",
+      "topic_id": "seguranca",
+      "evidence_type": "proposta",
+      "statement": "Propõe alterar a Lei de Drogas (Lei 11.343/2006) para suprimir a fase de notificação prévia para defesa, alinhando o rito ao Código de Processo Penal.",
+      "scope": "federal",
+      "verification_status": "verified"
+    },
+    {
+      "curation_order": 13,
+      "status": "approved",
+      "topic_id": "educacao",
+      "evidence_type": "proposta",
+      "statement": "Propõe incluir, entre os deveres das organizações esportivas profissionais, o oferecimento de curso de educação financeira básica aos atletas.",
+      "scope": "federal",
+      "verification_status": "verified"
+    },
+    {
+      "curation_order": 19,
+      "status": "approved",
+      "topic_id": "economia",
+      "evidence_type": "proposta",
+      "statement": "Apresentou emenda de Plenário (02/03/2026) a projeto em regime de urgência para alterar a Lei 5.991/1973 e dispor sobre a comercialização de medicamentos em farmácia ou drogaria instalada em área de venda.",
+      "scope": "federal",
+      "verification_status": "verified"
+    },
+    {
+      "curation_order": 20,
+      "status": "approved",
+      "topic_id": "meio-ambiente",
+      "evidence_type": "atuação",
+      "statement": "Requer visita técnica dos membros da Comissão Especial à Zona da Mata mineira para tratar das consequências das fortes chuvas de 2026.",
+      "scope": "federal",
+      "verification_status": "verified"
+    },
+    {
+      "curation_order": 21,
+      "status": "approved",
+      "topic_id": "meio-ambiente",
+      "evidence_type": "atuação",
+      "statement": "Requer audiência pública para avaliar os impactos e danos causados pelas enchentes de 2026 na Zona da Mata de Minas Gerais.",
+      "scope": "federal",
+      "verification_status": "verified"
+    },
+    {
+      "curation_order": 23,
+      "status": "approved",
+      "topic_id": "saude",
+      "evidence_type": "atuação",
+      "statement": "Requer audiência pública na Comissão de Saúde sobre a efetividade das políticas de saúde e valorização dos agentes de saúde e combate às endemias no SUS.",
+      "scope": "federal",
+      "verification_status": "verified"
+    },
+    {
+      "curation_order": 25,
+      "status": "approved",
+      "topic_id": "direitos",
+      "evidence_type": "atuação",
+      "statement": "Requer realização de audiência pública conjunta sobre mulheres negras em Brasília (protagonismo político, cultura e resistência) em novembro de 2025.",
+      "scope": "federal",
+      "verification_status": "verified"
+    },
+    {
+      "curation_order": 26,
+      "status": "approved",
+      "topic_id": "direitos",
+      "evidence_type": "atuação",
+      "statement": "Requer realização de audiência pública conjunta sobre mulheres negras em Brasília (protagonismo político, cultura e resistência) em novembro de 2025.",
+      "scope": "federal",
+      "verification_status": "verified"
+    },
+    {
+      "curation_order": 28,
+      "status": "approved",
+      "topic_id": "direitos",
+      "evidence_type": "atuação",
+      "statement": "Requerimento de retirada da pauta do PL 2668/2024 na Comissão de Direitos Humanos, Minorias e Igualdade Racial (08/07/2026).",
+      "scope": "federal",
+      "verification_status": "verified"
+    },
+    {
+      "curation_order": 29,
+      "status": "approved",
+      "topic_id": "direitos",
+      "evidence_type": "atuação",
+      "statement": "Votação nominal do requerimento de retirada da pauta do PL 717/2025 na Comissão de Direitos Humanos, Minorias e Igualdade Racial (08/07/2026).",
+      "scope": "federal",
+      "verification_status": "verified"
+    },
+    {
+      "curation_order": 30,
+      "status": "approved",
+      "topic_id": "direitos",
+      "evidence_type": "atuação",
+      "statement": "Requerimento de retirada da pauta do PL 4401/2025 na Comissão de Direitos Humanos, Minorias e Igualdade Racial (08/07/2026).",
+      "scope": "federal",
+      "verification_status": "verified"
+    },
+    {
+      "curation_order": 31,
+      "status": "approved",
+      "topic_id": "direitos",
+      "evidence_type": "atuação",
+      "statement": "Votação nominal do requerimento de retirada da pauta do PL 2668/2024 na Comissão de Direitos Humanos, Minorias e Igualdade Racial (08/07/2026).",
+      "scope": "federal",
+      "verification_status": "verified"
+    },
+    {
+      "curation_order": 32,
+      "status": "approved",
+      "topic_id": "direitos",
+      "evidence_type": "atuação",
+      "statement": "Requerimento de retirada da pauta do PL 4205/2021 na Comissão de Direitos Humanos, Minorias e Igualdade Racial (08/07/2026).",
+      "scope": "federal",
+      "verification_status": "verified"
+    },
+    {
+      "curation_order": 33,
+      "status": "approved",
+      "topic_id": "direitos",
+      "evidence_type": "atuação",
+      "statement": "Votação nominal do requerimento de retirada da pauta do PL 4205/2021 na Comissão de Direitos Humanos, Minorias e Igualdade Racial (08/07/2026).",
+      "scope": "federal",
+      "verification_status": "verified"
+    }
+  ],
+  "held_by_frozen_taxonomy": [
+    {
+      "curation_order": 9,
+      "original_topic": "gestao_transparencia",
+      "reason": "topic_outside_v5_5_freeze"
+    },
+    {
+      "curation_order": 22,
+      "original_topic": "gestao_transparencia",
+      "reason": "topic_outside_v5_5_freeze"
+    },
+    {
+      "curation_order": 24,
+      "original_topic": "gestao_transparencia",
+      "reason": "topic_outside_v5_5_freeze"
+    },
+    {
+      "curation_order": 27,
+      "original_topic": "homenagens_cerimonial",
+      "reason": "topic_outside_v5_5_freeze"
+    }
+  ]
+}
