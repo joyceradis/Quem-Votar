@@ -584,6 +584,38 @@ async function initProfile(){
   const institutionalEvidence=candidate.institutional_evidence||[];
   const thematicEvidence=topicEvidence(candidate);
   const impactTopics=practicalAreas(candidate);
+  const socialName=candidate.social_name&&norm(candidate.social_name)!==norm(name)?candidate.social_name:null;
+  const organization=(
+    candidate.coalition&&norm(candidate.coalition)!=="PARTIDO ISOLADO"
+      ? candidate.coalition_composition||candidate.coalition
+      : candidate.coalition
+        ? "Partido isolado"
+        : null
+  );
+  const electoralFacts=[
+    {
+      label:"Partido",
+      value:candidate.party_name
+        ? [candidate.party,candidate.party_name].filter(Boolean).join(" · ")
+        : candidate.party
+    },
+    {label:"Federação / composição",value:organization},
+    {label:"Escolaridade",value:candidate.education},
+    {label:"Ocupação declarada",value:candidate.occupation},
+    {label:"Situação da candidatura",value:candidate.registration_status},
+    {label:"Situação de totalização",value:candidate.totalization_status}
+  ].filter(item=>item.value);
+  const electoralFactsContent=electoralFacts.length?`
+    <div class="electoral-data" aria-label="Dados eleitorais do TSE">
+      <div class="electoral-data-head">
+        <strong>Dados eleitorais do TSE</strong>
+        <span>Cadastro de candidaturas · 2026</span>
+      </div>
+      <dl class="electoral-data-grid">
+        ${electoralFacts.map(item=>`<div class="electoral-data-item"><dt>${esc(item.label)}</dt><dd>${esc(item.value)}</dd></div>`).join("")}
+      </dl>
+    </div>
+  `:"";
 
   document.title=`${name} · Quem Votar?`;
   const roleLabel=kind==="federal"?"Deputado Federal":"Deputado Estadual";
@@ -630,7 +662,9 @@ async function initProfile(){
         <p class="eyebrow">${kind==="federal"?"DEPUTADO FEDERAL":"DEPUTADO ESTADUAL"} · ESPÍRITO SANTO</p>
         <h1>${esc(name)}</h1>
         <p class="full-name">${esc(candidate.full_name||"")}</p>
-        <div class="identity-line"><strong>${esc(candidate.party||"Partido não informado")}</strong><span>nº ${esc(candidate.number||"—")}</span><span>${esc(candidate.occupation||"Ocupação não informada")}</span></div>
+        ${socialName?`<p class="social-name">Nome social: ${esc(socialName)}</p>`:""}
+        <div class="identity-line"><strong>${esc(candidate.party||"Partido não informado")}</strong><span>nº ${esc(candidate.number||"—")}</span></div>
+        ${electoralFactsContent}
         <div class="profile-actions">
           <button id="profileCompare" class="profile-compare" type="button" data-candidate-id="${esc(candidate.tse_id)}">${getCompareIds().includes(String(candidate.tse_id))?"Remover da comparação":"Comparar"}</button>
           <button id="profileShare" class="profile-share" type="button">Compartilhar perfil</button>
