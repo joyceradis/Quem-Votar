@@ -58,6 +58,16 @@ class CandidateProfileDataContractTest(unittest.TestCase):
         self.assertIn("electoral-data-grid", css)
         self.assertIn("electoral-data-item", css)
 
+    def test_registration_status_metadata_documents_explicit_absence(self):
+        meta = json.loads(
+            (ROOT / "data" / "generated" / "meta.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        note = meta.get("data_quality", {}).get("registration_status", "")
+        self.assertIn("not_available", note)
+        self.assertNotIn("publica null", note)
+
 
 if __name__ == "__main__":
     unittest.main()
