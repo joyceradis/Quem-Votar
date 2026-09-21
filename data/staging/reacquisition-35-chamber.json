@@ -1,0 +1,179 @@
+{
+  "version": "1.0.0",
+  "semantics": "Maintainer-approved records retained after curation. This manifest authorizes technical re-acquisition only and does not bypass source attribution, support-text, taxonomy, promotion, CI, or canonical publication gates.",
+  "source": {
+    "maintainer_file": "base promovida.xlsx",
+    "sha256": "b51de281083a8e337413cfc5c8c01f95a50b177971d9a403ef656fd44ea53519",
+    "approved_records_total": 27,
+    "already_published_orders": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "reacquisition_records": 23
+  },
+  "records": [
+    {
+      "curation_order": 6,
+      "candidate_id": "80002542403",
+      "chamber_id": 204356,
+      "proposition_id": 2531928,
+      "source_url": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2531928"
+    },
+    {
+      "curation_order": 7,
+      "candidate_id": "80002542403",
+      "chamber_id": 204356,
+      "proposition_id": 2539077,
+      "source_url": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2539077"
+    },
+    {
+      "curation_order": 8,
+      "candidate_id": "80002542403",
+      "chamber_id": 204356,
+      "proposition_id": 2539078,
+      "source_url": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2539078"
+    },
+    {
+      "curation_order": 9,
+      "candidate_id": "80002542403",
+      "chamber_id": 204356,
+      "proposition_id": 2539079,
+      "source_url": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2539079"
+    },
+    {
+      "curation_order": 10,
+      "candidate_id": "80002542403",
+      "chamber_id": 204356,
+      "proposition_id": 2540194,
+      "source_url": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2540194"
+    },
+    {
+      "curation_order": 11,
+      "candidate_id": "80002542409",
+      "chamber_id": 204355,
+      "proposition_id": 2527014,
+      "source_url": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2527014"
+    },
+    {
+      "curation_order": 12,
+      "candidate_id": "80002542409",
+      "chamber_id": 204355,
+      "proposition_id": 2530737,
+      "source_url": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2530737"
+    },
+    {
+      "curation_order": 13,
+      "candidate_id": "80002542409",
+      "chamber_id": 204355,
+      "proposition_id": 2530739,
+      "source_url": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2530739"
+    },
+    {
+      "curation_order": 19,
+      "candidate_id": "80002536278",
+      "chamber_id": 220529,
+      "proposition_id": 2576189,
+      "source_url": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2576189"
+    },
+    {
+      "curation_order": 20,
+      "candidate_id": "80002536278",
+      "chamber_id": 220529,
+      "proposition_id": 2576182,
+      "source_url": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2576182"
+    },
+    {
+      "curation_order": 21,
+      "candidate_id": "80002536278",
+      "chamber_id": 220529,
+      "proposition_id": 2576184,
+      "source_url": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2576184"
+    },
+    {
+      "curation_order": 22,
+      "candidate_id": "80002536278",
+      "chamber_id": 220529,
+      "proposition_id": 2576186,
+      "source_url": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2576186"
+    },
+    {
+      "curation_order": 23,
+      "candidate_id": "80002536278",
+      "chamber_id": 220529,
+      "proposition_id": 2576188,
+      "source_url": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2576188"
+    },
+    {
+      "curation_order": 24,
+      "candidate_id": "80002536278",
+      "chamber_id": 220529,
+      "proposition_id": 2576191,
+      "source_url": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2576191"
+    },
+    {
+      "curation_order": 25,
+      "candidate_id": "80002549470",
+      "chamber_id": 220527,
+      "proposition_id": 2548818,
+      "source_url": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2548818"
+    },
+    {
+      "curation_order": 26,
+      "candidate_id": "80002549470",
+      "chamber_id": 220527,
+      "proposition_id": 2548819,
+      "source_url": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2548819"
+    },
+    {
+      "curation_order": 27,
+      "candidate_id": "80002542411",
+      "chamber_id": 220530,
+      "proposition_id": 2539082,
+      "source_url": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2539082"
+    },
+    {
+      "curation_order": 28,
+      "candidate_id": "80002542411",
+      "chamber_id": 220530,
+      "proposition_id": 2532101,
+      "source_url": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2532101"
+    },
+    {
+      "curation_order": 29,
+      "candidate_id": "80002542411",
+      "chamber_id": 220530,
+      "proposition_id": 2532103,
+      "source_url": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2532103"
+    },
+    {
+      "curation_order": 30,
+      "candidate_id": "80002542411",
+      "chamber_id": 220530,
+      "proposition_id": 2532087,
+      "source_url": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2532087"
+    },
+    {
+      "curation_order": 31,
+      "candidate_id": "80002542411",
+      "chamber_id": 220530,
+      "proposition_id": 2532105,
+      "source_url": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2532105"
+    },
+    {
+      "curation_order": 32,
+      "candidate_id": "80002542411",
+      "chamber_id": 220530,
+      "proposition_id": 2532090,
+      "source_url": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2532090"
+    },
+    {
+      "curation_order": 33,
+      "candidate_id": "80002542411",
+      "chamber_id": 220530,
+      "proposition_id": 2532093,
+      "source_url": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2532093"
+    }
+  ]
+}
