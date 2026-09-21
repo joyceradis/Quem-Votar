@@ -105,7 +105,6 @@ def render_preview(
         image_meta = (
             f'<meta property="og:image" content="{esc(photo_url)}">\n'
             f'<meta property="og:image:alt" content="Foto pública de {esc(name)}">\n'
-            f'<meta name="twitter:image" content="{esc(photo_url)}">\n'
         )
 
     return f"""<!doctype html>
@@ -114,26 +113,16 @@ def render_preview(
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,follow,max-image-preview:large">
-<meta name="description" content="{esc(description)}">
 <meta property="og:type" content="profile">
 <meta property="og:site_name" content="Quem Votar?">
 <meta property="og:title" content="{esc(title)}">
 <meta property="og:description" content="{esc(description)}">
 <meta property="og:url" content="{esc(preview_url)}">
-{image_meta}<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="{esc(title)}">
-<meta name="twitter:description" content="{esc(description)}">
-<link rel="canonical" href="{esc(profile_url)}">
+{image_meta}<link rel="canonical" href="{esc(profile_url)}">
 <meta http-equiv="refresh" content="0; url={esc(profile_url)}">
 <title>{esc(title)}</title>
-<script>location.replace({json.dumps(profile_url, ensure_ascii=False)});</script>
 </head>
-<body>
-<main>
-<p>Redirecionando para a ficha de {esc(name)}.</p>
-<p><a href="{esc(profile_url)}">Abrir ficha</a></p>
-</main>
-</body>
+<body></body>
 </html>
 """
 
