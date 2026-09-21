@@ -72,6 +72,11 @@ GENERIC_ONLY_SEGMENTS = {
     "propostas", "projetos", "programa", "agenda",
 }
 
+ARCHIVE_ROUTE_SEGMENTS = {
+    "categoria", "category", "tag", "tags", "tipo", "type", "autor", "author",
+    "arquivo", "archive", "arquivos", "archives", "page", "pagina",
+}
+
 
 def utc_now() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
@@ -313,6 +318,18 @@ def looks_like_exact_content(url: str, anchor_text: str = "") -> bool:
 
     if len(segments) == 1 and segments[0].casefold() in GENERIC_ONLY_SEGMENTS:
         return False
+
+    # Category/tag/archive indexes are discovery surfaces, not evidence items.
+    # Keep specific article/project slugs such as /artigos/<slug>, while rejecting
+    # routes such as /categoria/noticias/ and /tipo/artigos/.
+    folded_segments = [segment.casefold() for segment in segments]
+    if (
+        len(folded_segments) >= 2
+        and folded_segments[-2] in ARCHIVE_ROUTE_SEGMENTS
+        and folded_segments[-1] in GENERIC_ONLY_SEGMENTS
+    ):
+        return False
+
     if len(segments) >= 2:
         return True
 
@@ -565,6 +582,21 @@ def discover_chamber(
                         "proposition_id": prop_id,
                         "api_url": api_url,
                         "api_item_uri": clean(item.get("uri")),
+                    },
+                    "institutional_snapshot": {
+                        "transport": "camara_dados_abertos",
+                        "query": "idDeputadoAutor",
+                        "candidate_id": cid,
+                        "chamber_id": chamber_id,
+                        "proposition_id": prop_id,
+                        "api_url": api_url,
+                        "api_item_uri": clean(item.get("uri")),
+                        "siglaTipo": sigla,
+                        "numero": numero,
+                        "ano": year_int or clean(year),
+                        "ementa": ementa,
+                        "dataApresentacao": clean(item.get("dataApresentacao")),
+                        "title": title,
                     },
                 }
             )
