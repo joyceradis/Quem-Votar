@@ -33,7 +33,7 @@ jobs:
           BASE_SHA="${{ github.event.pull_request.base.sha }}"
           HEAD_SHA="${{ github.event.pull_request.head.sha }}"
           git diff --name-only "$BASE_SHA" "$HEAD_SHA" | sort -u > /tmp/arquivos-alterados.txt
-          PROTEGIDOS='^(AGENTS\.md|AUDITORIA\.md|METODOLOGIA\.md|scripts/(audit-site|sync-data|coletor_evidencias)\.py|data/reference/topic-evidence\.json|data/staging/topic-evidence-reviews\.json|docs/(GOVERNANCE|DELIVERY_GOVERNANCE|PRODUCT_NORTH_STAR|TOPIC_EVIDENCE|DATA_MODEL)\.md|\.github/(CODEOWNERS|workflows/))'
+          PROTEGIDOS='^(AGENTS\.md|AUDITORIA\.md|METODOLOGIA\.md|scripts/(audit-site|sync-data|coletor_evidencias)\.py|data/reference/topic-evidence\.json|data/staging/topic-evidence-reviews\.json|docs/(GOVERNANCE|DELIVERY_GOVERNANCE|PRODUCT_NORTH_STAR|TOPIC_EVIDENCE|DATA_MODEL|CHECKPOINT_CURRENT)\.md|\.github/(CODEOWNERS|workflows/))'
           VIOLACOES=$(grep -E "$PROTEGIDOS" /tmp/arquivos-alterados.txt || true)
           if [[ -n "$VIOLACOES" ]]; then
             {
@@ -44,6 +44,18 @@ jobs:
             } >> "$GITHUB_OUTPUT"
           else
             echo "protected=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: 🧾 Exigir checkpoint junto com data/generated
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -q '^data/generated/' /tmp/arquivos-alterados.txt; then
+            if ! grep -qx 'docs/CHECKPOINT_CURRENT.md' /tmp/arquivos-alterados.txt; then
+              echo "::error::PR altera data/generated/* sem atualizar docs/CHECKPOINT_CURRENT.md no mesmo PR."
+              exit 1
+            fi
+            echo "Checkpoint acoplado ao snapshot gerado: OK"
           fi
 
       - name: 🔐 Validar autorização explícita de governança

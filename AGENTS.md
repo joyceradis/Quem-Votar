@@ -191,7 +191,8 @@ Uma mudança só pode ser descrita como pronta quando:
 - sintaxe/validação aplicável passou;
 - Pages/deploy correspondente concluiu com sucesso;
 - o comportamento publicado foi verificado quando a mudança for de frontend;
-- limitações conhecidas foram registradas.
+- limitações conhecidas foram registradas;
+- todo PR que toque `data/generated/*` atualiza `docs/CHECKPOINT_CURRENT.md` no mesmo PR, mesmo quando a alteração preserve as contagens, para manter rastreabilidade entre snapshot publicável e checkpoint.
 
 `CI verde != cobertura de dados completa`.
 `feature no código != feature validada em produção`.
