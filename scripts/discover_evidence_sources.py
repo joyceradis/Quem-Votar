@@ -70,12 +70,17 @@ CONTENT_HINTS = {
 GENERIC_ONLY_SEGMENTS = {
     "sobre", "contato", "home", "inicio", "quem-sou", "biografia", "perfil",
     "login", "privacidade", "termos", "imprensa", "noticias", "blog", "artigos",
-    "propostas", "projetos", "programa", "agenda",
+    "propostas", "projetos", "programa", "agenda", "producoes-do-mandato",
+    "minhas-ideias",
 }
 
 ARCHIVE_ROUTE_SEGMENTS = {
     "categoria", "category", "tag", "tags", "tipo", "type", "autor", "author",
-    "arquivo", "archive", "arquivos", "archives", "page", "pagina",
+    "arquivo", "archive", "arquivos", "archives", "page", "pagina", "c",
+}
+
+UTILITY_ROUTE_SEGMENTS = {
+    "widget", "widgets", "embed", "embeds", "feed", "feeds",
 }
 
 
@@ -300,6 +305,50 @@ class LinkExtractor(HTMLParser):
             self._text = []
 
 
+def is_obvious_listing_or_utility(url: str, anchor_text: str = "") -> bool:
+    """Detect deterministic non-evidence surfaces without semantic inference."""
+    try:
+        parsed = urllib.parse.urlsplit(url)
+    except ValueError:
+        return True
+
+    segments = [segment.casefold() for segment in parsed.path.split("/") if segment]
+    if not segments:
+        return True
+
+    if any(segment in UTILITY_ROUTE_SEGMENTS for segment in segments):
+        return True
+
+    if len(segments) == 1 and segments[0] in GENERIC_ONLY_SEGMENTS:
+        return True
+
+    if (
+        len(segments) >= 2
+        and segments[-2] in ARCHIVE_ROUTE_SEGMENTS
+        and segments[-1] in GENERIC_ONLY_SEGMENTS
+    ):
+        return True
+
+    # A shallow route ending in a generic index name is only treated as a
+    # listing when its own anchor/title is likewise generic. This preserves
+    # article slugs that happen to end in a section token such as /noticias/.
+    if segments[-1] in GENERIC_ONLY_SEGMENTS:
+        label = re.sub(
+            r"[^a-z0-9]+",
+            " ",
+            collector.norm(anchor_text),
+        ).strip()
+        last = re.sub(
+            r"[^a-z0-9]+",
+            " ",
+            collector.norm(segments[-1]),
+        ).strip()
+        if label and label == last:
+            return True
+
+    return False
+
+
 def looks_like_exact_content(url: str, anchor_text: str = "") -> bool:
     parsed = urllib.parse.urlsplit(url)
     if is_link_aggregator(url) or is_blocked_aggregator_content(url):
@@ -311,24 +360,13 @@ def looks_like_exact_content(url: str, anchor_text: str = "") -> bool:
     if re.search(r"\.(pdf|docx?|odt)$", path, re.I):
         return True
 
+    if is_obvious_listing_or_utility(url, anchor_text):
+        return False
+
     normalized = re.sub(r"[^a-z0-9]+", " ", collector.norm(path + " " + anchor_text))
     tokens = set(normalized.split())
     hints = CONTENT_HINTS.intersection(tokens)
     if not hints:
-        return False
-
-    if len(segments) == 1 and segments[0].casefold() in GENERIC_ONLY_SEGMENTS:
-        return False
-
-    # Category/tag/archive indexes are discovery surfaces, not evidence items.
-    # Keep specific article/project slugs such as /artigos/<slug>, while rejecting
-    # routes such as /categoria/noticias/ and /tipo/artigos/.
-    folded_segments = [segment.casefold() for segment in segments]
-    if (
-        len(folded_segments) >= 2
-        and folded_segments[-2] in ARCHIVE_ROUTE_SEGMENTS
-        and folded_segments[-1] in GENERIC_ONLY_SEGMENTS
-    ):
         return False
 
     if len(segments) >= 2:
