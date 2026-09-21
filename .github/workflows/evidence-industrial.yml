@@ -41,7 +41,7 @@ jobs:
             });
             const stopped = comments.some(comment =>
               comment.user?.login === "joyceradis" &&
-              /^\s*\/(?:stop-full-pass|stop-continuous-worker)\b/im.test(comment.body || "")
+              /^\s*\/(?:stop-full-pass|stop-continuous-worker|stop-wartime-worker)\b/im.test(comment.body || "")
             );
             core.setOutput("stop", stopped ? "true" : "false");
             if (stopped) {
