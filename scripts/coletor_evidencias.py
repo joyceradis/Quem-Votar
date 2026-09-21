@@ -781,6 +781,81 @@ def make_draft_id(candidate_id: str, source_url: str, content_hash: str) -> str:
     return hashlib.sha256(raw).hexdigest()[:20]
 
 
+def collect_institutional_snapshot(
+    item: dict[str, Any],
+    *,
+    candidate: dict[str, Any],
+) -> dict[str, Any] | None:
+    """Materialize a trusted Câmara draft from the discovery API payload.
+
+    The public Câmara proposition URL remains the source URL shown to users.
+    This avoids a redundant HTML fetch for data that was already returned by
+    the official idDeputadoAutor API query. No semantic classification occurs.
+    """
+    snapshot = item.get("institutional_snapshot")
+    origin = item.get("source_origin") or {}
+    if not isinstance(snapshot, dict):
+        return None
+    if clean(item.get("source_kind")) != "institutional":
+        return None
+    if clean(item.get("attribution_trust")) != "official_author_api":
+        return None
+    if clean(origin.get("institution")) != "Câmara dos Deputados":
+        return None
+    if clean(snapshot.get("transport")) != "camara_dados_abertos":
+        return None
+
+    candidate_id = clean(item.get("candidate_id"))
+    source_url = clean(item.get("source_url"))
+    title = clean(item.get("source_title") or snapshot.get("title"))
+    ementa = clean(snapshot.get("ementa"))
+    normalized_text = clean("\n".join(x for x in (title, ementa) if x))
+    if len(normalized_text) < 40:
+        raise RuntimeError("conteúdo institucional API insuficiente para revisão")
+
+    raw_snapshot = json.dumps(
+        snapshot,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    source_hash = hashlib.sha256(raw_snapshot).hexdigest()
+    content_hash = hashlib.sha256(normalized_text.encode("utf-8")).hexdigest()
+    draft_id = make_draft_id(candidate_id, source_url, content_hash)
+
+    notes = clean(item.get("collection_notes"))
+    api_note = (
+        "Materializado do snapshot da API oficial da Câmara já obtido no discovery; "
+        "sem refetch HTML da página de tramitação."
+    )
+    return {
+        "draft_id": draft_id,
+        "candidate_id": candidate_id,
+        "candidate_name": candidate_display_name(candidate),
+        "office": clean(candidate.get("office")),
+        "party": clean(candidate.get("party")),
+        "source_kind": "institutional",
+        "source_url": source_url,
+        "source_title": title,
+        "source_publisher": clean(item.get("source_publisher") or "Câmara dos Deputados"),
+        "published_at": normalize_date(
+            clean(item.get("published_at") or snapshot.get("dataApresentacao"))
+        ),
+        "captured_at": utc_now(),
+        "document_type": "api_json",
+        "page_count": None,
+        "source_sha256": source_hash,
+        "content_sha256": content_hash,
+        "candidate_mentioned": False,
+        "raw_excerpt": normalized_text,
+        "review_status": "pending",
+        "collection_notes": clean(f"{notes} {api_note}"),
+        "source_origin": origin,
+        "attribution_trust": "official_author_api",
+        "attribution_basis_hint": clean(item.get("attribution_basis_hint")),
+    }
+
+
 def collect_source(
     item: dict[str, Any],
     *,
@@ -794,6 +869,11 @@ def collect_source(
     candidate_id = clean(item.get("candidate_id"))
     candidate = candidates[candidate_id]
     source_url = clean(item.get("source_url"))
+
+    snapshot_draft = collect_institutional_snapshot(item, candidate=candidate)
+    if snapshot_draft is not None:
+        return snapshot_draft
+
     body, final_url, content_type = fetcher(source_url)
     final_url = clean(final_url)
     normalized_content_type = clean(content_type).casefold()
