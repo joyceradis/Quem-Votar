@@ -55,7 +55,7 @@ jobs:
           set -euo pipefail
           INVALID="$(git status --porcelain | awk '{print $2}' | grep -Ev '^(data/generated/|data/reference/tse-enrichment-bootstrap.json$)' || true)"
           if [[ -n "$INVALID" ]]; then
-            echo "::error::sync alterou arquivo fora de data/generated"
+            echo "::error::sync alterou arquivo fora do snapshot permitido da #86"
             printf '%s\n' "$INVALID"
             exit 1
           fi
