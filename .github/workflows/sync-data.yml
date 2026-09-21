@@ -16,6 +16,10 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     timeout-minutes: 25
+    env:
+      # Keep Python bytecode outside the checkout so the integrity guard
+      # continues to fail closed for every repository path except data/generated.
+      PYTHONPYCACHEPREFIX: /tmp/quem-votar-pycache
     steps:
       - name: Checkout
         uses: actions/checkout@v4
