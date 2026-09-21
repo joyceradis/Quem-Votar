@@ -1,216 +1,278 @@
 # Checkpoint atual — V5.5
 
-Data: 2026-09-20.
+Data: 2026-09-21.
+
+Estado auditado contra `main` em `e88c365ec013a0dbf1b60b21c21ea78ac696b545`, antes do PR que atualiza este checkpoint.
 
 ## Estado canônico
 
 Branch: `main`.
 
-Baseline visual: `V5.5`. Cache de assets: `5.5.0`.
+Versão de produto: `5.5.0` ([`VERSION`](../VERSION)).
 
-Versão canônica: [`VERSION`](../VERSION).
+Baseline visual: V5.5.
 
-Este checkpoint não cria sozinho um GitHub Release formal.
+Cache atual de assets públicos: `5.5.2`.
 
-## Contrato público
+Feature freeze do núcleo eleitoral vigente até **04/10/2026**.
 
-- Deputado Federal e Deputado Estadual no Espírito Santo;
-- busca e cargo no primeiro fluxo;
+O produto informa e documenta. Não produz score, ranking, vencedor, previsão eleitoral ou recomendação de voto.
+
+## Snapshot eleitoral público
+
+Universo atual:
+
+- **547 candidaturas**;
+- **137** para Deputado Federal;
+- **410** para Deputado Estadual;
+- **7** vínculos atuais com mandato federal na Câmara preservados;
+- **26** evidências institucionais ALES 2025 vinculadas;
+- **22** evidências temáticas canônicas em `data/reference/topic-evidence.json`.
+
+`SQ_CANDIDATO` permanece a chave eleitoral canônica.
+
+Nenhuma contagem acima deve ser tratada como avaliação de candidatura ou completude política.
+
+## Contrato de situação da candidatura
+
+A sentinela TSE `#NE` não é interpretada como situação jurídica.
+
+Quando a fonte atual não resolve `DS_SITUACAO_CANDIDATURA`, o snapshot publica:
+
+```
+registration_status = "not_available"
+```
+
+A ficha traduz esse estado como **“Ainda não disponível na fonte atual”**.
+
+Regras:
+
+- sentinela não vira `null` silencioso;
+- ausência não vira deferimento, regularidade, indeferimento ou qualquer conclusão jurídica;
+- `audit-site.py` falha se `registration_status` desaparecer em `null` ou vazio;
+- `#NE` e `#NULO` continuam proibidos no snapshot público.
+
+Correção consolidada pela #91 / PR #92.
+
+## Interface e distribuição
+
+O contrato público continua:
+
+- busca por nome/número;
+- filtro factual por cargo e demais campos documentados;
 - 12 resultados por página;
-- comparação de até 3 candidaturas;
+- comparação lado a lado de até 3 candidaturas;
 - ficha vertical por camadas;
-- sem score, ranking, vencedor, previsão eleitoral ou recomendação.
+- temas somente quando há evidência documentada;
+- ausência de evidência não é convertida em ausência de posição.
 
-## Semântica temática
+### Compartilhamento social
 
-`Saúde`, `Educação`, `Segurança`, `Economia` e demais temas representam propostas, declarações ou atuação documentada.
+A limitação anterior de Open Graph dinâmico foi corrigida pela #93 / PR #94.
 
-Ocupação declarada ao TSE é apenas metadado. Não gera tema, posição política ou avaliação.
+Estado atual:
 
-Taxonomia temática pública: `data/reference/policy-topics.json`.
+- **547/547** candidaturas possuem entrada estática `/social/<SQ_CANDIDATO>/index.html`;
+- geração é 1:1, sem seleção ou priorização de candidaturas;
+- identidade específica da candidatura fica restrita aos metadados `og:*`;
+- wrappers possuem `body` vazio e redirecionam tecnicamente para a ficha canônica;
+- nenhum conteúdo visível de ficha, busca, comparação ou temas foi duplicado ou reformulado;
+- artifact do GitHub Pages do deploy pós-merge contém as 547 páginas;
+- Pages build/deploy do commit `e88c365ec013a0dbf1b60b21c21ea78ac696b545` concluiu com sucesso no run `35667171810`.
 
-## Interface V5.5
+### Telemetria
 
-- Home orientada às perguntas “o que faz hoje?”, “o que diz que vai fazer?” e “onde isso mexe na vida real?”;
-- identidade regional capixaba leve no hero;
-- wordmark `quem votar?` com badge `ES 2026`;
-- azul conduz interação e rosa funciona apenas como acento de marca;
-- menu principal lateral em todas as larguras;
-- linguagem pública sem jargão de auditoria no primeiro nível;
-- cargo e busca dominam o primeiro fluxo;
-- filtros secundários aparecem sob demanda;
-- assuntos e filtros temáticos só aparecem quando existe `topic_evidence` documentada para o recorte correspondente;
-- cartões de candidatura usam hierarquia editorial, bordas discretas e tags temáticas apenas quando existe evidência documentada;
-- nenhuma tag é derivada de partido, profissão, ocupação, religião ou associação;
-- ausência de evidência não gera tag;
-- não há selo visual de qualidade, checkmark ou semáforo de completude;
-- nome/cargo/partido/número têm precedência sobre foto e ocupação;
-- ficha: Visão geral -> Trajetória -> Temas e propostas -> Registros públicos -> Fontes e limitações;
-- ficha possui ação de compartilhamento com URL direta e fallback de cópia de link;
-- metadados sociais básicos são atualizados no navegador para a candidatura aberta;
-- favicon SVG e manifesto web configurados;
-- `prefers-reduced-motion` preservado.
+Google Analytics 4 está instalado no site público com Measurement ID `G-2KY1FDKV88`.
 
-## Dados preservados
+A telemetria não altera conteúdo eleitoral, ordenação ou critérios editoriais.
 
-- `SQ_CANDIDATO` continua chave canônica;
-- snapshots TSE não foram reinterpretados;
-- Câmara e ALES preservam critérios de vínculo;
-- lacuna continua sendo lacuna.
+## Evidências temáticas
 
-## Limitação conhecida de compartilhamento
+Fonte canônica:
 
-GitHub Pages é hospedagem estática. A ficha usa uma única página com query string e atualiza Open Graph no navegador; crawlers sociais que não executam JavaScript podem exibir preview genérico.
+`data/reference/topic-evidence.json`
 
-Preview social individualizado por candidatura exige geração estática por candidato ou camada de renderização no servidor e permanece pendente.
+Cobertura canônica atual: **22 registros**.
 
-## Pendências de conteúdo
+Taxonomia pública congelada:
 
-- histórico eleitoral TSE completo;
-- bens;
-- redes sociais;
-- cobertura contemporânea completa da ALES;
-- propostas/posições temáticas em escala;
-- atividade parlamentar temática;
-- registros públicos juridicamente qualificados.
+- `saude`;
+- `educacao`;
+- `seguranca`;
+- `economia`;
+- `infraestrutura`;
+- `meio-ambiente`;
+- `direitos`.
 
-## Gates
+Não force-fit de tema durante o freeze.
 
-Antes de considerar uma mudança pública consolidada:
+A ausência de evidência continua significando apenas ausência de evidência integrada nas fontes verificadas, não ausência de proposta ou posição.
 
-1. `node --check app.js` verde;
-2. `scripts/audit-site.py` verde;
-3. workflow Quality verde;
-4. GitHub Pages correspondente concluído;
-5. comportamento publicado verificado quando a mudança for de frontend.
+## Pipeline de evidências — War Time
 
-## Camada de propostas e declarações
+A #35 permanece aberta em modo contínuo, read-only/artifact-only.
 
-Fonte canônica: `data/reference/topic-evidence.json`.
+Invariantes:
 
-O sync eleitoral anexa essa camada por `SQ_CANDIDATO` sem apagá-la.
+- zero autoaprovação;
+- zero escrita canônica pelo worker;
+- promoção somente por PR rastreável + gates;
+- falhas institucionais e de anchor são incidentes explícitos;
+- fila de curadoria é delta novo, não repetição de decisões já tomadas.
 
-No checkpoint atual, a cobertura canônica é **1 registro promovido**. Isso valida o fluxo ponta a ponta, mas não representa cobertura temática suficiente e não permite inferir ausência de propostas nas demais candidaturas.
+Último worker concluído e auditável no momento deste checkpoint:
 
-A expansão dessa camada é acompanhada pela issue #2.
+- run: `35665676445`;
+- commit: `c1b664ffe8b1e49036b78b1b4759cfa13bfb2ad8`;
+- artifact: `10668973576`;
+- drafts acumulados no artifact: **751**;
+- evidências canônicas observadas: **22**;
+- URLs não canônicas acumuladas: **624**;
+- novo lote de curadoria: **99 itens**, **11 candidaturas**;
+- incidentes institucionais acionáveis: **0**;
+- transporte Câmara observado nesse run: `api_fallback`.
 
-## Coleta em staging
+A infraestrutura bulk oficial da Câmara está em `main`, mas o último run concluído acima caiu para o fallback de API. Portanto o bulk não deve ser descrito como transporte efetivamente usado enquanto um artifact posterior não demonstrar `camara_bulk_daily`.
 
-A infraestrutura entregue pela issue #5 mantém coleta separada da publicação canônica:
+Os arquivos versionados de staging no repositório não equivalem ao estado operacional do worker; o worker preserva estado não canônico em artifacts/cache.
 
-- `scripts/coletor_evidencias.py` lê os `SQ_CANDIDATO` do snapshot atual;
-- redes sociais declaradas ao TSE entram como sementes de descoberta, não como evidência;
-- URLs de conteúdo específico geram rascunhos em `data/staging/`;
-- coleta bruta, revisão semântica e promoção canônica ficam separadas;
-- HTML e texto são suportados;
-- PDF textual é suportado via `pypdf`, sem OCR automático;
-- PDF sem camada textual suficiente é rejeitado em vez de inferido;
-- hash do arquivo bruto e hash do texto extraído são preservados;
-- promoção é `dry-run` por padrão e exige `--write-canonical` explicitamente;
-- revisão aprovada precisa estar ancorada em trecho coletado e respeitar o limite de até 3 tentativas;
-- a cobertura canônica contém **1 registro aprovado**, usado para validar o pipeline ponta a ponta; isso não representa cobertura temática suficiente.
+## Enriquecimento TSE — #86
+
+A #86 permanece **em andamento** e fora do snapshot canônico.
+
+Cobertura observada na branch de trabalho:
+
+- 547 candidaturas processadas;
+- 356 candidaturas com bens;
+- 1.513 registros de bens;
+- 447 candidaturas com redes;
+- 1.266 links;
+- 376 candidaturas com histórico;
+- 1.138 registros históricos.
+
+Esses números são cobertura de dados, não interpretação política.
+
+O transporte de contingência deve declarar explicitamente a cadeia:
+
+`TSE = fonte factual primária → bootstrap versionado = transporte contingencial → freshness + hashes`.
+
+O run `35663835538` falhou e não é prova de promoção. A correção de isolamento de fixture foi aplicada depois, e o run de branch `35663986139` concluiu verde.
+
+Nenhum dado da #86 está autorizado como canônico até patrimônio, redes, histórico e PII/freshness passarem pelos gates separados e um PR de promoção explícito ser aprovado.
+
+## Sync eleitoral — #88
+
+A correção de `__pycache__` foi mergeada em `341251b52df06e8cf4884cb18b4a170b31657534`.
+
+A #88 permanece **aberta** porque merge não equivale a prova operacional.
+
+Critério restante:
+
+- run novo em `main` contendo a correção;
+- conclusão verde;
+- guard fail-closed preservado;
+- artifact auditável;
+- SHA, run ID e artifact registrados na issue.
+
+Reexecução de payload antigo não satisfaz esse critério.
+
+## Governança executável
+
+A #36 está concluída.
+
+Ruleset ativo da `main`:
+
+- nome: `Protecao-da-Main`;
+- ruleset ID: `23730808`;
+- enforcement: `active`;
+- alvo: default branch;
+- bypass actors: nenhum;
+- `current_user_can_bypass: never`;
+- deletion bloqueada;
+- non-fast-forward/force push bloqueado;
+- Pull Request obrigatório;
+- required status checks em modo strict:
+  - `audit`;
+  - `🛑 Inspetor de Regras da IA`.
+
+O endpoint clássico de branch protection pode retornar 403 para a integração GitHub App sem permissão administrativa; isso não invalida o ruleset observado pelo endpoint próprio de rulesets. A branch `main` retorna `protected: true`.
 
 ## Estado das frentes
 
-### Governança
+### Concluídas / consolidadas
 
-- #36: caminho do sync endurecido para artifact read-only; permanece bloqueada apenas pela ativação administrativa do ruleset/proteção da `main`;
-- #45: em andamento; topologia canônica multiagente e disciplina documental;
-- #44: pronta; Governance Sentinel ainda não implementado.
+- #36 — proteção efetiva de `main`;
+- #45 — topologia canônica multiagente;
+- #91 — `registration_status` explícito;
+- #93 — Open Graph estático 1:1 por candidatura.
 
-### Evidências
+### Em andamento
 
-- #5: concluída; infraestrutura de coleta/staging/revisão/promoção entregue;
-- #2: em andamento; resultado de produto da camada temática;
-- #34: tracking em andamento da engenharia de escala;
-- #38: pronta; coverage ledger/report;
-- #39: pronta; batch source discovery;
-- #40: pronta; idempotência/retomada/reprocessamento;
-- #41: pronta; exception-driven review;
-- #42: pronta; benchmark semântico em shadow mode;
-- #35: **bloqueada** até o preflight mínimo #38–#41;
-- #43: bloqueada para decisão pós-freeze.
+- #2 — expansão de propostas e declarações com fonte;
+- #34 — tracking de escala da pipeline de evidências;
+- #35 — worker contínuo War Time;
+- #86 — bens, redes e histórico TSE em staging/validação;
+- #88 — prova operacional pós-merge do sync;
+- #95 — acoplamento obrigatório de checkpoint a `data/generated/*`.
 
-### Cobertura operacional atual
+### Ainda não consolidada
 
-Snapshot eleitoral: **547 candidaturas**.
+- #44 — Governance Sentinel periódico permanece aberto.
 
-Estado atual da nova pipeline temática:
+## Critério de pronto para `data/generated/*`
 
-- sources em staging: 1;
-- drafts: 1;
-- reviews aprovadas: 1;
-- evidências canônicas: 1.
+A partir deste checkpoint, qualquer PR que toque `data/generated/*` deve atualizar **`docs/CHECKPOINT_CURRENT.md` no mesmo PR**.
 
-Esses números medem estados diferentes e não devem ser tratados como uma única “cobertura”.
+Esse acoplamento é parte do DoD e deve ser aplicado fail-closed pela Cerca Elétrica.
 
-### Baseline
+Objetivo: impedir que snapshot público e documentação canônica avancem em estados diferentes.
 
-- V5.4: concluída;
-- V5.5 / Issue #11: concluída e consolidada em `main`;
-- Issue #13: concluída; regra documental do README consolidada.
+## Gates de entrega
 
-## Regra documental
+Antes de merge de mudança pública:
 
-Este checkpoint é datado. Se a `main` avançar, ele deve ser atualizado no próximo merge que altere de forma material:
+1. `node --check app.js` verde;
+2. `scripts/audit-site.py` verde;
+3. suíte determinística de testes verde;
+4. Quality verde;
+5. Cerca Elétrica verde quando aplicável;
+6. `docs/CHECKPOINT_CURRENT.md` no mesmo PR quando `data/generated/*` for alterado;
+7. Pages/deploy correspondente concluído quando houver superfície pública;
+8. comportamento publicado verificado quando a mudança for de frontend/distribuição.
 
-- baseline/versionamento;
-- arquitetura de dados;
-- contrato público;
-- estado das frentes macro;
-- limitações conhecidas relevantes.
+`CI verde != cobertura de dados completa`.
 
-Microcommits sem mudança de estado não exigem novo checkpoint.
+`feature no código != feature validada em produção`.
 
+`placeholder != integração`.
 
 ## Feature freeze de produção
 
-A V5.5 permanece em regime de feature freeze até 04/10/2026, com fronteira explícita entre o **núcleo eleitoral** e a **camada de sustentabilidade**.
+A V5.5 permanece congelada até 04/10/2026.
 
-### Núcleo eleitoral congelado
+Exceções permitidas no núcleo eleitoral:
 
-Permanecem congelados, salvo correção, segurança, acessibilidade, disponibilidade, atualização factual ou proveniência:
+- segurança;
+- atualização factual;
+- proveniência;
+- disponibilidade;
+- acessibilidade/correção necessária já coberta pelas regras normativas.
 
-- busca e navegação eleitoral;
-- fichas de candidaturas;
-- comparação;
-- temas e taxonomia política;
-- regras editoriais;
-- `topic_evidence` e sua semântica;
-- pipeline de publicação canônica;
-- qualquer mudança que altere ordem, visibilidade, tratamento ou interpretação de candidaturas.
+Para os itens prioritários desta passagem, o PR deve registrar:
 
-### Camada de sustentabilidade isolada
+```
+Freeze-exception: <categoria>
+Justificativa: <por que não altera ordem, visibilidade, tratamento ou interpretação de candidaturas>
+```
 
-Pode evoluir durante o freeze sem alterar a versão V5.5 quando permanecer desacoplada do conteúdo eleitoral:
+A justificativa precisa ser revisada antes do merge.
 
-- `.github/FUNDING.yml`;
-- GitHub Sponsors;
-- seção de apoio no README;
-- rota estática `apoio.html`;
-- cópia local de chave PIX;
-- documentação de transparência e sustentabilidade;
-- link secundário de apoio no rodapé.
+A camada de sustentabilidade permanece isolada e não pode modificar `topic-evidence.json`, ordenação, busca, comparação ou tratamento de candidaturas.
 
-Essa camada não pode escrever na fonte canônica de evidências, aparecer como publicidade dentro de fichas/busca/comparação/temas nem conceder qualquer influência editorial.
+## Próximo passo seguro
 
-Toda mudança durante o freeze deve usar o menor escopo efetivo possível.
+Concluir o enforcement da #95. Depois disso, a ordem volta para:
 
-Baseline canônico durante o freeze: **V5.5**.
-
-
-## Hardening de governança — 20/09/2026
-
-A auditoria da #36 confirmou regressão anterior de 7 → 0 vínculos federais quando a API da Câmara ficou indisponível.
-
-Os 7 vínculos previamente validados foram restaurados após rechecagem institucional, e o sincronizador agora:
-
-- preserva o último estado federal validado quando a lista da Câmara estiver temporariamente indisponível;
-- aborta se a fonte falhar e não existir estado anterior seguro;
-- impede rebase pós-auditoria;
-- não usa `[skip ci]`;
-- executa a suíte do pipeline antes da exportação;
-- não faz commit/push direto em `main`; exporta snapshot candidato auditável como artifact;
-- resolve o espelho eleitoral por revisão imutável e hash do conteúdo processado.
-
-Quality do commit crítico `28eb787` concluiu com sucesso. O sync foi posteriormente convertido para runtime read-only/artifact-only, eliminando a necessidade de bypass permanente do bot. A proteção/ruleset da branch `main` continua sendo configuração externa do GitHub e permanece requisito aberto do hardening até ser ativada.
+1. resolver a prova operacional pendente da #88 quando houver novo run;
+2. concluir os gates da #86 sem promoção prematura;
+3. seguir a expansão de cobertura temática da #2/#35 sob os contratos do freeze.
