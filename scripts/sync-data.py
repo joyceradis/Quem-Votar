@@ -12,14 +12,18 @@ A plataforma não gera ranking, score ou recomendação.
 """
 from __future__ import annotations
 
+import csv
 import hashlib
+import io
 import json
 import re
 import unicodedata
 import urllib.parse
 import urllib.request
+import zipfile
 from collections import defaultdict
 from datetime import datetime, timezone
+from decimal import Decimal, InvalidOperation
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -32,6 +36,10 @@ UA = "Quem-Votar-ES/3.0 (+https://github.com/joyceradis/Quem-Votar-)"
 
 TSE_DATASET = "https://dadosabertos.tse.jus.br/dataset/candidatos-2026"
 TSE_CAND_ZIP = "https://cdn.tse.jus.br/estatistica/sead/odsele/consulta_cand/consulta_cand_2026.zip"
+TSE_COMPLEMENT_ZIP = "https://cdn.tse.jus.br/estatistica/sead/odsele/consulta_cand_complementar/consulta_cand_complementar_2026.zip"
+TSE_ASSETS_ZIP = "https://cdn.tse.jus.br/estatistica/sead/odsele/bem_candidato/bem_candidato_2026.zip"
+TSE_SOCIAL_ZIP = "https://cdn.tse.jus.br/estatistica/sead/odsele/consulta_cand/rede_social_candidato_2026.zip"
+TSE_HISTORY_ZIP = "https://cdn.tse.jus.br/estatistica/sead/odsele/historico_candidatura/historico_candidatura_2026.zip"
 TSE_PHOTO_ZIP = "https://cdn.tse.jus.br/estatistica/sead/eleicoes/eleicoes2026/fotos/foto_cand2026_ES_div.zip"
 PHOTO_MIRROR_BASE = "https://realidadebrasil.com.br/media/photos"
 DIVULGACAND = "https://divulgacandcontas.tse.jus.br/divulga/"
@@ -108,6 +116,450 @@ def request_bytes(url: str, timeout: int = 20) -> bytes:
         return response.read()
 
 
+
+def _decode_tse_csv(raw: bytes) -> str:
+    for encoding in ("utf-8-sig", "cp1252", "latin-1"):
+        try:
+            return raw.decode(encoding)
+        except UnicodeDecodeError:
+            continue
+    raise RuntimeError("CSV TSE com codificação não reconhecida")
+
+
+def _pick_archive_member(names, preferred_suffix: str | None = None):
+    csv_names = [
+        name for name in names
+        if name.lower().endswith((".csv", ".txt")) and not name.endswith("/")
+    ]
+    if preferred_suffix:
+        preferred = [
+            name for name in csv_names
+            if Path(name).name.lower().endswith(preferred_suffix.lower())
+        ]
+        if len(preferred) == 1:
+            return preferred[0]
+        if len(preferred) > 1:
+            raise RuntimeError(
+                f"arquivo TSE ambíguo para {preferred_suffix}: "
+                + ", ".join(sorted(preferred)[:8])
+            )
+    es_candidates = [
+        name for name in csv_names
+        if re.search(r"_ES\.(csv|txt)$", Path(name).name, re.I)
+    ]
+    if len(es_candidates) == 1:
+        return es_candidates[0]
+    if len(csv_names) == 1:
+        return csv_names[0]
+    raise RuntimeError(
+        "não foi possível identificar partição ES no ZIP TSE; membros: "
+        + ", ".join(sorted(csv_names)[:12])
+    )
+
+
+def read_tse_archive(url: str, preferred_suffix: str | None = None, timeout: int = 90):
+    raw = request_bytes(url, timeout=timeout)
+    if len(raw) > 150 * 1024 * 1024:
+        raise RuntimeError(f"arquivo TSE excede limite operacional: {len(raw)} bytes")
+    digest = hashlib.sha256(raw).hexdigest()
+    try:
+        archive = zipfile.ZipFile(io.BytesIO(raw))
+    except zipfile.BadZipFile as exc:
+        raise RuntimeError(f"resposta TSE não é ZIP válido: {url}") from exc
+
+    member = _pick_archive_member(archive.namelist(), preferred_suffix)
+    info = archive.getinfo(member)
+    if info.file_size > 80 * 1024 * 1024:
+        raise RuntimeError(f"CSV TSE excede limite operacional: {member}")
+    text = _decode_tse_csv(archive.read(member))
+    reader = csv.DictReader(io.StringIO(text), delimiter=";")
+    rows = list(reader)
+    if not rows or not reader.fieldnames:
+        raise RuntimeError(f"recurso TSE vazio: {member}")
+
+    first = rows[0]
+    generated_at = " ".join(
+        value for value in (
+            clean(first.get("DT_GERACAO")),
+            clean(first.get("HH_GERACAO")),
+        )
+        if value
+    ) or None
+    return rows, {
+        "institution": "TSE",
+        "url": url,
+        "archive_member": member,
+        "sha256": digest,
+        "generated_at": generated_at,
+        "row_count": len(rows),
+        "status": "fresh",
+    }
+
+
+def parse_brl(value):
+    value = clean(value)
+    if value is None:
+        return None
+    normalized = str(value).replace(".", "").replace(",", ".")
+    try:
+        return Decimal(normalized)
+    except InvalidOperation:
+        return None
+
+
+def decimal_json(value: Decimal | None):
+    if value is None:
+        return None
+    return float(value.quantize(Decimal("0.01")))
+
+
+def _safe_url(value):
+    value = clean(value)
+    if not value:
+        return None
+    if not re.match(r"^https?://", value, re.I):
+        return None
+    parts = urllib.parse.urlsplit(value)
+    if not parts.netloc:
+        return None
+    scheme = parts.scheme.lower()
+    host = parts.netloc.lower()
+    return urllib.parse.urlunsplit((scheme, host, parts.path, parts.query, parts.fragment))
+
+
+def _previous_candidate_map():
+    rows = []
+    rows.extend(read_existing_json("candidates-federal.json", []))
+    rows.extend(read_existing_json("candidates-estadual.json", []))
+    return {
+        str(row.get("tse_id")): row
+        for row in rows
+        if row.get("tse_id")
+    }
+
+
+def _restore_field_from_previous(candidates, previous, field):
+    restored = 0
+    for candidate in candidates:
+        old = previous.get(str(candidate.get("tse_id"))) or {}
+        if field in old:
+            candidate[field] = old.get(field)
+            restored += 1
+    return restored
+
+
+def _require_known_candidate_rows(rows, by_id, dataset, candidate_field="SQ_CANDIDATO"):
+    matched = sum(
+        1 for row in rows
+        if clean(row.get(candidate_field)) in by_id
+    )
+    if matched == 0:
+        raise RuntimeError(
+            f"{dataset}: nenhuma linha vinculável aos {len(by_id)} SQ_CANDIDATO atuais "
+            f"pelo campo {candidate_field}"
+        )
+    return matched
+
+
+def _history_join_field(rows, candidate_ids):
+    if not rows:
+        raise RuntimeError("Histórico TSE vazio")
+    fields = list(rows[0].keys())
+    candidates = [
+        field for field in fields
+        if "CANDIDATO" in field.upper() and (
+            field.upper().startswith("SQ_") or "SQ_CANDIDATO" in field.upper()
+        )
+    ]
+    scored = []
+    for field in candidates:
+        matches = sum(
+            1 for row in rows
+            if clean(row.get(field)) in candidate_ids
+        )
+        scored.append((matches, field))
+    scored.sort(reverse=True)
+    if not scored or scored[0][0] == 0:
+        raise RuntimeError(
+            "Histórico TSE sem chave de vínculo compatível com SQ_CANDIDATO atual; "
+            f"campos candidatos={candidates}; campos disponíveis={fields}"
+        )
+    return scored[0][1]
+
+
+def enrich_tse_open_data(groups):
+    candidates = [item for group in groups for item in group]
+    by_id = {
+        str(candidate.get("tse_id")): candidate
+        for candidate in candidates
+        if candidate.get("tse_id")
+    }
+    previous = _previous_candidate_map()
+    source_meta = {}
+
+    for candidate in candidates:
+        candidate["social_links"] = []
+        candidate["previous_elections"] = []
+        candidate["tse_additional"] = {}
+        candidate["assets"] = {
+            "total_declared_brl": None,
+            "count": 0,
+            "items": [],
+            "source": None,
+        }
+
+    def load_dataset(key, url, suffix):
+        try:
+            rows, meta = read_tse_archive(url, preferred_suffix=suffix)
+            source_meta[key] = meta
+            return rows
+        except Exception as exc:
+            source_meta[key] = {
+                "institution": "TSE",
+                "url": url,
+                "status": "unavailable",
+                "error": f"{type(exc).__name__}: {exc}",
+            }
+            print(f"[aviso] TSE {key} indisponível: {exc}")
+            return None
+
+    complement = load_dataset(
+        "candidate_complement",
+        TSE_COMPLEMENT_ZIP,
+        f"consulta_cand_complementar_{YEAR}_{UF}.csv",
+    )
+    if complement is not None:
+        _require_known_candidate_rows(complement, by_id, "complementares")
+        for row in complement:
+            candidate = by_id.get(clean(row.get("SQ_CANDIDATO")))
+            if not candidate:
+                continue
+            judgment = (
+                clean(row.get("DS_SITUACAO_JULGAMENTO"))
+                or clean(row.get("DS_SITUACAO_CANDIDATO_PLEITO"))
+                or clean(row.get("DS_DETALHE_SITUACAO_CAND"))
+            )
+            if judgment:
+                candidate["registration_status"] = judgment
+            declares = clean(row.get("ST_DECLARAR_BENS"))
+            additional = {
+                "registration_judgment": judgment,
+                "accepted_at": clean(row.get("DT_ACEITE_CANDIDATURA")),
+                "declares_assets": (
+                    True if declares == "S" else False if declares == "N" else None
+                ),
+            }
+            candidate["tse_additional"] = {
+                key: value for key, value in additional.items()
+                if value is not None
+            }
+    else:
+        restored = _restore_field_from_previous(candidates, previous, "tse_additional")
+        for candidate in candidates:
+            old = previous.get(str(candidate.get("tse_id"))) or {}
+            if old.get("registration_status"):
+                candidate["registration_status"] = old.get("registration_status")
+        if restored:
+            source_meta["candidate_complement"]["status"] = "stale_preserved"
+        else:
+            raise RuntimeError(
+                "Complementares TSE indisponíveis e sem snapshot anterior validado"
+            )
+
+    assets_rows = load_dataset(
+        "candidate_assets",
+        TSE_ASSETS_ZIP,
+        f"bem_candidato_{YEAR}_{UF}.csv",
+    )
+    if assets_rows is not None:
+        _require_known_candidate_rows(assets_rows, by_id, "bens")
+        grouped = defaultdict(list)
+        for row in assets_rows:
+            candidate_id = clean(row.get("SQ_CANDIDATO"))
+            if candidate_id in by_id:
+                grouped[candidate_id].append(row)
+        for candidate_id, rows in grouped.items():
+            items = []
+            total = Decimal("0")
+            for row in sorted(
+                rows,
+                key=lambda item: number(item.get("NR_ORDEM_BEM_CANDIDATO")) or 0,
+            ):
+                value = parse_brl(row.get("VR_BEM_CANDIDATO"))
+                if value is not None:
+                    total += value
+                item = {
+                    "order": number(row.get("NR_ORDEM_BEM_CANDIDATO")),
+                    "type": clean(row.get("DS_TIPO_BEM_CANDIDATO")),
+                    "description": clean(row.get("DS_BEM_CANDIDATO")),
+                    "value_brl": decimal_json(value),
+                    "updated_at": clean(row.get("DT_ULT_ATUAL_BEM_CANDIDATO")),
+                }
+                items.append({
+                    key: value for key, value in item.items()
+                    if value is not None
+                })
+            by_id[candidate_id]["assets"] = {
+                "total_declared_brl": decimal_json(total),
+                "count": len(items),
+                "items": items,
+                "source": {
+                    "institution": "TSE",
+                    "dataset": "Bens de candidatos - 2026",
+                    "url": TSE_ASSETS_ZIP,
+                },
+            }
+    else:
+        restored = _restore_field_from_previous(candidates, previous, "assets")
+        if restored:
+            source_meta["candidate_assets"]["status"] = "stale_preserved"
+        else:
+            raise RuntimeError("Bens TSE indisponíveis e sem snapshot anterior validado")
+
+    social_rows = load_dataset(
+        "candidate_social",
+        TSE_SOCIAL_ZIP,
+        f"rede_social_candidato_{YEAR}_{UF}.csv",
+    )
+    if social_rows is not None:
+        _require_known_candidate_rows(social_rows, by_id, "redes sociais")
+        grouped = defaultdict(list)
+        for row in social_rows:
+            candidate_id = clean(row.get("SQ_CANDIDATO"))
+            url = _safe_url(row.get("DS_URL"))
+            if candidate_id in by_id and url:
+                grouped[candidate_id].append(url)
+        for candidate_id, urls in grouped.items():
+            seen = set()
+            normalized = []
+            for url in urls:
+                if url in seen:
+                    continue
+                seen.add(url)
+                normalized.append(url)
+            by_id[candidate_id]["social_links"] = normalized
+    else:
+        restored = _restore_field_from_previous(candidates, previous, "social_links")
+        if restored:
+            source_meta["candidate_social"]["status"] = "stale_preserved"
+        else:
+            raise RuntimeError(
+                "Redes sociais TSE indisponíveis e sem snapshot anterior validado"
+            )
+
+    history_rows = load_dataset(
+        "candidate_history",
+        TSE_HISTORY_ZIP,
+        None,
+    )
+    if history_rows is not None:
+        join_field = _history_join_field(history_rows, set(by_id))
+        source_meta["candidate_history"]["join_field"] = join_field
+        grouped = defaultdict(list)
+        for row in history_rows:
+            candidate_id = clean(row.get(join_field))
+            if candidate_id not in by_id:
+                continue
+            year = number(row.get("ANO_ELEICAO") or row.get("AA_ELEICAO"))
+            if not isinstance(year, int) or year >= YEAR:
+                continue
+            record = {
+                "year": year,
+                "office": clean(
+                    row.get("DS_CARGO")
+                    or row.get("DS_CARGO_CANDIDATURA")
+                    or row.get("DS_CARGO_ANTERIOR")
+                ),
+                "party": clean(
+                    row.get("SG_PARTIDO")
+                    or row.get("SG_PARTIDO_CANDIDATURA")
+                    or row.get("SG_PARTIDO_ANTERIOR")
+                ),
+                "uf": clean(
+                    row.get("SG_UF")
+                    or row.get("SG_UE")
+                    or row.get("SG_UF_CANDIDATURA")
+                ),
+                "result": clean(
+                    row.get("DS_SIT_TOT_TURNO")
+                    or row.get("DS_SITUACAO_CANDIDATURA")
+                    or row.get("DS_RESULTADO")
+                ),
+            }
+            record = {
+                key: value for key, value in record.items()
+                if value is not None
+            }
+            grouped[candidate_id].append(record)
+
+        if not grouped:
+            raise RuntimeError(
+                f"Histórico TSE: chave {join_field} vinculou candidatos atuais, "
+                "mas nenhum registro anterior a 2026 foi produzido"
+            )
+
+        for candidate_id, rows in grouped.items():
+            seen = set()
+            records = []
+            for record in sorted(
+                rows,
+                key=lambda item: (
+                    -(item.get("year") or 0),
+                    item.get("office") or "",
+                    item.get("party") or "",
+                ),
+            ):
+                key = (
+                    record.get("year"),
+                    record.get("office"),
+                    record.get("party"),
+                    record.get("uf"),
+                    record.get("result"),
+                )
+                if key in seen:
+                    continue
+                seen.add(key)
+                records.append(record)
+            by_id[candidate_id]["previous_elections"] = records
+    else:
+        restored = _restore_field_from_previous(candidates, previous, "previous_elections")
+        if restored:
+            source_meta["candidate_history"]["status"] = "stale_preserved"
+        else:
+            raise RuntimeError(
+                "Histórico TSE indisponível e sem snapshot anterior validado"
+            )
+
+    counts = {
+        "candidates_with_assets": sum(
+            1 for candidate in candidates
+            if (candidate.get("assets") or {}).get("count", 0) > 0
+        ),
+        "asset_records": sum(
+            (candidate.get("assets") or {}).get("count", 0)
+            for candidate in candidates
+        ),
+        "candidates_with_social_links": sum(
+            1 for candidate in candidates if candidate.get("social_links")
+        ),
+        "social_links": sum(
+            len(candidate.get("social_links") or [])
+            for candidate in candidates
+        ),
+        "candidates_with_previous_elections": sum(
+            1 for candidate in candidates if candidate.get("previous_elections")
+        ),
+        "previous_election_records": sum(
+            len(candidate.get("previous_elections") or [])
+            for candidate in candidates
+        ),
+        "candidates_with_registration_status": sum(
+            1 for candidate in candidates if candidate.get("registration_status")
+        ),
+    }
+    return source_meta, counts
+
+
 def mirror_snapshot(filename: str):
     """Resolve uma revisão imutável e lê exatamente os bytes dessa revisão."""
     path = f"{MIRROR_PATH_BASE}/{filename}"
@@ -177,8 +629,12 @@ def normalize_candidate(row, office, mirror_info):
         },
         "assets": {
             "total_declared_brl": None,
-            "status": "não integrado neste snapshot básico",
+            "count": 0,
+            "items": [],
+            "source": None,
         },
+        "social_links": [],
+        "tse_additional": {},
         "previous_elections": [],
         "current_mandate": None,
         "institutional_history": None,
@@ -591,6 +1047,8 @@ def main():
     federal = candidates["federal"]
     estadual = candidates["estadual"]
 
+    tse_enrichment_sources, tse_enrichment_counts = enrich_tse_open_data([federal, estadual])
+
     chamber_url, chamber_rows = enrich_federal(federal)
 
     ales_links = enrich_ales_reference([federal, estadual])
@@ -618,10 +1076,16 @@ def main():
                 ),
                 "ales_2025_evidence_linked": ales_links,
                 "topic_evidence": topic_evidence_count,
+                **tse_enrichment_counts,
             },
             "sources": {
                 "primary_tse_dataset": TSE_DATASET,
                 "primary_tse_candidate_zip": TSE_CAND_ZIP,
+                "primary_tse_complement_zip": TSE_COMPLEMENT_ZIP,
+                "primary_tse_assets_zip": TSE_ASSETS_ZIP,
+                "primary_tse_social_zip": TSE_SOCIAL_ZIP,
+                "primary_tse_history_zip": TSE_HISTORY_ZIP,
+                "tse_enrichment": tse_enrichment_sources,
                 "primary_tse_photo_zip_es": TSE_PHOTO_ZIP,
                 "photo_transport_mirror": PHOTO_MIRROR_BASE,
                 "operational_mirror": mirror_meta,
@@ -630,12 +1094,12 @@ def main():
             },
             "data_quality": {
                 "registration_status": (
-                    "O arquivo básico espelhado retorna #NE para a situação de candidatura "
-                    "dos registros ES; o sistema publica null em vez de atribuir significado."
+                    "O status básico pode vir como #NE no espelho; quando disponível, "
+                    "a ficha usa o julgamento da base oficial de informações complementares."
                 ),
                 "assets": (
-                    "Patrimônio não é publicado até haver ingestão auditável do "
-                    "bem_candidato_2026."
+                    "Bens são incorporados somente do arquivo oficial bem_candidato_2026, "
+                    "com valores somados por SQ_CANDIDATO e proveniência registrada."
                 ),
                 "photos": (
                     "A fonte primária é o pacote ES - Fotos de candidatos do TSE. "
@@ -643,15 +1107,15 @@ def main():
                     "cache público por SQ_CANDIDATO; falhas de imagem caem para placeholder."
                 ),
                 "electoral_history": (
-                    "Histórico eleitoral TSE ainda não é incorporado automaticamente neste "
-                    "snapshot; histórico institucional federal é obtido da Câmara."
+                    "Histórico eleitoral é incorporado do recurso oficial Histórico de "
+                    "candidaturas e mantido separado do histórico institucional da Câmara."
                 ),
                 "state_current_mandate": (
                     "Não inferido automaticamente; a composição da ALES requer validação "
                     "institucional datada."
                 ),
             },
-            "normalizer_version": "3.1.0",
+            "normalizer_version": "4.0.0",
         },
     )
     print(
@@ -660,7 +1124,10 @@ def main():
         f"{sum(1 for c in federal if c.get('current_mandate'))} "
         "vínculos atuais com a Câmara confirmados; "
         f"{ales_links} vínculos históricos ALES documentados; "
-        f"{topic_evidence_count} evidências temáticas curadas."
+        f"{topic_evidence_count} evidências temáticas curadas; "
+        f"{tse_enrichment_counts['asset_records']} bens; "
+        f"{tse_enrichment_counts['social_links']} redes declaradas; "
+        f"{tse_enrichment_counts['previous_election_records']} registros históricos TSE."
     )
 
 
