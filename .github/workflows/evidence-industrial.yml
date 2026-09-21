@@ -1,9 +1,9 @@
-name: Evidence industrial full pass — artifact only
+name: Evidence continuous worker — artifact only
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: "37 * * * *"
+    - cron: "37 */6 * * *"
   push:
     branches: [main]
     paths:
@@ -12,13 +12,14 @@ on:
       - "scripts/process_evidence_batch.py"
       - "scripts/build_exception_queue.py"
       - "scripts/evidence_coverage_report.py"
+      - "scripts/cruise_worker_guard.py"
 
 permissions:
   contents: read
   issues: read
 
 concurrency:
-  group: evidence-industrial-full-pass
+  group: evidence-continuous-worker
   cancel-in-progress: false
 
 jobs:
@@ -27,7 +28,7 @@ jobs:
     outputs:
       stop: ${{ steps.check.outputs.stop }}
     steps:
-      - name: Check #35 full-pass window
+      - name: Check #35 continuous-worker window
         id: check
         uses: actions/github-script@v7
         with:
@@ -44,7 +45,7 @@ jobs:
             );
             core.setOutput("stop", stopped ? "true" : "false");
             if (stopped) {
-              core.notice("Full-pass window closed by maintainer signal in #35.");
+              core.notice("Continuous-worker window closed by maintainer signal in #35.");
             }
 
   industrial:
@@ -67,7 +68,7 @@ jobs:
 
       - name: Validate pipeline before processing
         run: |
-          python -m py_compile             scripts/coletor_evidencias.py             scripts/discover_evidence_sources.py             scripts/process_evidence_batch.py             scripts/build_exception_queue.py             scripts/evidence_coverage_report.py
+          python -m py_compile             scripts/coletor_evidencias.py             scripts/discover_evidence_sources.py             scripts/process_evidence_batch.py             scripts/build_exception_queue.py             scripts/evidence_coverage_report.py             scripts/cruise_worker_guard.py
           python -m unittest discover -s tests -p 'test_*.py' -v
           python scripts/audit-site.py
 
@@ -257,6 +258,21 @@ jobs:
           )
           PY
 
+      - name: Build cruise-mode health and batching report
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="${{ steps.ws.outputs.out }}"
+          STATE="${{ steps.ws.outputs.state }}"
+          python scripts/cruise_worker_guard.py \
+            --sources "$OUT/topic-evidence-sources.json" \
+            --failures "$OUT/processing-failures.json" \
+            --drafts "$STATE/drafts.json" \
+            --canonical data/reference/topic-evidence.json \
+            --federal data/generated/candidates-federal.json \
+            --estadual data/generated/candidates-estadual.json \
+            --output "$OUT/cruise-status.json"
+
       - name: Export state snapshot and provenance
         shell: bash
         run: |
@@ -296,7 +312,27 @@ jobs:
       - name: Upload industrial evidence artifact
         uses: actions/upload-artifact@v4
         with:
-          name: evidence-industrial-${{ github.run_id }}
+          name: evidence-worker-${{ github.run_id }}
           path: ${{ steps.ws.outputs.out }}
           if-no-files-found: error
           retention-days: 7
+
+      - name: Page only on actionable cruise incidents
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="${{ steps.ws.outputs.out }}"
+          python - "$OUT/cruise-status.json" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          report = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+          count = int((report.get("metrics") or {}).get("actionable_incidents", 0))
+          if count:
+              print(json.dumps(report.get("incidents") or [], ensure_ascii=False, indent=2))
+              raise SystemExit(
+                  f"cruise-mode incident: {count} actionable institutional failure(s)"
+              )
+          print("cruise_mode_ok: silent success")
+          PY
