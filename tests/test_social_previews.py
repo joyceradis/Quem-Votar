@@ -41,7 +41,11 @@ class StaticSocialPreviewTests(unittest.TestCase):
         self.assertIn('property="og:description"', html)
         self.assertIn('property="og:image"', html)
         self.assertIn("MARIA &amp; TESTE", html)
+        self.assertIn("<body></body>", html)
+        self.assertNotIn("<main", html)
+        self.assertNotIn("<p>", html)
         self.assertNotIn("googletagmanager.com", html)
+        self.assertNotIn('name="twitter:', html)
         self.assertNotIn("score", html.lower())
         self.assertNotIn("recomend", html.lower())
 
