@@ -8,6 +8,8 @@ on:
       - ".github/workflows/evidence-reacquire-35.yml"
       - "scripts/reacquire_curated_chamber.py"
       - "data/staging/reacquisition-35-chamber.json"
+      - "data/staging/reacquisition-35-decisions.json"
+      - "scripts/bind_reacquired_reviews.py"
 
 permissions:
   contents: read
@@ -39,7 +41,8 @@ jobs:
             scripts/coletor_evidencias.py \
             scripts/discover_evidence_sources.py \
             scripts/process_evidence_batch.py \
-            scripts/reacquire_curated_chamber.py
+            scripts/reacquire_curated_chamber.py \
+            scripts/bind_reacquired_reviews.py
           python -m unittest discover -s tests -p 'test_*.py' -v
           python scripts/audit-site.py
 
@@ -100,6 +103,20 @@ jobs:
             --workers 6 \
             --limit 23 \
             | tee "$OUT/processing.log"
+
+      - name: Bind existing human decisions and dry-run promotion
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="${{ steps.ws.outputs.out }}"
+          STATE="${{ steps.ws.outputs.state }}"
+          python scripts/bind_reacquired_reviews.py \
+            --drafts "$STATE/drafts.json" \
+            --decisions data/staging/reacquisition-35-decisions.json \
+            --canonical data/reference/topic-evidence.json \
+            --reviews "$OUT/rebound-reviews.json" \
+            --promotion-candidate "$OUT/topic-evidence-promotion-candidate.json" \
+            --report "$OUT/promotion-dry-run.json"
 
       - name: Validate isolated outputs
         shell: bash
