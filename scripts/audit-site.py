@@ -162,6 +162,16 @@ def main() -> None:
 
     blob = json.dumps(rows, ensure_ascii=False).lower()
     assert "#ne" not in blob and "#nulo" not in blob, "sentinela TSE vazou no snapshot"
+    unresolved_registration = [
+        str(x.get("tse_id") or "")
+        for x in rows
+        if not isinstance(x.get("registration_status"), str)
+        or not x.get("registration_status").strip()
+    ]
+    assert not unresolved_registration, (
+        "registration_status não pode desaparecer em null/blank; "
+        f"amostra={unresolved_registration[:5]}"
+    )
     assert not any(f'"{field}"' in blob for field in FORBIDDEN_FIELDS), "campo pessoal proibido no snapshot"
     assert all(x.get("source", {}).get("institution") == "TSE" for x in rows), "origem eleitoral inconsistente"
     assert all(x.get("photo_source", {}).get("institution") == "TSE" for x in rows), "origem da foto não rastreável ao TSE"
