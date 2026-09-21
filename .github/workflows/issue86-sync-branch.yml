@@ -22,6 +22,8 @@ jobs:
     if: ${{ !contains(github.event.head_commit.message, '[issue86-generated]') }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
+    env:
+      PYTHONPYCACHEPREFIX: /tmp/quem-votar-pycache
     steps:
       - name: Checkout branch
         uses: actions/checkout@v4
