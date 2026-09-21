@@ -40,6 +40,27 @@ jobs:
           python -m py_compile scripts/sync-data.py
           python -m unittest discover -s tests -p 'test_*.py' -v
 
+      - name: Validar API pública DivulgaCandContas
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, urllib.request
+          urls = [
+              "https://divulgacandcontas.tse.jus.br/divulga/rest/v1/eleicao/ordinarias",
+              "https://divulgacandcontas.tse.jus.br/divulga/rest/v1/candidatura/buscar/2026/ES/20322002026/candidato/80002542409",
+          ]
+          for url in urls:
+              req = urllib.request.Request(url, headers={"User-Agent":"Mozilla/5.0","Accept":"application/json"})
+              with urllib.request.urlopen(req, timeout=30) as response:
+                  payload = json.loads(response.read().decode("utf-8"))
+              if isinstance(payload, list):
+                  print(url, "list", len(payload))
+              else:
+                  print(url, "keys", sorted(payload.keys())[:40])
+                  print("candidate", payload.get("id"), "bens", len(payload.get("bens") or []), "sites", len(payload.get("sites") or []), "anteriores", len(payload.get("eleicoesAnteriores") or []))
+          PY
+
       - name: Coletar snapshot oficial TSE
         run: python scripts/sync-data.py
 
