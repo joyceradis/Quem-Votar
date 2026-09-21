@@ -40,25 +40,32 @@ jobs:
           python -m py_compile scripts/sync-data.py
           python -m unittest discover -s tests -p 'test_*.py' -v
 
-      - name: Validar API pública DivulgaCandContas
+      - name: Validar transporte intermediário para DivulgaCandContas
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
-          import json, urllib.request
-          urls = [
-              "https://divulgacandcontas.tse.jus.br/divulga/rest/v1/eleicao/ordinarias",
-              "https://divulgacandcontas.tse.jus.br/divulga/rest/v1/candidatura/buscar/2026/ES/20322002026/candidato/80002542409",
+          import json, urllib.parse, urllib.request
+          target = "https://divulgacandcontas.tse.jus.br/divulga/rest/v1/candidatura/buscar/2026/ES/20322002026/candidato/80002542409"
+          probes = [
+              ("allorigins", "https://api.allorigins.win/raw?url=" + urllib.parse.quote(target, safe="")),
+              ("corsproxy", "https://corsproxy.io/?" + urllib.parse.quote(target, safe="")),
           ]
-          for url in urls:
-              req = urllib.request.Request(url, headers={"User-Agent":"Mozilla/5.0","Accept":"application/json"})
-              with urllib.request.urlopen(req, timeout=30) as response:
-                  payload = json.loads(response.read().decode("utf-8"))
-              if isinstance(payload, list):
-                  print(url, "list", len(payload))
-              else:
-                  print(url, "keys", sorted(payload.keys())[:40])
-                  print("candidate", payload.get("id"), "bens", len(payload.get("bens") or []), "sites", len(payload.get("sites") or []), "anteriores", len(payload.get("eleicoesAnteriores") or []))
+          ok = False
+          for name, url in probes:
+              try:
+                  req = urllib.request.Request(url, headers={"User-Agent":"Mozilla/5.0","Accept":"application/json"})
+                  with urllib.request.urlopen(req, timeout=30) as response:
+                      raw = response.read().decode("utf-8")
+                  payload = json.loads(raw)
+                  print(name, "OK", "candidate", payload.get("id"), "bens", len(payload.get("bens") or []), "sites", len(payload.get("sites") or []), "anteriores", len(payload.get("eleicoesAnteriores") or []))
+                  print("keys", sorted(payload.keys())[:60])
+                  ok = True
+                  break
+              except Exception as exc:
+                  print(name, "FAIL", type(exc).__name__, exc)
+          if not ok:
+              raise SystemExit("nenhum transporte intermediário respondeu")
           PY
 
       - name: Coletar snapshot oficial TSE
