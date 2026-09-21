@@ -26,6 +26,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 import coletor_evidencias as collector
+import camara_bulk
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_EXISTING = ROOT / "data/staging/topic-evidence-sources.json"
@@ -666,6 +667,8 @@ def run_discovery(
     site_workers: int = 8,
     discover_sites: bool = True,
     discover_chamber_sources: bool = True,
+    chamber_bulk_cache_dir: Path | None = None,
+    chamber_bulk_years: tuple[int, ...] = (2023, 2024, 2025, 2026),
 ) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
     seeds, rejected, seed_provenance = declared_seed_sources(candidates)
     exact: list[dict[str, Any]] = []
@@ -693,10 +696,45 @@ def run_discovery(
                 exact.extend(found)
                 rejected.extend(failures)
 
+    chamber_provenance: dict[str, Any] = {"mode": "disabled"}
     if discover_chamber_sources:
-        chamber_sources, chamber_rejected = discover_chamber(candidates)
-        exact.extend(chamber_sources)
-        rejected.extend(chamber_rejected)
+        has_chamber_candidates = any(
+            clean((candidate.get("current_mandate") or {}).get("chamber_id"))
+            for candidate in candidates.values()
+        )
+        if chamber_bulk_cache_dir is not None:
+            try:
+                chamber_sources, chamber_provenance = camara_bulk.discover_chamber_bulk(
+                    candidates,
+                    cache_dir=chamber_bulk_cache_dir,
+                    years=chamber_bulk_years,
+                )
+                if has_chamber_candidates and not chamber_sources:
+                    raise RuntimeError(
+                        "bulk Câmara retornou zero vínculos para candidaturas com chamber_id"
+                    )
+                exact.extend(chamber_sources)
+            except Exception as exc:
+                chamber_sources, chamber_rejected = discover_chamber(candidates)
+                exact.extend(chamber_sources)
+                rejected.extend(chamber_rejected)
+                chamber_provenance = {
+                    "mode": "api_fallback",
+                    "bulk_error": str(exc)[:1000],
+                    "source_records": len(chamber_sources),
+                    "semantics": (
+                        "Fallback técnico para a API idDeputadoAutor; não altera "
+                        "aprovação, taxonomia ou dados canônicos."
+                    ),
+                }
+        else:
+            chamber_sources, chamber_rejected = discover_chamber(candidates)
+            exact.extend(chamber_sources)
+            rejected.extend(chamber_rejected)
+            chamber_provenance = {
+                "mode": "api_idDeputadoAutor",
+                "source_records": len(chamber_sources),
+            }
 
     merged = dedupe_sources(existing_sources + seeds + exact)
     rejected = dedupe_rejections(rejected)
@@ -719,6 +757,7 @@ def run_discovery(
             "candidates_with_exact_content": len(with_exact & candidate_ids),
             "source_records": len(merged),
             "seed_provenance": seed_provenance,
+            "chamber_provenance": chamber_provenance,
         },
         "sources": merged,
     }
@@ -736,6 +775,12 @@ def run_discovery(
         "exact_content_records": sum(x.get("discovery_status") == "exact_content" for x in merged),
         "rejections": len(rejected),
         "source_records": len(merged),
+        "chamber_source_records": sum(
+            clean(x.get("source_kind")) == "institutional"
+            and clean(x.get("discovery_status")) == "exact_content"
+            for x in merged
+        ),
+        "chamber_transport_mode": clean(chamber_provenance.get("mode")),
     }
     return sources_payload, rejections_payload, metrics
 
@@ -750,6 +795,13 @@ def main() -> int:
     parser.add_argument("--site-workers", type=int, default=8)
     parser.add_argument("--skip-sites", action="store_true")
     parser.add_argument("--skip-chamber", action="store_true")
+    parser.add_argument("--chamber-bulk-cache-dir", type=Path)
+    parser.add_argument(
+        "--chamber-bulk-years",
+        type=int,
+        nargs="+",
+        default=[2023, 2024, 2025, 2026],
+    )
     args = parser.parse_args()
 
     candidates = collector.load_candidates()
@@ -765,6 +817,8 @@ def main() -> int:
         site_workers=max(1, args.site_workers),
         discover_sites=not args.skip_sites,
         discover_chamber_sources=not args.skip_chamber,
+        chamber_bulk_cache_dir=args.chamber_bulk_cache_dir,
+        chamber_bulk_years=tuple(args.chamber_bulk_years),
     )
 
     args.output_sources.parent.mkdir(parents=True, exist_ok=True)

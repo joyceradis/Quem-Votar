@@ -16,6 +16,20 @@ from typing import Any
 import discover_evidence_sources as discovery
 
 
+PRIMARY_CHAMBER_SIGLAS = {
+    "PL",
+    "PLP",
+    "PEC",
+    "PDL",
+    "PRC",
+    "REQ",
+    "RPD",
+    "PRL",
+    "PRLP",
+    "PRLE",
+}
+
+
 def clean(value: Any) -> str:
     return "" if value is None else str(value).strip()
 
@@ -41,7 +55,8 @@ def is_trusted_chamber(draft: dict[str, Any]) -> bool:
         clean(draft.get("source_kind")) == "institutional"
         and clean(draft.get("source_publisher")).casefold()
         == "câmara dos deputados"
-        and clean(draft.get("attribution_trust")) == "official_author_api"
+        and clean(draft.get("attribution_trust"))
+        in {"official_author_api", "official_author_bulk"}
         and clean(origin.get("institution")) == "Câmara dos Deputados"
         and bool(clean(origin.get("chamber_id")))
         and bool(clean(origin.get("proposition_id")))
@@ -67,6 +82,26 @@ LANE_PRIORITY = {
 }
 
 
+def official_document_type(row: dict[str, Any]) -> str:
+    value = clean(row.get("official_document_type"))
+    if value:
+        return value
+    snapshot = row.get("institutional_snapshot") or {}
+    if isinstance(snapshot, dict):
+        return clean(snapshot.get("siglaTipo"))
+    return ""
+
+
+def chamber_document_priority(row: dict[str, Any]) -> int:
+    """Technical routing only; never an approval or content score."""
+    if not is_trusted_chamber(row):
+        return 0
+    sigla = official_document_type(row).upper()
+    if not sigla:
+        return 1
+    return 0 if sigla in PRIMARY_CHAMBER_SIGLAS else 1
+
+
 def is_candidate_site_listing(draft: dict[str, Any]) -> bool:
     if clean(draft.get("source_kind")) not in {"official_candidate", "official_party"}:
         return False
@@ -76,11 +111,82 @@ def is_candidate_site_listing(draft: dict[str, Any]) -> bool:
     )
 
 
+def latest_source_index(
+    payload: dict[str, Any] | None,
+) -> dict[tuple[str, str], dict[str, Any]]:
+    if not payload:
+        return {}
+    rows = payload.get("sources") or []
+    if not isinstance(rows, list):
+        raise RuntimeError("sources deve ser lista")
+    result: dict[tuple[str, str], dict[str, Any]] = {}
+    for row in rows:
+        cid = clean(row.get("candidate_id"))
+        url = discovery.canonicalize_url(clean(row.get("source_url")))
+        if not cid or not url:
+            continue
+        result[(cid, url)] = row
+    return result
+
+
+def enrich_from_source(
+    draft: dict[str, Any],
+    source: dict[str, Any] | None,
+) -> dict[str, Any]:
+    if not source:
+        return dict(draft)
+
+    result = dict(draft)
+    snapshot = source.get("institutional_snapshot") or {}
+    if not isinstance(snapshot, dict):
+        snapshot = {}
+
+    source_origin = source.get("source_origin") or {}
+    if not isinstance(source_origin, dict):
+        source_origin = {}
+
+    if not result.get("source_origin") and source_origin:
+        result["source_origin"] = source_origin
+    if not clean(result.get("attribution_trust")):
+        result["attribution_trust"] = clean(source.get("attribution_trust"))
+
+    doc_type = clean(snapshot.get("siglaTipo"))
+    if doc_type:
+        result["official_document_type"] = doc_type
+
+    themes = snapshot.get("official_themes")
+    if isinstance(themes, list):
+        result["official_themes"] = themes
+
+    proposition_id = clean(
+        snapshot.get("proposition_id") or source_origin.get("proposition_id")
+    )
+    if proposition_id:
+        result["official_proposition_id"] = proposition_id
+
+    transport = clean(snapshot.get("transport"))
+    if transport:
+        result["discovery_transport"] = transport
+
+    bulk_sha = clean(
+        snapshot.get("bulk_snapshot_sha256")
+        or source_origin.get("bulk_snapshot_sha256")
+    )
+    if bulk_sha:
+        result["bulk_snapshot_sha256"] = bulk_sha
+
+    result["latest_source_attribution_trust"] = clean(
+        source.get("attribution_trust")
+    )
+    return result
+
+
 def build_batch(
     *,
     drafts_payload: dict[str, Any],
     canonical_payload: dict[str, Any],
     decisions_payload: dict[str, Any],
+    sources_payload: dict[str, Any] | None = None,
     limit: int = 100,
     per_candidate_limit: int = 12,
 ) -> tuple[dict[str, Any], dict[str, int]]:
@@ -89,6 +195,7 @@ def build_batch(
     if not isinstance(drafts, list) or not isinstance(canonical, list):
         raise RuntimeError("drafts/entries inválidos")
 
+    source_index = latest_source_index(sources_payload)
     known_decisions = decided_ids(decisions_payload)
     canonical_urls = {
         clean(row.get("source_url"))
@@ -102,12 +209,15 @@ def build_batch(
     skipped_listing = 0
     by_key: dict[tuple[str, str], dict[str, Any]] = {}
 
-    for draft in drafts:
-        did = clean(draft.get("draft_id"))
-        cid = clean(draft.get("candidate_id"))
-        url = discovery.canonicalize_url(clean(draft.get("source_url")))
+    for raw_draft in drafts:
+        did = clean(raw_draft.get("draft_id"))
+        cid = clean(raw_draft.get("candidate_id"))
+        url = discovery.canonicalize_url(clean(raw_draft.get("source_url")))
         if not did or not cid or not url:
             continue
+
+        draft = enrich_from_source(raw_draft, source_index.get((cid, url)))
+
         if did in known_decisions:
             skipped_decided += 1
             continue
@@ -141,6 +251,7 @@ def build_batch(
         grouped[cid].sort(
             key=lambda row: (
                 LANE_PRIORITY.get(lane(row), 9),
+                chamber_document_priority(row),
                 clean(row.get("published_at")) == "",
                 clean(row.get("published_at")),
                 clean(row.get("source_url")),
@@ -170,6 +281,9 @@ def build_batch(
 
     handoff = []
     for row in selected:
+        official_themes = row.get("official_themes")
+        if not isinstance(official_themes, list):
+            official_themes = []
         handoff.append(
             {
                 "draft_id": clean(row.get("draft_id")),
@@ -178,6 +292,12 @@ def build_batch(
                 "office": clean(row.get("office")),
                 "party": clean(row.get("party")),
                 "lane": lane(row),
+                "document_priority": chamber_document_priority(row),
+                "official_document_type": official_document_type(row),
+                "official_proposition_id": clean(row.get("official_proposition_id")),
+                "official_themes": official_themes,
+                "discovery_transport": clean(row.get("discovery_transport")),
+                "bulk_snapshot_sha256": clean(row.get("bulk_snapshot_sha256")),
                 "source_kind": clean(row.get("source_kind")),
                 "source_url": clean(row.get("source_url")),
                 "source_title": clean(row.get("source_title")),
@@ -185,6 +305,9 @@ def build_batch(
                 "published_at": clean(row.get("published_at")),
                 "candidate_mentioned": bool(row.get("candidate_mentioned")),
                 "attribution_trust": clean(row.get("attribution_trust")),
+                "latest_source_attribution_trust": clean(
+                    row.get("latest_source_attribution_trust")
+                ),
                 "attribution_basis_hint": clean(row.get("attribution_basis_hint")),
                 "raw_excerpt": clean(row.get("raw_excerpt")),
                 "review_status": "pending",
@@ -192,7 +315,11 @@ def build_batch(
         )
 
     batch_basis = "\n".join(x["draft_id"] for x in handoff)
-    batch_id = hashlib.sha256(batch_basis.encode("utf-8")).hexdigest()[:16] if handoff else ""
+    batch_id = (
+        hashlib.sha256(batch_basis.encode("utf-8")).hexdigest()[:16]
+        if handoff
+        else ""
+    )
     metrics = {
         "drafts_total": len(drafts),
         "known_decision_ids": len(known_decisions),
@@ -202,21 +329,40 @@ def build_batch(
         "skipped_nonpending": skipped_nonpending,
         "skipped_listing": skipped_listing,
         "eligible_unique": len(eligible),
+        "eligible_primary_chamber": sum(
+            is_trusted_chamber(row) and chamber_document_priority(row) == 0
+            for row in eligible
+        ),
         "candidates_eligible": len(grouped),
         "selected": len(handoff),
+        "selected_primary_chamber": sum(
+            row["lane"] == "institutional_trusted"
+            and row["document_priority"] == 0
+            for row in handoff
+        ),
         "candidates_selected": len({x["candidate_id"] for x in handoff}),
     }
     payload = {
-        "version": "1.0.0",
+        "version": "1.1.0",
         "batch_id": batch_id,
         "semantics": (
             "New curation work only. Candidate-fair technical batching; no political "
-            "ranking, semantic approval, or canonical publication is performed."
+            "ranking, semantic approval, V5.5 topic mapping, or canonical publication "
+            "is performed."
         ),
         "policy": {
             "max_records": limit,
             "max_per_candidate": per_candidate_limit,
             "lane_order": list(LANE_PRIORITY),
+            "chamber_primary_document_types": sorted(PRIMARY_CHAMBER_SIGLAS),
+            "document_type_policy": (
+                "Technical review priority only. Other official document types remain "
+                "in staging and are not rejected or approved automatically."
+            ),
+            "official_theme_policy": (
+                "Câmara codTema/tema are transported as official metadata only; "
+                "no automatic mapping to the public V5.5 taxonomy."
+            ),
             "autoapproval": False,
         },
         "metrics": metrics,
@@ -230,6 +376,7 @@ def main() -> int:
     ap.add_argument("--drafts", type=Path, required=True)
     ap.add_argument("--canonical", type=Path, required=True)
     ap.add_argument("--decisions", type=Path, required=True)
+    ap.add_argument("--sources", type=Path)
     ap.add_argument("--output", type=Path, required=True)
     ap.add_argument("--metrics", type=Path, required=True)
     ap.add_argument("--limit", type=int, default=100)
@@ -240,6 +387,7 @@ def main() -> int:
         drafts_payload=read_json(args.drafts),
         canonical_payload=read_json(args.canonical),
         decisions_payload=read_json(args.decisions),
+        sources_payload=read_json(args.sources) if args.sources else None,
         limit=max(0, args.limit),
         per_candidate_limit=max(1, args.per_candidate_limit),
     )

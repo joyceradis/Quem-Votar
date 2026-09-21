@@ -156,9 +156,15 @@ def trusted_institutional_attribution(draft: dict[str, Any]) -> bool:
     origin = draft.get("source_origin") or {}
     return (
         clean(draft.get("source_kind")) == "institutional"
-        and clean(draft.get("attribution_trust")) == "official_author_api"
+        and clean(draft.get("attribution_trust"))
+        in {"official_author_api", "official_author_bulk"}
         and clean(origin.get("institution")) == "Câmara dos Deputados"
-        and clean(origin.get("discovery_method")) == "api_idDeputadoAutor"
+        and clean(origin.get("discovery_method"))
+        in {
+            "api_idDeputadoAutor",
+            "api_idDeputadoAutor_paginated_reacquisition",
+            "bulk_proposicoesAutores_join",
+        }
         and bool(clean(origin.get("chamber_id")))
         and bool(clean(origin.get("proposition_id")))
     )
