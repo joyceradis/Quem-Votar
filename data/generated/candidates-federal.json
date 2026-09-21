@@ -3030,19 +3030,6 @@
     },
     "topic_evidence": [
       {
-        "topic_id": "economia",
-        "evidence_type": "proposta",
-        "statement": "Apresentou emenda de Plenário (02/03/2026) a projeto em regime de urgência para alterar a Lei 5.991/1973 e dispor sobre a comercialização de medicamentos em farmácia ou drogaria instalada em área de venda.",
-        "source_url": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2605709",
-        "source_title": "EMP 1/0 — Altera a Lei nº 5.991, de 17 de dezembro de 1973, que “dispõe sobre o Controle Sanitário do Comércio de Drogas, Medicamentos, Insumos Farmacêuticos e Correlatos, e dá outras Providências”, para dispor sobre a comercialização de medicamentos em farmácia ou drogaria instalada na área de vend",
-        "source_publisher": "Câmara dos Deputados",
-        "published_at": "2026-03-02",
-        "captured_at": "2026-09-21T14:11:40+00:00",
-        "scope": "federal",
-        "quote_or_summary": "",
-        "verification_status": "verified"
-      },
-      {
         "topic_id": "meio-ambiente",
         "evidence_type": "atuação",
         "statement": "Requer visita técnica dos membros da Comissão Especial à Zona da Mata mineira para tratar das consequências das fortes chuvas de 2026.",
