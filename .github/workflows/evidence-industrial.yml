@@ -13,6 +13,8 @@ on:
       - "scripts/build_exception_queue.py"
       - "scripts/evidence_coverage_report.py"
       - "scripts/cruise_worker_guard.py"
+      - "scripts/build_curation_batch.py"
+      - "data/staging/wartime-curation-decisions.json"
 
 permissions:
   contents: read
@@ -68,7 +70,7 @@ jobs:
 
       - name: Validate pipeline before processing
         run: |
-          python -m py_compile             scripts/coletor_evidencias.py             scripts/discover_evidence_sources.py             scripts/process_evidence_batch.py             scripts/build_exception_queue.py             scripts/evidence_coverage_report.py             scripts/cruise_worker_guard.py
+          python -m py_compile             scripts/coletor_evidencias.py             scripts/discover_evidence_sources.py             scripts/process_evidence_batch.py             scripts/build_exception_queue.py             scripts/evidence_coverage_report.py             scripts/cruise_worker_guard.py             scripts/build_curation_batch.py
           python -m unittest discover -s tests -p 'test_*.py' -v
           python scripts/audit-site.py
 
@@ -292,6 +294,21 @@ jobs:
           )
           print(f"human_review_count={len(human)}")
           PY
+
+      - name: Build new-work curation delta
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="${{ steps.ws.outputs.out }}"
+          STATE="${{ steps.ws.outputs.state }}"
+          python scripts/build_curation_batch.py \
+            --drafts "$STATE/drafts.json" \
+            --canonical data/reference/topic-evidence.json \
+            --decisions data/staging/wartime-curation-decisions.json \
+            --output "$OUT/curation-batch.json" \
+            --metrics "$OUT/curation-batch-metrics.json" \
+            --limit 100 \
+            --per-candidate-limit 12
 
       - name: Validate persistent state
         shell: bash
