@@ -40,6 +40,12 @@ TSE_COMPLEMENT_ZIP = "https://cdn.tse.jus.br/estatistica/sead/odsele/consulta_ca
 TSE_ASSETS_ZIP = "https://cdn.tse.jus.br/estatistica/sead/odsele/bem_candidato/bem_candidato_2026.zip"
 TSE_SOCIAL_ZIP = "https://cdn.tse.jus.br/estatistica/sead/odsele/consulta_cand/rede_social_candidato_2026.zip"
 TSE_HISTORY_ZIP = "https://cdn.tse.jus.br/estatistica/sead/odsele/historico_candidatura/historico_candidatura_2026.zip"
+TSE_RESOURCE_DOWNLOADS = {
+    TSE_COMPLEMENT_ZIP: "https://dadosabertos.tse.jus.br/dataset/candidatos-2026/resource/d58fc30b-4eea-4286-a330-15511029e00e/download/consulta_cand_complementar_2026.zip",
+    TSE_ASSETS_ZIP: "https://dadosabertos.tse.jus.br/dataset/candidatos-2026/resource/33fbda56-eb41-46f5-a8a0-8b499c285a1d/download/bem_candidato_2026.zip",
+    TSE_SOCIAL_ZIP: "https://dadosabertos.tse.jus.br/dataset/candidatos-2026/resource/7c480cbf-7415-4237-8db7-8c8167542da9/download/rede_social_candidato_2026.zip",
+    TSE_HISTORY_ZIP: "https://dadosabertos.tse.jus.br/dataset/candidatos-2026/resource/6c3a8826-32da-460f-b306-97474b580efb/download/historico_candidatura_2026.zip",
+}
 TSE_PHOTO_ZIP = "https://cdn.tse.jus.br/estatistica/sead/eleicoes/eleicoes2026/fotos/foto_cand2026_ES_div.zip"
 PHOTO_MIRROR_BASE = "https://realidadebrasil.com.br/media/photos"
 DIVULGACAND = "https://divulgacandcontas.tse.jus.br/divulga/"
@@ -158,7 +164,24 @@ def _pick_archive_member(names, preferred_suffix: str | None = None):
 
 
 def read_tse_archive(url: str, preferred_suffix: str | None = None, timeout: int = 90):
-    raw = request_bytes(url, timeout=timeout)
+    attempts = [url]
+    alternate = TSE_RESOURCE_DOWNLOADS.get(url)
+    if alternate and alternate not in attempts:
+        attempts.append(alternate)
+
+    raw = None
+    transport_url = None
+    errors = []
+    for candidate_url in attempts:
+        try:
+            raw = request_bytes(candidate_url, timeout=timeout)
+            transport_url = candidate_url
+            break
+        except Exception as exc:
+            errors.append(f"{candidate_url}: {type(exc).__name__}: {exc}")
+
+    if raw is None:
+        raise RuntimeError("falha nas rotas oficiais TSE | " + " | ".join(errors))
     if len(raw) > 150 * 1024 * 1024:
         raise RuntimeError(f"arquivo TSE excede limite operacional: {len(raw)} bytes")
     digest = hashlib.sha256(raw).hexdigest()
@@ -188,6 +211,7 @@ def read_tse_archive(url: str, preferred_suffix: str | None = None, timeout: int
     return rows, {
         "institution": "TSE",
         "url": url,
+        "transport_url": transport_url,
         "archive_member": member,
         "sha256": digest,
         "generated_at": generated_at,
