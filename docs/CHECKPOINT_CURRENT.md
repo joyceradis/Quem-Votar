@@ -2,7 +2,7 @@
 
 Data: 2026-09-21.
 
-Estado auditado contra `main` em `e88c365ec013a0dbf1b60b21c21ea78ac696b545`, antes do PR que atualiza este checkpoint.
+Estado auditado contra `main` em `49a46286e1b54de970cf71fe9d6c8c5ca2dfce57`.
 
 ## Estado canônico
 
@@ -204,7 +204,8 @@ O endpoint clássico de branch protection pode retornar 403 para a integração 
 - #36 — proteção efetiva de `main`;
 - #45 — topologia canônica multiagente;
 - #91 — `registration_status` explícito;
-- #93 — Open Graph estático 1:1 por candidatura.
+- #93 — Open Graph estático 1:1 por candidatura;
+- #95 — checkpoint obrigatório no mesmo PR de qualquer mudança em `data/generated/*`.
 
 ### Em andamento
 
@@ -213,7 +214,7 @@ O endpoint clássico de branch protection pode retornar 403 para a integração 
 - #35 — worker contínuo War Time;
 - #86 — bens, redes e histórico TSE em staging/validação;
 - #88 — prova operacional pós-merge do sync;
-- #95 — acoplamento obrigatório de checkpoint a `data/generated/*`.
+- #95 — acoplamento obrigatório de checkpoint a `data/generated/*` — **concluída**.
 
 ### Ainda não consolidada
 
@@ -271,7 +272,7 @@ A camada de sustentabilidade permanece isolada e não pode modificar `topic-evid
 
 ## Próximo passo seguro
 
-Concluir o enforcement da #95. Depois disso, a ordem volta para:
+Com o enforcement da #95 consolidado, a ordem volta para:
 
 1. resolver a prova operacional pendente da #88 quando houver novo run;
 2. concluir os gates da #86 sem promoção prematura;
