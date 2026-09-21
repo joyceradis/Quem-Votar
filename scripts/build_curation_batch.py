@@ -102,13 +102,19 @@ def chamber_document_priority(row: dict[str, Any]) -> int:
     return 0 if sigla in PRIMARY_CHAMBER_SIGLAS else 1
 
 
-def is_candidate_site_listing(draft: dict[str, Any]) -> bool:
-    if clean(draft.get("source_kind")) not in {"official_candidate", "official_party"}:
+def is_non_evidence_listing(draft: dict[str, Any]) -> bool:
+    if is_trusted_chamber(draft):
         return False
-    return not discovery.looks_like_exact_content(
-        clean(draft.get("source_url")),
-        clean(draft.get("source_title")),
-    )
+
+    url = clean(draft.get("source_url"))
+    title = clean(draft.get("source_title"))
+    if discovery.is_obvious_listing_or_utility(url, title):
+        return True
+
+    if clean(draft.get("source_kind")) in {"official_candidate", "official_party"}:
+        return not discovery.looks_like_exact_content(url, title)
+
+    return False
 
 
 def latest_source_index(
@@ -227,7 +233,7 @@ def build_batch(
         if clean(draft.get("review_status") or "pending") != "pending":
             skipped_nonpending += 1
             continue
-        if is_candidate_site_listing(draft):
+        if is_non_evidence_listing(draft):
             skipped_listing += 1
             continue
 
