@@ -38,7 +38,7 @@
     "ales": "https://www.al.es.gov.br/"
   },
   "data_quality": {
-    "registration_status": "O arquivo básico espelhado retorna #NE para a situação de candidatura dos registros ES; o sistema publica null em vez de atribuir significado.",
+    "registration_status": "Quando a fonte TSE não resolve a situação de candidatura e retorna sentinela como #NE/#NULO, o snapshot publica o estado explícito 'not_available'. Isso registra indisponibilidade sem inferir situação jurídica favorável, desfavorável ou regularidade.",
     "assets": "Patrimônio não é publicado até haver ingestão auditável do bem_candidato_2026.",
     "photos": "A fonte primária é o pacote ES - Fotos de candidatos do TSE. Como o CDN oficial bloqueia o runner, a UI usa temporariamente um cache público por SQ_CANDIDATO; falhas de imagem caem para placeholder.",
     "electoral_history": "Histórico eleitoral TSE ainda não é incorporado automaticamente neste snapshot; histórico institucional federal é obtido da Câmara.",
