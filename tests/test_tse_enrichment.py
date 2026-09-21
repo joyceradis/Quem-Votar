@@ -109,6 +109,8 @@ class TseEnrichmentTests(unittest.TestCase):
 
         with patch.object(sync, "read_tse_archive", side_effect=fake_archive), patch.object(
             sync, "_previous_candidate_map", return_value={}
+        ), patch.object(
+            sync, "_load_enrichment_bootstrap", return_value=({}, None)
         ):
             meta, counts = sync.enrich_tse_open_data([candidates])
 
@@ -152,6 +154,8 @@ class TseEnrichmentTests(unittest.TestCase):
             return datasets[url], {"institution": "TSE", "url": url, "status": "fresh", "sha256": "b"*64, "row_count": len(datasets[url])}
         with patch.object(sync, "read_tse_archive", side_effect=fake_archive), patch.object(
             sync, "_previous_candidate_map", return_value={}
+        ), patch.object(
+            sync, "_load_enrichment_bootstrap", return_value=({}, None)
         ):
             sync.enrich_tse_open_data([candidates])
 
