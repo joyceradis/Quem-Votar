@@ -500,69 +500,104 @@ def discover_chamber_bulk(
     all_sources: list[dict[str, Any]] = []
     all_files: list[dict[str, Any]] = []
     year_reports: list[dict[str, Any]] = []
+    failed_years: list[dict[str, Any]] = []
 
-    for year_value in sorted({int(value) for value in years}):
-        authors_path, authors_meta = download_bulk_csv(
-            "proposicoesAutores",
-            year_value,
-            cache_dir=cache_dir,
-        )
-        all_files.append(authors_meta)
-        author_links = collect_author_links(
-            iter_csv(authors_path),
-            candidates=candidates,
-        )
-        target_ids = set(author_links)
+    # Prefer freshest legislative years first. A slow historical year must not
+    # erase already acquired current-year evidence.
+    for year_value in sorted({int(value) for value in years}, reverse=True):
+        try:
+            authors_path, authors_meta = download_bulk_csv(
+                "proposicoesAutores",
+                year_value,
+                cache_dir=cache_dir,
+            )
+            author_links = collect_author_links(
+                iter_csv(authors_path),
+                candidates=candidates,
+            )
+            target_ids = set(author_links)
 
-        if not target_ids:
+            if not target_ids:
+                all_files.append(authors_meta)
+                year_reports.append(
+                    {
+                        "year": year_value,
+                        "status": "ok",
+                        "matched_propositions": 0,
+                        "source_records": 0,
+                        "theme_links": 0,
+                    }
+                )
+                continue
+
+            propositions_path, propositions_meta = download_bulk_csv(
+                "proposicoes",
+                year_value,
+                cache_dir=cache_dir,
+            )
+            themes_path, themes_meta = download_bulk_csv(
+                "proposicoesTemas",
+                year_value,
+                cache_dir=cache_dir,
+            )
+
+            propositions = collect_propositions(
+                iter_csv(propositions_path),
+                target_ids,
+            )
+            themes = collect_themes(
+                iter_csv(themes_path),
+                target_ids,
+            )
+            file_provenance = [authors_meta, propositions_meta, themes_meta]
+            sources = build_sources(
+                candidates=candidates,
+                year=year_value,
+                author_links=author_links,
+                propositions=propositions,
+                themes=themes,
+                file_provenance=file_provenance,
+            )
+
+            all_files.extend(file_provenance)
+            all_sources.extend(sources)
             year_reports.append(
                 {
                     "year": year_value,
+                    "status": "ok",
+                    "matched_propositions": len(target_ids),
+                    "source_records": len(sources),
+                    "theme_links": sum(len(x) for x in themes.values()),
+                }
+            )
+        except Exception as exc:
+            failure = {
+                "year": year_value,
+                "status": "transport_failed",
+                "error": str(exc)[:1000],
+            }
+            failed_years.append(failure)
+            year_reports.append(
+                {
+                    **failure,
                     "matched_propositions": 0,
                     "source_records": 0,
                     "theme_links": 0,
                 }
             )
+            # Continue to other years. Partial coverage is explicit in report
+            # and never promoted as completeness.
             continue
 
-        propositions_path, propositions_meta = download_bulk_csv(
-            "proposicoes",
-            year_value,
-            cache_dir=cache_dir,
-        )
-        themes_path, themes_meta = download_bulk_csv(
-            "proposicoesTemas",
-            year_value,
-            cache_dir=cache_dir,
-        )
-        all_files.extend((propositions_meta, themes_meta))
-
-        propositions = collect_propositions(
-            iter_csv(propositions_path),
-            target_ids,
-        )
-        themes = collect_themes(
-            iter_csv(themes_path),
-            target_ids,
-        )
-        file_provenance = [authors_meta, propositions_meta, themes_meta]
-        sources = build_sources(
-            candidates=candidates,
-            year=year_value,
-            author_links=author_links,
-            propositions=propositions,
-            themes=themes,
-            file_provenance=file_provenance,
-        )
-        all_sources.extend(sources)
-        year_reports.append(
-            {
-                "year": year_value,
-                "matched_propositions": len(target_ids),
-                "source_records": len(sources),
-                "theme_links": sum(len(x) for x in themes.values()),
-            }
-        )
+    has_chamber_candidates = any(
+        clean((candidate.get("current_mandate") or {}).get("chamber_id"))
+        for candidate in candidates.values()
+    )
+    if has_chamber_candidates and not all_sources:
+        detail = "; ".join(
+            f"{item['year']}: {item['error']}" for item in failed_years
+        ) or "nenhum vínculo encontrado nos anos consultados"
+        raise RuntimeError(f"bulk Câmara sem ano utilizável: {detail}")
 
     unique_candidates = {
         clean(item.get("candidate_id"))
@@ -575,13 +610,26 @@ def discover_chamber_bulk(
         if clean((item.get("source_origin") or {}).get("proposition_id"))
     }
     report = {
-        "mode": "camara_bulk_daily",
+        "mode": (
+            "camara_bulk_daily_partial"
+            if failed_years
+            else "camara_bulk_daily"
+        ),
         "generated_at": utc_now(),
         "years": [x["year"] for x in year_reports],
+        "successful_years": [
+            x["year"] for x in year_reports if x.get("status") == "ok"
+        ],
+        "failed_years": failed_years,
+        "coverage_complete_for_requested_years": not failed_years,
         "source_records": len(all_sources),
         "candidates_with_sources": len(unique_candidates),
         "unique_propositions": len(unique_props),
-        "theme_links": sum(x["theme_links"] for x in year_reports),
+        "theme_links": sum(
+            x["theme_links"]
+            for x in year_reports
+            if x.get("status") == "ok"
+        ),
         "year_reports": year_reports,
         "files": [
             {
@@ -599,6 +647,8 @@ def discover_chamber_bulk(
                     "etag",
                     "last_modified",
                     "cache_hit",
+                    "download_attempts",
+                    "download_timeout_seconds",
                 }
             }
             for item in all_files
@@ -606,7 +656,9 @@ def discover_chamber_bulk(
         "semantics": (
             "Official Câmara daily bulk transport. Authorship and official themes are "
             "staging metadata only; no political interpretation, V5.5 topic mapping, "
-            "review approval, or canonical publication occurs here."
+            "review approval, or canonical publication occurs here. Failed yearly "
+            "transports are explicit and do not erase successfully acquired years."
         ),
     }
     return all_sources, report
+
