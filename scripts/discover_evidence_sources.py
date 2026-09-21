@@ -68,7 +68,7 @@ CONTENT_HINTS = {
 
 GENERIC_ONLY_SEGMENTS = {
     "sobre", "contato", "home", "inicio", "quem-sou", "biografia", "perfil",
-    "login", "privacidade", "termos", "imprensa", "noticias", "blog",
+    "login", "privacidade", "termos", "imprensa", "noticias", "blog", "artigos",
     "propostas", "projetos", "programa", "agenda",
 }
 
