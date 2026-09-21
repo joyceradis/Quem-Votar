@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Cruise-mode health gate and batching report for #35.
+"""Wartime health gate and batching report for #35.
 
 This script is intentionally non-editorial. It never approves, promotes, or
 classifies political evidence. It only checks operational provenance invariants
@@ -145,9 +145,9 @@ def build_report(
 
     return {
         "version": "1.0.0",
-        "mode": "cruise",
+        "mode": "wartime",
         "semantics": (
-            "Operational health and batching report only. No political evidence "
+            "Wartime operational health and batching report only. No political evidence "
             "is approved, promoted, ranked, or reclassified by this report."
         ),
         "alert_policy": {
