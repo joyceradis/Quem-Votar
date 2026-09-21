@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "captured_at": "2026-09-21T22:37:17.762039+00:00",
+  "captured_at": "2026-09-21T22:42:54.457871+00:00",
   "semantics": "Snapshot factual TSE transportado por páginas estáticas do MeuVoto porque os endpoints oficiais retornam HTTP 403 ao runner. Não contém ranking, inferência ou conteúdo editorial.",
   "source": {
     "institution": "TSE",
