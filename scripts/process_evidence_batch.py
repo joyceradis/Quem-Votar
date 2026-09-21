@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
@@ -179,21 +180,36 @@ def run_batch(
         entry = states.get(sid, {})
         force = sid in reprocess_source_ids or clean(item.get("candidate_id")) in reprocess_candidate_ids
         attempts_before = int(entry.get("attempts", 0) or 0)
+        previous_status = clean(entry.get("status"))
+        previous_error = clean(entry.get("last_error"))
+        snapshot_transport_upgrade = (
+            isinstance(item.get("institutional_snapshot"), dict)
+            and previous_status == "failed"
+            and (
+                "HTTP 429" in previous_error
+                or re.search(r"HTTP 5\\d\\d", previous_error)
+                or "falha de rede" in previous_error.casefold()
+                or "timeout" in previous_error.casefold()
+            )
+        )
 
-        if not force and clean(entry.get("status")) == "collected":
+        if not force and previous_status == "collected":
             skipped_collected += 1
             continue
-        if not force and clean(entry.get("status")) in {"quarantined", "rejected"}:
+        if not force and previous_status in {"quarantined", "rejected"}:
             skipped_permanent += 1
             continue
-        if not force and attempts_before >= max_attempts:
+        if not force and attempts_before >= max_attempts and not snapshot_transport_upgrade:
             skipped_exhausted += 1
             continue
 
-        remaining = retries_per_run if force else min(
-            retries_per_run, max(1, max_attempts - attempts_before)
+        effective_force = force or snapshot_transport_upgrade
+        remaining = 1 if snapshot_transport_upgrade else (
+            retries_per_run if force else min(
+                retries_per_run, max(1, max_attempts - attempts_before)
+            )
         )
-        eligible.append((sid, item, force, remaining))
+        eligible.append((sid, item, effective_force, remaining))
 
     # Fair batching: round-robin by SQ_CANDIDATO so a candidate with hundreds
     # of institutional documents cannot monopolize one processing cycle.
