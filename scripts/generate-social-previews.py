@@ -120,7 +120,7 @@ def render_preview(
 <meta property="og:url" content="{esc(preview_url)}">
 {image_meta}<link rel="canonical" href="{esc(profile_url)}">
 <meta http-equiv="refresh" content="0; url={esc(profile_url)}">
-<title>{esc(title)}</title>
+<title>Quem Votar?</title>
 </head>
 <body></body>
 </html>
