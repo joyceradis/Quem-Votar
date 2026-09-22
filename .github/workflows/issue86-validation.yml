@@ -1,4 +1,4 @@
-# Checkpoint: validar snapshot pós-merge issue86-generated 1cc9b99
+# Checkpoint: revalidar snapshot #86 após merge de main/PR #104
 name: Issue 86 — gates do snapshot materializado
 
 on:
