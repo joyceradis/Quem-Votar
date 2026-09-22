@@ -16,6 +16,18 @@ sys.modules[SPEC.name] = sync
 assert SPEC.loader is not None
 SPEC.loader.exec_module(sync)
 
+BOOTSTRAP_MODULE_PATH = (
+    Path(__file__).resolve().parents[1] / "scripts" / "bootstrap-tse-enrichment.py"
+)
+BOOTSTRAP_SPEC = importlib.util.spec_from_file_location(
+    "bootstrap_tse_enrichment_issue86",
+    BOOTSTRAP_MODULE_PATH,
+)
+bootstrap = importlib.util.module_from_spec(BOOTSTRAP_SPEC)
+sys.modules[BOOTSTRAP_SPEC.name] = bootstrap
+assert BOOTSTRAP_SPEC.loader is not None
+BOOTSTRAP_SPEC.loader.exec_module(bootstrap)
+
 
 def zip_csv(name: str, body: str) -> bytes:
     data = io.BytesIO()
@@ -25,6 +37,44 @@ def zip_csv(name: str, body: str) -> bytes:
 
 
 class TseEnrichmentTests(unittest.TestCase):
+    def test_bootstrap_social_links_normalize_query_and_deduplicate_real_case(self):
+        html = """
+        <h2 id="canais">Canais</h2>
+        <ul class="canais">
+          <li><a href="https://instagram.com/cezar.lazaroo?IGSH=MTDJEDJHODN0CMP6YG==">Instagram 1</a></li>
+          <li><a href="https://instagram.com/cezar.lazaroo?igsh=mtdjedjhodn0cmp6yg==">Instagram 2</a></li>
+        </ul>
+        <h2 id="historico">Histórico</h2>
+        """
+        self.assertEqual(
+            ["https://instagram.com/cezar.lazaroo?igsh=MTDJEDJHODN0CMP6YG=="],
+            bootstrap.extract_social_links(html),
+        )
+
+    def test_bootstrap_history_exposes_uf_from_official_divulga_url(self):
+        html = """
+        <h2 id="historico">Histórico</h2>
+        <table>
+          <caption>Candidaturas anteriores desta pessoa</caption>
+          <tbody>
+            <tr>
+              <td>2020</td>
+              <td>Vereador</td>
+              <td>REPUBLICANOS</td>
+              <td>Pancas</td>
+              <td>96</td>
+              <td>—</td>
+              <td>Suplente</td>
+              <td><a href="https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001208438/2020/56790">TSE</a></td>
+            </tr>
+          </tbody>
+        </table>
+        """
+        records = bootstrap.extract_history(html)
+        self.assertEqual(1, len(records))
+        self.assertEqual("Pancas", records[0]["location"])
+        self.assertEqual("ES", records[0]["uf"])
+
     def test_reads_es_partition_and_provenance(self):
         raw = zip_csv(
             "bem_candidato_2026_ES.csv",
