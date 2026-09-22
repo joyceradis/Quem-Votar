@@ -58,7 +58,10 @@ class StaticSocialPreviewTests(unittest.TestCase):
             html,
         )
         self.assertEqual(1, html.count('property="og:image"'))
-        self.assertIn("imagem institucional neutra", html)
+        self.assertIn(
+            'property="og:image:alt" content="Imagem de compartilhamento da candidatura"',
+            html,
+        )
 
     def test_malformed_photo_url_uses_neutral_fallback(self) -> None:
         row = candidate("80000000004")
@@ -69,6 +72,10 @@ class StaticSocialPreviewTests(unittest.TestCase):
             html,
         )
         self.assertFalse(previews.is_valid_https_url(row["photo_url"]))
+        self.assertIn(
+            'property="og:image:alt" content="Imagem de compartilhamento da candidatura"',
+            html,
+        )
 
     def test_http_photo_url_uses_neutral_fallback(self) -> None:
         row = candidate("80000000005")
@@ -79,6 +86,10 @@ class StaticSocialPreviewTests(unittest.TestCase):
             html,
         )
         self.assertFalse(previews.is_valid_https_url(row["photo_url"]))
+        self.assertIn(
+            'property="og:image:alt" content="Imagem de compartilhamento da candidatura"',
+            html,
+        )
 
     def test_https_photo_url_remains_candidate_specific(self) -> None:
         row = candidate("80000000006")
@@ -89,6 +100,10 @@ class StaticSocialPreviewTests(unittest.TestCase):
             html,
         )
         self.assertNotIn("og-fallback-neutral.png", html)
+        self.assertIn(
+            'property="og:image:alt" content="Imagem de compartilhamento da candidatura"',
+            html,
+        )
 
     def test_generate_is_one_to_one_by_sq_candidato(self) -> None:
         rows = [
