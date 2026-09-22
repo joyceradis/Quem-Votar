@@ -3,7 +3,6 @@
   const STORAGE_KEY='qv_compare';
   const MAX=3;
   const page=document.body?.dataset?.page||'';
-  const appSrc='app.js?v=5.5.2';
 
   function unique(ids){
     return [...new Set((ids||[]).map(String).map(v=>v.trim()).filter(Boolean))];
@@ -95,19 +94,12 @@
     },true);
     new MutationObserver(syncA11y).observe(document.body,{childList:true,subtree:true});
   }
-  function loadApp(){
-    const script=document.createElement('script');
-    script.src=appSrc;
-    script.defer=true;
-    document.body.appendChild(script);
-  }
 
   (async()=>{
     window.__qvValidCompareIds=await validIds();
     write(read());
     sanitizeCompareUrl(window.__qvValidCompareIds);
     installGuards();
-    loadApp();
     setTimeout(syncA11y,0);
   })();
 })();
