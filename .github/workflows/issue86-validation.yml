@@ -1,0 +1,35 @@
+name: Issue 86 — gates do snapshot materializado
+
+on:
+  push:
+    branches:
+      - data/issue-86-tse-enrichment
+    paths:
+      - data/generated/meta.json
+      - scripts/validate-tse-enrichment-snapshot.py
+      - .github/workflows/issue86-validation.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: issue-86-validation
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout snapshot já materializado
+        uses: actions/checkout@v4
+        with:
+          ref: data/issue-86-tse-enrichment
+
+      - name: Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Rodar os quatro gates da #86
+        run: python scripts/validate-tse-enrichment-snapshot.py
