@@ -6,6 +6,8 @@ não altera snapshots e não produz classificações políticas.
 """
 from __future__ import annotations
 
+import html
+import importlib.util
 import json
 import re
 from pathlib import Path
@@ -13,6 +15,8 @@ from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data" / "generated"
+SOCIAL_GENERATOR_PATH = ROOT / "scripts" / "generate-social-previews.py"
+OG_META_RE = re.compile(r'<meta property="(og:[^"]+)" content="([^"]*)">')
 
 REQUIRED_PAGES = {
     "index.html": 'data-page="home"',
@@ -39,6 +43,20 @@ def is_valid_https_url(value) -> bool:
         return False
     parsed = urlsplit(raw)
     return parsed.scheme.lower() == "https" and bool(parsed.netloc)
+
+
+def load_social_generator():
+    spec = importlib.util.spec_from_file_location(
+        "social_preview_generator", SOCIAL_GENERATOR_PATH
+    )
+    assert spec and spec.loader, "gerador canônico de preview social não carregável"
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def og_meta(html_text: str) -> dict[str, str]:
+    return dict(OG_META_RE.findall(html_text))
 
 
 def main() -> None:
@@ -184,8 +202,36 @@ def main() -> None:
     } | {
         str(row.get("tse_id")): "estadual" for row in estadual
     }
+    candidate_record = {}
+    for row in federal:
+        candidate_record[str(row.get("tse_id"))] = {**row, "_kind": "federal"}
+    for row in estadual:
+        candidate_record[str(row.get("tse_id"))] = {**row, "_kind": "estadual"}
+
+    social_generator = load_social_generator()
+    individual_og_images = 0
+    fallback_og_images = 0
+    og_drift_ids = []
+
     for cid in ids:
         preview = read(social_root / cid / "index.html")
+        candidate = candidate_record[cid]
+        expected_image, uses_candidate_photo = social_generator.resolve_og_image(
+            candidate,
+            site_base=social_generator.DEFAULT_SITE_BASE,
+        )
+        expected_preview = social_generator.render_preview(
+            candidate,
+            site_base=social_generator.DEFAULT_SITE_BASE,
+        )
+        actual_og = og_meta(preview)
+        expected_og = og_meta(expected_preview)
+
+        if uses_candidate_photo:
+            individual_og_images += 1
+        else:
+            fallback_og_images += 1
+
         assert f'/social/{cid}/' in preview, f"{cid}: og:url social ausente"
         assert f"id={cid}" in preview, f"{cid}: redirect para ficha ausente"
         assert f"cargo={candidate_kind[cid]}" in preview, f"{cid}: cargo do redirect divergente"
@@ -194,15 +240,25 @@ def main() -> None:
         assert preview.count('property="og:image"') == 1, (
             f"{cid}: preview deve conter exatamente um og:image"
         )
+        assert actual_og.get("og:image") == html.escape(expected_image, quote=True), (
+            f"{cid}: og:image diverge de resolve_og_image() do gerador canônico"
+        )
         assert preview.count('property="og:image:alt"') == 1, (
             f"{cid}: preview deve conter exatamente um og:image:alt"
         )
         assert (
             'property="og:image:alt" content="Imagem de compartilhamento da candidatura"' in preview
         ), f"{cid}: og:image:alt deve ser uniforme"
+        if actual_og != expected_og:
+            og_drift_ids.append(cid)
         assert "googletagmanager.com" not in preview, (
             f"{cid}: wrapper social não deve carregar tracker"
         )
+
+    assert not og_drift_ids, (
+        "drift entre og:* materializado e render_preview() canônico; "
+        f"total={len(og_drift_ids)} amostra={og_drift_ids[:5]}"
+    )
 
     source_entries = topic_evidence_source.get("entries") or []
     allowed_evidence_types = {"proposta", "declaração", "atuação"}
@@ -264,6 +320,7 @@ def main() -> None:
         f"assets v{next(iter(versions))} | "
         f"{len(federal)} federais | {len(estadual)} estaduais | "
         f"{valid_photo_urls}/{len(rows)} URLs HTTPS de foto | "
+        f"OG individual={individual_og_images} fallback={fallback_og_images} drift={len(og_drift_ids)} | "
         f"{linked_federal} vínculos Câmara | {linked_ales} evidências ALES | "
         f"{len(topic_ids)} temas de política pública | {len(source_entries)} evidências temáticas"
     )
