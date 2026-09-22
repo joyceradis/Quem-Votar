@@ -49,6 +49,62 @@ class StaticSocialPreviewTests(unittest.TestCase):
         self.assertNotIn("score", html.lower())
         self.assertNotIn("recomend", html.lower())
 
+    def test_missing_photo_uses_neutral_fallback_and_keeps_og_image(self) -> None:
+        row = candidate("80000000003")
+        row["photo_url"] = None
+        html = previews.render_preview(row)
+        self.assertIn(
+            'property="og:image" content="https://joyceradis.github.io/Quem-Votar/assets/og-fallback-neutral.png"',
+            html,
+        )
+        self.assertEqual(1, html.count('property="og:image"'))
+        self.assertIn(
+            'property="og:image:alt" content="Imagem de compartilhamento da candidatura"',
+            html,
+        )
+
+    def test_malformed_photo_url_uses_neutral_fallback(self) -> None:
+        row = candidate("80000000004")
+        row["photo_url"] = "not-a-url"
+        html = previews.render_preview(row)
+        self.assertIn(
+            'content="https://joyceradis.github.io/Quem-Votar/assets/og-fallback-neutral.png"',
+            html,
+        )
+        self.assertFalse(previews.is_valid_https_url(row["photo_url"]))
+        self.assertIn(
+            'property="og:image:alt" content="Imagem de compartilhamento da candidatura"',
+            html,
+        )
+
+    def test_http_photo_url_uses_neutral_fallback(self) -> None:
+        row = candidate("80000000005")
+        row["photo_url"] = "http://example.org/photo.jpg"
+        html = previews.render_preview(row)
+        self.assertIn(
+            'content="https://joyceradis.github.io/Quem-Votar/assets/og-fallback-neutral.png"',
+            html,
+        )
+        self.assertFalse(previews.is_valid_https_url(row["photo_url"]))
+        self.assertIn(
+            'property="og:image:alt" content="Imagem de compartilhamento da candidatura"',
+            html,
+        )
+
+    def test_https_photo_url_remains_candidate_specific(self) -> None:
+        row = candidate("80000000006")
+        self.assertTrue(previews.is_valid_https_url(row["photo_url"]))
+        html = previews.render_preview(row)
+        self.assertIn(
+            f'property="og:image" content="{row["photo_url"]}"',
+            html,
+        )
+        self.assertNotIn("og-fallback-neutral.png", html)
+        self.assertIn(
+            'property="og:image:alt" content="Imagem de compartilhamento da candidatura"',
+            html,
+        )
+
     def test_generate_is_one_to_one_by_sq_candidato(self) -> None:
         rows = [
             candidate("80000000001", "federal"),

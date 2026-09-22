@@ -14,17 +14,38 @@ import re
 import shutil
 from pathlib import Path
 from typing import Any
-from urllib.parse import quote
+from urllib.parse import quote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 GENERATED = ROOT / "data" / "generated"
 DEFAULT_OUTPUT = ROOT / "social"
 DEFAULT_SITE_BASE = "https://joyceradis.github.io/Quem-Votar/"
+FALLBACK_OG_IMAGE_PATH = "assets/og-fallback-neutral.png"
 ID_RE = re.compile(r"^\d+$")
 
 
 def clean(value: Any) -> str:
     return "" if value is None else str(value).strip()
+
+
+def is_valid_https_url(value: Any) -> bool:
+    raw = clean(value)
+    if not raw:
+        return False
+    parsed = urlsplit(raw)
+    return parsed.scheme.lower() == "https" and bool(parsed.netloc)
+
+
+def resolve_og_image(
+    candidate: dict[str, Any],
+    *,
+    site_base: str,
+) -> tuple[str, bool]:
+    photo_url = clean(candidate.get("photo_url"))
+    if is_valid_https_url(photo_url):
+        return photo_url, True
+    base = site_base.rstrip("/") + "/"
+    return f"{base}{FALLBACK_OG_IMAGE_PATH}", False
 
 
 def load_candidates() -> list[dict[str, Any]]:
@@ -95,17 +116,17 @@ def render_preview(
     title = f"{name} · Quem Votar?"
     description = factual_description(candidate)
     preview_url, profile_url = candidate_urls(candidate, site_base=site_base)
-    photo_url = clean(candidate.get("photo_url"))
-    if photo_url and not photo_url.startswith("https://"):
-        photo_url = ""
+    image_url, _uses_candidate_photo = resolve_og_image(
+        candidate,
+        site_base=site_base,
+    )
 
     esc = lambda value: html.escape(str(value), quote=True)
-    image_meta = ""
-    if photo_url:
-        image_meta = (
-            f'<meta property="og:image" content="{esc(photo_url)}">\n'
-            f'<meta property="og:image:alt" content="Foto pública de {esc(name)}">\n'
-        )
+    image_alt = "Imagem de compartilhamento da candidatura"
+    image_meta = (
+        f'<meta property="og:image" content="{esc(image_url)}">\n'
+        f'<meta property="og:image:alt" content="{esc(image_alt)}">\n'
+    )
 
     return f"""<!doctype html>
 <html lang="pt-BR">
