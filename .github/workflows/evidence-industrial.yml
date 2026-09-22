@@ -207,6 +207,7 @@ jobs:
 
             if [[ "$queued" -eq 0 ]]; then
               echo "wartime_backlog_drained=true" | tee -a "$OUT/processing.log"
+              stop_reason=drained
               break
             fi
 
@@ -216,10 +217,29 @@ jobs:
             fi
 
             if [[ "$cycle" -ge "$max_cycles" ]]; then
-              echo "::error::Wartime safety cap reached before backlog drain."
-              exit 1
+              echo "::notice::Wartime budget reached; validating partial state for resume."
+              stop_reason=budget_exhausted
+              break
             fi
           done
+
+          python - "$OUT/drain-status.json" "$stop_reason" "$cycle" "$eligible" <<'PYCODE'
+          import json
+          import os
+          import sys
+          from pathlib import Path
+
+          Path(sys.argv[1]).write_text(json.dumps({
+              "stop_reason": sys.argv[2],
+              "backlog_drained": sys.argv[2] == "drained",
+              "cycles": int(sys.argv[3]),
+              "eligible_before_last_batch": int(sys.argv[4]),
+              "base_sha": os.environ["GITHUB_SHA"],
+              "run_id": os.environ["GITHUB_RUN_ID"],
+              "run_attempt": os.environ["GITHUB_RUN_ATTEMPT"],
+              "semantics": "Partial progress is resumable only after downstream validation. Not canonical evidence."
+          }, indent=2) + "\n", encoding="utf-8")
+          PYCODE
 
       - name: Materialize persistent processing failures
         shell: bash
