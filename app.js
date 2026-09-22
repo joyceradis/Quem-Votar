@@ -81,6 +81,10 @@ async function loadCore(){
     getJSON(DATA.meta,{})
   ]);
 
+  if(federal.length&&estadual.length){
+    validCompareIds=[...federal,...estadual].map(item=>String(item.tse_id));
+    setCompareIds(getCompareIds());
+  }
   return{
     federal,
     estadual,
@@ -186,16 +190,41 @@ function photoMarkup(candidate,profile=false){
   return `<img${imageClass} src="${esc(source)}" alt="Foto de ${esc(name)}" loading="${profile?"eager":"lazy"}" onerror="this.outerHTML='<div class=&quot;${fallbackClass}&quot;>Imagem não disponível</div>'">`;
 }
 
+let validCompareIds=null;
+
+function announceComparison(message){
+  const status=$("compareStatus");
+  if(status)status.textContent=message;
+}
+
 function getCompareIds(){
   try{
-    return JSON.parse(localStorage.getItem("qv_compare")||"[]").map(String).slice(0,3);
+    return normalizeCompareIds(JSON.parse(localStorage.getItem("qv_compare")||"[]"),validCompareIds);
   }catch{
     return [];
   }
 }
 
+function normalizeCompareIds(ids,validIds=null){
+  if(!Array.isArray(ids))return [];
+  const allowed=validIds?new Set(validIds.map(String)):null;
+  return [...new Set(ids.map(String))]
+    .filter(id=>!allowed||allowed.has(id))
+    .slice(0,3);
+}
+
+function comparisonState(ids){
+  const count=normalizeCompareIds(ids).length;
+  return{
+    count,
+    canOpen:count>=2,
+    atLimit:count===3,
+    message:count===1?"Escolha mais 1 pessoa":count===3?"Limite de 3 atingido":`${count} selecionados`
+  };
+}
+
 function setCompareIds(ids){
-  localStorage.setItem("qv_compare",JSON.stringify([...new Set(ids.map(String))].slice(0,3)));
+  localStorage.setItem("qv_compare",JSON.stringify(normalizeCompareIds(ids,validCompareIds)));
 }
 
 function toggleCompare(id){
@@ -203,8 +232,16 @@ function toggleCompare(id){
   const ids=getCompareIds();
   const index=ids.indexOf(key);
 
-  if(index>=0)ids.splice(index,1);
-  else if(ids.length<3)ids.push(key);
+  if(validCompareIds&&!validCompareIds.includes(key))return ids;
+  if(index>=0){
+    ids.splice(index,1);
+    announceComparison("Candidatura removida. "+comparisonState(ids).message);
+  }else if(ids.length<3){
+    ids.push(key);
+    announceComparison("Candidatura adicionada. "+comparisonState(ids).message);
+  }else{
+    announceComparison("Limite de 3 atingido. Remova uma candidatura para escolher outra.");
+  }
 
   setCompareIds(ids);
   return ids;
@@ -245,6 +282,8 @@ async function initHome(){
 function candidateCard(candidate,kind,selectedIds){
   const name=candidate.ballot_name||candidate.full_name||"Nome não disponível";
   const selected=selectedIds.includes(String(candidate.tse_id));
+  const limited=!selected&&comparisonState(selectedIds).atLimit;
+  const compareLabel=selected?"Remover":limited?"Limite de 3":"Comparar";
   const profileUrl=`candidato.html?id=${encodeURIComponent(candidate.tse_id)}&cargo=${kind}`;
   const evidence=topicEvidence(candidate);
   const proposalCount=evidence.length;
@@ -273,9 +312,7 @@ function candidateCard(candidate,kind,selectedIds){
       </div>
       <div class="candidate-actions">
         <a class="profile-link" href="${profileUrl}">Entender</a>
-        <button class="compare-button${selected?" selected":""}" data-compare-id="${esc(candidate.tse_id)}" type="button">
-          ${selected?"Remover":"Comparar"}
-        </button>
+        <button class="compare-button${selected?" selected":""}" data-compare-id="${esc(candidate.tse_id)}" type="button" aria-pressed="${selected}" aria-disabled="${limited}"${limited?" disabled":""}>${compareLabel}</button>
       </div>
     </article>
   `;
@@ -323,9 +360,19 @@ function updateCompareTray(){
   if(!tray)return;
 
   const ids=getCompareIds();
+  const state=comparisonState(ids);
   tray.hidden=!ids.length;
-  $("compareCount").textContent=`${ids.length} selecionado${ids.length===1?"":"s"}`;
-  $("openCompare").href=`comparar.html?ids=${encodeURIComponent(ids.join(","))}`;
+  $("compareCount").textContent=state.message;
+  const openCompare=$("openCompare");
+  openCompare.textContent=state.canOpen?"Comparar":"Escolha mais 1";
+  openCompare.setAttribute("aria-disabled",String(!state.canOpen));
+  if(state.canOpen){
+    openCompare.href=`comparar.html?ids=${encodeURIComponent(ids.join(","))}`;
+    openCompare.removeAttribute("tabindex");
+  }else{
+    openCompare.removeAttribute("href");
+    openCompare.setAttribute("tabindex","-1");
+  }
 }
 
 async function initCandidates(){
@@ -448,8 +495,10 @@ async function initCandidates(){
 
         $("cards").querySelectorAll("[data-compare-id]").forEach(button=>{
       button.addEventListener("click",()=>{
-        toggleCompare(button.dataset.compareId);
+        const id=button.dataset.compareId;
+        toggleCompare(id);
         render();
+        Array.from($("cards").querySelectorAll("[data-compare-id]")).find(node=>node.dataset.compareId===id)?.focus();
       });
     });
 
@@ -504,6 +553,12 @@ async function initCandidates(){
   $("clearCompare").addEventListener("click",()=>{
     setCompareIds([]);
     render();
+    announceComparison("Seleção limpa. Escolha pelo menos 2 candidaturas.");
+    $("searchInput").focus();
+  });
+
+  $("openCompare").addEventListener("click",event=>{
+    if(!comparisonState(getCompareIds()).canOpen)event.preventDefault();
   });
 
   populateParties();
@@ -662,6 +717,11 @@ async function initProfile(){
     ...thematicEvidence.filter(item=>item.source_url).map(item=>({name:topicById(item.topic_id)?.label||"Proposta/declaração",detail:item.source_publisher||item.published_at||"",url:item.source_url}))
   ].filter(Boolean);
 
+  const profileCompareIds=getCompareIds();
+  const profileSelected=profileCompareIds.includes(String(candidate.tse_id));
+  const profileLimited=!profileSelected&&comparisonState(profileCompareIds).atLimit;
+  const profileCompareLabel=profileSelected?"Remover da comparação":profileLimited?"Limite de 3 atingido":"Comparar";
+
   $("profileMount").className="";
   $("profileMount").innerHTML=`
     <a class="back-link" href="candidatos.html?cargo=${kind}">Voltar para pessoas</a>
@@ -675,7 +735,7 @@ async function initProfile(){
         <div class="identity-line"><strong>${esc(candidate.party||"Partido não informado")}</strong><span>nº ${esc(candidate.number||"—")}</span></div>
         ${electoralFactsContent}
         <div class="profile-actions">
-          <button id="profileCompare" class="profile-compare" type="button" data-candidate-id="${esc(candidate.tse_id)}">${getCompareIds().includes(String(candidate.tse_id))?"Remover da comparação":"Comparar"}</button>
+          <button id="profileCompare" class="profile-compare" type="button" data-candidate-id="${esc(candidate.tse_id)}" aria-pressed="${profileSelected}" aria-disabled="${profileLimited}"${profileLimited?" disabled":""}>${profileCompareLabel}</button>
           <button id="profileShare" class="profile-share" type="button">Compartilhar perfil</button>
         </div>
       </div>
@@ -694,7 +754,9 @@ async function initProfile(){
 
   $("profileCompare")?.addEventListener("click",event=>{
     const ids=toggleCompare(event.currentTarget.dataset.candidateId);
-    event.currentTarget.textContent=ids.includes(String(candidate.tse_id))?"Remover da comparação":"Comparar";
+    const selected=ids.includes(String(candidate.tse_id));
+    event.currentTarget.textContent=selected?"Remover da comparação":"Comparar";
+    event.currentTarget.setAttribute("aria-pressed",String(selected));
   });
 
   $("profileShare")?.addEventListener("click",async event=>{
@@ -720,15 +782,22 @@ async function initCompare(){
   TOPICS=topics;
   applyGlobalMeta(meta);
 
+  if(!all.length){
+    $("compareMount").textContent="Não foi possível carregar as candidaturas. Tente novamente.";
+    return;
+  }
   const fromUrl=(params().get("ids")||"").split(",").filter(Boolean).map(String);
-  const ids=(fromUrl.length?fromUrl:getCompareIds()).slice(0,3);
+  const validIds=all.map(candidate=>String(candidate.tse_id));
+  const ids=normalizeCompareIds(fromUrl.length?fromUrl:getCompareIds(),validIds);
   const selected=ids.map(id=>all.find(candidate=>String(candidate.tse_id)===id)).filter(Boolean);
 
-  if(!selected.length){
+  setCompareIds(ids);
+
+  if(selected.length<2){
     $("compareMount").innerHTML=`
       <div class="compare-empty">
-        <h2>Ninguém selecionado.</h2>
-        <p>Abra a lista e escolha até três pessoas para comparar.</p>
+        <h2>${selected.length?"Escolha mais 1 pessoa.":"Ninguém selecionado."}</h2>
+        <p>Abra a lista e escolha de duas a três pessoas para comparar.</p>
         <a href="candidatos.html?cargo=federal">Escolher pessoas</a>
       </div>
     `;
