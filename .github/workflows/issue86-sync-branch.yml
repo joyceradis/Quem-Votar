@@ -1,0 +1,77 @@
+name: Issue 86 — validar enriquecimento TSE na branch
+
+on:
+  push:
+    branches:
+      - data/issue-86-tse-enrichment
+    paths:
+      - scripts/sync-data.py
+      - scripts/bootstrap-tse-enrichment.py
+      - tests/test_tse_enrichment.py
+      - .github/workflows/issue86-sync-branch.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: issue-86-tse-enrichment
+  cancel-in-progress: false
+
+jobs:
+  sync-branch:
+    if: ${{ !contains(github.event.head_commit.message, '[issue86-generated]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      PYTHONPYCACHEPREFIX: /tmp/quem-votar-pycache
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: data/issue-86-tse-enrichment
+
+      - name: Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências
+        run: python -m pip install -r requirements-evidence.txt
+
+      - name: Validar sintaxe e regressões de código
+        run: |
+          python -m py_compile scripts/sync-data.py scripts/bootstrap-tse-enrichment.py
+          python -m unittest discover -s tests -p 'test_sync_data.py' -v
+          python -m unittest discover -s tests -p 'test_tse_enrichment.py' -v
+
+      - name: Gerar bootstrap TSE versionado
+        run: python scripts/bootstrap-tse-enrichment.py
+
+      - name: Coletar snapshot oficial TSE
+        run: python scripts/sync-data.py
+
+      - name: Validar suíte determinística pós-geração
+        run: python -m unittest discover -s tests -p 'test_*.py' -v
+
+      - name: Auditar snapshot
+        run: python scripts/audit-site.py
+
+      - name: Gravar apenas data/generated na branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          INVALID="$(git status --porcelain | awk '{print $2}' | grep -Ev '^(data/generated/|data/reference/tse-enrichment-bootstrap.json$)' || true)"
+          if [[ -n "$INVALID" ]]; then
+            echo "::error::sync alterou arquivo fora do snapshot permitido da #86"
+            printf '%s\n' "$INVALID"
+            exit 1
+          fi
+          if git diff --quiet -- data/generated data/reference/tse-enrichment-bootstrap.json; then
+            echo "Nenhuma mudança no snapshot."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/generated data/reference/tse-enrichment-bootstrap.json
+          git commit -m "data: snapshot TSE enriquecido da #86 [issue86-generated]"
+          git push origin HEAD:data/issue-86-tse-enrichment

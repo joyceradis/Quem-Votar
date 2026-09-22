@@ -1,8 +1,8 @@
 # Checkpoint atual — V5.5
 
-Data: 2026-09-21.
+Data: 2026-09-22.
 
-Estado auditado contra `main` em `49a46286e1b54de970cf71fe9d6c8c5ca2dfce57`.
+Estado auditado contra `main` em `3f7a40009ebda1f0ed398494134c1d47709c23c2`.
 
 ## Estado canônico
 
@@ -138,27 +138,48 @@ Os arquivos versionados de staging no repositório não equivalem ao estado oper
 
 ## Enriquecimento TSE — #86
 
-A #86 permanece **em andamento** e fora do snapshot canônico.
+A #86 permanece **em andamento**, com integração preparada no **PR #105**, mas ainda sem promoção para `main`.
 
-Cobertura observada na branch de trabalho:
+A branch `data/issue-86-tse-enrichment` incorporou `main` por merge explícito no commit `ec24d9234be823bd73f6c0534c67de7fbf90083c`, preservando o histórico RED/fix/GREEN da validação.
+
+Snapshot pós-merge materializado pelo pipeline no commit `1cc9b994ec3dcf99fb224804ae05a3af8f22715c`:
 
 - 547 candidaturas processadas;
 - 356 candidaturas com bens;
 - 1.513 registros de bens;
 - 447 candidaturas com redes;
-- 1.266 links;
+- 1.253 links após normalização e deduplicação;
 - 376 candidaturas com histórico;
 - 1.138 registros históricos.
 
 Esses números são cobertura de dados, não interpretação política.
 
-O transporte de contingência deve declarar explicitamente a cadeia:
+A proveniência preserva explicitamente a cadeia:
 
 `TSE = fonte factual primária → bootstrap versionado = transporte contingencial → freshness + hashes`.
 
-O run `35663835538` falhou e não é prova de promoção. A correção de isolamento de fixture foi aplicada depois, e o run de branch `35663986139` concluiu verde.
+O transporte contingencial é identificado como páginas estáticas do MeuVoto; a indisponibilidade HTTP 403 das rotas oficiais TSE permanece registrada separadamente e não altera o TSE como fonte factual primária.
 
-Nenhum dado da #86 está autorizado como canônico até patrimônio, redes, histórico e PII/freshness passarem pelos gates separados e um PR de promoção explícito ser aprovado.
+Contratos preservados no snapshot pós-merge:
+
+- patrimônio com contagem e soma auditáveis;
+- redes normalizadas e deduplicadas antes da persistência;
+- histórico com chave explícita `year/office/uf/party/result`, preservando `location` quando a granularidade é municipal;
+- ausência de CPF, título eleitoral e e-mail pessoal nos registros públicos;
+- `registration_status = "not_available"` para sentinelas TSE, sem inferência jurídica.
+
+Validação pós-merge:
+
+- bootstrap/sync + suíte determinística + auditoria: run `35683821238` — **PASS**;
+- provenance: **PASS**;
+- Gate A — patrimônio: **PASS**;
+- Gate B — redes: **PASS**, com `duplicatas_casefold=0`;
+- Gate C — histórico: **PASS**, sem ausência de `year/office/uf/party/result`;
+- Gate D — PII: **PASS**, com zero hits;
+- execução conjunta dos cinco gates: run `35683935859` — **OVERALL PASS**;
+- Quality pós-rematerialização: run `35683939904` — **PASS**.
+
+O estado acima autoriza avaliação do PR #105. Merge para `main` continua condicionado a autorização explícita separada.
 
 ## Sync eleitoral — #88
 
@@ -212,7 +233,7 @@ O endpoint clássico de branch protection pode retornar 403 para a integração 
 - #2 — expansão de propostas e declarações com fonte;
 - #34 — tracking de escala da pipeline de evidências;
 - #35 — worker contínuo War Time;
-- #86 — bens, redes e histórico TSE em staging/validação;
+- #86 — bens, redes e histórico TSE validados no PR #105, aguardando autorização de merge;
 - #88 — prova operacional pós-merge do sync;
 
 ### Ainda não consolidada
@@ -274,5 +295,5 @@ A camada de sustentabilidade permanece isolada e não pode modificar `topic-evid
 Com o enforcement da #95 consolidado, a ordem volta para:
 
 1. resolver a prova operacional pendente da #88 quando houver novo run;
-2. concluir os gates da #86 sem promoção prematura;
+2. avaliar o PR #105 da #86; os cinco gates estão verdes e o merge continua sujeito a autorização explícita;
 3. seguir a expansão de cobertura temática da #2/#35 sob os contratos do freeze.
