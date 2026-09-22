@@ -9,6 +9,7 @@ canonical data.
 from __future__ import annotations
 
 import csv
+import http.client
 import hashlib
 import json
 import os
@@ -195,6 +196,17 @@ def download_bulk_csv(
         except TimeoutError as exc:
             tmp_path.unlink(missing_ok=True)
             error = RuntimeError(f"{dataset}-{year}: timeout")
+            if attempt >= attempts:
+                raise error from exc
+        except (
+            ConnectionResetError,
+            http.client.RemoteDisconnected,
+            http.client.IncompleteRead,
+        ) as exc:
+            tmp_path.unlink(missing_ok=True)
+            error = RuntimeError(
+                f"{dataset}-{year}: falha de conexão durante leitura: {exc}"
+            )
             if attempt >= attempts:
                 raise error from exc
         except Exception:

@@ -773,10 +773,9 @@ def run_discovery(
                         "api_fallback_rejections": len(fallback_rejected),
                     }
                 elif has_chamber_candidates and not chamber_sources:
-                    chamber_provenance = {
-                        **chamber_provenance,
-                        "mode": "camara_bulk_daily_zero_matches",
-                    }
+                    raise RuntimeError(
+                        "bulk Câmara retornou zero vínculos para candidaturas com chamber_id"
+                    )
             except Exception as exc:
                 fallback_years = tuple(
                     sorted({int(year) for year in chamber_bulk_years}, reverse=True)
