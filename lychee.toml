@@ -1,0 +1,6 @@
+# Lychee configuration for repository link checks.
+# The issue #86 MeuVoto capture is a frozen source fixture, not a navigable
+# repository page; its relative links belong to the upstream site.
+exclude_path = [
+  '(^|/)data/staging/issue86-meuvoto-sample\.html$',
+]
