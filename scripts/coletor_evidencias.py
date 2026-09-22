@@ -353,7 +353,7 @@ def fetch_bytes(
             return body, final_url, content_type
         except urllib.error.HTTPError as exc:
             error = RuntimeError(f"HTTP {exc.code} ao coletar {url}")
-            is_transient = exc.code == 429 or 500 <= exc.code <= 599
+            is_transient = exc.code in {408, 425, 429} or 500 <= exc.code <= 599
             if not is_transient or attempt >= attempts:
                 raise error from exc
         except urllib.error.URLError as exc:
