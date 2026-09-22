@@ -65,6 +65,15 @@ ALLOWED_SOURCE_KINDS = {
 }
 ALLOWED_DISCOVERY_STATUS = {"seed", "exact_content"}
 
+TRUSTED_CHAMBER_ATTRIBUTION = {
+    "official_author_api",
+    "official_author_bulk",
+}
+TRUSTED_CHAMBER_TRANSPORTS = {
+    "camara_dados_abertos",
+    "camara_bulk_daily",
+}
+
 DUMMY_TEXT_PATTERNS = (
     r"\blorem\s+ipsum\b",
     r"\bdolor\s+sit\s+amet\b",
@@ -315,6 +324,7 @@ def fetch_bytes(
     timeout: int = DEFAULT_TIMEOUT,
     max_bytes: int = MAX_FETCH_BYTES,
     user_agent: str = DEFAULT_USER_AGENT,
+    retries: int = 3,
 ) -> tuple[bytes, str, str]:
     validate_public_https_url(url, resolve_dns=True)
     opener = urllib.request.build_opener(SafeRedirectHandler())
@@ -325,23 +335,43 @@ def fetch_bytes(
             "Accept": "text/html,text/plain,application/xhtml+xml,application/zip;q=0.8,*/*;q=0.2",
         },
     )
-    try:
-        with opener.open(request, timeout=timeout) as response:
-            final_url = response.geturl()
-            validate_public_https_url(final_url, resolve_dns=True)
-            content_type = clean(response.headers.get("Content-Type")).lower()
-            declared = response.headers.get("Content-Length")
-            if declared and declared.isdigit() and int(declared) > max_bytes:
-                raise RuntimeError(f"resposta excede limite de {max_bytes} bytes")
-            body = response.read(max_bytes + 1)
-    except urllib.error.HTTPError as exc:
-        raise RuntimeError(f"HTTP {exc.code} ao coletar {url}") from exc
-    except urllib.error.URLError as exc:
-        raise RuntimeError(f"falha de rede ao coletar {url}: {exc.reason}") from exc
+    attempts = max(1, int(retries))
+    request_timeout = max(1, int(timeout))
+    for attempt in range(1, attempts + 1):
+        try:
+            with opener.open(request, timeout=request_timeout) as response:
+                final_url = response.geturl()
+                validate_public_https_url(final_url, resolve_dns=True)
+                content_type = clean(response.headers.get("Content-Type")).lower()
+                declared = response.headers.get("Content-Length")
+                if declared and declared.isdigit() and int(declared) > max_bytes:
+                    raise RuntimeError(f"resposta excede limite de {max_bytes} bytes")
+                body = response.read(max_bytes + 1)
 
-    if len(body) > max_bytes:
-        raise RuntimeError(f"resposta excede limite de {max_bytes} bytes")
-    return body, final_url, content_type
+            if len(body) > max_bytes:
+                raise RuntimeError(f"resposta excede limite de {max_bytes} bytes")
+            return body, final_url, content_type
+        except urllib.error.HTTPError as exc:
+            error = RuntimeError(f"HTTP {exc.code} ao coletar {url}")
+            is_transient = exc.code == 429 or 500 <= exc.code <= 599
+            if not is_transient or attempt >= attempts:
+                raise error from exc
+        except urllib.error.URLError as exc:
+            error = RuntimeError(f"falha de rede ao coletar {url}: {exc.reason}")
+            if attempt >= attempts:
+                raise error from exc
+        except TimeoutError as exc:
+            error = RuntimeError(f"timeout ao coletar {url}")
+            if attempt >= attempts:
+                raise error from exc
+        except ConnectionError as exc:
+            error = RuntimeError(f"falha de conexão ao coletar {url}: {exc}")
+            if attempt >= attempts:
+                raise error from exc
+
+        time.sleep(min(15, 2 ** (attempt - 1)))
+
+    raise RuntimeError(f"falha de transporte ao coletar {url}")
 
 
 class PageTextExtractor(HTMLParser):
@@ -786,11 +816,11 @@ def collect_institutional_snapshot(
     *,
     candidate: dict[str, Any],
 ) -> dict[str, Any] | None:
-    """Materialize a trusted Câmara draft from the discovery API payload.
+    """Materialize a trusted Câmara draft from an official discovery snapshot.
 
     The public Câmara proposition URL remains the source URL shown to users.
-    This avoids a redundant HTML fetch for data that was already returned by
-    the official idDeputadoAutor API query. No semantic classification occurs.
+    API and official daily-bulk transports are accepted only when authorship is
+    anchored by a Câmara deputy identifier. No semantic classification occurs.
     """
     snapshot = item.get("institutional_snapshot")
     origin = item.get("source_origin") or {}
@@ -798,11 +828,13 @@ def collect_institutional_snapshot(
         return None
     if clean(item.get("source_kind")) != "institutional":
         return None
-    if clean(item.get("attribution_trust")) != "official_author_api":
+    attribution_trust = clean(item.get("attribution_trust"))
+    if attribution_trust not in TRUSTED_CHAMBER_ATTRIBUTION:
         return None
     if clean(origin.get("institution")) != "Câmara dos Deputados":
         return None
-    if clean(snapshot.get("transport")) != "camara_dados_abertos":
+    transport = clean(snapshot.get("transport"))
+    if transport not in TRUSTED_CHAMBER_TRANSPORTS:
         return None
 
     candidate_id = clean(item.get("candidate_id"))
@@ -824,10 +856,17 @@ def collect_institutional_snapshot(
     draft_id = make_draft_id(candidate_id, source_url, content_hash)
 
     notes = clean(item.get("collection_notes"))
-    api_note = (
+    transport_note = (
+        "Materializado do arquivo bulk diário oficial da Câmara já obtido no discovery; "
+        "sem refetch HTML da página de tramitação."
+        if transport == "camara_bulk_daily"
+        else
         "Materializado do snapshot da API oficial da Câmara já obtido no discovery; "
         "sem refetch HTML da página de tramitação."
     )
+    official_themes = snapshot.get("official_themes")
+    if not isinstance(official_themes, list):
+        official_themes = []
     return {
         "draft_id": draft_id,
         "candidate_id": candidate_id,
@@ -842,17 +881,27 @@ def collect_institutional_snapshot(
             clean(item.get("published_at") or snapshot.get("dataApresentacao"))
         ),
         "captured_at": utc_now(),
-        "document_type": "api_json",
+        "document_type": (
+            "bulk_csv" if transport == "camara_bulk_daily" else "api_json"
+        ),
         "page_count": None,
         "source_sha256": source_hash,
         "content_sha256": content_hash,
         "candidate_mentioned": False,
         "raw_excerpt": normalized_text,
         "review_status": "pending",
-        "collection_notes": clean(f"{notes} {api_note}"),
+        "collection_notes": clean(f"{notes} {transport_note}"),
         "source_origin": origin,
-        "attribution_trust": "official_author_api",
+        "attribution_trust": attribution_trust,
         "attribution_basis_hint": clean(item.get("attribution_basis_hint")),
+        "official_document_type": clean(snapshot.get("siglaTipo")),
+        "official_themes": official_themes,
+        "official_proposition_id": clean(
+            snapshot.get("proposition_id") or origin.get("proposition_id")
+        ),
+        "institutional_snapshot_sha256": clean(
+            snapshot.get("bulk_snapshot_sha256")
+        ) or source_hash,
     }
 
 

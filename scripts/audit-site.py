@@ -6,12 +6,17 @@ não altera snapshots e não produz classificações políticas.
 """
 from __future__ import annotations
 
+import html
+import importlib.util
 import json
 import re
 from pathlib import Path
+from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data" / "generated"
+SOCIAL_GENERATOR_PATH = ROOT / "scripts" / "generate-social-previews.py"
+OG_META_RE = re.compile(r'<meta property="(og:[^"]+)" content="([^"]*)">')
 
 REQUIRED_PAGES = {
     "index.html": 'data-page="home"',
@@ -30,6 +35,29 @@ FORBIDDEN_FIELDS = {
 def read(path: Path) -> str:
     assert path.exists(), f"arquivo obrigatório ausente: {path.relative_to(ROOT)}"
     return path.read_text(encoding="utf-8")
+
+
+def is_valid_https_url(value) -> bool:
+    raw = "" if value is None else str(value).strip()
+    if not raw:
+        return False
+    parsed = urlsplit(raw)
+    return parsed.scheme.lower() == "https" and bool(parsed.netloc)
+
+
+def load_social_generator():
+    spec = importlib.util.spec_from_file_location(
+        "social_preview_generator", SOCIAL_GENERATOR_PATH
+    )
+    assert spec and spec.loader, "gerador canônico de preview social não carregável"
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def og_meta(html_text: str) -> dict[str, str]:
+    return dict(OG_META_RE.findall(html_text))
+
 
 def main() -> None:
     versions = set()
@@ -69,6 +97,15 @@ def main() -> None:
     assert "[skip ci]" not in sync_workflow, "snapshot automático não pode pular CI"
     assert "git pull --rebase" not in sync_workflow, "sync não pode rebasear snapshot depois da auditoria"
     assert "python -m unittest discover" in quality_workflow, "Quality precisa executar testes"
+    assert "Exigir checkpoint junto com data/generated" in agent_fence, (
+        "Agent Fence precisa aplicar o acoplamento data/generated -> checkpoint"
+    )
+    assert "docs/CHECKPOINT_CURRENT.md" in agent_fence, (
+        "checkpoint deve participar do gate de proveniência"
+    )
+    assert "data/generated/" in agent_fence, (
+        "Agent Fence precisa detectar mudanças em data/generated"
+    )
     assert "requirements-evidence.txt" in quality_workflow, "Quality precisa instalar dependências do coletor"
     assert "python scripts/audit-site.py" in sync_workflow, "sync precisa auditar o snapshot candidato"
     assert "python -m unittest discover" in sync_workflow, "sync precisa testar antes de exportar snapshot"
@@ -142,6 +179,87 @@ def main() -> None:
     assert all(ids), "registro sem SQ_CANDIDATO"
     assert len(ids) == len(set(ids)), "SQ_CANDIDATO duplicado"
 
+    social_root = ROOT / "social"
+    fallback_og_image = ROOT / "assets" / "og-fallback-neutral.png"
+    assert fallback_og_image.exists(), "asset neutro de fallback og:image ausente"
+    social_manifest = json.loads(read(social_root / "manifest.json"))
+    assert social_manifest.get("candidate_count") == len(rows), (
+        "manifest de preview social diverge do snapshot"
+    )
+    assert social_manifest.get("candidate_ids") == sorted(ids), (
+        "IDs do preview social divergem do snapshot eleitoral"
+    )
+    actual_social_ids = sorted(
+        path.name
+        for path in social_root.iterdir()
+        if path.is_dir() and (path / "index.html").exists()
+    )
+    assert actual_social_ids == sorted(ids), (
+        "cobertura de preview social deve ser 1:1 por SQ_CANDIDATO"
+    )
+    candidate_kind = {
+        str(row.get("tse_id")): "federal" for row in federal
+    } | {
+        str(row.get("tse_id")): "estadual" for row in estadual
+    }
+    candidate_record = {}
+    for row in federal:
+        candidate_record[str(row.get("tse_id"))] = {**row, "_kind": "federal"}
+    for row in estadual:
+        candidate_record[str(row.get("tse_id"))] = {**row, "_kind": "estadual"}
+
+    social_generator = load_social_generator()
+    individual_og_images = 0
+    fallback_og_images = 0
+    og_drift_ids = []
+
+    for cid in ids:
+        preview = read(social_root / cid / "index.html")
+        candidate = candidate_record[cid]
+        expected_image, uses_candidate_photo = social_generator.resolve_og_image(
+            candidate,
+            site_base=social_generator.DEFAULT_SITE_BASE,
+        )
+        expected_preview = social_generator.render_preview(
+            candidate,
+            site_base=social_generator.DEFAULT_SITE_BASE,
+        )
+        actual_og = og_meta(preview)
+        expected_og = og_meta(expected_preview)
+
+        if uses_candidate_photo:
+            individual_og_images += 1
+        else:
+            fallback_og_images += 1
+
+        assert f'/social/{cid}/' in preview, f"{cid}: og:url social ausente"
+        assert f"id={cid}" in preview, f"{cid}: redirect para ficha ausente"
+        assert f"cargo={candidate_kind[cid]}" in preview, f"{cid}: cargo do redirect divergente"
+        assert 'property="og:title"' in preview, f"{cid}: og:title ausente"
+        assert 'property="og:description"' in preview, f"{cid}: og:description ausente"
+        assert preview.count('property="og:image"') == 1, (
+            f"{cid}: preview deve conter exatamente um og:image"
+        )
+        assert actual_og.get("og:image") == html.escape(expected_image, quote=True), (
+            f"{cid}: og:image diverge de resolve_og_image() do gerador canônico"
+        )
+        assert preview.count('property="og:image:alt"') == 1, (
+            f"{cid}: preview deve conter exatamente um og:image:alt"
+        )
+        assert (
+            'property="og:image:alt" content="Imagem de compartilhamento da candidatura"' in preview
+        ), f"{cid}: og:image:alt deve ser uniforme"
+        if actual_og != expected_og:
+            og_drift_ids.append(cid)
+        assert "googletagmanager.com" not in preview, (
+            f"{cid}: wrapper social não deve carregar tracker"
+        )
+
+    assert not og_drift_ids, (
+        "drift entre og:* materializado e render_preview() canônico; "
+        f"total={len(og_drift_ids)} amostra={og_drift_ids[:5]}"
+    )
+
     source_entries = topic_evidence_source.get("entries") or []
     allowed_evidence_types = {"proposta", "declaração", "atuação"}
     allowed_evidence_status = {"verified", "dated", "secondary_source"}
@@ -162,6 +280,16 @@ def main() -> None:
 
     blob = json.dumps(rows, ensure_ascii=False).lower()
     assert "#ne" not in blob and "#nulo" not in blob, "sentinela TSE vazou no snapshot"
+    unresolved_registration = [
+        str(x.get("tse_id") or "")
+        for x in rows
+        if not isinstance(x.get("registration_status"), str)
+        or not x.get("registration_status").strip()
+    ]
+    assert not unresolved_registration, (
+        "registration_status não pode desaparecer em null/blank; "
+        f"amostra={unresolved_registration[:5]}"
+    )
     assert not any(f'"{field}"' in blob for field in FORBIDDEN_FIELDS), "campo pessoal proibido no snapshot"
     assert all(x.get("source", {}).get("institution") == "TSE" for x in rows), "origem eleitoral inconsistente"
     assert all(x.get("photo_source", {}).get("institution") == "TSE" for x in rows), "origem da foto não rastreável ao TSE"
@@ -176,8 +304,11 @@ def main() -> None:
             assert mirror.get("content_sha256"), f"{kind}: hash dos bytes processados ausente"
     assert meta.get("sources", {}).get("camara_federal"), "fonte Câmara ausente: preservar último estado ou falhar fechado"
 
-    with_photo_url = sum(bool(x.get("photo_url")) for x in rows)
-    assert with_photo_url == len(rows), f"URLs de transporte de foto: {with_photo_url}/{len(rows)}"
+    valid_photo_urls = sum(is_valid_https_url(x.get("photo_url")) for x in rows)
+    assert valid_photo_urls == len(rows), (
+        "photo_url deve ser HTTPS sintaticamente válida (scheme=https + netloc): "
+        f"{valid_photo_urls}/{len(rows)}"
+    )
 
     linked_federal = sum(bool(x.get("current_mandate")) for x in federal)
     linked_ales = sum(len(x.get("institutional_evidence") or []) for x in rows)
@@ -188,7 +319,8 @@ def main() -> None:
         "AUDITORIA OK | "
         f"assets v{next(iter(versions))} | "
         f"{len(federal)} federais | {len(estadual)} estaduais | "
-        f"{with_photo_url}/{len(rows)} URLs de foto | "
+        f"{valid_photo_urls}/{len(rows)} URLs HTTPS de foto | "
+        f"OG individual={individual_og_images} fallback={fallback_og_images} drift={len(og_drift_ids)} | "
         f"{linked_federal} vínculos Câmara | {linked_ales} evidências ALES | "
         f"{len(topic_ids)} temas de política pública | {len(source_entries)} evidências temáticas"
     )

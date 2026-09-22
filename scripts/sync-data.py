@@ -79,13 +79,26 @@ def request_json(url: str, timeout: int = 20):
         return json.loads(response.read().decode("utf-8"))
 
 
+UNAVAILABLE_SENTINELS = {"", "#NULO", "#NE", "-1", "-3", "NÃO DIVULGÁVEL"}
+REGISTRATION_STATUS_NOT_AVAILABLE = "not_available"
+
+
 def clean(value):
     if value is None:
         return None
     value = str(value).strip()
-    if value in {"", "#NULO", "#NE", "-1", "-3", "NÃO DIVULGÁVEL"}:
+    if value in UNAVAILABLE_SENTINELS:
         return None
     return value
+
+
+def normalize_registration_status(value):
+    if value is None:
+        return REGISTRATION_STATUS_NOT_AVAILABLE
+    raw = str(value).strip()
+    if raw in UNAVAILABLE_SENTINELS:
+        return REGISTRATION_STATUS_NOT_AVAILABLE
+    return raw
 
 
 def number(value):
@@ -808,9 +821,11 @@ def normalize_candidate(row, office, mirror_info):
         "party_name": clean(row.get("NM_PARTIDO")),
         "coalition": clean(row.get("NM_COLIGACAO")),
         "coalition_composition": clean(row.get("DS_COMPOSICAO_COLIGACAO")),
-        # O espelho básico contém #NE neste campo para todo o ES.
-        # Isso NÃO é convertido em um status jurídico inventado.
-        "registration_status": clean(row.get("DS_SITUACAO_CANDIDATURA")),
+        # Sentinelas TSE não viram conclusão jurídica nem desaparecem em null.
+        # O estado explícito usa o vocabulário de ausência de AGENTS.md §5.
+        "registration_status": normalize_registration_status(
+            row.get("DS_SITUACAO_CANDIDATURA")
+        ),
         "totalization_status": clean(row.get("DS_SIT_TOT_TURNO")),
         "occupation": clean(row.get("DS_OCUPACAO")),
         "education": clean(row.get("DS_GRAU_INSTRUCAO")),
@@ -1294,8 +1309,10 @@ def main():
             },
             "data_quality": {
                 "registration_status": (
-                    "O status básico pode vir como #NE no espelho; quando disponível, "
-                    "a ficha usa o julgamento da base oficial de informações complementares."
+                    "Quando a fonte TSE não resolve a situação de candidatura e retorna "
+                    "sentinela como #NE/#NULO, o snapshot publica o estado explícito "
+                    "'not_available'. Isso registra indisponibilidade sem inferir situação "
+                    "jurídica favorável, desfavorável ou regularidade."
                 ),
                 "assets": (
                     "A fonte factual primária é o TSE. Quando o arquivo oficial "

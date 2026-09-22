@@ -9,6 +9,7 @@ on:
     paths:
       - ".github/workflows/evidence-industrial.yml"
       - "scripts/discover_evidence_sources.py"
+      - "scripts/camara_bulk.py"
       - "scripts/process_evidence_batch.py"
       - "scripts/build_exception_queue.py"
       - "scripts/evidence_coverage_report.py"
@@ -70,7 +71,7 @@ jobs:
 
       - name: Validate pipeline before processing
         run: |
-          python -m py_compile             scripts/coletor_evidencias.py             scripts/discover_evidence_sources.py             scripts/process_evidence_batch.py             scripts/build_exception_queue.py             scripts/evidence_coverage_report.py             scripts/cruise_worker_guard.py             scripts/build_curation_batch.py
+          python -m py_compile             scripts/coletor_evidencias.py             scripts/discover_evidence_sources.py             scripts/camara_bulk.py             scripts/process_evidence_batch.py             scripts/build_exception_queue.py             scripts/evidence_coverage_report.py             scripts/cruise_worker_guard.py             scripts/build_curation_batch.py
           python -m unittest discover -s tests -p 'test_*.py' -v
           python scripts/audit-site.py
 
@@ -81,9 +82,22 @@ jobs:
           set -euo pipefail
           OUT="$RUNNER_TEMP/evidence-industrial-output"
           STATE="$RUNNER_TEMP/evidence-industrial-state"
-          mkdir -p "$OUT" "$STATE"
+          BULK="$RUNNER_TEMP/camara-bulk-cache"
+          mkdir -p "$OUT" "$STATE" "$BULK"
           echo "out=$OUT" >> "$GITHUB_OUTPUT"
           echo "state=$STATE" >> "$GITHUB_OUTPUT"
+          echo "bulk=$BULK" >> "$GITHUB_OUTPUT"
+
+      - name: Resolve Câmara bulk cache day
+        id: bulk-key
+        shell: bash
+        run: echo "day=$(date -u +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+
+      - name: Restore daily Câmara bulk cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.ws.outputs.bulk }}
+          key: camara-bulk-v1-${{ runner.os }}-${{ steps.bulk-key.outputs.day }}
 
       - name: Restore non-canonical processing state
         uses: actions/cache/restore@v4
@@ -128,7 +142,16 @@ jobs:
         run: |
           set -euo pipefail
           OUT="${{ steps.ws.outputs.out }}"
-          python scripts/discover_evidence_sources.py             --output-sources "$OUT/topic-evidence-sources.json"             --output-rejections "$OUT/discovery-rejections.json"             --metrics "$OUT/discovery-metrics.json"             --site-workers 8             --max-links-per-site 20             | tee "$OUT/discovery.log"
+          BULK="${{ steps.ws.outputs.bulk }}"
+          python scripts/discover_evidence_sources.py \
+            --output-sources "$OUT/topic-evidence-sources.json" \
+            --output-rejections "$OUT/discovery-rejections.json" \
+            --metrics "$OUT/discovery-metrics.json" \
+            --site-workers 8 \
+            --max-links-per-site 20 \
+            --chamber-bulk-cache-dir "$BULK" \
+            --chamber-bulk-years 2023 2024 2025 2026 \
+            | tee "$OUT/discovery.log"
 
       - name: Drain exact-content backlog continuously
         shell: bash
@@ -305,6 +328,7 @@ jobs:
             --drafts "$STATE/drafts.json" \
             --canonical data/reference/topic-evidence.json \
             --decisions data/staging/wartime-curation-decisions.json \
+            --sources "$OUT/topic-evidence-sources.json" \
             --output "$OUT/curation-batch.json" \
             --metrics "$OUT/curation-batch-metrics.json" \
             --limit 100 \

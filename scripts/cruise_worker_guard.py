@@ -96,7 +96,10 @@ def build_report(
     for draft in drafts:
         if not is_chamber_source(draft):
             continue
-        if clean(draft.get("attribution_trust")) != "official_author_api":
+        if clean(draft.get("attribution_trust")) not in {
+            "official_author_api",
+            "official_author_bulk",
+        }:
             continue
 
         origin = draft.get("source_origin") or {}

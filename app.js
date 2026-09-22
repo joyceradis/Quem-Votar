@@ -543,6 +543,14 @@ async function initTopics(){
     }).join(""):'<div class="empty">Ainda não há propostas, declarações ou atuações temáticas integradas com fonte. A ausência de registro não significa ausência de posição.</div>';
   });
 }
+function registrationStatusLabel(value){
+  const normalized=String(value||"").trim().toLowerCase();
+  if(!normalized||normalized==="not_available"){
+    return "Ainda não disponível na fonte atual";
+  }
+  return value;
+}
+
 function definitionRow(label,value){
   return `<div class="definition-row"><dt>${esc(label)}</dt><dd>${esc(value||"Não disponível")}</dd></div>`;
 }
@@ -602,7 +610,7 @@ async function initProfile(){
     {label:"Federação / composição",value:organization},
     {label:"Escolaridade",value:candidate.education},
     {label:"Ocupação declarada",value:candidate.occupation},
-    {label:"Situação da candidatura",value:candidate.registration_status},
+    {label:"Situação da candidatura",value:registrationStatusLabel(candidate.registration_status)},
     {label:"Situação de totalização",value:candidate.totalization_status}
   ].filter(item=>item.value);
   const electoralFactsContent=electoralFacts.length?`
@@ -624,9 +632,10 @@ async function initProfile(){
   profileUrl.searchParams.set("id",String(candidate.tse_id));
   profileUrl.searchParams.set("cargo",kind);
   const canonicalUrl=profileUrl.toString();
+  const socialUrl=new URL(`social/${encodeURIComponent(candidate.tse_id)}/`,location.href).toString();
   document.querySelector('meta[property="og:title"]')?.setAttribute("content",document.title);
   document.querySelector('meta[property="og:description"]')?.setAttribute("content",shareDescription);
-  document.querySelector('meta[property="og:url"]')?.setAttribute("content",canonicalUrl);
+  document.querySelector('meta[property="og:url"]')?.setAttribute("content",socialUrl);
   document.querySelector('meta[name="twitter:title"]')?.setAttribute("content",document.title);
   document.querySelector('meta[name="twitter:description"]')?.setAttribute("content",shareDescription);
   document.querySelector('link[rel="canonical"]')?.setAttribute("href",canonicalUrl);
@@ -693,10 +702,10 @@ async function initProfile(){
     const original=button.textContent;
     try{
       if(navigator.share){
-        await navigator.share({title:document.title,text:shareDescription,url:canonicalUrl});
+        await navigator.share({title:document.title,text:shareDescription,url:socialUrl});
         return;
       }
-      await navigator.clipboard.writeText(canonicalUrl);
+      await navigator.clipboard.writeText(socialUrl);
       button.textContent="Link copiado";
       setTimeout(()=>button.textContent=original,1800);
     }catch(error){
