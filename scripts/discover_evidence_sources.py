@@ -23,7 +23,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from html.parser import HTMLParser
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any, Callable, Iterable
 
 import coletor_evidencias as collector
 import camara_bulk
@@ -508,53 +508,69 @@ def discover_chamber(
     candidates: dict[str, dict[str, Any]],
     fetch_json: Callable[[str], Any] = request_json,
     min_year: int = 2023,
+    exact_years: Iterable[int] | None = None,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     sources: list[dict[str, Any]] = []
     rejected: list[dict[str, Any]] = []
+    requested_years: tuple[int | None, ...]
+    if exact_years is None:
+        requested_years = (None,)
+    else:
+        requested_years = tuple(sorted({int(year) for year in exact_years}, reverse=True))
 
     for cid, candidate in candidates.items():
         mandate = candidate.get("current_mandate") or {}
         chamber_id = mandate.get("chamber_id")
         if not chamber_id:
             continue
-        query = urllib.parse.urlencode(
-            {
+        for requested_year in requested_years:
+            query_params = {
                 "idDeputadoAutor": chamber_id,
                 "ordem": "DESC",
                 "ordenarPor": "id",
                 "itens": 100,
             }
-        )
-        api_url = f"{CHAMBER_API}/proposicoes?{query}"
-        try:
-            payload = fetch_json(api_url)
-        except Exception as exc:
-            rejected.append(
-                rejection(
-                    cid, candidate, "chamber_discovery_failed",
-                    source_url=api_url, detail=str(exc)[:500],
-                )
-            )
-            continue
+            if requested_year is not None:
+                query_params["ano"] = requested_year
+            api_url = f"{CHAMBER_API}/proposicoes?{urllib.parse.urlencode(query_params)}"
+            next_url = api_url
+            seen_pages: set[str] = set()
+            candidate_year_sources: list[dict[str, Any]] = []
 
-        for item in payload.get("dados", []) if isinstance(payload, dict) else []:
-            prop_id = item.get("id")
-            year = item.get("ano")
-            if not prop_id:
-                continue
             try:
-                year_int = int(year)
-            except (TypeError, ValueError):
-                year_int = 0
-            if year_int and year_int < min_year:
-                continue
-            sigla = clean(item.get("siglaTipo"))
-            numero = clean(item.get("numero"))
-            ementa = clean(item.get("ementa"))
-            title = clean(f"{sigla} {numero}/{year or ''} — {ementa}")[:300]
-            page_url = canonicalize_url(f"{CHAMBER_PAGE}?idProposicao={prop_id}")
-            sources.append(
-                {
+                while next_url:
+                    if next_url in seen_pages:
+                        raise RuntimeError(f"pagination cycle at {next_url}")
+                    seen_pages.add(next_url)
+                    payload = fetch_json(next_url)
+                    if not isinstance(payload, dict):
+                        raise RuntimeError("Câmara API payload is not an object")
+                    items = payload.get("dados", [])
+                    if not isinstance(items, list):
+                        raise RuntimeError("Câmara API dados is not a list")
+
+                    for item in items:
+                        prop_id = item.get("id")
+                        year = item.get("ano")
+                        if not prop_id:
+                            continue
+                        try:
+                            year_int = int(year)
+                        except (TypeError, ValueError):
+                            year_int = 0
+                        if requested_year is not None and year_int != requested_year:
+                            raise RuntimeError(
+                                f"record year {year_int or year!r} escaped expected year {requested_year}"
+                            )
+                        if requested_year is None and year_int and year_int < min_year:
+                            continue
+                        sigla = clean(item.get("siglaTipo"))
+                        numero = clean(item.get("numero"))
+                        ementa = clean(item.get("ementa"))
+                        title = clean(f"{sigla} {numero}/{year or ''} — {ementa}")[:300]
+                        page_url = canonicalize_url(f"{CHAMBER_PAGE}?idProposicao={prop_id}")
+                        candidate_year_sources.append(
+                            {
                     "candidate_id": cid,
                     "candidate_name": collector.candidate_display_name(candidate),
                     "source_kind": "institutional",
@@ -581,7 +597,7 @@ def discover_chamber(
                         "discovery_method": "api_idDeputadoAutor",
                         "chamber_id": chamber_id,
                         "proposition_id": prop_id,
-                        "api_url": api_url,
+                        "api_url": next_url,
                         "api_item_uri": clean(item.get("uri")),
                     },
                     "institutional_snapshot": {
@@ -590,7 +606,7 @@ def discover_chamber(
                         "candidate_id": cid,
                         "chamber_id": chamber_id,
                         "proposition_id": prop_id,
-                        "api_url": api_url,
+                        "api_url": next_url,
                         "api_item_uri": clean(item.get("uri")),
                         "siglaTipo": sigla,
                         "numero": numero,
@@ -599,8 +615,31 @@ def discover_chamber(
                         "dataApresentacao": clean(item.get("dataApresentacao")),
                         "title": title,
                     },
-                }
-            )
+                            }
+                        )
+
+                    next_url = ""
+                    links = payload.get("links", [])
+                    if not isinstance(links, list):
+                        raise RuntimeError("Câmara API links is not a list")
+                    for link in links:
+                        if isinstance(link, dict) and clean(link.get("rel")).casefold() == "next":
+                            next_url = clean(link.get("href"))
+                            break
+            except Exception as exc:
+                scope = f"year={requested_year}" if requested_year is not None else f"min_year={min_year}"
+                rejected.append(
+                    rejection(
+                        cid,
+                        candidate,
+                        "chamber_discovery_failed",
+                        source_url=api_url,
+                        detail=f"{scope}; page={next_url or api_url}; {exc}"[:500],
+                    )
+                )
+                continue
+
+            sources.extend(candidate_year_sources)
     return sources, rejected
 
 
@@ -709,18 +748,49 @@ def run_discovery(
                     cache_dir=chamber_bulk_cache_dir,
                     years=chamber_bulk_years,
                 )
-                if has_chamber_candidates and not chamber_sources:
-                    raise RuntimeError(
-                        "bulk Câmara retornou zero vínculos para candidaturas com chamber_id"
-                    )
                 exact.extend(chamber_sources)
+                failed_years = tuple(
+                    sorted(
+                        {
+                            int(year)
+                            for year in chamber_provenance.get("failed_years", [])
+                        },
+                        reverse=True,
+                    )
+                )
+                if failed_years:
+                    fallback_sources, fallback_rejected = discover_chamber(
+                        candidates,
+                        exact_years=failed_years,
+                    )
+                    exact.extend(fallback_sources)
+                    rejected.extend(fallback_rejected)
+                    chamber_provenance = {
+                        **chamber_provenance,
+                        "mode": "camara_bulk_partial_api_fallback",
+                        "api_fallback_years": list(failed_years),
+                        "api_fallback_source_records": len(fallback_sources),
+                        "api_fallback_rejections": len(fallback_rejected),
+                    }
+                elif has_chamber_candidates and not chamber_sources:
+                    chamber_provenance = {
+                        **chamber_provenance,
+                        "mode": "camara_bulk_daily_zero_matches",
+                    }
             except Exception as exc:
-                chamber_sources, chamber_rejected = discover_chamber(candidates)
+                fallback_years = tuple(
+                    sorted({int(year) for year in chamber_bulk_years}, reverse=True)
+                )
+                chamber_sources, chamber_rejected = discover_chamber(
+                    candidates,
+                    exact_years=fallback_years,
+                )
                 exact.extend(chamber_sources)
                 rejected.extend(chamber_rejected)
                 chamber_provenance = {
                     "mode": "api_fallback",
                     "bulk_error": str(exc)[:1000],
+                    "api_fallback_years": list(fallback_years),
                     "source_records": len(chamber_sources),
                     "semantics": (
                         "Fallback técnico para a API idDeputadoAutor; não altera "
