@@ -14,6 +14,7 @@ import json
 import os
 import re
 import tempfile
+import time
 import urllib.error
 import urllib.request
 from collections import defaultdict
@@ -85,12 +86,14 @@ def download_bulk_csv(
     *,
     cache_dir: Path,
     max_bytes: int = MAX_BULK_BYTES,
+    timeout: int = 180,
+    retries: int = 3,
 ) -> tuple[Path, dict[str, Any]]:
-    """Materialize one official daily CSV with an auditable local cache.
+    """Materialize one official daily CSV with cache and bounded retries.
 
     The GitHub workflow places cache_dir behind a date-scoped Actions cache, so
     normal 5-minute watchdog runs reuse the same official bytes instead of
-    redownloading them.
+    redownloading them. Only transient transport failures are retried.
     """
     url = bulk_url(dataset, year)
     data_path, meta_path = cache_paths(cache_dir, dataset, year)
@@ -112,76 +115,95 @@ def download_bulk_csv(
         },
     )
 
-    tmp_fd, tmp_name = tempfile.mkstemp(
-        prefix=f".{dataset}-{year}-",
-        suffix=".part",
-        dir=str(cache_dir),
-    )
-    os.close(tmp_fd)
-    tmp_path = Path(tmp_name)
-    digest = hashlib.sha256()
-    size = 0
-    final_url = url
-    headers: dict[str, str] = {}
+    attempts = max(1, int(retries))
+    request_timeout = max(1, int(timeout))
+    transient_http_codes = {408, 425, 429, 500, 502, 503, 504}
 
-    try:
-        with opener.open(request, timeout=60) as response, tmp_path.open("wb") as out:
-            final_url = clean(response.geturl())
-            collector.validate_public_https_url(final_url, resolve_dns=True)
-            declared = clean(response.headers.get("Content-Length"))
-            if declared.isdigit() and int(declared) > max_bytes:
-                raise RuntimeError(
-                    f"{dataset}-{year}: resposta excede limite de {max_bytes} bytes"
-                )
-            headers = {
-                "etag": clean(response.headers.get("ETag")),
-                "last_modified": clean(response.headers.get("Last-Modified")),
-                "content_type": clean(response.headers.get("Content-Type")),
-            }
-            while True:
-                chunk = response.read(CHUNK_SIZE)
-                if not chunk:
-                    break
-                size += len(chunk)
-                if size > max_bytes:
+    for attempt in range(1, attempts + 1):
+        tmp_fd, tmp_name = tempfile.mkstemp(
+            prefix=f".{dataset}-{year}-",
+            suffix=".part",
+            dir=str(cache_dir),
+        )
+        os.close(tmp_fd)
+        tmp_path = Path(tmp_name)
+        digest = hashlib.sha256()
+        size = 0
+        final_url = url
+        headers: dict[str, str] = {}
+
+        try:
+            with opener.open(request, timeout=request_timeout) as response, tmp_path.open("wb") as out:
+                final_url = clean(response.geturl())
+                collector.validate_public_https_url(final_url, resolve_dns=True)
+                declared = clean(response.headers.get("Content-Length"))
+                if declared.isdigit() and int(declared) > max_bytes:
                     raise RuntimeError(
                         f"{dataset}-{year}: resposta excede limite de {max_bytes} bytes"
                     )
-                digest.update(chunk)
-                out.write(chunk)
-    except urllib.error.HTTPError as exc:
-        tmp_path.unlink(missing_ok=True)
-        raise RuntimeError(f"{dataset}-{year}: HTTP {exc.code}") from exc
-    except urllib.error.URLError as exc:
-        tmp_path.unlink(missing_ok=True)
-        raise RuntimeError(f"{dataset}-{year}: falha de rede: {exc.reason}") from exc
-    except Exception:
-        tmp_path.unlink(missing_ok=True)
-        raise
+                headers = {
+                    "etag": clean(response.headers.get("ETag")),
+                    "last_modified": clean(response.headers.get("Last-Modified")),
+                    "content_type": clean(response.headers.get("Content-Type")),
+                }
+                while True:
+                    chunk = response.read(CHUNK_SIZE)
+                    if not chunk:
+                        break
+                    size += len(chunk)
+                    if size > max_bytes:
+                        raise RuntimeError(
+                            f"{dataset}-{year}: resposta excede limite de {max_bytes} bytes"
+                        )
+                    digest.update(chunk)
+                    out.write(chunk)
 
-    if size <= 0:
-        tmp_path.unlink(missing_ok=True)
-        raise RuntimeError(f"{dataset}-{year}: arquivo vazio")
+            if size <= 0:
+                raise RuntimeError(f"{dataset}-{year}: arquivo vazio")
 
-    tmp_path.replace(data_path)
-    meta = {
-        "dataset": dataset,
-        "year": int(year),
-        "url": url,
-        "final_url": final_url,
-        "fetched_at": utc_now(),
-        "sha256": digest.hexdigest(),
-        "bytes": size,
-        "etag": headers.get("etag", ""),
-        "last_modified": headers.get("last_modified", ""),
-        "content_type": headers.get("content_type", ""),
-        "cache_hit": False,
-    }
-    meta_path.write_text(
-        json.dumps(meta, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
-    )
-    return data_path, meta
+            tmp_path.replace(data_path)
+            meta = {
+                "dataset": dataset,
+                "year": int(year),
+                "url": url,
+                "final_url": final_url,
+                "fetched_at": utc_now(),
+                "sha256": digest.hexdigest(),
+                "bytes": size,
+                "etag": headers.get("etag", ""),
+                "last_modified": headers.get("last_modified", ""),
+                "content_type": headers.get("content_type", ""),
+                "cache_hit": False,
+                "download_attempts": attempt,
+                "download_timeout_seconds": request_timeout,
+            }
+            meta_path.write_text(
+                json.dumps(meta, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+            return data_path, meta
+        except urllib.error.HTTPError as exc:
+            tmp_path.unlink(missing_ok=True)
+            error = RuntimeError(f"{dataset}-{year}: HTTP {exc.code}")
+            if exc.code not in transient_http_codes or attempt >= attempts:
+                raise error from exc
+        except urllib.error.URLError as exc:
+            tmp_path.unlink(missing_ok=True)
+            error = RuntimeError(f"{dataset}-{year}: falha de rede: {exc.reason}")
+            if attempt >= attempts:
+                raise error from exc
+        except TimeoutError as exc:
+            tmp_path.unlink(missing_ok=True)
+            error = RuntimeError(f"{dataset}-{year}: timeout")
+            if attempt >= attempts:
+                raise error from exc
+        except Exception:
+            tmp_path.unlink(missing_ok=True)
+            raise
+
+        time.sleep(min(15, 2 ** (attempt - 1)))
+
+    raise RuntimeError(f"{dataset}-{year}: falha de transporte")
 
 
 def iter_csv(path: Path) -> Iterator[dict[str, str]]:
@@ -471,66 +493,102 @@ def discover_chamber_bulk(
     all_files: list[dict[str, Any]] = []
     year_reports: list[dict[str, Any]] = []
 
-    for year_value in sorted({int(value) for value in years}):
-        authors_path, authors_meta = download_bulk_csv(
-            "proposicoesAutores",
-            year_value,
-            cache_dir=cache_dir,
-        )
-        all_files.append(authors_meta)
-        author_links = collect_author_links(
-            iter_csv(authors_path),
-            candidates=candidates,
-        )
-        target_ids = set(author_links)
+    ordered_years = sorted({int(value) for value in years}, reverse=True)
 
-        if not target_ids:
+    for year_value in ordered_years:
+        dataset_reports: list[dict[str, Any]] = []
+        year_files: list[dict[str, Any]] = []
+
+        def acquire(dataset: str) -> Path:
+            try:
+                path, meta = download_bulk_csv(
+                    dataset,
+                    year_value,
+                    cache_dir=cache_dir,
+                )
+            except Exception as exc:
+                dataset_reports.append(
+                    {
+                        "dataset": dataset,
+                        "status": "failed",
+                        "error": str(exc)[:1000],
+                    }
+                )
+                raise
+            dataset_reports.append(
+                {
+                    "dataset": dataset,
+                    "status": "success",
+                    "sha256": clean(meta.get("sha256")),
+                    "cache_hit": bool(meta.get("cache_hit")),
+                }
+            )
+            year_files.append(meta)
+            all_files.append(meta)
+            return path
+
+        try:
+            authors_path = acquire("proposicoesAutores")
+            author_links = collect_author_links(
+                iter_csv(authors_path),
+                candidates=candidates,
+            )
+            target_ids = set(author_links)
+
+            if not target_ids:
+                year_reports.append(
+                    {
+                        "year": year_value,
+                        "status": "success",
+                        "matched_propositions": 0,
+                        "source_records": 0,
+                        "theme_links": 0,
+                        "datasets": dataset_reports,
+                    }
+                )
+                continue
+
+            propositions_path = acquire("proposicoes")
+            propositions = collect_propositions(
+                iter_csv(propositions_path),
+                target_ids,
+            )
+            themes_path = acquire("proposicoesTemas")
+            themes = collect_themes(
+                iter_csv(themes_path),
+                target_ids,
+            )
+            sources = build_sources(
+                candidates=candidates,
+                year=year_value,
+                author_links=author_links,
+                propositions=propositions,
+                themes=themes,
+                file_provenance=year_files,
+            )
+        except Exception as exc:
             year_reports.append(
                 {
                     "year": year_value,
+                    "status": "failed",
                     "matched_propositions": 0,
                     "source_records": 0,
                     "theme_links": 0,
+                    "datasets": dataset_reports,
+                    "error": str(exc)[:1000],
                 }
             )
             continue
 
-        propositions_path, propositions_meta = download_bulk_csv(
-            "proposicoes",
-            year_value,
-            cache_dir=cache_dir,
-        )
-        themes_path, themes_meta = download_bulk_csv(
-            "proposicoesTemas",
-            year_value,
-            cache_dir=cache_dir,
-        )
-        all_files.extend((propositions_meta, themes_meta))
-
-        propositions = collect_propositions(
-            iter_csv(propositions_path),
-            target_ids,
-        )
-        themes = collect_themes(
-            iter_csv(themes_path),
-            target_ids,
-        )
-        file_provenance = [authors_meta, propositions_meta, themes_meta]
-        sources = build_sources(
-            candidates=candidates,
-            year=year_value,
-            author_links=author_links,
-            propositions=propositions,
-            themes=themes,
-            file_provenance=file_provenance,
-        )
         all_sources.extend(sources)
         year_reports.append(
             {
                 "year": year_value,
+                "status": "success",
                 "matched_propositions": len(target_ids),
                 "source_records": len(sources),
                 "theme_links": sum(len(x) for x in themes.values()),
+                "datasets": dataset_reports,
             }
         )
 
@@ -547,7 +605,10 @@ def discover_chamber_bulk(
     report = {
         "mode": "camara_bulk_daily",
         "generated_at": utc_now(),
-        "years": [x["year"] for x in year_reports],
+        "years": ordered_years,
+        "failed_years": [
+            item["year"] for item in year_reports if item.get("status") == "failed"
+        ],
         "source_records": len(all_sources),
         "candidates_with_sources": len(unique_candidates),
         "unique_propositions": len(unique_props),
@@ -569,6 +630,8 @@ def discover_chamber_bulk(
                     "etag",
                     "last_modified",
                     "cache_hit",
+                    "download_attempts",
+                    "download_timeout_seconds",
                 }
             }
             for item in all_files
