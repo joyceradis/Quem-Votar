@@ -523,8 +523,7 @@ async function initCandidates(){
       button.addEventListener("click",()=>{
         const id=button.dataset.compareId;
         toggleCompare(id);
-        render();
-        Array.from($("cards").querySelectorAll("[data-compare-id]")).find(node=>node.dataset.compareId===id)?.focus();
+        syncComparisonControls();
       });
     });
 
@@ -578,7 +577,7 @@ async function initCandidates(){
 
   $("clearCompare").addEventListener("click",()=>{
     setCompareIds([]);
-    render();
+    syncComparisonControls();
     announceComparison("Seleção limpa. Escolha pelo menos 2 candidaturas.");
     $("searchInput").focus();
   });
