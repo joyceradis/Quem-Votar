@@ -247,6 +247,29 @@ class CamaraBulkTests(unittest.TestCase):
         self.assertEqual(3, opener.calls)
         self.assertEqual([((1,), {}), ((2,), {})], sleep.call_args_list)
 
+    def test_request_json_uses_fetch_bytes_retry_policy(self):
+        url = "https://dadosabertos.camara.leg.br/api/v2/proposicoes"
+        opener = SequencedOpener(
+            [
+                TimeoutError("first attempt timed out"),
+                FakeResponse(b'{"dados": [{"id": 10}]}', url),
+            ]
+        )
+
+        with (
+            patch.object(
+                collector.urllib.request,
+                "build_opener",
+                return_value=opener,
+            ),
+            patch.object(collector, "validate_public_https_url"),
+            patch.object(collector.time, "sleep"),
+        ):
+            payload = discovery.request_json(url)
+
+        self.assertEqual({"dados": [{"id": 10}]}, payload)
+        self.assertEqual(2, opener.calls)
+
     def test_bulk_isolates_dataset_failure_and_processes_newest_year_first(self):
         calls = []
 
