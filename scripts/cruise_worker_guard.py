@@ -39,6 +39,16 @@ def proposition_id_from_url(url: str) -> str:
     return match.group(1) if match else ""
 
 
+def is_explicit_reacquisition_failure(failure: dict[str, Any]) -> bool:
+    """Return true only for a producer-declared institutional reacquisition incident.
+
+    A collection/materialization failure is not evidence that reacquisition or
+    discovery failed. The guard therefore fails closed on an explicit incident
+    signal instead of inferring one merely from a Câmara URL.
+    """
+    return clean(failure.get("incident_type")) == "institutional_reacquisition_failure"
+
+
 def load_candidate_chamber_ids(
     federal_path: Path,
     estadual_path: Path,
@@ -82,7 +92,11 @@ def build_report(
 
     for failure in failures:
         url = clean(failure.get("source_url"))
-        if url and url in current_chamber_urls:
+        if (
+            is_explicit_reacquisition_failure(failure)
+            and url
+            and url in current_chamber_urls
+        ):
             incidents.append(
                 {
                     "type": "institutional_reacquisition_failure",
@@ -147,7 +161,7 @@ def build_report(
     backlog_urls = sorted(url for url in draft_urls if url not in canonical_urls)
 
     return {
-        "version": "1.0.0",
+        "version": "1.1.0",
         "mode": "wartime",
         "semantics": (
             "Wartime operational health and batching report only. No political evidence "
@@ -159,6 +173,7 @@ def build_report(
                 "institutional_reacquisition_failure",
                 "institutional_anchor_integrity_failure",
             ],
+            "reacquisition_signal": "explicit incident_type only; collection failures remain recorded but do not page",
         },
         "batching": {
             "auto_pr": False,
