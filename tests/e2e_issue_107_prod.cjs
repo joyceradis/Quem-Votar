@@ -50,7 +50,7 @@ async function check(name, fn) { try { await fn(); results.push({name,ok:true});
    assert.match(await page.locator("#compareMount").innerText(),/Escolha mais 1 pessoa/);
   });
   await ctx.close();
-  const mobile=await browser.newContext({viewport:{width:390,height:844},isMobile:true});
+  const mobile=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
   await mobile.addInitScript(()=>localStorage.removeItem("qv_compare"));
   const m=await mobile.newPage();
   await check("mobile 390x844: sem overflow horizontal e controles utilizáveis",async()=>{
