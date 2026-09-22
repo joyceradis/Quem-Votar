@@ -4,3 +4,10 @@
 exclude_path = [
   '(^|/)data/staging/issue86-meuvoto-sample\.html$',
 ]
+
+# These external URLs are attribution/reference links in HTML/Markdown only.
+# Operational TSE collection in Python remains unaffected by lychee.
+exclude = [
+  '^https://dadosabertos\.tse\.jus\.br/',
+  '^https://(?:www\.)?scielo\.br/',
+]
