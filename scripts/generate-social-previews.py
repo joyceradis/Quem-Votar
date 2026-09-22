@@ -116,17 +116,13 @@ def render_preview(
     title = f"{name} · Quem Votar?"
     description = factual_description(candidate)
     preview_url, profile_url = candidate_urls(candidate, site_base=site_base)
-    image_url, uses_candidate_photo = resolve_og_image(
+    image_url, _uses_candidate_photo = resolve_og_image(
         candidate,
         site_base=site_base,
     )
 
     esc = lambda value: html.escape(str(value), quote=True)
-    image_alt = (
-        f"Foto pública de {name}"
-        if uses_candidate_photo
-        else "Quem Votar? · imagem institucional neutra"
-    )
+    image_alt = "Imagem de compartilhamento da candidatura"
     image_meta = (
         f'<meta property="og:image" content="{esc(image_url)}">\n'
         f'<meta property="og:image:alt" content="{esc(image_alt)}">\n'
