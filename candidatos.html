@@ -7,7 +7,6 @@
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-2KY1FDKV88');
 </script>
 <meta charset="utf-8">
@@ -54,18 +53,13 @@
     </div>
     <div class="snapshot-inline"><span id="listUpdate">Carregando atualização…</span><a data-tse-source href="https://dadosabertos.tse.jus.br/dataset/candidatos-2026" target="_blank" rel="noopener">Dados do TSE</a></div>
   </header>
-
   <div class="office-switch" role="tablist" aria-label="Cargo">
     <button class="office-button" data-kind="federal" role="tab">Deputado Federal <b id="federalCount">—</b></button>
     <button class="office-button" data-kind="estadual" role="tab">Deputado Estadual <b id="estadualCount">—</b></button>
   </div>
-
   <section class="search-panel" aria-label="Busca e filtros">
     <div class="primary-search">
-      <label>
-        <span>Buscar candidatura</span>
-        <input id="searchInput" type="search" placeholder="Nome, número ou partido" autocomplete="off">
-      </label>
+      <label><span>Buscar candidatura</span><input id="searchInput" type="search" placeholder="Nome, número ou partido" autocomplete="off"></label>
       <button id="filterToggle" class="filter-toggle" type="button" aria-expanded="false" aria-controls="secondaryFilters"><img src="assets/icon-filter.svg" alt="">Filtros<span id="activeFilterCount"></span></button>
     </div>
     <div id="secondaryFilters" class="secondary-filters" hidden>
@@ -75,24 +69,18 @@
       <button id="clearFilters" class="clear-button" type="button">Limpar filtros</button>
     </div>
   </section>
-
-  <div class="results-head">
-    <div><strong id="resultCount">Carregando…</strong><span>Pessoas encontradas</span></div>
-    <span id="pageStatus"></span>
-  </div>
-
+  <div class="results-head"><div><strong id="resultCount">Carregando…</strong><span>Pessoas encontradas</span></div><span id="pageStatus"></span></div>
   <section id="cards" class="candidate-list" aria-live="polite"><div class="loading">Carregando candidaturas…</div></section>
   <nav id="pagination" class="pagination" aria-label="Paginação"></nav>
 </main>
-
 <div id="compareTray" class="compare-tray" hidden>
-  <div><strong id="compareCount">0 selecionados</strong><span>Até 3 candidaturas</span></div>
+  <div><strong id="compareCount">0 selecionados</strong><span>Até 3 candidaturas</span><span id="compareStatus" class="sr-only" role="status" aria-live="polite"></span></div>
   <div><button id="clearCompare" type="button">Limpar</button><a id="openCompare" href="comparar.html">Comparar</a></div>
 </div>
 <footer class="site-footer">
   <div><strong>Quem Votar? · Espírito Santo 2026</strong><span>Informação pública, em linguagem normal.</span></div>
   <div><span>Atualizado em <b data-snapshot-date>—</b></span><a data-tse-source href="https://dadosabertos.tse.jus.br/dataset/candidatos-2026" target="_blank" rel="noopener">Dados do TSE</a></div>
 </footer>
-<script src="app.js?v=5.5.2" defer></script>
+<script src="compare-funnel.js?v=1" defer></script>
 </body>
 </html>
