@@ -14,8 +14,13 @@ async function check(name, fn) { try { await fn(); results.push({name,ok:true});
   const buttons=page.locator("button[data-compare-id]");
   assert.ok(await buttons.count()>=4);
   const ids=await buttons.evaluateAll(xs=>xs.slice(0,4).map(x=>x.dataset.compareId));
-  await check("1 candidatura: CTA bloqueado + teclado + foco",async()=>{
-   await buttons.nth(0).focus(); await page.keyboard.press("Enter");
+  await check("1 candidatura: CTA bloqueado + Tab/Shift+Tab/Space + foco",async()=>{
+   await buttons.nth(0).focus();
+   await page.keyboard.press("Shift+Tab");
+   assert.notEqual(await page.evaluate(()=>document.activeElement?.dataset?.compareId),ids[0]);
+   await page.keyboard.press("Tab");
+   assert.equal(await page.evaluate(()=>document.activeElement?.dataset?.compareId),ids[0]);
+   await page.keyboard.press("Space");
    assert.equal(await buttons.nth(0).getAttribute("aria-pressed"),"true");
    assert.match(await page.locator("#compareCount").innerText(),/Escolha mais 1/);
    assert.equal(await page.locator("#openCompare").getAttribute("aria-disabled"),"true");
