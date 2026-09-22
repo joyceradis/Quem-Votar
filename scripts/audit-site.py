@@ -9,6 +9,7 @@ from __future__ import annotations
 import json
 import re
 from pathlib import Path
+from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data" / "generated"
@@ -30,6 +31,15 @@ FORBIDDEN_FIELDS = {
 def read(path: Path) -> str:
     assert path.exists(), f"arquivo obrigatório ausente: {path.relative_to(ROOT)}"
     return path.read_text(encoding="utf-8")
+
+
+def is_valid_https_url(value) -> bool:
+    raw = "" if value is None else str(value).strip()
+    if not raw:
+        return False
+    parsed = urlsplit(raw)
+    return parsed.scheme.lower() == "https" and bool(parsed.netloc)
+
 
 def main() -> None:
     versions = set()
@@ -152,6 +162,8 @@ def main() -> None:
     assert len(ids) == len(set(ids)), "SQ_CANDIDATO duplicado"
 
     social_root = ROOT / "social"
+    fallback_og_image = ROOT / "assets" / "og-fallback-neutral.png"
+    assert fallback_og_image.exists(), "asset neutro de fallback og:image ausente"
     social_manifest = json.loads(read(social_root / "manifest.json"))
     assert social_manifest.get("candidate_count") == len(rows), (
         "manifest de preview social diverge do snapshot"
@@ -179,6 +191,9 @@ def main() -> None:
         assert f"cargo={candidate_kind[cid]}" in preview, f"{cid}: cargo do redirect divergente"
         assert 'property="og:title"' in preview, f"{cid}: og:title ausente"
         assert 'property="og:description"' in preview, f"{cid}: og:description ausente"
+        assert preview.count('property="og:image"') == 1, (
+            f"{cid}: preview deve conter exatamente um og:image"
+        )
         assert "googletagmanager.com" not in preview, (
             f"{cid}: wrapper social não deve carregar tracker"
         )
@@ -227,8 +242,11 @@ def main() -> None:
             assert mirror.get("content_sha256"), f"{kind}: hash dos bytes processados ausente"
     assert meta.get("sources", {}).get("camara_federal"), "fonte Câmara ausente: preservar último estado ou falhar fechado"
 
-    with_photo_url = sum(bool(x.get("photo_url")) for x in rows)
-    assert with_photo_url == len(rows), f"URLs de transporte de foto: {with_photo_url}/{len(rows)}"
+    valid_photo_urls = sum(is_valid_https_url(x.get("photo_url")) for x in rows)
+    assert valid_photo_urls == len(rows), (
+        "photo_url deve ser HTTPS sintaticamente válida (scheme=https + netloc): "
+        f"{valid_photo_urls}/{len(rows)}"
+    )
 
     linked_federal = sum(bool(x.get("current_mandate")) for x in federal)
     linked_ales = sum(len(x.get("institutional_evidence") or []) for x in rows)
@@ -239,7 +257,7 @@ def main() -> None:
         "AUDITORIA OK | "
         f"assets v{next(iter(versions))} | "
         f"{len(federal)} federais | {len(estadual)} estaduais | "
-        f"{with_photo_url}/{len(rows)} URLs de foto | "
+        f"{valid_photo_urls}/{len(rows)} URLs HTTPS de foto | "
         f"{linked_federal} vínculos Câmara | {linked_ales} evidências ALES | "
         f"{len(topic_ids)} temas de política pública | {len(source_entries)} evidências temáticas"
     )
