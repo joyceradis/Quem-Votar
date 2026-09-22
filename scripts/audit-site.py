@@ -194,6 +194,12 @@ def main() -> None:
         assert preview.count('property="og:image"') == 1, (
             f"{cid}: preview deve conter exatamente um og:image"
         )
+        assert preview.count('property="og:image:alt"') == 1, (
+            f"{cid}: preview deve conter exatamente um og:image:alt"
+        )
+        assert (
+            'property="og:image:alt" content="Imagem de compartilhamento da candidatura"' in preview
+        ), f"{cid}: og:image:alt deve ser uniforme"
         assert "googletagmanager.com" not in preview, (
             f"{cid}: wrapper social não deve carregar tracker"
         )
