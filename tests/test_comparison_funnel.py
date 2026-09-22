@@ -14,6 +14,7 @@ def run_app(expression):
         const fs = require("fs");
         const vm = require("vm");
         const storage = new Map();
+        const listeners = {{}};
         const classList = {{
           add() {{}},
           remove() {{}},
@@ -28,6 +29,9 @@ def run_app(expression):
           Set,
           URL,
           URLSearchParams,
+          addEventListener(name, callback) {{ listeners[name] = callback; }},
+          dispatchEvent(event) {{ listeners[event.type]?.(event); }},
+          history: {{ replaceState() {{}} }},
           location: {{ href: "https://example.test/", search: "" }},
           localStorage: {{
             getItem(key) {{ return storage.has(key) ? storage.get(key) : null; }},
@@ -60,6 +64,26 @@ def run_app(expression):
 
 
 class ComparisonFunnelTests(unittest.TestCase):
+    def test_storage_event_and_page_restore_refresh_visible_selection(self):
+        result = run_app('(() => {const button={id:"profileCompare",dataset:{candidateId:"101"},classList:{toggle(){}},setAttribute(){}};const status={};document.querySelectorAll=()=>[button];document.getElementById=id=>id==="compareStatus"?status:null;setCompareIds(["101"]);dispatchEvent({type:"storage",key:"qv_compare"});const selected=button.textContent;setCompareIds([]);dispatchEvent({type:"pageshow"});return {selected,cleared:button.textContent,announced:status.textContent.includes("Seleção atualizada")};})()')
+        self.assertEqual({"selected":"Remover da comparação","cleared":"Comparar","announced":True}, result)
+
+    def test_url_is_canonical_after_removing_unknown_and_duplicate_ids(self):
+        result = run_app('(async () => {const mount={};document.getElementById=id=>id==="compareMount"?mount:null;location.search="?ids=101,101,invalid,202";location.href="https://example.test/comparar.html"+location.search;let rewritten="";history.replaceState=(_,unused,url)=>{rewritten=url.searchParams.get("ids")};getJSON=async path=>path===DATA.federal?[{tse_id:"101"}]:path===DATA.estadual?[{tse_id:"202"}]:{topics:[]};await initCompare();return rewritten;})()')
+        self.assertEqual("101,202", result)
+
+    def test_empty_url_does_not_reuse_previous_selection(self):
+        result = run_app('(async () => {const mount={};document.getElementById=id=>id==="compareMount"?mount:null;location.search="?ids=";setCompareIds(["101","202"]);getJSON=async path=>path===DATA.federal?[{tse_id:"101"}]:path===DATA.estadual?[{tse_id:"202"}]:{topics:[]};await initCompare();return {ids:getCompareIds(),empty:mount.innerHTML.includes("Ninguém selecionado")};})()')
+        self.assertEqual({"ids": [], "empty": True}, result)
+
+    def test_partial_snapshot_does_not_erase_selection(self):
+        result = run_app('(async () => {const mount={};document.getElementById=id=>id==="compareMount"?mount:null;location.search="?ids=101,202";setCompareIds(["101","202"]);getJSON=async path=>path===DATA.federal?[{tse_id:"101"}]:path===DATA.estadual?[]:{topics:[]};await initCompare();return {ids:getCompareIds(),error:mount.textContent.includes("Sua seleção foi preservada"),rendered:!!mount.innerHTML};})()')
+        self.assertEqual({"ids": ["101", "202"], "error": True, "rendered": False}, result)
+
+    def test_sync_updates_profile_and_list_without_replacing_focused_nodes(self):
+        result = run_app('(() => {const make=(id,key)=>({id,dataset:key,attrs:{},classList:{toggle(){}},setAttribute(k,v){this.attrs[k]=v}});const card=make("",{compareId:"101"});const profile=make("profileCompare",{candidateId:"404"});document.querySelectorAll=()=>[card,profile];setCompareIds(["101","202","303"]);syncComparisonControls();const full={card:card.textContent,profile:profile.textContent,disabled:profile.disabled};setCompareIds([]);syncComparisonControls();return {full,empty:{card:card.textContent,profile:profile.textContent,disabled:profile.disabled,pressed:card.attrs["aria-pressed"]}};})()')
+        self.assertEqual({"full":{"card":"Remover","profile":"Limite de 3 atingido","disabled":True},"empty":{"card":"Comparar","profile":"Comparar","disabled":False,"pressed":"false"}}, result)
+
     def test_normalizes_url_selection_to_unique_known_candidates(self):
         result = run_app(
             'typeof normalizeCompareIds === "function" '
