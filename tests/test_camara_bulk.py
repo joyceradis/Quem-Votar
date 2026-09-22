@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import http.client
 import json
 import sys
 import tempfile
@@ -47,6 +48,15 @@ class FakeResponse:
         chunk = self._body[self._offset:self._offset + size]
         self._offset += len(chunk)
         return chunk
+
+
+class FailingReadResponse(FakeResponse):
+    def __init__(self, error: Exception, url: str):
+        super().__init__(b"x", url)
+        self.error = error
+
+    def read(self, size: int = -1):
+        raise self.error
 
 
 class SequencedOpener:
@@ -150,6 +160,47 @@ class CamaraBulkTests(unittest.TestCase):
 
             self.assertEqual(1, permanent_opener.calls)
 
+    def test_download_retries_read_side_connection_failures(self):
+        url = camara_bulk.bulk_url("proposicoesAutores", 2026)
+        transient_errors = (
+            ConnectionResetError("connection reset"),
+            http.client.RemoteDisconnected("remote disconnected"),
+            http.client.IncompleteRead(b"", 1),
+        )
+
+        for transient in transient_errors:
+            with self.subTest(transient=type(transient).__name__):
+                with tempfile.TemporaryDirectory() as tmp:
+                    opener = SequencedOpener(
+                        [
+                            FailingReadResponse(transient, url),
+                            FakeResponse(b"idProposicao\n10\n", url),
+                        ]
+                    )
+                    with (
+                        patch.object(
+                            camara_bulk.urllib.request,
+                            "build_opener",
+                            return_value=opener,
+                        ),
+                        patch.object(
+                            camara_bulk.collector,
+                            "validate_public_https_url",
+                        ),
+                        patch.object(camara_bulk.time, "sleep") as sleep,
+                    ):
+                        _, meta = camara_bulk.download_bulk_csv(
+                            "proposicoesAutores",
+                            2026,
+                            cache_dir=Path(tmp),
+                            retries=3,
+                            timeout=20,
+                        )
+
+                self.assertEqual(2, opener.calls)
+                self.assertEqual(2, meta["download_attempts"])
+                sleep.assert_called_once_with(1)
+
     def test_fetch_bytes_retries_transient_errors_but_not_permanent_errors(self):
         url = "https://dadosabertos.camara.leg.br/api/v2/proposicoes"
         transient_errors = (
@@ -185,7 +236,7 @@ class CamaraBulkTests(unittest.TestCase):
                 self.assertEqual(2, opener.calls)
                 sleep.assert_called_once_with(1)
 
-        for code in (404, 408):
+        for code in (400, 404):
             with self.subTest(permanent_http=code):
                 permanent_http = urllib.error.HTTPError(
                     url, code, "permanent client error", {}, None
@@ -221,6 +272,35 @@ class CamaraBulkTests(unittest.TestCase):
 
         self.assertEqual(1, oversized_opener.calls)
         local_error_sleep.assert_not_called()
+
+    def test_fetch_bytes_retries_http_408_and_425(self):
+        url = "https://dadosabertos.camara.leg.br/api/v2/proposicoes"
+
+        for code in (408, 425):
+            with self.subTest(code=code):
+                opener = SequencedOpener(
+                    [
+                        urllib.error.HTTPError(
+                            url, code, "transient client response", {}, None
+                        ),
+                        FakeResponse(b'{"dados": []}', url),
+                    ]
+                )
+                with (
+                    patch.object(
+                        collector.urllib.request,
+                        "build_opener",
+                        return_value=opener,
+                    ),
+                    patch.object(collector, "validate_public_https_url"),
+                    patch.object(collector.time, "sleep") as sleep,
+                ):
+                    body, final_url, _ = collector.fetch_bytes(url, retries=3)
+
+                self.assertEqual(b'{"dados": []}', body)
+                self.assertEqual(url, final_url)
+                self.assertEqual(2, opener.calls)
+                sleep.assert_called_once_with(1)
 
     def test_fetch_bytes_stops_after_retry_limit(self):
         url = "https://dadosabertos.camara.leg.br/api/v2/proposicoes"
@@ -493,6 +573,53 @@ class CamaraBulkTests(unittest.TestCase):
         self.assertEqual([2025], provenance["api_fallback_years"])
         self.assertEqual("camara_bulk_partial_api_fallback", provenance["mode"])
         self.assertEqual("camara_bulk_partial_api_fallback", metrics["chamber_transport_mode"])
+
+    def test_run_discovery_calls_api_when_bulk_returns_zero_without_failed_years(self):
+        candidates = {"123": candidate()}
+        api_source = {
+            "candidate_id": "123",
+            "candidate_name": "CANDIDATO 123",
+            "source_kind": "institutional",
+            "discovery_status": "exact_content",
+            "source_url": (
+                "https://www.camara.leg.br/proposicoesWeb/"
+                "fichadetramitacao?idProposicao=2026"
+            ),
+        }
+        fallback_calls = []
+
+        def fake_bulk(*args, **kwargs):
+            return [], {
+                "mode": "camara_bulk_daily",
+                "failed_years": [],
+                "year_reports": [],
+                "source_records": 0,
+            }
+
+        def fake_api(api_candidates, *, exact_years):
+            fallback_calls.append(tuple(exact_years))
+            return [api_source], []
+
+        with tempfile.TemporaryDirectory() as tmp:
+            with (
+                patch.object(discovery, "declared_seed_sources", return_value=([], [], {})),
+                patch.object(discovery.camara_bulk, "discover_chamber_bulk", side_effect=fake_bulk),
+                patch.object(discovery, "discover_chamber", side_effect=fake_api),
+            ):
+                payload, _, metrics = discovery.run_discovery(
+                    candidates=candidates,
+                    existing_sources=[],
+                    discover_sites=False,
+                    chamber_bulk_cache_dir=Path(tmp),
+                    chamber_bulk_years=(2023, 2024, 2025, 2026),
+                )
+
+        self.assertEqual([(2026, 2025, 2024, 2023)], fallback_calls)
+        self.assertEqual(1, len(payload["sources"]))
+        provenance = payload["discovery_run"]["chamber_provenance"]
+        self.assertEqual("api_fallback", provenance["mode"])
+        self.assertEqual([2026, 2025, 2024, 2023], provenance["api_fallback_years"])
+        self.assertEqual("api_fallback", metrics["chamber_transport_mode"])
 
     def test_bulk_join_preserves_official_type_themes_and_authorship_scope(self):
         candidates = {"123": candidate()}
