@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-09-22T03:23:39.201505+00:00",
+  "collected_at": "2026-09-22T03:38:28.161813+00:00",
   "uf": "ES",
   "election_year": 2026,
   "counts": {
@@ -14,7 +14,7 @@
     "social_links": 1253,
     "candidates_with_previous_elections": 376,
     "previous_election_records": 1138,
-    "candidates_with_registration_status": 0
+    "candidates_with_registration_status": 547
   },
   "sources": {
     "primary_tse_dataset": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
@@ -123,7 +123,7 @@
     "ales": "https://www.al.es.gov.br/"
   },
   "data_quality": {
-    "registration_status": "O status básico pode vir como #NE no espelho; quando disponível, a ficha usa o julgamento da base oficial de informações complementares.",
+    "registration_status": "Quando a fonte TSE não resolve a situação de candidatura e retorna sentinela como #NE/#NULO, o snapshot publica o estado explícito 'not_available'. Isso registra indisponibilidade sem inferir situação jurídica favorável, desfavorável ou regularidade.",
     "assets": "A fonte factual primária é o TSE. Quando o arquivo oficial bem_candidato_2026 não pode ser transportado pelo runner, o sync pode usar o bootstrap versionado de contingência, com transporte, freshness e hashes registrados em sources.tse_enrichment; ausência de registros não é interpretada como ausência de patrimônio.",
     "photos": "A fonte primária é o pacote ES - Fotos de candidatos do TSE. Como o CDN oficial bloqueia o runner, a UI usa temporariamente um cache público por SQ_CANDIDATO; falhas de imagem caem para placeholder.",
     "electoral_history": "A fonte factual primária é o TSE e o histórico permanece separado do histórico institucional da Câmara. Se o recurso oficial não puder ser transportado pelo runner, o sync pode usar o bootstrap versionado de contingência, com provenance e freshness explícitas.",
