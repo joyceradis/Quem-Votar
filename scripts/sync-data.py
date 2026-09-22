@@ -252,6 +252,64 @@ def _safe_url(value):
     return urllib.parse.urlunsplit((scheme, host, parts.path, parts.query, parts.fragment))
 
 
+def _normalize_social_url(value):
+    value = _safe_url(value)
+    if not value:
+        return None
+    parts = urllib.parse.urlsplit(value)
+    query_parts = []
+    for component in parts.query.split("&") if parts.query else []:
+        if "=" in component:
+            key, raw_value = component.split("=", 1)
+            query_parts.append(f"{key.lower()}={raw_value}")
+        else:
+            query_parts.append(component.lower())
+    return urllib.parse.urlunsplit(
+        (
+            parts.scheme.lower(),
+            parts.netloc.lower(),
+            parts.path,
+            "&".join(query_parts),
+            parts.fragment,
+        )
+    )
+
+
+def _normalize_social_links(values):
+    normalized = []
+    seen = set()
+    for value in values or []:
+        url = _normalize_social_url(value)
+        if not url:
+            continue
+        dedupe_key = url.casefold()
+        if dedupe_key in seen:
+            continue
+        seen.add(dedupe_key)
+        normalized.append(url)
+    return normalized
+
+
+def _history_uf_from_source_url(value):
+    value = clean(value)
+    if not value:
+        return None
+    match = re.search(r"/candidato/[^/]+/([A-Z]{2})/", value, re.I)
+    return match.group(1).upper() if match else None
+
+
+def _normalize_history_records(records):
+    normalized = []
+    for record in records or []:
+        item = dict(record)
+        if not clean(item.get("uf")):
+            uf = _history_uf_from_source_url(item.get("source_url"))
+            if uf:
+                item["uf"] = uf
+        normalized.append(item)
+    return normalized
+
+
 def _previous_candidate_map():
     rows = []
     rows.extend(read_existing_json("candidates-federal.json", []))
@@ -271,6 +329,28 @@ def _restore_field_from_previous(candidates, previous, field):
             candidate[field] = old.get(field)
             restored += 1
     return restored
+
+
+def _stale_source_meta(previous_meta, key, current_meta):
+    previous_source = (
+        ((previous_meta.get("sources") or {}).get("tse_enrichment") or {}).get(key)
+        or {}
+    )
+    if previous_source.get("origin_status") == "bootstrap_mirror":
+        return {
+            **previous_source,
+            "status": "stale_preserved",
+            "official_resource_url": (
+                current_meta.get("url")
+                or previous_source.get("official_resource_url")
+            ),
+            "official_fetch_status": "unavailable",
+            "official_fetch_error": (
+                current_meta.get("error")
+                or previous_source.get("official_fetch_error")
+            ),
+        }
+    return {**current_meta, "status": "stale_preserved"}
 
 
 def _load_enrichment_bootstrap(candidate_ids):
@@ -495,7 +575,11 @@ def enrich_tse_open_data(groups):
             else 0
         )
         if restored:
-            source_meta["candidate_assets"]["status"] = "stale_preserved"
+            source_meta["candidate_assets"] = _stale_source_meta(
+                previous_meta,
+                "candidate_assets",
+                source_meta["candidate_assets"],
+            )
         else:
             applied = _apply_bootstrap_field(candidates, bootstrap, "assets")
             if applied != len(candidates):
@@ -519,14 +603,7 @@ def enrich_tse_open_data(groups):
             if candidate_id in by_id and url:
                 grouped[candidate_id].append(url)
         for candidate_id, urls in grouped.items():
-            seen = set()
-            normalized = []
-            for url in urls:
-                if url in seen:
-                    continue
-                seen.add(url)
-                normalized.append(url)
-            by_id[candidate_id]["social_links"] = normalized
+            by_id[candidate_id]["social_links"] = _normalize_social_links(urls)
     else:
         restored = (
             _restore_field_from_previous(candidates, previous, "social_links")
@@ -534,7 +611,11 @@ def enrich_tse_open_data(groups):
             else 0
         )
         if restored:
-            source_meta["candidate_social"]["status"] = "stale_preserved"
+            source_meta["candidate_social"] = _stale_source_meta(
+                previous_meta,
+                "candidate_social",
+                source_meta["candidate_social"],
+            )
         else:
             applied = _apply_bootstrap_field(candidates, bootstrap, "social_links")
             if applied != len(candidates):
@@ -543,6 +624,11 @@ def enrich_tse_open_data(groups):
                 **(bootstrap_meta or {}),
                 "dataset": "Redes sociais de candidatos - 2026",
             }
+
+    for candidate in candidates:
+        candidate["social_links"] = _normalize_social_links(
+            candidate.get("social_links")
+        )
 
     history_rows = load_dataset(
         "candidate_history",
@@ -625,7 +711,11 @@ def enrich_tse_open_data(groups):
             else 0
         )
         if restored:
-            source_meta["candidate_history"]["status"] = "stale_preserved"
+            source_meta["candidate_history"] = _stale_source_meta(
+                previous_meta,
+                "candidate_history",
+                source_meta["candidate_history"],
+            )
         else:
             applied = _apply_bootstrap_field(candidates, bootstrap, "previous_elections")
             if applied != len(candidates):
@@ -634,6 +724,11 @@ def enrich_tse_open_data(groups):
                 **(bootstrap_meta or {}),
                 "dataset": "Histórico de candidaturas",
             }
+
+    for candidate in candidates:
+        candidate["previous_elections"] = _normalize_history_records(
+            candidate.get("previous_elections")
+        )
 
     counts = {
         "candidates_with_assets": sum(

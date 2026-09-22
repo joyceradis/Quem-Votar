@@ -15,6 +15,7 @@ import html as html_module
 import json
 import re
 import time
+import urllib.parse
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
@@ -110,6 +111,34 @@ def extract_assets(html: str, official_url: str | None):
     }
 
 
+def normalize_social_url(value: str):
+    value = html_module.unescape(value).strip()
+    if not re.match(r"^https?://", value, re.I):
+        return None
+    try:
+        parts = urllib.parse.urlsplit(value)
+    except ValueError:
+        return None
+    if not parts.netloc:
+        return None
+    query_parts = []
+    for component in parts.query.split("&") if parts.query else []:
+        if "=" in component:
+            key, raw_value = component.split("=", 1)
+            query_parts.append(f"{key.lower()}={raw_value}")
+        else:
+            query_parts.append(component.lower())
+    return urllib.parse.urlunsplit(
+        (
+            parts.scheme.lower(),
+            parts.netloc.lower(),
+            parts.path,
+            "&".join(query_parts),
+            parts.fragment,
+        )
+    )
+
+
 def extract_social_links(html: str):
     block = section(html, "canais")
     match = re.search(r'<ul\b[^>]*class=["\'][^"\']*\bcanais\b[^"\']*["\'][^>]*>(.*?)</ul>', block, re.I | re.S)
@@ -118,12 +147,26 @@ def extract_social_links(html: str):
     links = []
     seen = set()
     for href in re.findall(r'<a\b[^>]*href=["\']([^"\']+)["\']', match.group(1), re.I):
-        href = html_module.unescape(href).strip()
-        if not re.match(r"^https?://", href, re.I) or href in seen:
+        normalized = normalize_social_url(href)
+        if not normalized:
             continue
-        seen.add(href)
-        links.append(href)
+        dedupe_key = normalized.casefold()
+        if dedupe_key in seen:
+            continue
+        seen.add(dedupe_key)
+        links.append(normalized)
     return links
+
+
+def history_uf_from_source_url(source_url: str | None):
+    if not source_url:
+        return None
+    match = re.search(
+        r"/candidato/[^/]+/([A-Z]{2})/",
+        source_url,
+        flags=re.I,
+    )
+    return match.group(1).upper() if match else None
 
 
 def extract_history(html: str):
@@ -148,6 +191,7 @@ def extract_history(html: str):
             "year": int(year_text),
             "office": office or None,
             "party": party or None,
+            "uf": history_uf_from_source_url(source_url),
             "location": location or None,
             "votes": int(votes_digits) if votes_digits else None,
             "result": result or None,
