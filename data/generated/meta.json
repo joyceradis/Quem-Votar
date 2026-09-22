@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-09-21T22:43:17.251369+00:00",
+  "collected_at": "2026-09-22T03:23:39.201505+00:00",
   "uf": "ES",
   "election_year": 2026,
   "counts": {
@@ -11,7 +11,7 @@
     "candidates_with_assets": 356,
     "asset_records": 1513,
     "candidates_with_social_links": 447,
-    "social_links": 1266,
+    "social_links": 1253,
     "candidates_with_previous_elections": 376,
     "previous_election_records": 1138,
     "candidates_with_registration_status": 0

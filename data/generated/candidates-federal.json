@@ -48,9 +48,9 @@
       }
     },
     "social_links": [
-      "https://facebook.com/profile.php?ID=61590884098863&LOCALE=PT_BR",
+      "https://facebook.com/profile.php?id=61590884098863&locale=PT_BR",
       "https://instagram.com/adaltopereiradacosta",
-      "https://facebook.com/adalto.costa.723874/?LOCALE=PT_BR"
+      "https://facebook.com/adalto.costa.723874/?locale=PT_BR"
     ],
     "tse_additional": {},
     "previous_elections": [
@@ -61,7 +61,8 @@
         "location": "Pancas",
         "votes": 96,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001208438/2020/56790"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001208438/2020/56790",
+        "uf": "ES"
       },
       {
         "year": 2016,
@@ -70,7 +71,8 @@
         "location": "Pancas",
         "votes": 100,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000010239/2016/56790"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000010239/2016/56790",
+        "uf": "ES"
       },
       {
         "year": 2014,
@@ -79,7 +81,8 @@
         "location": "Espírito Santo",
         "votes": 1465,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000540/2014/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000540/2014/ES",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -145,9 +148,9 @@
     "social_links": [
       "https://facebook.com/share/1hxtmzhapk/?mibextid=wwXIfr",
       "https://facebook.com/share/1gvkyx4hdn/?mibextid=wwXIfr",
-      "https://instagram.com/adrianaboas_es?IGSH=YNDHA2IXCXV6EGFK&UTM_SOURCE=QR",
-      "https://facebook.com/share/1ffdvbpyad/?MIBEXTID=WWXIFR",
-      "https://tiktok.com/@adrianaboas_br?_R=1&_T=ZS-98ANWAPI04F"
+      "https://instagram.com/adrianaboas_es?igsh=YNDHA2IXCXV6EGFK&utm_source=QR",
+      "https://facebook.com/share/1ffdvbpyad/?mibextid=WWXIFR",
+      "https://tiktok.com/@adrianaboas_br?_r=1&_t=ZS-98ANWAPI04F"
     ],
     "tse_additional": {},
     "previous_elections": [
@@ -158,7 +161,8 @@
         "location": "Espírito Santo",
         "votes": 6429,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001615733/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001615733/2022/ES",
+        "uf": "ES"
       },
       {
         "year": 2018,
@@ -167,7 +171,8 @@
         "location": "Espírito Santo",
         "votes": 11152,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000607545/2018/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000607545/2018/ES",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -242,7 +247,8 @@
         "location": "Serra",
         "votes": 3587,
         "result": "Eleito Por QP",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002288555/2024/56995"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002288555/2024/56995",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -306,8 +312,8 @@
       }
     },
     "social_links": [
-      "https://facebook.com/share/1cnjhkkj9h/?MIBEXTID=WWXIFR",
-      "https://instagram.com/ailana_pelissari?IGSH=YTGXCJRLBM1QB2VN&UTM_SOURCE=QR"
+      "https://facebook.com/share/1cnjhkkj9h/?mibextid=WWXIFR",
+      "https://instagram.com/ailana_pelissari?igsh=YTGXCJRLBM1QB2VN&utm_source=QR"
     ],
     "tse_additional": {},
     "previous_elections": [],
@@ -397,7 +403,8 @@
         "location": "Sooretama",
         "votes": 10389,
         "result": "Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001178021/2020/56189"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001178021/2020/56189",
+        "uf": "ES"
       },
       {
         "year": 2016,
@@ -406,7 +413,8 @@
         "location": "Sooretama",
         "votes": 8330,
         "result": "Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000005812/2016/56189"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000005812/2016/56189",
+        "uf": "ES"
       },
       {
         "year": 2012,
@@ -415,7 +423,8 @@
         "location": "Sooretama",
         "votes": 5283,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000009605/2012/56189"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000009605/2012/56189",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -494,7 +503,8 @@
         "location": "Espírito Santo",
         "votes": 3402,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001615728/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001615728/2022/ES",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -560,7 +570,8 @@
         "location": "Espírito Santo",
         "votes": 214,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001646700/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001646700/2022/ES",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -648,8 +659,8 @@
       }
     },
     "social_links": [
-      "https://instagram.com/amaronetotv/?HL=PT-BR",
-      "https://facebook.com/amaronetotv/?LOCALE=PT_BR"
+      "https://instagram.com/amaronetotv/?hl=PT-BR",
+      "https://facebook.com/amaronetotv/?locale=PT_BR"
     ],
     "tse_additional": {},
     "previous_elections": [
@@ -660,7 +671,8 @@
         "location": "Espírito Santo",
         "votes": 52375,
         "result": "Eleito Por Média",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001604531/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001604531/2022/ES",
+        "uf": "ES"
       },
       {
         "year": 2018,
@@ -669,7 +681,8 @@
         "location": "Espírito Santo",
         "votes": 181813,
         "result": "Eleito Por QP",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000607518/2018/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000607518/2018/ES",
+        "uf": "ES"
       },
       {
         "year": 2016,
@@ -678,7 +691,8 @@
         "location": "Vitória",
         "votes": 65554,
         "result": "2º Turno",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000008424/2016/57053"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000008424/2016/57053",
+        "uf": "ES"
       },
       {
         "year": 2014,
@@ -687,7 +701,8 @@
         "location": "Espírito Santo",
         "votes": 55408,
         "result": "Eleito Por QP",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000291/2014/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000291/2014/ES",
+        "uf": "ES"
       }
     ],
     "current_mandate": {
@@ -1029,8 +1044,8 @@
     "social_links": [
       "https://anapaulapsol.com.br",
       "https://threads.com/@apaulapreta50",
-      "https://x.com/paulapreta50?S=21&T=KCNY6PMVKSOWT4XPKEXYYA",
-      "https://facebook.com/anapaula.rocha.92505?LOCALE=PT_BR",
+      "https://x.com/paulapreta50?s=21&t=KCNY6PMVKSOWT4XPKEXYYA",
+      "https://facebook.com/anapaula.rocha.92505?locale=PT_BR",
       "https://instagram.com/apaulapreta50"
     ],
     "tse_additional": {},
@@ -1042,7 +1057,8 @@
         "location": "Vitória",
         "votes": 2670,
         "result": "Eleito Por QP",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002285277/2024/57053"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002285277/2024/57053",
+        "uf": "ES"
       },
       {
         "year": 2022,
@@ -1051,7 +1067,8 @@
         "location": "Espírito Santo",
         "votes": 9153,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001611840/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001611840/2022/ES",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -1124,7 +1141,8 @@
         "location": "Vitória",
         "votes": 21,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002151421/2024/57053"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002151421/2024/57053",
+        "uf": "ES"
       },
       {
         "year": 2020,
@@ -1133,7 +1151,8 @@
         "location": "Vitória",
         "votes": 58,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001116648/2020/57053"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001116648/2020/57053",
+        "uf": "ES"
       },
       {
         "year": 2016,
@@ -1142,7 +1161,8 @@
         "location": "Vitória",
         "votes": 95,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000007704/2016/57053"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000007704/2016/57053",
+        "uf": "ES"
       },
       {
         "year": 2012,
@@ -1151,7 +1171,8 @@
         "location": "Vitória",
         "votes": 73,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000012754/2012/57053"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000012754/2012/57053",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -1284,7 +1305,8 @@
         "location": "Castelo",
         "votes": 163,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001051106/2020/56278"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001051106/2020/56278",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -1375,7 +1397,8 @@
         "location": "Cariacica",
         "votes": 1985,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80001941751/2024/56251"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80001941751/2024/56251",
+        "uf": "ES"
       },
       {
         "year": 2022,
@@ -1384,7 +1407,8 @@
         "location": "Espírito Santo",
         "votes": 58887,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001723276/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001723276/2022/ES",
+        "uf": "ES"
       },
       {
         "year": 2020,
@@ -1393,7 +1417,8 @@
         "location": "Cariacica",
         "votes": 18884,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001162168/2020/56251"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001162168/2020/56251",
+        "uf": "ES"
       },
       {
         "year": 2018,
@@ -1402,7 +1427,8 @@
         "location": "Espírito Santo",
         "votes": 247165,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000607527/2018/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000607527/2018/ES",
+        "uf": "ES"
       },
       {
         "year": 2016,
@@ -1411,7 +1437,8 @@
         "location": "Cariacica",
         "votes": 1002,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000011269/2016/56251"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000011269/2016/56251",
+        "uf": "ES"
       },
       {
         "year": 2014,
@@ -1420,7 +1447,8 @@
         "location": "Espírito Santo",
         "votes": 4929,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000248/2014/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000248/2014/ES",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -1514,7 +1542,8 @@
         "location": "Espírito Santo",
         "votes": 365,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001649880/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001649880/2022/ES",
+        "uf": "ES"
       },
       {
         "year": 2016,
@@ -1523,7 +1552,8 @@
         "location": "Marataízes",
         "votes": 39,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000006297/2016/56120"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000006297/2016/56120",
+        "uf": "ES"
       },
       {
         "year": 2012,
@@ -1532,7 +1562,8 @@
         "location": "Marataízes",
         "votes": 105,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000011422/2012/56120"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000011422/2012/56120",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -1606,7 +1637,8 @@
         "party": "PL",
         "location": "Marataízes",
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002017737/2024/56120"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002017737/2024/56120",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -1712,7 +1744,8 @@
         "location": "Serra",
         "votes": 79,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80001911939/2024/56995"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80001911939/2024/56995",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -1780,7 +1813,8 @@
         "location": "Espírito Santo",
         "votes": 10777,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001620352/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001620352/2022/ES",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -1846,7 +1880,7 @@
     "social_links": [
       "https://facebook.com/brunasoaresbm",
       "https://instagram.com/brunasoaresbm",
-      "https://instagram.com/brunasoaresbm?IGSH=ZMTIEMFZOGVLOTBQ"
+      "https://instagram.com/brunasoaresbm?igsh=ZMTIEMFZOGVLOTBQ"
     ],
     "tse_additional": {},
     "previous_elections": [],
@@ -2036,7 +2070,8 @@
         "location": "Espírito Santo",
         "votes": 31897,
         "result": "Eleito Por QP",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001609916/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001609916/2022/ES",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -2141,7 +2176,8 @@
         "location": "Linhares",
         "votes": 1376,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002293948/2024/56634"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002293948/2024/56634",
+        "uf": "ES"
       },
       {
         "year": 2022,
@@ -2150,7 +2186,8 @@
         "location": "Espírito Santo",
         "votes": 10059,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001615737/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001615737/2022/ES",
+        "uf": "ES"
       },
       {
         "year": 2020,
@@ -2158,7 +2195,8 @@
         "party": "REPUBLICANOS",
         "location": "Marilândia",
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80000986711/2020/57070"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80000986711/2020/57070",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -2287,7 +2325,7 @@
       }
     },
     "social_links": [
-      "https://threads.com/@carlaandresa.oficial?HL=PT-BR",
+      "https://threads.com/@carlaandresa.oficial?hl=PT-BR",
       "https://youtube.com/channel/uccggd0db3yiussdst3uh1-w",
       "https://instagram.com/carlaandresa.oficial"
     ],
@@ -2299,7 +2337,8 @@
         "party": "REPUBLICANOS",
         "location": "Espírito Santo",
         "result": "Concorrendo",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001604498/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001604498/2022/ES",
+        "uf": "ES"
       },
       {
         "year": 2022,
@@ -2307,7 +2346,8 @@
         "party": "SOLIDARIEDADE",
         "location": "Espírito Santo",
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001713734/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001713734/2022/ES",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -2392,7 +2432,8 @@
         "location": "Vitória",
         "votes": 1292,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002335664/2024/57053"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002335664/2024/57053",
+        "uf": "ES"
       },
       {
         "year": 2022,
@@ -2401,7 +2442,8 @@
         "location": "Espírito Santo",
         "votes": 10075,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001620357/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001620357/2022/ES",
+        "uf": "ES"
       },
       {
         "year": 2020,
@@ -2409,7 +2451,8 @@
         "party": "REPUBLICANOS",
         "location": "Vitória",
         "result": "Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001188307/2020/57053"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001188307/2020/57053",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -2494,7 +2537,8 @@
         "location": "Espírito Santo",
         "votes": 9000,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001619791/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001619791/2022/ES",
+        "uf": "ES"
       },
       {
         "year": 2020,
@@ -2503,7 +2547,8 @@
         "location": "Guarapari",
         "votes": 20453,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001004434/2020/56472"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001004434/2020/56472",
+        "uf": "ES"
       },
       {
         "year": 2018,
@@ -2512,7 +2557,8 @@
         "location": "Espírito Santo",
         "votes": 14699,
         "result": "Eleito Por QP",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000619976/2018/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000619976/2018/ES",
+        "uf": "ES"
       },
       {
         "year": 2016,
@@ -2521,7 +2567,8 @@
         "location": "Guarapari",
         "votes": 27772,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000010877/2016/56472"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000010877/2016/56472",
+        "uf": "ES"
       },
       {
         "year": 2014,
@@ -2530,7 +2577,8 @@
         "location": "Espírito Santo",
         "votes": 10159,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000327/2014/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000327/2014/ES",
+        "uf": "ES"
       },
       {
         "year": 2012,
@@ -2539,7 +2587,8 @@
         "location": "Guarapari",
         "votes": 23019,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1719/80000013226/2012/56472"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1719/80000013226/2012/56472",
+        "uf": "ES"
       },
       {
         "year": 2012,
@@ -2548,7 +2597,8 @@
         "location": "Guarapari",
         "votes": 7553,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000005221/2012/56472"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000005221/2012/56472",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -2690,7 +2740,7 @@
     "social_links": [
       "https://instagram.com/eusouclaudialemoses",
       "https://facebook.com/claudialemosoficial",
-      "https://facebook.com/profile.php?ID=100063748441880",
+      "https://facebook.com/profile.php?id=100063748441880",
       "https://instagram.com/direct/t/105483617516575",
       "https://facebook.com/claudialemosdeputada",
       "https://facebook.com/claudiallemosoficial",
@@ -2705,7 +2755,8 @@
         "location": "Espírito Santo",
         "votes": 3810,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001610098/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001610098/2022/ES",
+        "uf": "ES"
       },
       {
         "year": 2020,
@@ -2714,7 +2765,8 @@
         "location": "Cachoeiro de Itapemirim",
         "votes": 435,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80000848099/2020/56235"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80000848099/2020/56235",
+        "uf": "ES"
       },
       {
         "year": 2018,
@@ -2723,7 +2775,8 @@
         "location": "Espírito Santo",
         "votes": 9157,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000607502/2018/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000607502/2018/ES",
+        "uf": "ES"
       },
       {
         "year": 2016,
@@ -2731,7 +2784,8 @@
         "party": "PRP",
         "location": "Cachoeiro de Itapemirim",
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000009403/2016/56235"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000009403/2016/56235",
+        "uf": "ES"
       },
       {
         "year": 2014,
@@ -2740,7 +2794,8 @@
         "location": "Espírito Santo",
         "votes": 10566,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000620/2014/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000620/2014/ES",
+        "uf": "ES"
       },
       {
         "year": 2010,
@@ -2748,7 +2803,8 @@
         "party": "PSB",
         "location": "Espírito Santo",
         "result": "Concorrendo",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14417/80000000193/2010/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14417/80000000193/2010/ES",
+        "uf": "ES"
       },
       {
         "year": 2006,
@@ -2756,7 +2812,8 @@
         "party": "PSB",
         "location": "Espírito Santo",
         "result": "Concorrendo",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14423/10496/2006/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14423/10496/2006/ES",
+        "uf": "ES"
       },
       {
         "year": 2004,
@@ -2764,7 +2821,8 @@
         "party": "PFL",
         "location": "Cachoeiro de Itapemirim",
         "result": "Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14431/184/2004/56235"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14431/184/2004/56235",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -2903,7 +2961,8 @@
         "location": "Vitória",
         "votes": 196,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80001942552/2024/57053"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80001942552/2024/57053",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -3119,7 +3178,7 @@
     "social_links": [
       "https://deputadodavitoria.com.br",
       "https://instagram.com/deputadodavitoria",
-      "https://facebook.com/deputadodavitoria/?LOCALE=PT_BR",
+      "https://facebook.com/deputadodavitoria/?locale=PT_BR",
       "https://youtube.com/@deputadodavitoria",
       "https://tiktok.com/@depdavitoria"
     ],
@@ -3132,7 +3191,8 @@
         "location": "Espírito Santo",
         "votes": 71779,
         "result": "Eleito Por Média",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001650200/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001650200/2022/ES",
+        "uf": "ES"
       },
       {
         "year": 2018,
@@ -3141,7 +3201,8 @@
         "location": "Espírito Santo",
         "votes": 74787,
         "result": "Eleito Por QP",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000611885/2018/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000611885/2018/ES",
+        "uf": "ES"
       },
       {
         "year": 2014,
@@ -3150,7 +3211,8 @@
         "location": "Espírito Santo",
         "votes": 40090,
         "result": "Eleito Por QP",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000377/2014/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000377/2014/ES",
+        "uf": "ES"
       },
       {
         "year": 2012,
@@ -3159,7 +3221,8 @@
         "location": "Colatina",
         "votes": 22319,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000003767/2012/56294"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000003767/2012/56294",
+        "uf": "ES"
       },
       {
         "year": 2010,
@@ -3168,7 +3231,8 @@
         "location": "Espírito Santo",
         "votes": 33374,
         "result": "Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14417/80000000554/2010/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14417/80000000554/2010/ES",
+        "uf": "ES"
       },
       {
         "year": 2008,
@@ -3176,7 +3240,8 @@
         "party": "PDT",
         "location": "Colatina",
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14422/5918/2008/56294"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14422/5918/2008/56294",
+        "uf": "ES"
       },
       {
         "year": 2006,
@@ -3184,7 +3249,8 @@
         "party": "PDT",
         "location": "Espírito Santo",
         "result": "Concorrendo",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14423/10438/2006/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14423/10438/2006/ES",
+        "uf": "ES"
       }
     ],
     "current_mandate": {
@@ -3489,7 +3555,8 @@
         "party": "PTB",
         "location": "São Mateus",
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14431/184/2004/56979"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14431/184/2004/56979",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -3626,7 +3693,8 @@
         "location": "Barra de São Francisco",
         "votes": 480,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002291437/2024/56170"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002291437/2024/56170",
+        "uf": "ES"
       },
       {
         "year": 2020,
@@ -3635,7 +3703,8 @@
         "location": "Barra de São Francisco",
         "votes": 416,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001004216/2020/56170"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001004216/2020/56170",
+        "uf": "ES"
       },
       {
         "year": 2012,
@@ -3644,7 +3713,8 @@
         "location": "Barra de São Francisco",
         "votes": 250,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000008210/2012/56170"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000008210/2012/56170",
+        "uf": "ES"
       },
       {
         "year": 2008,
@@ -3652,7 +3722,8 @@
         "party": "PR",
         "location": "Barra de São Francisco",
         "result": "Concorrendo",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14422/2873/2008/56170"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14422/2873/2008/56170",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -3930,7 +4001,8 @@
         "location": "Iúna",
         "votes": 706,
         "result": "Eleito Por Média",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002142942/2024/56596"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002142942/2024/56596",
+        "uf": "ES"
       },
       {
         "year": 2020,
@@ -3939,7 +4011,8 @@
         "location": "Iúna",
         "votes": 842,
         "result": "Eleito Por QP",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001074746/2020/56596"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001074746/2020/56596",
+        "uf": "ES"
       },
       {
         "year": 2014,
@@ -3947,7 +4020,8 @@
         "party": "PSB",
         "location": "Espírito Santo",
         "result": "Concorrendo",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000301/2014/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000301/2014/ES",
+        "uf": "ES"
       },
       {
         "year": 2012,
@@ -3956,7 +4030,8 @@
         "location": "Iúna",
         "votes": 534,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000007823/2012/56596"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000007823/2012/56596",
+        "uf": "ES"
       },
       {
         "year": 2010,
@@ -3964,7 +4039,8 @@
         "party": "PSB",
         "location": "Espírito Santo",
         "result": "Concorrendo",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14417/80000000475/2010/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14417/80000000475/2010/ES",
+        "uf": "ES"
       },
       {
         "year": 2008,
@@ -3972,7 +4048,8 @@
         "party": "PSB",
         "location": "Iúna",
         "result": "Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14422/2364/2008/56596"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14422/2364/2008/56596",
+        "uf": "ES"
       },
       {
         "year": 2004,
@@ -3980,7 +4057,8 @@
         "party": "PRONA",
         "location": "Iúna",
         "result": "Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14431/244/2004/56596"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14431/244/2004/56596",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -4242,7 +4320,8 @@
         "location": "Santa Maria de Jetibá",
         "votes": 678,
         "result": "Eleito Por Média",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002341469/2024/57932"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002341469/2024/57932",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -4336,8 +4415,8 @@
       }
     },
     "social_links": [
-      "https://instagram.com/erickmusso?IGSH=MTQ3CGKXD2Q5MHDKMG==",
-      "https://facebook.com/share/1mkkq47kdu/?MIBEXTID=WWXIFR"
+      "https://instagram.com/erickmusso?igsh=MTQ3CGKXD2Q5MHDKMG==",
+      "https://facebook.com/share/1mkkq47kdu/?mibextid=WWXIFR"
     ],
     "tse_additional": {},
     "previous_elections": [
@@ -4348,7 +4427,8 @@
         "location": "Espírito Santo",
         "votes": 337642,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001654081/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001654081/2022/ES",
+        "uf": "ES"
       },
       {
         "year": 2018,
@@ -4357,7 +4437,8 @@
         "location": "Espírito Santo",
         "votes": 21188,
         "result": "Eleito Por Média",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000607507/2018/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000607507/2018/ES",
+        "uf": "ES"
       },
       {
         "year": 2016,
@@ -4366,7 +4447,8 @@
         "location": "Aracruz",
         "votes": 13263,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000003425/2016/56111"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000003425/2016/56111",
+        "uf": "ES"
       },
       {
         "year": 2014,
@@ -4375,7 +4457,8 @@
         "location": "Espírito Santo",
         "votes": 14638,
         "result": "Eleito Por QP",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000144/2014/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000144/2014/ES",
+        "uf": "ES"
       },
       {
         "year": 2012,
@@ -4384,7 +4467,8 @@
         "location": "Aracruz",
         "votes": 1546,
         "result": "Eleito Por QP",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000001351/2012/56111"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000001351/2012/56111",
+        "uf": "ES"
       },
       {
         "year": 2008,
@@ -4392,7 +4476,8 @@
         "party": "PSDB",
         "location": "Aracruz",
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14422/1631/2008/56111"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14422/1631/2008/56111",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -4615,7 +4700,7 @@
       "https://tiktok.com/@rigonifelipe",
       "https://instagram.com/rigonifelipe",
       "https://x.com/rigoni_felipe",
-      "https://facebook.com/rigonifelipe?LOCALE=PT_BR"
+      "https://facebook.com/rigonifelipe?locale=PT_BR"
     ],
     "tse_additional": {},
     "previous_elections": [
@@ -4626,7 +4711,8 @@
         "location": "Espírito Santo",
         "votes": 63362,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001610102/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001610102/2022/ES",
+        "uf": "ES"
       },
       {
         "year": 2018,
@@ -4635,7 +4721,8 @@
         "location": "Espírito Santo",
         "votes": 84405,
         "result": "Eleito Por QP",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000620173/2018/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000620173/2018/ES",
+        "uf": "ES"
       },
       {
         "year": 2016,
@@ -4644,7 +4731,8 @@
         "location": "Linhares",
         "votes": 1156,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000008175/2016/56634"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000008175/2016/56634",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -4754,7 +4842,7 @@
       "https://instagram.com/flaviomello2023",
       "https://youtube.com/@flaviocapixabanews7303",
       "https://instagram.com/flaviomello877",
-      "https://facebook.com/profile.php?ID=100091543054966",
+      "https://facebook.com/profile.php?id=100091543054966",
       "https://youtube.com/@tvestudioes5449"
     ],
     "tse_additional": {},
@@ -4766,7 +4854,8 @@
         "location": "Vitória",
         "votes": 35,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002366721/2024/57053"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002366721/2024/57053",
+        "uf": "ES"
       },
       {
         "year": 2020,
@@ -4775,7 +4864,8 @@
         "location": "Vitória",
         "votes": 189,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80000944322/2020/57053"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80000944322/2020/57053",
+        "uf": "ES"
       },
       {
         "year": 2018,
@@ -4783,7 +4873,8 @@
         "party": "PSL",
         "location": "Espírito Santo",
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000607544/2018/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000607544/2018/ES",
+        "uf": "ES"
       },
       {
         "year": 2012,
@@ -4792,7 +4883,8 @@
         "location": "Vitória",
         "votes": 150,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000009210/2012/57053"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000009210/2012/57053",
+        "uf": "ES"
       },
       {
         "year": 2010,
@@ -4801,7 +4893,8 @@
         "location": "Espírito Santo",
         "votes": 384,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14417/80000000282/2010/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14417/80000000282/2010/ES",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -4887,7 +4980,8 @@
         "location": "Aracruz",
         "votes": 275,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002222041/2024/56111"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002222041/2024/56111",
+        "uf": "ES"
       },
       {
         "year": 2012,
@@ -4896,7 +4990,8 @@
         "location": "Aracruz",
         "votes": 174,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000011861/2012/56111"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000011861/2012/56111",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -4997,11 +5092,11 @@
     },
     "social_links": [
       "https://www.vemcomfreitas.com.br",
-      "https://facebook.com/share/1cvkkap8ta/?MIBEXTID=WWXIFR",
-      "https://youtube.com/@freitas40_es?SI=SKWCQRTGCS_3GSO3",
+      "https://facebook.com/share/1cvkkap8ta/?mibextid=WWXIFR",
+      "https://youtube.com/@freitas40_es?si=SKWCQRTGCS_3GSO3",
       "https://instagram.com/freitas40_es",
-      "https://tiktok.com/@freitaus40_es?_R=1&_T=ZS-98BE6CMD2CW",
-      "https://facebook.com/share/1d5wbgcdks/?MIBEXTID=WWXIFR"
+      "https://tiktok.com/@freitaus40_es?_r=1&_t=ZS-98BE6CMD2CW",
+      "https://facebook.com/share/1d5wbgcdks/?mibextid=WWXIFR"
     ],
     "tse_additional": {},
     "previous_elections": [
@@ -5012,7 +5107,8 @@
         "location": "Espírito Santo",
         "votes": 36791,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001620967/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001620967/2022/ES",
+        "uf": "ES"
       },
       {
         "year": 2018,
@@ -5021,7 +5117,8 @@
         "location": "Espírito Santo",
         "votes": 15320,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000625553/2018/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000625553/2018/ES",
+        "uf": "ES"
       },
       {
         "year": 2016,
@@ -5030,7 +5127,8 @@
         "location": "São Mateus",
         "votes": 10797,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000010128/2016/56979"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000010128/2016/56979",
+        "uf": "ES"
       },
       {
         "year": 2014,
@@ -5039,7 +5137,8 @@
         "location": "Espírito Santo",
         "votes": 33945,
         "result": "Eleito Por QP",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000305/2014/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000305/2014/ES",
+        "uf": "ES"
       },
       {
         "year": 2010,
@@ -5048,7 +5147,8 @@
         "location": "Espírito Santo",
         "votes": 24711,
         "result": "Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14417/80000000499/2010/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14417/80000000499/2010/ES",
+        "uf": "ES"
       },
       {
         "year": 2006,
@@ -5056,7 +5156,8 @@
         "party": "PAN",
         "location": "Espírito Santo",
         "result": "Concorrendo",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14423/10314/2006/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14423/10314/2006/ES",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -5134,7 +5235,8 @@
         "location": "Vitória",
         "votes": 71,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002058512/2024/57053"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002058512/2024/57053",
+        "uf": "ES"
       },
       {
         "year": 2022,
@@ -5143,7 +5245,8 @@
         "location": "Espírito Santo",
         "votes": 93,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001652390/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001652390/2022/ES",
+        "uf": "ES"
       },
       {
         "year": 2018,
@@ -5152,7 +5255,8 @@
         "location": "Espírito Santo",
         "votes": 124,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000613532/2018/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000613532/2018/ES",
+        "uf": "ES"
       },
       {
         "year": 2016,
@@ -5161,7 +5265,8 @@
         "location": "Vitória",
         "votes": 87,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000007510/2016/57053"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000007510/2016/57053",
+        "uf": "ES"
       },
       {
         "year": 2014,
@@ -5170,7 +5275,8 @@
         "location": "Espírito Santo",
         "votes": 211,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000071/2014/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000071/2014/ES",
+        "uf": "ES"
       },
       {
         "year": 2012,
@@ -5179,7 +5285,8 @@
         "location": "Vitória",
         "votes": 106,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000007924/2012/57053"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000007924/2012/57053",
+        "uf": "ES"
       },
       {
         "year": 2010,
@@ -5188,7 +5295,8 @@
         "location": "Espírito Santo",
         "votes": 269,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14417/80000000347/2010/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14417/80000000347/2010/ES",
+        "uf": "ES"
       },
       {
         "year": 2008,
@@ -5196,7 +5304,8 @@
         "party": "DEM",
         "location": "Vitória",
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14422/5786/2008/57053"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14422/5786/2008/57053",
+        "uf": "ES"
       },
       {
         "year": 2006,
@@ -5204,7 +5313,8 @@
         "party": "PMN",
         "location": "Espírito Santo",
         "result": "Concorrendo",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14423/10096/2006/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14423/10096/2006/ES",
+        "uf": "ES"
       },
       {
         "year": 2004,
@@ -5212,7 +5322,8 @@
         "party": "PTB",
         "location": "Vitória",
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14431/241/2004/57053"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14431/241/2004/57053",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -5295,7 +5406,8 @@
         "location": "Vila Velha",
         "votes": 429,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80001977206/2024/57037"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80001977206/2024/57037",
+        "uf": "ES"
       },
       {
         "year": 2020,
@@ -5304,7 +5416,8 @@
         "location": "Vila Velha",
         "votes": 780,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80000653215/2020/57037"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80000653215/2020/57037",
+        "uf": "ES"
       },
       {
         "year": 2018,
@@ -5313,7 +5426,8 @@
         "location": "Espírito Santo",
         "votes": 925,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000627364/2018/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000627364/2018/ES",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -5448,7 +5562,7 @@
     },
     "social_links": [
       "https://instagram.com/gilbertinhopsol",
-      "https://facebook.com/gilbertinhopsol?RDID=LWPF6GZXHHWYOIDR&SHARE_URL=HTTPS%3"
+      "https://facebook.com/gilbertinhopsol?rdid=LWPF6GZXHHWYOIDR&share_url=HTTPS%3"
     ],
     "tse_additional": {},
     "previous_elections": [
@@ -5459,7 +5573,8 @@
         "location": "Espírito Santo",
         "votes": 20138,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001610767/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001610767/2022/ES",
+        "uf": "ES"
       },
       {
         "year": 2020,
@@ -5468,7 +5583,8 @@
         "location": "Vitória",
         "votes": 1408,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80000994540/2020/57053"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80000994540/2020/57053",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -5641,7 +5757,8 @@
         "location": "Espírito Santo",
         "votes": 74215,
         "result": "Eleito Por Média",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001604734/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001604734/2022/ES",
+        "uf": "ES"
       },
       {
         "year": 2016,
@@ -5650,7 +5767,8 @@
         "location": "Viana",
         "votes": 25197,
         "result": "Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000001184/2016/57010"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000001184/2016/57010",
+        "uf": "ES"
       },
       {
         "year": 2012,
@@ -5659,7 +5777,8 @@
         "location": "Viana",
         "votes": 20256,
         "result": "Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000006447/2012/57010"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000006447/2012/57010",
+        "uf": "ES"
       },
       {
         "year": 2010,
@@ -5667,7 +5786,8 @@
         "party": "PV",
         "location": "Espírito Santo",
         "result": "Concorrendo",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14417/80000000287/2010/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14417/80000000287/2010/ES",
+        "uf": "ES"
       },
       {
         "year": 2008,
@@ -5675,7 +5795,8 @@
         "party": "PV",
         "location": "Viana",
         "result": "Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14422/3093/2008/57010"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14422/3093/2008/57010",
+        "uf": "ES"
       },
       {
         "year": 2004,
@@ -5683,7 +5804,8 @@
         "party": "PT do B",
         "location": "Viana",
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14431/121/2004/57010"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14431/121/2004/57010",
+        "uf": "ES"
       }
     ],
     "current_mandate": {
@@ -5920,7 +6042,8 @@
         "location": "Espírito Santo",
         "votes": 87994,
         "result": "Eleito Por QP",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001615730/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001615730/2022/ES",
+        "uf": "ES"
       },
       {
         "year": 2020,
@@ -5929,7 +6052,8 @@
         "location": "Vitória",
         "votes": 1560,
         "result": "Eleito Por Média",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001162330/2020/57053"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001162330/2020/57053",
+        "uf": "ES"
       },
       {
         "year": 2018,
@@ -5938,7 +6062,8 @@
         "location": "Espírito Santo",
         "votes": 5395,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000607549/2018/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000607549/2018/ES",
+        "uf": "ES"
       }
     ],
     "current_mandate": {
@@ -6241,7 +6366,8 @@
         "location": "Colatina",
         "votes": 24552,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002172889/2024/56294"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002172889/2024/56294",
+        "uf": "ES"
       },
       {
         "year": 2020,
@@ -6250,7 +6376,8 @@
         "location": "Colatina",
         "votes": 20072,
         "result": "Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001214257/2020/56294"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001214257/2020/56294",
+        "uf": "ES"
       },
       {
         "year": 2018,
@@ -6259,7 +6386,8 @@
         "location": "Espírito Santo",
         "votes": 6643,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000613549/2018/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000613549/2018/ES",
+        "uf": "ES"
       },
       {
         "year": 2014,
@@ -6268,7 +6396,8 @@
         "location": "Espírito Santo",
         "votes": 42848,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000478/2014/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000478/2014/ES",
+        "uf": "ES"
       },
       {
         "year": 2004,
@@ -6276,7 +6405,8 @@
         "party": "PSB",
         "location": "Colatina",
         "result": "Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14431/287/2004/56294"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14431/287/2004/56294",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -6369,7 +6499,8 @@
         "location": "Santa Maria de Jetibá",
         "votes": 9011,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002255228/2024/57932"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002255228/2024/57932",
+        "uf": "ES"
       },
       {
         "year": 2020,
@@ -6378,7 +6509,8 @@
         "location": "Santa Maria de Jetibá",
         "votes": 9883,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001098204/2020/57932"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001098204/2020/57932",
+        "uf": "ES"
       },
       {
         "year": 2018,
@@ -6387,7 +6519,8 @@
         "location": "Espírito Santo",
         "votes": 14635,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000607528/2018/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000607528/2018/ES",
+        "uf": "ES"
       },
       {
         "year": 2016,
@@ -6396,7 +6529,8 @@
         "location": "Santa Maria de Jetibá",
         "votes": 8211,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000002212/2016/57932"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000002212/2016/57932",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -6464,7 +6598,8 @@
         "location": "Guarapari",
         "votes": 912,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002300373/2024/56472"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002300373/2024/56472",
+        "uf": "ES"
       },
       {
         "year": 2022,
@@ -6473,7 +6608,8 @@
         "location": "Espírito Santo",
         "votes": 2473,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001651648/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001651648/2022/ES",
+        "uf": "ES"
       },
       {
         "year": 2020,
@@ -6482,7 +6618,8 @@
         "location": "Guarapari",
         "votes": 713,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001124383/2020/56472"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001124383/2020/56472",
+        "uf": "ES"
       },
       {
         "year": 2018,
@@ -6491,7 +6628,8 @@
         "location": "Espírito Santo",
         "votes": 2376,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000613548/2018/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000613548/2018/ES",
+        "uf": "ES"
       },
       {
         "year": 2016,
@@ -6500,7 +6638,8 @@
         "location": "Marataízes",
         "votes": 180,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000005842/2016/56120"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000005842/2016/56120",
+        "uf": "ES"
       },
       {
         "year": 2010,
@@ -6508,7 +6647,8 @@
         "party": "PRP",
         "location": "Espírito Santo",
         "result": "Indeferido Com Recurso",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14417/80000000231/2010/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14417/80000000231/2010/ES",
+        "uf": "ES"
       },
       {
         "year": 2008,
@@ -6516,7 +6656,8 @@
         "party": "PPS",
         "location": "Marataízes",
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14422/3542/2008/56120"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14422/3542/2008/56120",
+        "uf": "ES"
       },
       {
         "year": 2006,
@@ -6524,7 +6665,8 @@
         "party": "PFL",
         "location": "Espírito Santo",
         "result": "Concorrendo",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14423/10229/2006/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14423/10229/2006/ES",
+        "uf": "ES"
       },
       {
         "year": 2004,
@@ -6532,7 +6674,8 @@
         "party": "PFL",
         "location": "Guarapari",
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14431/83/2004/56472"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14431/83/2004/56472",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -6600,7 +6743,7 @@
       "https://queroapoiar.com.br/IRINYLOPES",
       "https://iriny.com.br",
       "https://web.facebook.com/irinylopes1333",
-      "https://facebook.com/profile.php?ID=61592136744658",
+      "https://facebook.com/profile.php?id=61592136744658",
       "https://x.com/iriny_13",
       "https://instagram.com/irinylopes",
       "https://chat.whatsapp.com/divuvslwnewed5ldetiua1",
@@ -6617,7 +6760,8 @@
         "location": "Espírito Santo",
         "votes": 36720,
         "result": "Eleito Por QP",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001719701/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001719701/2022/ES",
+        "uf": "ES"
       },
       {
         "year": 2018,
@@ -6626,7 +6770,8 @@
         "location": "Espírito Santo",
         "votes": 18349,
         "result": "Eleito Por QP",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000626755/2018/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000626755/2018/ES",
+        "uf": "ES"
       },
       {
         "year": 2014,
@@ -6635,7 +6780,8 @@
         "location": "Espírito Santo",
         "votes": 43858,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000402/2014/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000402/2014/ES",
+        "uf": "ES"
       },
       {
         "year": 2012,
@@ -6644,7 +6790,8 @@
         "location": "Vitória",
         "votes": 34689,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000009757/2012/57053"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000009757/2012/57053",
+        "uf": "ES"
       },
       {
         "year": 2010,
@@ -6653,7 +6800,8 @@
         "location": "Espírito Santo",
         "votes": 74534,
         "result": "Média",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14417/80000000199/2010/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14417/80000000199/2010/ES",
+        "uf": "ES"
       },
       {
         "year": 2006,
@@ -6661,7 +6809,8 @@
         "party": "PT",
         "location": "Espírito Santo",
         "result": "Concorrendo",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14423/10048/2006/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14423/10048/2006/ES",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -6731,7 +6880,7 @@
       }
     },
     "social_links": [
-      "https://facebook.com/profile.php?ID=100043456713426",
+      "https://facebook.com/profile.php?id=100043456713426",
       "https://instagram.com/jaquelinelopesarnaldo"
     ],
     "tse_additional": {},
@@ -6743,7 +6892,8 @@
         "location": "Espírito Santo",
         "votes": 17,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001652392/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001652392/2022/ES",
+        "uf": "ES"
       },
       {
         "year": 2020,
@@ -6752,7 +6902,8 @@
         "location": "Vitória",
         "votes": 5,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001237971/2020/57053"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001237971/2020/57053",
+        "uf": "ES"
       },
       {
         "year": 2018,
@@ -6761,7 +6912,8 @@
         "location": "Espírito Santo",
         "votes": 64,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000625560/2018/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000625560/2018/ES",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -6878,7 +7030,8 @@
         "location": "Espírito Santo",
         "votes": 51317,
         "result": "Eleito Por Média",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001719422/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001719422/2022/ES",
+        "uf": "ES"
       },
       {
         "year": 2020,
@@ -6886,7 +7039,8 @@
         "party": "PT",
         "location": "Vitória",
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001072802/2020/57053"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001072802/2020/57053",
+        "uf": "ES"
       },
       {
         "year": 2018,
@@ -6895,7 +7049,8 @@
         "location": "Espírito Santo",
         "votes": 142654,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000626722/2018/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000626722/2018/ES",
+        "uf": "ES"
       }
     ],
     "current_mandate": {
@@ -7050,7 +7205,7 @@
       }
     },
     "social_links": [
-      "https://instagram.com/jailsoncoutinho13?IGSH=MWLZYW0ZZM41CW9UBW=="
+      "https://instagram.com/jailsoncoutinho13?igsh=MWLZYW0ZZM41CW9UBW=="
     ],
     "tse_additional": {},
     "previous_elections": [
@@ -7061,7 +7216,8 @@
         "location": "Aracruz",
         "votes": 206,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80001919450/2024/56111"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80001919450/2024/56111",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -7136,7 +7292,8 @@
         "location": "Colatina",
         "votes": 74,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002145466/2024/56294"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002145466/2024/56294",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -7256,7 +7413,7 @@
       "https://youtube.com/@jhonnsom70",
       "https://x.com/jhonnsom70",
       "https://threads.com/@jhonnsom70",
-      "https://facebook.com/profile.php?ID=61576917943728",
+      "https://facebook.com/profile.php?id=61576917943728",
       "https://instagram.com/jhonnsom70",
       "https://instagram.com/escomjhonnsom70",
       "https://instagram.com/mulheres_comjhonnsom70"
@@ -7367,7 +7524,7 @@
     },
     "social_links": [
       "https://gmail.com",
-      "https://threads.com/@joaoccoser?IGSHID=NTC4MTIWNJQ2YQ%3D%3D",
+      "https://threads.com/@joaoccoser?igshid=NTC4MTIWNJQ2YQ%3D%3D",
       "https://facebook.com/joaoccoser",
       "https://youtube.com/@joaocoser7745",
       "https://x.com/joaoccoser",
@@ -7382,7 +7539,8 @@
         "location": "Vitória",
         "votes": 29339,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002335761/2024/57053"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002335761/2024/57053",
+        "uf": "ES"
       },
       {
         "year": 2022,
@@ -7391,7 +7549,8 @@
         "location": "Espírito Santo",
         "votes": 58279,
         "result": "Eleito Por QP",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001719711/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001719711/2022/ES",
+        "uf": "ES"
       },
       {
         "year": 2020,
@@ -7400,7 +7559,8 @@
         "location": "Vitória",
         "votes": 37373,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001072803/2020/57053"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001072803/2020/57053",
+        "uf": "ES"
       },
       {
         "year": 2018,
@@ -7409,7 +7569,8 @@
         "location": "Espírito Santo",
         "votes": 37836,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000626745/2018/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000626745/2018/ES",
+        "uf": "ES"
       },
       {
         "year": 2014,
@@ -7418,7 +7579,8 @@
         "location": "Espírito Santo",
         "votes": 338810,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000397/2014/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000397/2014/ES",
+        "uf": "ES"
       },
       {
         "year": 2008,
@@ -7426,7 +7588,8 @@
         "party": "PT",
         "location": "Vitória",
         "result": "Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14422/5992/2008/57053"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14422/5992/2008/57053",
+        "uf": "ES"
       },
       {
         "year": 2004,
@@ -7434,7 +7597,8 @@
         "party": "PT",
         "location": "Vitória",
         "result": "Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14431/39/2004/57053"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14431/39/2004/57053",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -7594,7 +7758,8 @@
         "location": "Espírito Santo",
         "votes": 241,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001645729/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001645729/2022/ES",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -7738,7 +7903,8 @@
         "party": "PPS",
         "location": "Guarapari",
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14422/1172/2008/56472"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14422/1172/2008/56472",
+        "uf": "ES"
       },
       {
         "year": 2004,
@@ -7746,7 +7912,8 @@
         "party": "PPS",
         "location": "Guarapari",
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14431/75/2004/56472"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14431/75/2004/56472",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -7822,7 +7989,8 @@
         "location": "Linhares",
         "votes": 1158,
         "result": "Eleito Por QP",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002168730/2024/56634"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002168730/2024/56634",
+        "uf": "ES"
       },
       {
         "year": 2020,
@@ -7831,7 +7999,8 @@
         "location": "Linhares",
         "votes": 798,
         "result": "Eleito Por Média",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001066949/2020/56634"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001066949/2020/56634",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -8177,7 +8346,8 @@
         "party": "PSL",
         "location": "Espírito Santo",
         "result": "Concorrendo",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000607547/2018/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000607547/2018/ES",
+        "uf": "ES"
       },
       {
         "year": 2016,
@@ -8186,7 +8356,8 @@
         "location": "Cachoeiro de Itapemirim",
         "votes": 826,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000010083/2016/56235"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000010083/2016/56235",
+        "uf": "ES"
       },
       {
         "year": 2012,
@@ -8195,7 +8366,8 @@
         "location": "Cachoeiro de Itapemirim",
         "votes": 473,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000011213/2012/56235"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000011213/2012/56235",
+        "uf": "ES"
       },
       {
         "year": 2010,
@@ -8204,7 +8376,8 @@
         "location": "Espírito Santo",
         "votes": 4521,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14417/80000000201/2010/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14417/80000000201/2010/ES",
+        "uf": "ES"
       },
       {
         "year": 2008,
@@ -8212,7 +8385,8 @@
         "party": "PC do B",
         "location": "Cachoeiro de Itapemirim",
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14422/1344/2008/56235"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14422/1344/2008/56235",
+        "uf": "ES"
       },
       {
         "year": 2004,
@@ -8220,7 +8394,8 @@
         "party": "PT",
         "location": "Cachoeiro de Itapemirim",
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14431/359/2004/56235"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14431/359/2004/56235",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -8301,7 +8476,8 @@
         "location": "Vila Velha",
         "votes": 365,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002141421/2024/57037"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002141421/2024/57037",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -8371,10 +8547,10 @@
       }
     },
     "social_links": [
-      "https://threads.com/@lorenavasquess?IGSHID=NTC4MTIWNJQ2YQ==",
-      "https://tiktok.com/@lorena.vasques6?_R=1&_T=ZS-98T0RICUK5M",
-      "https://facebook.com/share/1bbtnklvzz/?MIBEXTID=WWXIFR",
-      "https://youtube.com/@lorenavasques?SI=-I2PDULJMKSPXN92",
+      "https://threads.com/@lorenavasquess?igshid=NTC4MTIWNJQ2YQ==",
+      "https://tiktok.com/@lorena.vasques6?_r=1&_t=ZS-98T0RICUK5M",
+      "https://facebook.com/share/1bbtnklvzz/?mibextid=WWXIFR",
+      "https://youtube.com/@lorenavasques?si=-I2PDULJMKSPXN92",
       "https://instagram.com/lorenavasquess"
     ],
     "tse_additional": {},
@@ -8386,7 +8562,8 @@
         "location": "Cachoeiro de Itapemirim",
         "votes": 11643,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002051567/2024/56235"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002051567/2024/56235",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -8529,7 +8706,8 @@
         "location": "Viana",
         "votes": 1251,
         "result": "Eleito Por Média",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002029091/2024/57010"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002029091/2024/57010",
+        "uf": "ES"
       },
       {
         "year": 2020,
@@ -8538,7 +8716,8 @@
         "location": "Viana",
         "votes": 477,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001181102/2020/57010"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001181102/2020/57010",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -8619,7 +8798,8 @@
         "location": "Espírito Santo",
         "votes": 29490,
         "result": "Eleito Por QP",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001648800/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001648800/2022/ES",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -8714,7 +8894,8 @@
         "party": "PSL",
         "location": "João Neiva",
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001185505/2020/56626"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001185505/2020/56626",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -8864,7 +9045,8 @@
         "location": "Anchieta",
         "votes": 3573,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002199148/2024/56073"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002199148/2024/56073",
+        "uf": "ES"
       },
       {
         "year": 2012,
@@ -8873,7 +9055,8 @@
         "location": "Anchieta",
         "votes": 607,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000003895/2012/56073"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000003895/2012/56073",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -8937,9 +9120,9 @@
       }
     },
     "social_links": [
-      "https://x.com/dacassia1?S=11",
-      "https://facebook.com/cassia.c.guimaraes.5?MIBEXTID=WWXIFR&RDID=JBEE8EXNB3BUV",
-      "https://instagram.com/majcassiacguimaraes5?IGSH=MW8YAHD0ATGWDDL4ZQ%3D%3D&UTM"
+      "https://x.com/dacassia1?s=11",
+      "https://facebook.com/cassia.c.guimaraes.5?mibextid=WWXIFR&rdid=JBEE8EXNB3BUV",
+      "https://instagram.com/majcassiacguimaraes5?igsh=MW8YAHD0ATGWDDL4ZQ%3D%3D&utm"
     ],
     "tse_additional": {},
     "previous_elections": [
@@ -8950,7 +9133,8 @@
         "location": "Vitória",
         "votes": 115,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80001989258/2024/57053"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80001989258/2024/57053",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -9154,7 +9338,7 @@
     "social_links": [
       "https://manato22.com.br",
       "https://youtube.com/channel/ucfhqp0nfrq67rbtcq0xseta",
-      "https://x.com/manato_es?S=11&T=-ZPSHRYJUF74WLWODVJVDQ",
+      "https://x.com/manato_es?s=11&t=-ZPSHRYJUF74WLWODVJVDQ",
       "https://facebook.com/manato.es",
       "https://instagram.com/manato_es"
     ],
@@ -9167,7 +9351,8 @@
         "location": "Espírito Santo",
         "votes": 800598,
         "result": "2º Turno",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001721262/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001721262/2022/ES",
+        "uf": "ES"
       },
       {
         "year": 2018,
@@ -9176,7 +9361,8 @@
         "location": "Espírito Santo",
         "votes": 525973,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000607525/2018/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000607525/2018/ES",
+        "uf": "ES"
       },
       {
         "year": 2014,
@@ -9185,7 +9371,8 @@
         "location": "Espírito Santo",
         "votes": 67631,
         "result": "Eleito Por Média",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000473/2014/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000473/2014/ES",
+        "uf": "ES"
       },
       {
         "year": 2010,
@@ -9194,7 +9381,8 @@
         "location": "Espírito Santo",
         "votes": 60700,
         "result": "Média",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14417/80000000138/2010/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14417/80000000138/2010/ES",
+        "uf": "ES"
       },
       {
         "year": 2006,
@@ -9202,7 +9390,8 @@
         "party": "PDT",
         "location": "Espírito Santo",
         "result": "Concorrendo",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14423/10523/2006/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14423/10523/2006/ES",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -9303,9 +9492,9 @@
     },
     "social_links": [
       "https://instagram.com/emanuelapedroso.es",
-      "https://tiktok.com/@emanuelapedroso.es?_R=1&_T=ZS-98PQCBRU5VW",
+      "https://tiktok.com/@emanuelapedroso.es?_r=1&_t=ZS-98PQCBRU5VW",
       "https://x.com/manupeloes",
-      "https://facebook.com/emanuelapedroso.es?LOCALE=PT_BR"
+      "https://facebook.com/emanuelapedroso.es?locale=PT_BR"
     ],
     "tse_additional": {},
     "previous_elections": [
@@ -9316,7 +9505,8 @@
         "location": "Alto Rio Novo",
         "votes": 2471,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000001971/2016/56065"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000001971/2016/56065",
+        "uf": "ES"
       },
       {
         "year": 2012,
@@ -9325,7 +9515,8 @@
         "location": "Alto Rio Novo",
         "votes": 1823,
         "result": "Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000013102/2012/56065"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000013102/2012/56065",
+        "uf": "ES"
       },
       {
         "year": 2012,
@@ -9333,7 +9524,8 @@
         "party": "PDT",
         "location": "Alto Rio Novo",
         "result": "Concorrendo",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000005007/2012/56065"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000005007/2012/56065",
+        "uf": "ES"
       },
       {
         "year": 2008,
@@ -9341,7 +9533,8 @@
         "party": "PDT",
         "location": "Alto Rio Novo",
         "result": "Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14422/973/2008/56065"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14422/973/2008/56065",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -9511,7 +9704,8 @@
         "location": "Espírito Santo",
         "votes": 41627,
         "result": "Eleito Por QP",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001609613/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001609613/2022/ES",
+        "uf": "ES"
       },
       {
         "year": 2018,
@@ -9520,7 +9714,8 @@
         "location": "Espírito Santo",
         "votes": 19595,
         "result": "Eleito Por Média",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000622478/2018/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000622478/2018/ES",
+        "uf": "ES"
       },
       {
         "year": 2016,
@@ -9529,7 +9724,8 @@
         "location": "Cariacica",
         "votes": 71590,
         "result": "2º Turno",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000007617/2016/56251"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000007617/2016/56251",
+        "uf": "ES"
       },
       {
         "year": 2014,
@@ -9538,7 +9734,8 @@
         "location": "Espírito Santo",
         "votes": 28234,
         "result": "Eleito Por QP",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000651/2014/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000651/2014/ES",
+        "uf": "ES"
       },
       {
         "year": 2012,
@@ -9547,7 +9744,8 @@
         "location": "Cariacica",
         "votes": 43068,
         "result": "2º Turno",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000005446/2012/56251"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000005446/2012/56251",
+        "uf": "ES"
       },
       {
         "year": 2010,
@@ -9556,7 +9754,8 @@
         "location": "Espírito Santo",
         "votes": 20417,
         "result": "Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14417/80000000462/2010/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14417/80000000462/2010/ES",
+        "uf": "ES"
       },
       {
         "year": 2008,
@@ -9564,7 +9763,8 @@
         "party": "PTB",
         "location": "Cariacica",
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14422/1940/2008/56251"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14422/1940/2008/56251",
+        "uf": "ES"
       },
       {
         "year": 2006,
@@ -9572,7 +9772,8 @@
         "party": "PTB",
         "location": "Espírito Santo",
         "result": "Concorrendo",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14423/10198/2006/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14423/10198/2006/ES",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -9644,7 +9845,7 @@
       }
     },
     "social_links": [
-      "https://instagram.com/malvesdasilva158?IGSH=AGDZMDB4YXQ4B2CY",
+      "https://instagram.com/malvesdasilva158?igsh=AGDZMDB4YXQ4B2CY",
       "https://facebook.com/maria.alvesdasilvazotti.9"
     ],
     "tse_additional": {},
@@ -9809,7 +10010,8 @@
         "location": "Espírito Santo",
         "votes": 42640,
         "result": "Eleito Por Média",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001604529/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001604529/2022/ES",
+        "uf": "ES"
       },
       {
         "year": 2016,
@@ -9818,7 +10020,8 @@
         "location": "Cariacica",
         "votes": 2385,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000007943/2016/56251"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000007943/2016/56251",
+        "uf": "ES"
       },
       {
         "year": 2012,
@@ -9827,7 +10030,8 @@
         "location": "Cariacica",
         "votes": 2485,
         "result": "Eleito Por QP",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000011365/2012/56251"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000011365/2012/56251",
+        "uf": "ES"
       },
       {
         "year": 2008,
@@ -9835,7 +10039,8 @@
         "party": "PP",
         "location": "Cariacica",
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14422/6796/2008/56251"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14422/6796/2008/56251",
+        "uf": "ES"
       }
     ],
     "current_mandate": {
@@ -10110,7 +10315,8 @@
         "location": "Minas Gerais",
         "votes": 3042,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/MG/2040602022/130001668937/2022/MG"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/MG/2040602022/130001668937/2022/MG",
+        "uf": "MG"
       },
       {
         "year": 2020,
@@ -10119,7 +10325,8 @@
         "location": "Lajinha",
         "votes": 516,
         "result": "Eleito Por Média",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/MG/2030402020/130000710920/2020/47538"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/MG/2030402020/130000710920/2020/47538",
+        "uf": "MG"
       }
     ],
     "current_mandate": null,
@@ -10245,7 +10452,8 @@
         "location": "Tocantins",
         "votes": 3619,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/NORTE/TO/2022802018/270000621002/2018/TO"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/NORTE/TO/2022802018/270000621002/2018/TO",
+        "uf": "TO"
       },
       {
         "year": 2004,
@@ -10253,7 +10461,8 @@
         "party": "PC do B",
         "location": "Tubarão",
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUL/SC/14431/290/2004/83674"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUL/SC/14431/290/2004/83674",
+        "uf": "SC"
       }
     ],
     "current_mandate": null,
@@ -10338,7 +10547,8 @@
         "location": "Vila Velha",
         "votes": 709,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80001895332/2024/57037"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80001895332/2024/57037",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -10450,7 +10660,8 @@
         "location": "Espírito Santo",
         "votes": 39539,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001650197/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001650197/2022/ES",
+        "uf": "ES"
       },
       {
         "year": 2020,
@@ -10459,7 +10670,8 @@
         "location": "Vila Velha",
         "votes": 39219,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001173826/2020/57037"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001173826/2020/57037",
+        "uf": "ES"
       },
       {
         "year": 2018,
@@ -10468,7 +10680,8 @@
         "location": "Espírito Santo",
         "votes": 53787,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000622444/2018/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000622444/2018/ES",
+        "uf": "ES"
       },
       {
         "year": 2016,
@@ -10477,7 +10690,8 @@
         "location": "Vila Velha",
         "votes": 65745,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000002957/2016/57037"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000002957/2016/57037",
+        "uf": "ES"
       },
       {
         "year": 2014,
@@ -10486,7 +10700,8 @@
         "location": "Espírito Santo",
         "votes": 522920,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000762/2014/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000762/2014/ES",
+        "uf": "ES"
       },
       {
         "year": 2014,
@@ -10494,7 +10709,8 @@
         "party": "PV",
         "location": "Espírito Santo",
         "result": "Concorrendo",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000173/2014/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000173/2014/ES",
+        "uf": "ES"
       },
       {
         "year": 2012,
@@ -10503,7 +10719,8 @@
         "location": "Vila Velha",
         "votes": 77468,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000002348/2012/57037"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000002348/2012/57037",
+        "uf": "ES"
       },
       {
         "year": 2008,
@@ -10511,7 +10728,8 @@
         "party": "PR",
         "location": "Vila Velha",
         "result": "2º Turno",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14422/4417/2008/57037"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14422/4417/2008/57037",
+        "uf": "ES"
       },
       {
         "year": 2006,
@@ -10519,7 +10737,8 @@
         "party": "PL",
         "location": "Espírito Santo",
         "result": "Concorrendo",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14423/10052/2006/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14423/10052/2006/ES",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -10578,10 +10797,10 @@
     "social_links": [
       "https://kwai-video.com/U/@OLGALIPAUS13/AODPC4W6",
       "https://www.olgalipaus.com.br",
-      "https://facebook.com/share/1jltapuex2/?MIBEXTID=WWXIFR",
-      "https://instagram.com/olgalipaus13?IGSH=ZMZ6EGG1ADEZZM41&UTM_SOURCE=QR",
-      "https://tiktok.com/@olgalipaus13?_R=1&_T=ZS-98LWOLX2EFY",
-      "https://facebook.com/share/18dkez21lu/?MIBEXTID=WWXIFR"
+      "https://facebook.com/share/1jltapuex2/?mibextid=WWXIFR",
+      "https://instagram.com/olgalipaus13?igsh=ZMZ6EGG1ADEZZM41&utm_source=QR",
+      "https://tiktok.com/@olgalipaus13?_r=1&_t=ZS-98LWOLX2EFY",
+      "https://facebook.com/share/18dkez21lu/?mibextid=WWXIFR"
     ],
     "tse_additional": {},
     "previous_elections": [],
@@ -10657,7 +10876,8 @@
         "location": "Serra",
         "votes": 37,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002362961/2024/56995"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002362961/2024/56995",
+        "uf": "ES"
       },
       {
         "year": 2020,
@@ -10665,7 +10885,8 @@
         "party": "DC",
         "location": "Serra",
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001193147/2020/56995"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001193147/2020/56995",
+        "uf": "ES"
       },
       {
         "year": 2012,
@@ -10674,7 +10895,8 @@
         "location": "Serra",
         "votes": 120,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000004767/2012/56995"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000004767/2012/56995",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -10731,7 +10953,7 @@
       }
     },
     "social_links": [
-      "https://instagram.com/mauricio_santos300?IGSH=ZWTOYMRKOHL4MHY0"
+      "https://instagram.com/mauricio_santos300?igsh=ZWTOYMRKOHL4MHY0"
     ],
     "tse_additional": {},
     "previous_elections": [
@@ -10742,7 +10964,8 @@
         "location": "Serra",
         "votes": 84,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002362974/2024/56995"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002362974/2024/56995",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -10860,7 +11083,7 @@
       }
     },
     "social_links": [
-      "https://instagram.com/pedrofrancez?IGSH=EWI1ZJVQCGRONHOW&UTM_SOURCE=QR"
+      "https://instagram.com/pedrofrancez?igsh=EWI1ZJVQCGRONHOW&utm_source=QR"
     ],
     "tse_additional": {},
     "previous_elections": [],
@@ -10918,7 +11141,7 @@
       }
     },
     "social_links": [
-      "https://instagram.com/penelopevfrosa?IGSH=Y2XZOWWZNDVSZDCX&UTM_SOURCE=QR"
+      "https://instagram.com/penelopevfrosa?igsh=Y2XZOWWZNDVSZDCX&utm_source=QR"
     ],
     "tse_additional": {},
     "previous_elections": [],
@@ -11016,7 +11239,8 @@
         "location": "Espírito Santo",
         "votes": 45260,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001651994/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001651994/2022/ES",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -11162,7 +11386,8 @@
         "location": "Cariacica",
         "votes": 61,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001160237/2020/56251"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001160237/2020/56251",
+        "uf": "ES"
       },
       {
         "year": 2016,
@@ -11171,7 +11396,8 @@
         "location": "Cariacica",
         "votes": 47,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000008432/2016/56251"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000008432/2016/56251",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -11330,7 +11556,7 @@
       "https://instagram.com/jadirpela",
       "https://br.linkedin.com/in/jadir-pella-191647394",
       "https://threads.com/@jadirpela",
-      "https://facebook.com/profile.php?ID=61584095835216",
+      "https://facebook.com/profile.php?id=61584095835216",
       "https://facebook.com/jadirifes",
       "https://facebook.com/jadirpela.com.br"
     ],
@@ -11343,7 +11569,8 @@
         "location": "Espírito Santo",
         "votes": 9712,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000304/2014/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000304/2014/ES",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -11407,7 +11634,7 @@
       }
     },
     "social_links": [
-      "https://facebook.com/dilcea.marvila?LOCALE=PT_BR",
+      "https://facebook.com/dilcea.marvila?locale=PT_BR",
       "https://instagram.com/dilceamarvila"
     ],
     "tse_additional": {},
@@ -11419,7 +11646,8 @@
         "location": "Marataízes",
         "votes": 474,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80001950200/2024/56120"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80001950200/2024/56120",
+        "uf": "ES"
       },
       {
         "year": 2014,
@@ -11428,7 +11656,8 @@
         "location": "Espírito Santo",
         "votes": 2351,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000035/2014/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000035/2014/ES",
+        "uf": "ES"
       },
       {
         "year": 2012,
@@ -11436,7 +11665,8 @@
         "party": "PR",
         "location": "Marataízes",
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000010770/2012/56120"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000010770/2012/56120",
+        "uf": "ES"
       },
       {
         "year": 2010,
@@ -11445,7 +11675,8 @@
         "location": "Espírito Santo",
         "votes": 9046,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14417/80000000139/2010/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14417/80000000139/2010/ES",
+        "uf": "ES"
       },
       {
         "year": 2008,
@@ -11453,7 +11684,8 @@
         "party": "PR",
         "location": "Marataízes",
         "result": "Concorrendo",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14422/3385/2008/56120"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14422/3385/2008/56120",
+        "uf": "ES"
       },
       {
         "year": 2004,
@@ -11461,7 +11693,8 @@
         "party": "PP",
         "location": "Marataízes",
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14431/23/2004/56120"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14431/23/2004/56120",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -11536,7 +11769,8 @@
         "party": "PODE",
         "location": "São Mateus",
         "result": "Concorrendo",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002262519/2024/56979"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002262519/2024/56979",
+        "uf": "ES"
       },
       {
         "year": 2024,
@@ -11544,7 +11778,8 @@
         "party": "PODE",
         "location": "São Mateus",
         "result": "Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002356242/2024/56979"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002356242/2024/56979",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -11610,7 +11845,8 @@
         "location": "Espírito Santo",
         "votes": 487,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001724209/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001724209/2022/ES",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -11748,9 +11984,9 @@
       }
     },
     "social_links": [
-      "https://tiktok.com/404?FROMURL=/RAFAELPACHECO4022",
+      "https://tiktok.com/404?fromurl=/RAFAELPACHECO4022",
       "https://threads.com/@rafaelrodrigopacheco",
-      "https://facebook.com/rafaelrodrigopachecosalaroli?MIBEXTID=WWXIFR&RDID=QUINU",
+      "https://facebook.com/rafaelrodrigopachecosalaroli?mibextid=WWXIFR&rdid=QUINU",
       "https://instagram.com/rafaelrodrigopacheco"
     ],
     "tse_additional": {},
@@ -11835,12 +12071,12 @@
     },
     "social_links": [
       "https://www.rafaelprimo.com.br",
-      "https://instagram.com/rafaelprimo?IGSH=MXDNYNB0BJB6EWV1EG%3D%3D&UTM_SOURCE=Q",
-      "https://threads.com/@rafaelprimo?IGSHID=NTC4MTIWNJQ2YQ==",
-      "https://tiktok.com/@rafaelprimo?_R=1&_T=ZS-98KGTBFSDIT",
-      "https://youtube.com/@rafaelprimo?SI=UH-OYKIOTFLZYR86",
-      "https://facebook.com/share/1aebzkocfu/?MIBEXTID=WWXIFR",
-      "https://x.com/rafaelprimo?S=11"
+      "https://instagram.com/rafaelprimo?igsh=MXDNYNB0BJB6EWV1EG%3D%3D&utm_source=Q",
+      "https://threads.com/@rafaelprimo?igshid=NTC4MTIWNJQ2YQ==",
+      "https://tiktok.com/@rafaelprimo?_r=1&_t=ZS-98KGTBFSDIT",
+      "https://youtube.com/@rafaelprimo?si=UH-OYKIOTFLZYR86",
+      "https://facebook.com/share/1aebzkocfu/?mibextid=WWXIFR",
+      "https://x.com/rafaelprimo?s=11"
     ],
     "tse_additional": {},
     "previous_elections": [
@@ -11851,7 +12087,8 @@
         "location": "Vila Velha",
         "votes": 1710,
         "result": "Eleito Por QP",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002278526/2024/57037"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002278526/2024/57037",
+        "uf": "ES"
       },
       {
         "year": 2020,
@@ -11859,7 +12096,8 @@
         "party": "REDE",
         "location": "Vila Velha",
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001179120/2020/57037"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001179120/2020/57037",
+        "uf": "ES"
       },
       {
         "year": 2018,
@@ -11868,7 +12106,8 @@
         "location": "Espírito Santo",
         "votes": 265,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000624410/2018/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000624410/2018/ES",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -11971,7 +12210,8 @@
         "location": "Vila Velha",
         "votes": 42096,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002138963/2024/57037"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002138963/2024/57037",
+        "uf": "ES"
       },
       {
         "year": 2022,
@@ -11980,7 +12220,8 @@
         "location": "Espírito Santo",
         "votes": 33874,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001719318/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001719318/2022/ES",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -12087,7 +12328,8 @@
         "location": "Vila Velha",
         "votes": 554,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002294197/2024/57037"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002294197/2024/57037",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -12203,7 +12445,8 @@
         "location": "Cachoeiro de Itapemirim",
         "votes": 1460,
         "result": "Eleito Por QP",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002032608/2024/56235"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002032608/2024/56235",
+        "uf": "ES"
       },
       {
         "year": 2022,
@@ -12212,7 +12455,8 @@
         "location": "Espírito Santo",
         "votes": 4347,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001650196/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001650196/2022/ES",
+        "uf": "ES"
       },
       {
         "year": 2020,
@@ -12221,7 +12465,8 @@
         "location": "Cachoeiro de Itapemirim",
         "votes": 7032,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001075105/2020/56235"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001075105/2020/56235",
+        "uf": "ES"
       },
       {
         "year": 2016,
@@ -12230,7 +12475,8 @@
         "location": "Cachoeiro de Itapemirim",
         "votes": 1247,
         "result": "Eleito Por QP",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000004056/2016/56235"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000004056/2016/56235",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -12388,7 +12634,8 @@
         "location": "Vila Velha",
         "votes": 4470,
         "result": "Eleito Por QP",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002018618/2024/57037"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002018618/2024/57037",
+        "uf": "ES"
       },
       {
         "year": 2020,
@@ -12397,7 +12644,8 @@
         "location": "Vila Velha",
         "votes": 1973,
         "result": "Eleito Por QP",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80000836183/2020/57037"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80000836183/2020/57037",
+        "uf": "ES"
       },
       {
         "year": 2016,
@@ -12406,7 +12654,8 @@
         "location": "Vila Velha",
         "votes": 1475,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000003277/2016/57037"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000003277/2016/57037",
+        "uf": "ES"
       },
       {
         "year": 2012,
@@ -12415,7 +12664,8 @@
         "location": "Vila Velha",
         "votes": 768,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000008867/2012/57037"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000008867/2012/57037",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -12503,7 +12753,8 @@
         "location": "Aracruz",
         "votes": 8135,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002301261/2024/56111"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002301261/2024/56111",
+        "uf": "ES"
       },
       {
         "year": 2020,
@@ -12512,7 +12763,8 @@
         "location": "Aracruz",
         "votes": 548,
         "result": "Eleito Por Média",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80000985671/2020/56111"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80000985671/2020/56111",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -12609,7 +12861,8 @@
         "location": "Guarapari",
         "votes": 36,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001225082/2020/56472"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001225082/2020/56472",
+        "uf": "ES"
       },
       {
         "year": 2018,
@@ -12618,7 +12871,8 @@
         "location": "Espírito Santo",
         "votes": 9531,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000627979/2018/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000627979/2018/ES",
+        "uf": "ES"
       },
       {
         "year": 2016,
@@ -12627,7 +12881,8 @@
         "location": "Marataízes",
         "votes": 143,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000006362/2016/56120"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000006362/2016/56120",
+        "uf": "ES"
       },
       {
         "year": 2014,
@@ -12636,7 +12891,8 @@
         "location": "Espírito Santo",
         "votes": 1087,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000066/2014/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000066/2014/ES",
+        "uf": "ES"
       },
       {
         "year": 2012,
@@ -12645,7 +12901,8 @@
         "location": "Marataízes",
         "votes": 502,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000011236/2012/56120"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000011236/2012/56120",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -12890,7 +13147,8 @@
         "party": "PTB",
         "location": "Vila Velha",
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001192010/2020/57037"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001192010/2020/57037",
+        "uf": "ES"
       },
       {
         "year": 2016,
@@ -12899,7 +13157,8 @@
         "location": "Vila Velha",
         "votes": 904,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000003287/2016/57037"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000003287/2016/57037",
+        "uf": "ES"
       },
       {
         "year": 2012,
@@ -12908,7 +13167,8 @@
         "location": "Vila Velha",
         "votes": 559,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000007269/2012/57037"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000007269/2012/57037",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -12983,7 +13243,8 @@
         "location": "Vila Velha",
         "votes": 44,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002278512/2024/57037"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002278512/2024/57037",
+        "uf": "ES"
       },
       {
         "year": 2022,
@@ -12992,7 +13253,8 @@
         "location": "Espírito Santo",
         "votes": 71,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001719708/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001719708/2022/ES",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -13082,7 +13344,8 @@
         "location": "Espírito Santo",
         "votes": 4464,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001609909/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001609909/2022/ES",
+        "uf": "ES"
       },
       {
         "year": 2020,
@@ -13091,7 +13354,8 @@
         "location": "Vila Velha",
         "votes": 1793,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001190388/2020/57037"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001190388/2020/57037",
+        "uf": "ES"
       },
       {
         "year": 2018,
@@ -13100,7 +13364,8 @@
         "location": "Espírito Santo",
         "votes": 7041,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000613575/2018/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000613575/2018/ES",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -13193,7 +13458,8 @@
         "location": "Venda Nova do Imigrante",
         "votes": 519,
         "result": "Eleito Por QP",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80001973933/2024/57975"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80001973933/2024/57975",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -13266,7 +13532,8 @@
         "location": "Espírito Santo",
         "votes": 408,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001718507/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001718507/2022/ES",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -13496,7 +13763,8 @@
         "location": "Ibatiba",
         "votes": 445,
         "result": "Eleito Por QP",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80001933285/2024/57096"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80001933285/2024/57096",
+        "uf": "ES"
       },
       {
         "year": 2020,
@@ -13505,7 +13773,8 @@
         "location": "Ibatiba",
         "votes": 196,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80000750630/2020/57096"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80000750630/2020/57096",
+        "uf": "ES"
       },
       {
         "year": 2016,
@@ -13514,7 +13783,8 @@
         "location": "Ibatiba",
         "votes": 116,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000008741/2016/57096"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000008741/2016/57096",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -13660,7 +13930,8 @@
         "location": "Espírito Santo",
         "votes": 80,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001723167/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001723167/2022/ES",
+        "uf": "ES"
       },
       {
         "year": 2016,
@@ -13669,7 +13940,8 @@
         "location": "Vila Velha",
         "votes": 49,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000012749/2016/57037"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000012749/2016/57037",
+        "uf": "ES"
       },
       {
         "year": 2014,
@@ -13678,7 +13950,8 @@
         "location": "Espírito Santo",
         "votes": 337,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000520/2014/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000520/2014/ES",
+        "uf": "ES"
       },
       {
         "year": 2012,
@@ -13687,7 +13960,8 @@
         "location": "Vila Velha",
         "votes": 117,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000001880/2012/57037"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000001880/2012/57037",
+        "uf": "ES"
       },
       {
         "year": 2008,
@@ -13695,7 +13969,8 @@
         "party": "PSB",
         "location": "Vila Velha",
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14422/7159/2008/57037"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14422/7159/2008/57037",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -13799,7 +14074,8 @@
         "party": "REPUBLICANOS",
         "location": "Guarapari",
         "result": "Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002052670/2024/56472"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002052670/2024/56472",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -14011,7 +14287,8 @@
         "location": "Serra",
         "votes": 979,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80001901313/2024/56995"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80001901313/2024/56995",
+        "uf": "ES"
       },
       {
         "year": 2022,
@@ -14020,7 +14297,8 @@
         "location": "Espírito Santo",
         "votes": 13017,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001610096/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001610096/2022/ES",
+        "uf": "ES"
       },
       {
         "year": 2020,
@@ -14028,7 +14306,8 @@
         "party": "PDT",
         "location": "Serra",
         "result": "Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001189871/2020/56995"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001189871/2020/56995",
+        "uf": "ES"
       },
       {
         "year": 2018,
@@ -14037,7 +14316,8 @@
         "location": "Espírito Santo",
         "votes": 3295,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000627602/2018/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000627602/2018/ES",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -14110,7 +14390,8 @@
         "location": "Vitória",
         "votes": 1304,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002285275/2024/57053"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002285275/2024/57053",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -14185,7 +14466,8 @@
         "location": "Espírito Santo",
         "votes": 629,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000619998/2018/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000619998/2018/ES",
+        "uf": "ES"
       },
       {
         "year": 2008,
@@ -14193,7 +14475,8 @@
         "party": "PMN",
         "location": "Afonso Cláudio",
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14422/6702/2008/56014"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14422/6702/2008/56014",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -14265,7 +14548,7 @@
     "social_links": [
       "https://x.com/tyago_hoffmann",
       "https://instagram.com/tyagohoffmann",
-      "https://facebook.com/tyago.hoffmann/?LOCALE=PT_BR"
+      "https://facebook.com/tyago.hoffmann/?locale=PT_BR"
     ],
     "tse_additional": {},
     "previous_elections": [
@@ -14276,7 +14559,8 @@
         "location": "Espírito Santo",
         "votes": 32123,
         "result": "Eleito Por QP",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001621155/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001621155/2022/ES",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -14343,7 +14627,8 @@
         "party": "PSC",
         "location": "Espírito Santo",
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001645483/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001645483/2022/ES",
+        "uf": "ES"
       },
       {
         "year": 2004,
@@ -14351,7 +14636,8 @@
         "party": "PMDB",
         "location": "Rio de Janeiro",
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/RJ/14431/193/2004/60011"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/RJ/14431/193/2004/60011",
+        "uf": "RJ"
       }
     ],
     "current_mandate": null,
@@ -14440,14 +14726,14 @@
     },
     "social_links": [
       "https://drvictorlinhalis.com",
-      "https://linktr.ee/DRVICTORLINHALIS?UTM_SOURCE=IG&UTM_MEDIUM=SOCIAL&UTM_CONTENT=L",
+      "https://linktr.ee/DRVICTORLINHALIS?utm_source=IG&utm_medium=SOCIAL&utm_content=L",
       "https://instagram.com/channel/aby6bnmtrurjc9ze",
       "https://instagram.com/drvictorlinhalis",
       "https://facebook.com/victor.garozilinhalis",
       "https://youtube.com/@drvictorlinhalis",
       "https://tiktok.com/@drvictorlinhalis",
       "https://whatsapp.com/channel/0029vbb2ke130lky5xqxhk42",
-      "https://x.com/victorlinhalis?S=11",
+      "https://x.com/victorlinhalis?s=11",
       "https://k.kwai.com/u/@deputadodr.vic/xjvcydqy"
     ],
     "tse_additional": {},
@@ -14459,7 +14745,8 @@
         "location": "Espírito Santo",
         "votes": 53483,
         "result": "Eleito Por Média",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001604731/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001604731/2022/ES",
+        "uf": "ES"
       },
       {
         "year": 2020,
@@ -14467,7 +14754,8 @@
         "party": "PODE",
         "location": "Vila Velha",
         "result": "Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80000713124/2020/57037"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80000713124/2020/57037",
+        "uf": "ES"
       }
     ],
     "current_mandate": {
@@ -14650,7 +14938,8 @@
         "location": "Nova Venécia",
         "votes": 5,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002218812/2024/56774"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002218812/2024/56774",
+        "uf": "ES"
       },
       {
         "year": 2020,
@@ -14659,7 +14948,8 @@
         "location": "Nova Venécia",
         "votes": 18,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001062115/2020/56774"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001062115/2020/56774",
+        "uf": "ES"
       },
       {
         "year": 2016,
@@ -14668,7 +14958,8 @@
         "location": "Vitória",
         "votes": 21,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000010839/2016/57053"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000010839/2016/57053",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -14775,7 +15066,7 @@
     },
     "social_links": [
       "https://x.com/vitordeangelo",
-      "https://facebook.com/vitordeangelo.oficial/?LOCALE=PT_BR",
+      "https://facebook.com/vitordeangelo.oficial/?locale=PT_BR",
       "https://instagram.com/vitordeangelo"
     ],
     "tse_additional": {},
@@ -14842,7 +15133,7 @@
     },
     "social_links": [
       "https://facebook.com/share/1dtybdfamb",
-      "https://instagram.com/walteraraujomontanhaes?IGSH=MTF1DZMZMWV3BMN0DW=="
+      "https://instagram.com/walteraraujomontanhaes?igsh=MTF1DZMZMWV3BMN0DW=="
     ],
     "tse_additional": {},
     "previous_elections": [
@@ -14853,7 +15144,8 @@
         "location": "Montanha",
         "votes": 107,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002272225/2024/56693"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002272225/2024/56693",
+        "uf": "ES"
       },
       {
         "year": 2020,
@@ -14862,7 +15154,8 @@
         "location": "Nanuque",
         "votes": 147,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/MG/2030402020/130000979421/2020/48852"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/MG/2030402020/130000979421/2020/48852",
+        "uf": "MG"
       },
       {
         "year": 2016,
@@ -14871,7 +15164,8 @@
         "location": "Nanuque",
         "votes": 132,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/MG/2/130000049053/2016/48852"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/MG/2/130000049053/2016/48852",
+        "uf": "MG"
       },
       {
         "year": 2004,
@@ -14879,7 +15173,8 @@
         "party": "PMDB",
         "location": "Montanha",
         "result": "Concorrendo",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14431/71/2004/56693"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14431/71/2004/56693",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
@@ -14966,7 +15261,8 @@
         "location": "Vitória",
         "votes": 966,
         "result": "Suplente",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002285270/2024/57053"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002285270/2024/57053",
+        "uf": "ES"
       },
       {
         "year": 2022,
@@ -14975,7 +15271,8 @@
         "location": "Espírito Santo",
         "votes": 1512,
         "result": "Não Eleito",
-        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001611834/2022/ES"
+        "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001611834/2022/ES",
+        "uf": "ES"
       }
     ],
     "current_mandate": null,
