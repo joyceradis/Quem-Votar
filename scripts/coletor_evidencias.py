@@ -324,6 +324,7 @@ def fetch_bytes(
     timeout: int = DEFAULT_TIMEOUT,
     max_bytes: int = MAX_FETCH_BYTES,
     user_agent: str = DEFAULT_USER_AGENT,
+    retries: int = 3,
 ) -> tuple[bytes, str, str]:
     validate_public_https_url(url, resolve_dns=True)
     opener = urllib.request.build_opener(SafeRedirectHandler())
@@ -334,23 +335,43 @@ def fetch_bytes(
             "Accept": "text/html,text/plain,application/xhtml+xml,application/zip;q=0.8,*/*;q=0.2",
         },
     )
-    try:
-        with opener.open(request, timeout=timeout) as response:
-            final_url = response.geturl()
-            validate_public_https_url(final_url, resolve_dns=True)
-            content_type = clean(response.headers.get("Content-Type")).lower()
-            declared = response.headers.get("Content-Length")
-            if declared and declared.isdigit() and int(declared) > max_bytes:
-                raise RuntimeError(f"resposta excede limite de {max_bytes} bytes")
-            body = response.read(max_bytes + 1)
-    except urllib.error.HTTPError as exc:
-        raise RuntimeError(f"HTTP {exc.code} ao coletar {url}") from exc
-    except urllib.error.URLError as exc:
-        raise RuntimeError(f"falha de rede ao coletar {url}: {exc.reason}") from exc
+    attempts = max(1, int(retries))
+    request_timeout = max(1, int(timeout))
+    for attempt in range(1, attempts + 1):
+        try:
+            with opener.open(request, timeout=request_timeout) as response:
+                final_url = response.geturl()
+                validate_public_https_url(final_url, resolve_dns=True)
+                content_type = clean(response.headers.get("Content-Type")).lower()
+                declared = response.headers.get("Content-Length")
+                if declared and declared.isdigit() and int(declared) > max_bytes:
+                    raise RuntimeError(f"resposta excede limite de {max_bytes} bytes")
+                body = response.read(max_bytes + 1)
 
-    if len(body) > max_bytes:
-        raise RuntimeError(f"resposta excede limite de {max_bytes} bytes")
-    return body, final_url, content_type
+            if len(body) > max_bytes:
+                raise RuntimeError(f"resposta excede limite de {max_bytes} bytes")
+            return body, final_url, content_type
+        except urllib.error.HTTPError as exc:
+            error = RuntimeError(f"HTTP {exc.code} ao coletar {url}")
+            is_transient = exc.code == 429 or 500 <= exc.code <= 599
+            if not is_transient or attempt >= attempts:
+                raise error from exc
+        except urllib.error.URLError as exc:
+            error = RuntimeError(f"falha de rede ao coletar {url}: {exc.reason}")
+            if attempt >= attempts:
+                raise error from exc
+        except TimeoutError as exc:
+            error = RuntimeError(f"timeout ao coletar {url}")
+            if attempt >= attempts:
+                raise error from exc
+        except ConnectionError as exc:
+            error = RuntimeError(f"falha de conexão ao coletar {url}: {exc}")
+            if attempt >= attempts:
+                raise error from exc
+
+        time.sleep(min(15, 2 ** (attempt - 1)))
+
+    raise RuntimeError(f"falha de transporte ao coletar {url}")
 
 
 class PageTextExtractor(HTMLParser):

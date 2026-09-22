@@ -150,6 +150,103 @@ class CamaraBulkTests(unittest.TestCase):
 
             self.assertEqual(1, permanent_opener.calls)
 
+    def test_fetch_bytes_retries_transient_errors_but_not_permanent_errors(self):
+        url = "https://dadosabertos.camara.leg.br/api/v2/proposicoes"
+        transient_errors = (
+            TimeoutError("timed out"),
+            urllib.error.URLError(ConnectionRefusedError("connection refused")),
+            urllib.error.HTTPError(url, 429, "too many requests", {}, None),
+            urllib.error.HTTPError(url, 503, "unavailable", {}, None),
+            urllib.error.HTTPError(url, 599, "network timeout", {}, None),
+        )
+
+        for transient in transient_errors:
+            with self.subTest(transient=repr(transient)):
+                opener = SequencedOpener(
+                    [transient, FakeResponse(b'{"dados": []}', url)]
+                )
+                with (
+                    patch.object(
+                        collector.urllib.request,
+                        "build_opener",
+                        return_value=opener,
+                    ),
+                    patch.object(collector, "validate_public_https_url"),
+                    patch.object(collector.time, "sleep") as sleep,
+                ):
+                    body, final_url, content_type = collector.fetch_bytes(
+                        url,
+                        retries=3,
+                    )
+
+                self.assertEqual(b'{"dados": []}', body)
+                self.assertEqual(url, final_url)
+                self.assertEqual("text/csv", content_type)
+                self.assertEqual(2, opener.calls)
+                sleep.assert_called_once_with(1)
+
+        for code in (404, 408):
+            with self.subTest(permanent_http=code):
+                permanent_http = urllib.error.HTTPError(
+                    url, code, "permanent client error", {}, None
+                )
+                permanent_opener = SequencedOpener([permanent_http])
+                with (
+                    patch.object(
+                        collector.urllib.request,
+                        "build_opener",
+                        return_value=permanent_opener,
+                    ),
+                    patch.object(collector, "validate_public_https_url"),
+                    patch.object(collector.time, "sleep") as permanent_sleep,
+                ):
+                    with self.assertRaisesRegex(RuntimeError, f"HTTP {code}"):
+                        collector.fetch_bytes(url, retries=3)
+
+                self.assertEqual(1, permanent_opener.calls)
+                permanent_sleep.assert_not_called()
+
+        oversized_opener = SequencedOpener([FakeResponse(b"too large", url)])
+        with (
+            patch.object(
+                collector.urllib.request,
+                "build_opener",
+                return_value=oversized_opener,
+            ),
+            patch.object(collector, "validate_public_https_url"),
+            patch.object(collector.time, "sleep") as local_error_sleep,
+        ):
+            with self.assertRaisesRegex(RuntimeError, "resposta excede limite"):
+                collector.fetch_bytes(url, max_bytes=1, retries=3)
+
+        self.assertEqual(1, oversized_opener.calls)
+        local_error_sleep.assert_not_called()
+
+    def test_fetch_bytes_stops_after_retry_limit(self):
+        url = "https://dadosabertos.camara.leg.br/api/v2/proposicoes"
+        opener = SequencedOpener(
+            [
+                TimeoutError("attempt 1"),
+                TimeoutError("attempt 2"),
+                TimeoutError("attempt 3"),
+            ]
+        )
+
+        with (
+            patch.object(
+                collector.urllib.request,
+                "build_opener",
+                return_value=opener,
+            ),
+            patch.object(collector, "validate_public_https_url"),
+            patch.object(collector.time, "sleep") as sleep,
+        ):
+            with self.assertRaisesRegex(RuntimeError, "timeout"):
+                collector.fetch_bytes(url, retries=3)
+
+        self.assertEqual(3, opener.calls)
+        self.assertEqual([((1,), {}), ((2,), {})], sleep.call_args_list)
+
     def test_bulk_isolates_dataset_failure_and_processes_newest_year_first(self):
         calls = []
 
@@ -242,6 +339,50 @@ class CamaraBulkTests(unittest.TestCase):
         self.assertEqual({"10", "11"}, {
             str(row["source_origin"]["proposition_id"]) for row in sources
         })
+        self.assertEqual([], rejected)
+
+    def test_discover_chamber_paginates_every_page_without_exact_years(self):
+        candidates = {"123": candidate()}
+        requested = []
+
+        def fake_json(url):
+            requested.append(url)
+            if "pagina=2" in url:
+                return {
+                    "dados": [
+                        {"id": 11, "siglaTipo": "PL", "numero": 2, "ano": 2025},
+                        {"id": 12, "siglaTipo": "PL", "numero": 3, "ano": 2022},
+                    ],
+                    "links": [],
+                }
+            return {
+                "dados": [
+                    {"id": 10, "siglaTipo": "PL", "numero": 1, "ano": 2026}
+                ],
+                "links": [
+                    {
+                        "rel": "next",
+                        "href": (
+                            "https://dadosabertos.camara.leg.br/api/v2/"
+                            "proposicoes?pagina=2"
+                        ),
+                    }
+                ],
+            }
+
+        sources, rejected = discovery.discover_chamber(
+            candidates,
+            fetch_json=fake_json,
+            min_year=2023,
+        )
+
+        first_query = urllib.parse.parse_qs(urllib.parse.urlsplit(requested[0]).query)
+        self.assertNotIn("ano", first_query)
+        self.assertEqual(2, len(requested))
+        self.assertEqual(
+            {"10", "11"},
+            {str(row["source_origin"]["proposition_id"]) for row in sources},
+        )
         self.assertEqual([], rejected)
 
     def test_discover_chamber_discards_candidate_year_when_page_two_fails(self):
