@@ -110,7 +110,24 @@ Leitura em camadas:
 
 Até 3 candidaturas lado a lado, com os mesmos campos factuais/documentais.
 
+O funil de comparação está consolidado com seleção de até 3 pessoas, feedback acessível, foco preservado nos fluxos cobertos, normalização de URLs inválidas/duplicadas, sincronização entre abas e validação em desktop/mobile/teclado.
+
 Não existe score, ranking, vencedor, previsão eleitoral ou recomendação de voto.
+
+### Compartilhamento social
+
+Cada candidatura possui uma entrada estática em `/social/<SQ_CANDIDATO>/index.html` para metadados Open Graph. Essas páginas não duplicam a ficha: o corpo é vazio e o fluxo direciona para a URL canônica da candidatura.
+
+### Camadas factuais integradas
+
+Além do cadastro eleitoral básico, o snapshot público preserva, quando disponíveis e com proveniência identificada:
+
+- bens declarados;
+- redes sociais declaradas ao TSE;
+- histórico eleitoral;
+- vínculo institucional atual/histórico.
+
+Ausência de uma dessas camadas continua sendo ausência de dado, não conclusão sobre a candidatura.
 
 ## Evidências temáticas
 
@@ -191,6 +208,7 @@ Leia antes de alterar:
 - `docs/FILTERS.md`
 - `docs/DATA_MODEL.md`
 - `docs/SITE_MAP.md`
+- `docs/RUNTIME_PROOF.md`
 - `METODOLOGIA.md`
 - `AUDITORIA.md`
 

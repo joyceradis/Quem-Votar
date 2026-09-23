@@ -2,7 +2,7 @@
 
 Data: 2026-09-23.
 
-Estado auditado contra `main` em `1de5c60bd11cb7c5bbb9d595e5155631772513a8`.
+Estado auditado a partir de `main` em `fb67c400b3e753add9f8ae6298d9ae5cb8a6dbb7` (PR #120 já integrado). Este checkpoint é atualizado por PR documental e, por isso, o merge documental subsequente pode avançar o SHA sem alterar o estado de produto descrito.
 
 ## Estado canônico
 
@@ -161,7 +161,18 @@ Sinais realmente pós-merge sobre `main@1de5c60...`:
 
 Isso satisfaz o gate material do primeiro slice UI/checkout. Não é descrito como um novo `workflow_dispatch`.
 
-A #117 permanece aberta para marcos posteriores. Network/privacy/GA4 continuam pertencendo à #108 e não foram absorvidos pelo #118.
+A #117 permanece aberta para o marco operacional ainda separado da #35. Network/privacy/GA4 continuam pertencendo à #108 e não foram absorvidos pelo harness.
+
+### Simplificação do plano de execução — #117 / PRs #119 e #120
+
+Após o harness do #118, dois slices adicionais foram integrados:
+
+- PR #119 removeu exclusivamente os workflows encerrados da #86 (`issue86-sync-branch.yml` e `issue86-validation.yml`);
+- PR #120 removeu o preflight noturno encerrado da #34 e tornou `evidence-discovery.yml` manual-only (`workflow_dispatch`), eliminando duplicação automática comprovada com o worker industrial;
+- Quality e Pages pós-#120: runs `35888011140` e `35888009578` — **PASS**;
+- merge do #120: `fb67c400b3e753add9f8ae6298d9ae5cb8a6dbb7`.
+
+A auditoria de schedule/concurrency da #35 foi registrada, mas **nenhuma mudança de cadência foi aplicada** neste checkpoint.
 
 
 ## Reconciliação de PRs herdados
@@ -182,7 +193,9 @@ Nove dos onze paths do PR são byte-idênticos à `main`. Os dois únicos paths 
 
 ### PR #116
 
-Este PR é o checkpoint documental corrente. Seu escopo continua exclusivamente `docs/CHECKPOINT_CURRENT.md`; ele deve ser validado novamente contra a `main` atual antes do merge.
+Mergeado em `c36c8c64e5c84e90a839dca08945a31ae2174993` como reconciliação documental pós-#118.
+
+O checkpoint atual já incorpora também os slices posteriores #119/#120. Nenhum deles alterou dados eleitorais ou semântica pública.
 
 
 ## Evidências temáticas
@@ -225,14 +238,16 @@ Resumabilidade está comprovada:
 - run independente `35724917391` restaurou a chave anterior, continuou do estado preservado e drenou o backlog;
 - o worker permaneceu read-only/artifact-only e publicou artifacts auditáveis.
 
-Estado operacional mais recente auditado:
+Estado operacional recente auditado:
 
-- run `35792402700`: **SUCCESS**;
-- run `35803561413`: processamento, persistência, artifact e assert de repositório inalterado passaram; falha ocorreu somente no step `Page only on actionable cruise incidents`;
+- run `35792402700`: **SUCCESS** e backlog drenado;
+- runs `35803561413` e `35876193462`: processamento chegou a `queued=0`, `eligible=0`, `progressed=0` no primeiro ciclo; o vermelho final continua vindo do mesmo gate de incidentes;
 - `persistent_failures=45`;
-- `actionable_incidents=14`;
-- os 14 foram reportados como `institutional_reacquisition_failure` com detalhe `conteúdo institucional API insuficiente para revisão`;
-- artifact do run `35803561413`: `evidence-worker-35803561413`, ID `10726154995`, digest `sha256:214d1a3f01e211413a28c9e808fa7b8fe4bb275c37b703977cddf3f30a040a21`.
+- `actionable_incidents=14` nos runs vermelhos;
+- os 14 continuam reportados como `institutional_reacquisition_failure` com detalhe `conteúdo institucional API insuficiente para revisão`;
+- artifact plenamente auditado do run `35803561413`: `evidence-worker-35803561413`, ID `10726154995`, digest `sha256:214d1a3f01e211413a28c9e808fa7b8fe4bb275c37b703977cddf3f30a040a21`.
+
+A auditoria de cadência mostrou que a concurrency serializa corretamente e que um run de ~2h28 reteve o seguinte até a liberação do grupo. A cadência wartime atual permanece inalterada até decisão separada da mantenedora.
 
 A auditoria da #35 concluiu que esses 14 casos possuem aquisição/proveniência Câmara presentes e falham na materialização por conteúdo insuficiente; o `cruise_worker_guard` ainda os classifica como reacquisition failure pela origem da fonte, sem distinguir o estágio real da falha.
 
@@ -345,14 +360,17 @@ O endpoint clássico de branch protection pode retornar 403 para a integração 
 - #107 / PR #112 — funil factual de comparação validado em produção.
 - #118 — primeiro slice do harness UI/checkout da #117 integrado em `main`;
 - #115 — branch E2E temporária fechada sem merge após supersession pelo #118;
+- #116 — checkpoint documental pós-#118 mergeado;
+- #119 — workflows encerrados da #86 removidos;
+- #120 — preflight noturno aposentado e discovery automático deduplicado;
 
 ### Em andamento
 
 - #2 — expansão de propostas e declarações com fonte;
 - #34 — tracking de escala da pipeline de evidências;
 - #35 — worker contínuo War Time; classificação do cruise guard permanece pendente;
-- #42 — benchmark semântico em shadow mode.
-- #117 — harness canônico: primeiro slice concluído; próximos marcos ainda não iniciados;
+- #42 — benchmark semântico em shadow mode, disponível para triagem sem autorização de promoção automática;
+- #117 — simplificação operacional em andamento; três slices (#118/#119/#120) integrados; revisão de cadência da #35 permanece separada;
 
 ### Bloqueada
 
@@ -361,7 +379,7 @@ O endpoint clássico de branch protection pode retornar 403 para a integração 
 
 ### Governança
 
-- #44 — Governance Sentinel permanece aberto e pronto para implementação incremental após esta reconciliação documental;
+- #44 — Governance Sentinel permanece aberto em `status:ready`; baseline documental reconciliado, implementação do sentinel ainda pendente;
 - #43 — decisão de orquestração permanece pós-freeze.
 
 
@@ -417,12 +435,13 @@ A camada de sustentabilidade permanece isolada e não pode modificar `topic-evid
 
 ## Próximo passo seguro
 
-Ordem canônica após este checkpoint:
+Estado após a arrumação de governança:
 
-1. concluir e mergear esta reconciliação documental do PR #116 somente com gates frescos verdes;
-2. somente depois iniciar o próximo marco da #117, preservando o escopo do primeiro slice já integrado;
-3. manter o PR #114 em draft/BLOCKED até existir contrato produtor → guard para `institutional_reacquisition_failure`;
-4. manter #108 separada: nenhum marco da #117 deve reabsorver GA4/network/privacy por conveniência;
-5. continuar #2/#35 sob os contratos do feature freeze, sem promoção automática de evidência política.
+1. manter o PR #114 em draft/BLOCKED até existir contrato produtor → guard para `institutional_reacquisition_failure`;
+2. manter #108 separada: privacidade/GA4/network não voltam para #117 por conveniência;
+3. manter #43 bloqueada até o pós-freeze;
+4. #44 está pronta para implementação futura do Governance Sentinel, sem misturar isso com alterações eleitorais;
+5. a revisão da cadência wartime da #35 fica como **unidade operacional separada**; este checkpoint não altera cron, concurrency ou timeout;
+6. continuar #2/#35 sob os contratos do feature freeze, sem promoção automática de evidência política.
 
 Nenhuma dessas frentes autoriza relaxamento dos gates de `main`.

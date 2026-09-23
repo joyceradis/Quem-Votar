@@ -30,25 +30,26 @@ Esta é a frente prioritária de conteúdo. O resultado de produto é acompanhad
 
 ### Ordem canônica de execução
 
-**P0 de governança**
-- #36 — concluir proteção de `main` + caminho autorizado do sync;
-- #45 — topologia multiagente e disciplina de Issues/documentação;
-- #44 — Governance Sentinel para detectar drift automaticamente.
+**Governança consolidada**
+- #36 — proteção efetiva de `main`: concluída;
+- #45 — topologia multiagente e disciplina documental: concluída;
+- #44 — Governance Sentinel: `status:ready`, implementação ainda pendente;
+- #117 — plano de execução/harness: três slices integrados (#118/#119/#120); qualquer revisão da cadência da #35 permanece uma unidade separada.
 
-**Preflight de escala**
+**Preflight de escala — concluído**
 1. #38 — coverage ledger e relatório read-only;
 2. #39 — descoberta de fontes em lote;
 3. #40 — idempotência, retomada e reprocessamento seguro;
 4. #41 — fila de exceções para casos ambíguos.
 
 **Avaliação em paralelo**
-5. #42 — benchmark de revisão semântica em shadow mode.
+5. #42 — benchmark de revisão semântica em shadow mode; disponível para triagem, sem escrita canônica.
 
-**Execução operacional**
-6. #35 — full candidate evidence coverage pass, somente após o preflight mínimo #38–#41.
+**Execução operacional ativa**
+6. #35 — worker contínuo wartime, read-only/artifact-only; promoção continua explícita e humana.
 
 **Decisão pós-freeze**
-7. #43 — ADR de orquestração da pipeline após resultados medidos e fim do freeze.
+7. #43 — ADR de orquestração permanece bloqueada até o pós-freeze e os resultados medidos.
 
 ### Arquitetura vigente
 
@@ -70,24 +71,31 @@ A #34 é tracking; critérios executáveis vivem nas Issues-filhas.
 
 ## Próximas frentes
 
-### ⏳ P1 — Histórico
+### 🟡 P1 — Histórico — base integrada, expansão pendente
 
-- histórico eleitoral TSE;
-- histórico partidário;
-- mandatos anteriores;
+Já integrado:
+- histórico eleitoral TSE quando disponível;
+- vínculos institucionais federais atuais/históricos;
+- evidências documentais estaduais vinculadas de forma conservadora.
+
+Ainda evolutivo:
+- histórico partidário mais completo;
 - funções públicas anteriores;
-- composição contemporânea da ALES;
-- histórico federal preservado mesmo com falha transitória de API.
+- composição contemporânea/longitudinal da ALES;
+- ampliação de fontes sem inferência por ausência.
 
-### ⏳ P2 — Transparência eleitoral
+### 🟡 P2 — Transparência eleitoral — parcialmente integrada
 
+Já integrado:
 - bens declarados;
+- redes sociais declaradas ao TSE, tratadas como dado/seed e não como posição política.
+
+Ainda pendente:
 - receitas de campanha;
 - despesas de campanha;
-- fornecedores/doadores conforme regras públicas;
-- redes sociais declaradas ao TSE.
+- fornecedores/doadores conforme regras públicas e disponibilidade da fonte.
 
-### ⏳ P3 — Atuação parlamentar
+### 🟡 P3 — Atuação parlamentar — cobertura parcial
 
 Federal:
 
