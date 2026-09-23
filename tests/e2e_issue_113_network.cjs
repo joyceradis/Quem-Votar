@@ -95,15 +95,17 @@ async function scenario(name, page, path, markers, action) {
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
     await settle(page);
     const outbound = page.locator('.source-item a[target="_blank"]').first();
-    let outboundUrl = "";
-    if (await outbound.count()) {
-      outboundUrl = await outbound.getAttribute("href") || "";
-      await outbound.evaluate(el => el.addEventListener("click", event => event.preventDefault(), { once: true }));
-      await outbound.click();
-      await settle(page);
-    }
+    assert.ok(await outbound.count(), "dynamic:OUTBOUND_LINK_NOT_AVAILABLE");
+    const outboundUrl = await outbound.getAttribute("href") || "";
+    await context.route(outboundUrl, route => route.abort());
+    const popup = context.waitForEvent("page", { timeout: 5000 }).catch(() => null);
+    await outbound.click();
+    const opened = await popup;
+    await settle(page);
+    if (opened) await opened.close();
     const dynamicHits = hits.slice(dynamicStart);
     assert.ok(dynamicHits.length > 0, "dynamic:NO_COLLECT");
+    assert.ok(dynamicHits.some(hit => eventName(hit) === "click"), "dynamic:OUTBOUND_CLICK_NOT_OBSERVED");
     assertAbsent(dynamicHits, [candidateId, candidateName], "dynamic:CANDIDATE_IDENTITY_LEAK");
     assertAbsent(dynamicHits, [outboundUrl], "dynamic:OUTBOUND_LINK_URL_LEAK");
     results.push({ name: "dynamic-auto-events", collect: dynamicHits.length, events: dynamicHits.map(eventName) });
