@@ -10,6 +10,7 @@
     "target",
     "requested",
     "overall",
+    "merge_gate",
     "suites",
     "artifacts"
   ],
@@ -32,10 +33,48 @@
       "type": "object",
       "required": [
         "ref",
-        "sha",
+        "checkout_sha",
         "mode",
-        "base_url"
-      ]
+        "base_url",
+        "served_revision",
+        "revision_status"
+      ],
+      "properties": {
+        "ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "checkout_sha": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "mode": {
+          "enum": [
+            "checkout",
+            "production"
+          ]
+        },
+        "base_url": {
+          "type": "string"
+        },
+        "served_revision": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "revision_status": {
+          "enum": [
+            "VERIFIED_CHECKOUT",
+            "VERIFIED_DEPLOYED",
+            "UNVERIFIED_PRODUCTION"
+          ]
+        }
+      }
     },
     "requested": {
       "type": "object",
@@ -118,6 +157,12 @@
           }
         }
       }
+    },
+    "merge_gate": {
+      "enum": [
+        "PASS",
+        "FAIL"
+      ]
     }
   }
 }
