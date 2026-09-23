@@ -21,7 +21,7 @@ jobs:
           npm init -y >/dev/null 2>&1
           npm install --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
-      - name: Validar produção: desktop, teclado, abas e mobile
+      - name: "Validar produção: desktop, teclado, abas e mobile"
         env:
           QV_BASE_URL: https://joyceradis.github.io/Quem-Votar/
         run: node tests/e2e_issue_112_head.cjs
