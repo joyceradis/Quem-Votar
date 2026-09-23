@@ -2,7 +2,7 @@
 
 Data: 2026-09-23.
 
-Estado auditado contra `main` em `b4d314f22d513db0011e5718a179c6df4a7dc0ec`.
+Estado auditado contra `main` em `1de5c60bd11cb7c5bbb9d595e5155631772513a8`.
 
 ## Estado canônico
 
@@ -119,6 +119,70 @@ Estado comprovado até este checkpoint:
 Consequência: o gate de privacidade permanece incompleto. Não existe autorização para promover #113, ressuscitá-lo ou abrir substituto apenas para contornar a ausência de prova. A direção registrada na #108 é reduzir primeiro a superfície automática do GA4 no plano administrativo e repetir o gate empírico antes de nova implementação.
 
 A telemetria não pode transmitir identidade de candidatura, busca, tema, partido, listas de IDs ou produzir interpretação política.
+
+
+## Harness canônico de runtime — #117 / PR #118
+
+O primeiro slice da #117 foi integrado em `main` pelo PR #118.
+
+Escopo deste slice:
+
+- validação UI sobre checkout de SHA/ref explícito;
+- execução somente em loopback;
+- bloqueio de saída não-loopback no browser;
+- isolamento por `browserContext`;
+- teardown fail-closed com observação de lifecycle;
+- espera determinística de render assíncrono;
+- artifact canônico com manifest e screenshots diagnósticas;
+- `merge_gate=PASS|FAIL`, com incerteza impedindo PASS.
+
+Estado integrado:
+
+- HEAD final do PR #118: `8098972cb1e0c21fea01d44fba7e3531934d78e8`;
+- Runtime UI proof final: run `35882212884` — **PASS**;
+- artifact: `runtime-proof-35882212884`, ID `10761550164`;
+- digest verificado: `sha256:682caf704b391d9d1b6c5b2dfdd3111b93f85124f2fb3532b7e16dec76bb6eda`;
+- manifest: `overall=PASS`, `merge_gate=PASS`;
+- invariantes do harness: 3/3 PASS;
+- cenários UI: 10/10 PASS;
+- mobile 390×844: sem overflow horizontal antes/depois da seleção;
+- merge commit: `1de5c60bd11cb7c5bbb9d595e5155631772513a8`.
+
+Como o executor manual pós-merge não estava disponível na sessão de reconciliação, foi registrada uma prova de equivalência, sem fingir um novo run:
+
+- tree do HEAD efetivamente testado: `240b35809c6ceb8be7d6f70ef5f2b643b1df4443`;
+- tree do merge commit em `main`: `240b35809c6ceb8be7d6f70ef5f2b643b1df4443`;
+- portanto a árvore integrada é byte-equivalente à árvore exercitada pelo run final.
+
+Sinais realmente pós-merge sobre `main@1de5c60...`:
+
+- Quality: run `35883642699` — **PASS**;
+- Pages build/deployment: run `35883637446` — **PASS**.
+
+Isso satisfaz o gate material do primeiro slice UI/checkout. Não é descrito como um novo `workflow_dispatch`.
+
+A #117 permanece aberta para marcos posteriores. Network/privacy/GA4 continuam pertencendo à #108 e não foram absorvidos pelo #118.
+
+
+## Reconciliação de PRs herdados
+
+### PR #114 / #35
+
+Permanece **OPEN + DRAFT + BLOCKED**.
+
+O diff corrige corretamente o falso positivo que tratava falha de collection/materialização em fonte Câmara como falha de reacquisition. Porém o produtor operacional atual não emite `incident_type=institutional_reacquisition_failure`; portanto o ramo explícito proposto não é alcançável no input real.
+
+Não mergear até existir contrato integrado produtor → guard. Não restaurar a inferência antiga.
+
+### PR #115
+
+Fechado **sem merge** como infraestrutura temporária superseded.
+
+Nove dos onze paths do PR são byte-idênticos à `main`. Os dois únicos paths exclusivos eram um workflow E2E temporário e seu script de teste, substituídos pelo harness canônico do #118.
+
+### PR #116
+
+Este PR é o checkpoint documental corrente. Seu escopo continua exclusivamente `docs/CHECKPOINT_CURRENT.md`; ele deve ser validado novamente contra a `main` atual antes do merge.
 
 
 ## Evidências temáticas
@@ -279,6 +343,8 @@ O endpoint clássico de branch protection pode retornar 403 para a integração 
 - #93 — Open Graph estático 1:1 por candidatura;
 - #95 — checkpoint obrigatório no mesmo PR de mudança em `data/generated/*`;
 - #107 / PR #112 — funil factual de comparação validado em produção.
+- #118 — primeiro slice do harness UI/checkout da #117 integrado em `main`;
+- #115 — branch E2E temporária fechada sem merge após supersession pelo #118;
 
 ### Em andamento
 
@@ -286,10 +352,12 @@ O endpoint clássico de branch protection pode retornar 403 para a integração 
 - #34 — tracking de escala da pipeline de evidências;
 - #35 — worker contínuo War Time; classificação do cruise guard permanece pendente;
 - #42 — benchmark semântico em shadow mode.
+- #117 — harness canônico: primeiro slice concluído; próximos marcos ainda não iniciados;
 
 ### Bloqueada
 
 - #108 — instrumentação GA4 com minimização de dados; #113 fechado sem merge e gate de outbound click não comprovado.
+- #114 / #35 — guard de reacquisition bloqueado até existir sinal operacional produzido e testado end-to-end;
 
 ### Governança
 
@@ -351,10 +419,10 @@ A camada de sustentabilidade permanece isolada e não pode modificar `topic-evid
 
 Ordem canônica após este checkpoint:
 
-1. concluir esta reconciliação documental da #44 sem misturar código, dados ou UI;
-2. na #35, corrigir de forma atômica o contrato de classificação do `cruise_worker_guard`, distinguindo reacquisition real de falha de collection/materialização e mantendo os registros de exceção;
-3. depois, implementar o primeiro slice determinístico do Governance Sentinel da #44 para detectar novo drift material do checkpoint;
-4. manter #108 bloqueada até reduzir a superfície automática do GA4 e repetir a prova real de rede; não criar patch substituto apenas para contornar a falsificação;
+1. concluir e mergear esta reconciliação documental do PR #116 somente com gates frescos verdes;
+2. somente depois iniciar o próximo marco da #117, preservando o escopo do primeiro slice já integrado;
+3. manter o PR #114 em draft/BLOCKED até existir contrato produtor → guard para `institutional_reacquisition_failure`;
+4. manter #108 separada: nenhum marco da #117 deve reabsorver GA4/network/privacy por conveniência;
 5. continuar #2/#35 sob os contratos do feature freeze, sem promoção automática de evidência política.
 
-Nenhuma dessas frentes autoriza merge automático ou relaxamento dos gates de `main`.
+Nenhuma dessas frentes autoriza relaxamento dos gates de `main`.
