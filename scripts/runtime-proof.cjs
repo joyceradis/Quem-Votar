@@ -64,6 +64,83 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+function trackPendingTask(pending, task) {
+  const tracked = Promise.resolve(task);
+  pending.add(tracked);
+  tracked.then(
+    () => pending.delete(tracked),
+    () => pending.delete(tracked)
+  );
+  tracked.catch(() => {});
+  return tracked;
+}
+
+async function drainPendingTasks(pending, timeoutMs = 2500) {
+  const tasks = [...pending];
+  if (!tasks.length) return;
+
+  let timer;
+  const timeout = new Promise((_, reject) => {
+    timer = setTimeout(() => reject(new Error("teardown:PENDING_ROUTE_TIMEOUT")), timeoutMs);
+  });
+
+  let settled;
+  try {
+    settled = await Promise.race([Promise.allSettled(tasks), timeout]);
+  } finally {
+    clearTimeout(timer);
+  }
+
+  const rejected = settled.filter(item => item.status === "rejected");
+  if (rejected.length) {
+    throw new AggregateError(
+      rejected.map(item => item.reason),
+      "teardown:PENDING_ROUTE_REJECTED"
+    );
+  }
+}
+
+async function withDelayedCandidateRoutes(page, delayMs, fn) {
+  const pattern = /data\/generated\/candidates-(federal|estadual)\.json/;
+  const pending = new Set();
+  const handler = route => trackPendingTask(pending, (async () => {
+    await sleep(delayMs);
+    await route.fallback();
+  })());
+
+  await page.route(pattern, handler);
+
+  let result;
+  let primaryError = null;
+  try {
+    result = await fn();
+  } catch (error) {
+    primaryError = error;
+  } finally {
+    const errors = [];
+    if (primaryError) errors.push(primaryError);
+
+    try {
+      await page.unroute(pattern, handler);
+    } catch (error) {
+      errors.push(error);
+    }
+
+    try {
+      await drainPendingTasks(pending);
+    } catch (error) {
+      errors.push(error);
+    }
+
+    if (errors.length === 1) throw errors[0];
+    if (errors.length > 1) {
+      throw new AggregateError(errors, "compare:DELAYED_ROUTE_CLEANUP");
+    }
+  }
+
+  return result;
+}
+
 async function screenshot(page, filename) {
   const destination = path.join(SCREENSHOTS, filename);
   await page.screenshot({ path: destination, fullPage: false });
@@ -110,7 +187,8 @@ async function installLifecycleProbe(page, events) {
 }
 
 async function exerciseLifecycleAndClose(page, events) {
-  if (!page || page.isClosed()) return;
+  assert.ok(page, "teardown:PAGE_NOT_CREATED");
+  assert.ok(!page.isClosed(), "teardown:PAGE_ALREADY_CLOSED");
   events.length = 0;
   await page.goto("about:blank", { waitUntil: "load" });
   await page.waitForTimeout(25);
@@ -189,6 +267,54 @@ async function runScenario(browser, suite, name, fn, contextOptions = { viewport
   }
 }
 
+async function runHarnessInvariantChecks() {
+  const suite = { status: "BLOCKED", scenarios: [] };
+  manifest.suites.harness_invariants = suite;
+
+  try {
+    await assert.rejects(
+      () => exerciseLifecycleAndClose({ isClosed: () => true }, []),
+      /teardown:PAGE_ALREADY_CLOSED/
+    );
+    record(suite, "teardown-rejects-preclosed-page", "PASS");
+  } catch (error) {
+    record(suite, "teardown-rejects-preclosed-page", "FAIL", { error: errText(error) });
+  }
+
+  try {
+    const pending = new Set();
+    let completed = false;
+    trackPendingTask(pending, new Promise(resolve => {
+      setTimeout(() => {
+        completed = true;
+        resolve();
+      }, 30);
+    }));
+    await drainPendingTasks(pending, 500);
+    assert.equal(completed, true, "teardown:PENDING_ROUTE_NOT_DRAINED");
+    assert.equal(pending.size, 0, "teardown:PENDING_ROUTE_SET_NOT_EMPTY");
+    record(suite, "pending-route-drain-waits", "PASS");
+  } catch (error) {
+    record(suite, "pending-route-drain-waits", "FAIL", { error: errText(error) });
+  }
+
+  try {
+    const pending = new Set();
+    trackPendingTask(pending, new Promise((_, reject) => {
+      setTimeout(() => reject(new Error("synthetic-route-failure")), 10);
+    }));
+    await assert.rejects(
+      () => drainPendingTasks(pending, 500),
+      /teardown:PENDING_ROUTE_REJECTED/
+    );
+    record(suite, "pending-route-rejection-propagates", "PASS");
+  } catch (error) {
+    record(suite, "pending-route-rejection-propagates", "FAIL", { error: errText(error) });
+  }
+
+  suite.status = worst(suite.scenarios.map(item => item.status));
+}
+
 async function runUi(browser) {
   const suite = { status: "BLOCKED", scenarios: [] };
   manifest.suites.ui = suite;
@@ -259,21 +385,34 @@ async function runUi(browser) {
   await runScenario(browser, suite, "delayed-compare-render-waits-for-terminal-state", async ({ page }) => {
     const ids = await loadCandidateIds(page);
     await page.evaluate(values => localStorage.setItem("qv_compare", JSON.stringify(values)), [ids[0], ids[2]]);
-    const pattern = /data\/generated\/candidates-(federal|estadual)\.json/;
-    const handler = async route => {
-      await sleep(700);
-      await route.continue();
-    };
 
-    await page.route(pattern, handler);
-    try {
+    await withDelayedCandidateRoutes(page, 700, async () => {
       const started = Date.now();
       await page.goto(BASE + "comparar.html?ids=" + encodeURIComponent(ids[0] + "," + ids[2]), { waitUntil: "domcontentloaded" });
       await waitForComparePeople(page, 2);
       assert.ok(Date.now() - started >= 500, "compare:ASYNC_WAIT_NOT_EXERCISED");
-    } finally {
-      await page.unroute(pattern, handler);
-    }
+    });
+  });
+
+  await runScenario(browser, suite, "delayed-route-preserves-local-firewall", async ({ page }) => {
+    await page.goto(BASE + "candidatos.html", { waitUntil: "domcontentloaded" });
+
+    await withDelayedCandidateRoutes(page, 25, async () => {
+      const failedRequest = page.waitForEvent("requestfailed", request =>
+        request.url().startsWith("https://example.invalid/data/generated/candidates-federal.json")
+      );
+      const outcome = await page.evaluate(async () => {
+        try {
+          await fetch("https://example.invalid/data/generated/candidates-federal.json");
+          return "resolved";
+        } catch {
+          return "rejected";
+        }
+      });
+      assert.equal(outcome, "rejected", "scope:EXTERNAL_DELAYED_ROUTE_NOT_BLOCKED");
+      const request = await failedRequest;
+      assert.match(request.url(), /^https:\/\/example\.invalid\//);
+    });
   });
 
   await runScenario(browser, suite, "cross-tab-storage-sync", async ({ context, page }) => {
@@ -379,6 +518,7 @@ function writeManifest() {
 (async () => {
   let browser;
   try {
+    await runHarnessInvariantChecks();
     browser = await chromium.launch({ headless: true });
     await runUi(browser);
   } catch (error) {

@@ -68,7 +68,7 @@ jobs:
         shell: bash
         run: |
           cd target
-          python3 -m http.server 8000 >/tmp/qv-runtime-proof-http.log 2>&1 &
+          python3 -m http.server 8000 --bind 127.0.0.1 >/tmp/qv-runtime-proof-http.log 2>&1 &
           for attempt in $(seq 1 30); do
             curl -fsS http://127.0.0.1:8000/ >/dev/null && exit 0
             sleep 1
