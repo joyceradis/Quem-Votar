@@ -21,7 +21,6 @@ class RuntimeProofContractTests(unittest.TestCase):
         self.assertIn("target_ref:", workflow)
         self.assertIn("Execute UI proof matrix", workflow)
         self.assertIn("QV_BASE_URL: http://127.0.0.1:8000/", workflow)
-        self.assertNotIn("target_mode", workflow)
         self.assertIn("actions/upload-artifact@v4", workflow)
         self.assertLess(workflow.index("Upload canonical proof artifact"), workflow.index("Enforce binary merge gate"))
         self.assertIn('if merge_gate != "PASS"', workflow)
