@@ -2,7 +2,7 @@
 
 Data: 2026-09-23.
 
-Estado auditado a partir de `main` em `fb67c400b3e753add9f8ae6298d9ae5cb8a6dbb7` (PR #120 já integrado). Este checkpoint é atualizado por PR documental e, por isso, o merge documental subsequente pode avançar o SHA sem alterar o estado de produto descrito.
+Estado auditado a partir de `main` em `6f8138a63893b881e553232e05ec33862c8b3c81` (PRs #122 e #123 já integrados). Este checkpoint é atualizado por PR documental e, por isso, o merge documental subsequente pode avançar o SHA sem alterar o estado de produto descrito.
 
 ## Estado canônico
 
@@ -12,7 +12,7 @@ Versão de produto: `5.5.0` ([`VERSION`](../VERSION)).
 
 Baseline visual: V5.5.
 
-Cache atual de assets públicos: `5.5.4`.
+Cache atual de assets públicos: `5.5.6`.
 
 Feature freeze do núcleo eleitoral vigente até **04/10/2026**.
 
@@ -174,16 +174,25 @@ Após o harness do #118, dois slices adicionais foram integrados:
 
 A auditoria de schedule/concurrency da #35 foi registrada, mas **nenhuma mudança de cadência foi aplicada** neste checkpoint.
 
+### Manutenção de acessibilidade pós-housekeeping — PRs #122 e #123
+
+Após a reconciliação documental anterior:
+
+- PR #122 integrou correções mobile, safe-area e acessibilidade dentro das exceções permitidas pelo feature freeze;
+- PR #123 corrigiu o foco visível remanescente no hero mobile;
+- os assets públicos foram promovidos de forma coordenada para cache `5.5.6`;
+- nenhuma dessas mudanças alterou dados eleitorais, ordenação, tratamento de candidaturas ou semântica editorial.
+
 
 ## Reconciliação de PRs herdados
 
 ### PR #114 / #35
 
-Permanece **OPEN + DRAFT + BLOCKED**.
+Foi **fechado sem merge**. A correção dessa lane permanece bloqueada até existir contrato integrado produtor → guard.
 
-O diff corrige corretamente o falso positivo que tratava falha de collection/materialização em fonte Câmara como falha de reacquisition. Porém o produtor operacional atual não emite `incident_type=institutional_reacquisition_failure`; portanto o ramo explícito proposto não é alcançável no input real.
+O diff do PR #114 corrigia corretamente o falso positivo que tratava falha de collection/materialização em fonte Câmara como falha de reacquisition. Porém o produtor operacional atual não emite `incident_type=institutional_reacquisition_failure`; portanto o ramo explícito proposto não era alcançável no input real.
 
-Não mergear até existir contrato integrado produtor → guard. Não restaurar a inferência antiga.
+Eventual sucessor só deve ser aberto quando existir contrato integrado produtor → guard. Não restaurar a inferência antiga.
 
 ### PR #115
 
@@ -437,7 +446,7 @@ A camada de sustentabilidade permanece isolada e não pode modificar `topic-evid
 
 Estado após a arrumação de governança:
 
-1. manter o PR #114 em draft/BLOCKED até existir contrato produtor → guard para `institutional_reacquisition_failure`;
+1. manter a correção da #35 bloqueada; o PR #114 permanece fechado sem merge e eventual sucessor exige contrato produtor → guard para `institutional_reacquisition_failure`;
 2. manter #108 separada: privacidade/GA4/network não voltam para #117 por conveniência;
 3. manter #43 bloqueada até o pós-freeze;
 4. #44 está pronta para implementação futura do Governance Sentinel, sem misturar isso com alterações eleitorais;
