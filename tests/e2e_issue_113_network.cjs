@@ -110,7 +110,7 @@ async function scenario(name, page, path, markers, action) {
     assertAbsent(dynamicHits, [outboundUrl], "dynamic:OUTBOUND_LINK_URL_LEAK");
     results.push({ name: "dynamic-auto-events", collect: dynamicHits.length, events: dynamicHits.map(eventName) });
 
-    console.log(JSON.stringify({ head: "753c754c4f150070c4dfeb36dc99fccf828f51e3", results }, null, 2));
+    console.log(JSON.stringify({ head: "827fadd8fac42e1654df120da9974e2a18e8b8f7", results }, null, 2));
     await context.close();
   } finally {
     await browser.close();
