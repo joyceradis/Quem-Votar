@@ -89,6 +89,7 @@ async function loadCore(){
     federal,
     estadual,
     meta,
+    comparisonReady:Boolean(federal.length&&estadual.length),
     all:[
       ...federal.map(item=>({...item,_kind:"federal"})),
       ...estadual.map(item=>({...item,_kind:"estadual"}))
@@ -225,6 +226,31 @@ function comparisonState(ids){
 
 function setCompareIds(ids){
   localStorage.setItem("qv_compare",JSON.stringify(normalizeCompareIds(ids,validCompareIds)));
+}
+
+function syncComparisonControls(){
+  const ids=getCompareIds();
+  document.querySelectorAll("[data-compare-id],#profileCompare").forEach(button=>{
+    const selected=ids.includes(String(button.dataset.compareId||button.dataset.candidateId));
+    const limited=!selected&&comparisonState(ids).atLimit;
+    button.disabled=limited;
+    button.setAttribute("aria-pressed",String(selected));
+    button.setAttribute("aria-disabled",String(limited));
+    button.classList.toggle("selected",selected);
+    button.textContent=selected?(button.id==="profileCompare"?"Remover da comparação":"Remover"):
+      limited?(button.id==="profileCompare"?"Limite de 3 atingido":"Limite de 3"):"Comparar";
+  });
+  updateCompareTray();
+}
+
+function setupComparisonSync(){
+  window.addEventListener("storage",event=>{
+    if(event.key!=="qv_compare"&&event.key!==null)return;
+    syncComparisonControls();
+    announceComparison("Seleção atualizada. "+comparisonState(getCompareIds()).message);
+  });
+  window.addEventListener("pageshow",syncComparisonControls);
+  window.addEventListener("focus",syncComparisonControls);
 }
 
 function toggleCompare(id){
@@ -497,8 +523,7 @@ async function initCandidates(){
       button.addEventListener("click",()=>{
         const id=button.dataset.compareId;
         toggleCompare(id);
-        render();
-        Array.from($("cards").querySelectorAll("[data-compare-id]")).find(node=>node.dataset.compareId===id)?.focus();
+        syncComparisonControls();
       });
     });
 
@@ -552,7 +577,7 @@ async function initCandidates(){
 
   $("clearCompare").addEventListener("click",()=>{
     setCompareIds([]);
-    render();
+    syncComparisonControls();
     announceComparison("Seleção limpa. Escolha pelo menos 2 candidaturas.");
     $("searchInput").focus();
   });
@@ -753,10 +778,8 @@ async function initProfile(){
   `;
 
   $("profileCompare")?.addEventListener("click",event=>{
-    const ids=toggleCompare(event.currentTarget.dataset.candidateId);
-    const selected=ids.includes(String(candidate.tse_id));
-    event.currentTarget.textContent=selected?"Remover da comparação":"Comparar";
-    event.currentTarget.setAttribute("aria-pressed",String(selected));
+    toggleCompare(event.currentTarget.dataset.candidateId);
+    syncComparisonControls();
   });
 
   $("profileShare")?.addEventListener("click",async event=>{
@@ -778,20 +801,26 @@ async function initProfile(){
   });
 }
 async function initCompare(){
-  const[{all,meta},topics]=await Promise.all([loadCore(),loadTopics()]);
+  const[{all,meta,comparisonReady},topics]=await Promise.all([loadCore(),loadTopics()]);
   TOPICS=topics;
   applyGlobalMeta(meta);
 
-  if(!all.length){
-    $("compareMount").textContent="Não foi possível carregar as candidaturas. Tente novamente.";
+  if(!comparisonReady){
+    $("compareMount").textContent="Não foi possível carregar todas as candidaturas. Sua seleção foi preservada. Tente novamente.";
     return;
   }
-  const fromUrl=(params().get("ids")||"").split(",").filter(Boolean).map(String);
+  const urlParams=params();
+  const fromUrl=(urlParams.get("ids")||"").split(",").filter(Boolean).map(String);
   const validIds=all.map(candidate=>String(candidate.tse_id));
-  const ids=normalizeCompareIds(fromUrl.length?fromUrl:getCompareIds(),validIds);
+  const ids=normalizeCompareIds(urlParams.has("ids")?fromUrl:getCompareIds(),validIds);
   const selected=ids.map(id=>all.find(candidate=>String(candidate.tse_id)===id)).filter(Boolean);
 
   setCompareIds(ids);
+  if(urlParams.has("ids")){
+    const canonicalUrl=new URL(location.href);
+    canonicalUrl.searchParams.set("ids",ids.join(","));
+    history.replaceState(null,"",canonicalUrl);
+  }
 
   if(selected.length<2){
     $("compareMount").innerHTML=`
@@ -803,8 +832,6 @@ async function initCompare(){
     `;
     return;
   }
-
-  setCompareIds(ids);
 
   const columns=selected.length;
   const row=(label,renderer)=>`
@@ -848,6 +875,7 @@ async function initAbout(){
 
 setupNavigation();
 setupTextSize();
+setupComparisonSync();
 
 const page=document.body.dataset.page;
 if(page==="home")initHome();
