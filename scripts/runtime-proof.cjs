@@ -300,7 +300,35 @@ async function runUi(browser) {
     "mobile-390x844",
     async ({ page }) => {
       await loadCandidateIds(page);
-      assert.ok(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth) <= 1);
+      const layout = await page.evaluate(() => {
+        const root = document.documentElement;
+        const viewportWidth = root.clientWidth;
+        const offenders = Array.from(document.querySelectorAll("body *"))
+          .map(node => {
+            const rect = node.getBoundingClientRect();
+            const style = getComputedStyle(node);
+            return {
+              tag: node.tagName.toLowerCase(),
+              id: node.id || null,
+              class: typeof node.className === "string" ? node.className : null,
+              left: Math.round(rect.left * 10) / 10,
+              right: Math.round(rect.right * 10) / 10,
+              width: Math.round(rect.width * 10) / 10,
+              position: style.position,
+              transform: style.transform
+            };
+          })
+          .filter(item => item.right > viewportWidth + 1 || item.left < -1)
+          .slice(0, 20);
+        return {
+          clientWidth: viewportWidth,
+          scrollWidth: root.scrollWidth,
+          delta: root.scrollWidth - viewportWidth,
+          offenders
+        };
+      });
+      suite.mobile_layout = layout;
+      assert.ok(layout.delta <= 1, "ui:HORIZONTAL_OVERFLOW " + JSON.stringify(layout));
       const first = page.locator("button[data-compare-id]").first();
       await first.scrollIntoViewIfNeeded();
       await first.tap();
