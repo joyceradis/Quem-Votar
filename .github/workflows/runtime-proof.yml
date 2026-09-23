@@ -1,0 +1,115 @@
+name: Runtime UI proof harness
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_ref:
+        description: "Git ref or SHA to validate"
+        required: true
+        default: "main"
+        type: string
+  pull_request:
+    branches: [main]
+    paths:
+      - ".github/workflows/runtime-proof.yml"
+      - "scripts/runtime-proof.cjs"
+      - "docs/RUNTIME_PROOF.md"
+      - "docs/runtime-proof-manifest.schema.json"
+      - "tests/test_runtime_proof_contract.py"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: runtime-ui-proof-${{ github.event_name }}-${{ github.event.pull_request.number || inputs.target_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      QV_TARGET_REF: ${{ github.event_name == 'workflow_dispatch' && inputs.target_ref || github.event.pull_request.head.sha }}
+      QV_PROOF_OUT: ../runtime-proof-artifact
+
+    steps:
+      - name: Checkout harness source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          path: harness
+
+      - name: Checkout target ref
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.target_ref || github.event.pull_request.head.sha }}
+          path: target
+
+      - name: Resolve executed SHAs
+        id: refs
+        shell: bash
+        run: |
+          echo "harness_sha=$(git -C harness rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          echo "target_sha=$(git -C target rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install isolated Playwright
+        working-directory: harness
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Serve target checkout
+        shell: bash
+        run: |
+          cd target
+          python3 -m http.server 8000 --bind 127.0.0.1 >/tmp/qv-runtime-proof-http.log 2>&1 &
+          for attempt in $(seq 1 30); do
+            curl -fsS http://127.0.0.1:8000/ >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/qv-runtime-proof-http.log || true
+          exit 1
+
+      - name: Execute UI proof matrix
+        working-directory: harness
+        env:
+          QV_BASE_URL: http://127.0.0.1:8000/
+          QV_TARGET_SHA: ${{ steps.refs.outputs.target_sha }}
+          QV_HARNESS_SHA: ${{ steps.refs.outputs.harness_sha }}
+          QV_RUN_ID: ${{ github.run_id }}
+          QV_RUN_ATTEMPT: ${{ github.run_attempt }}
+        run: node scripts/runtime-proof.cjs
+
+      - name: Upload canonical proof artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: runtime-proof-${{ github.run_id }}
+          path: runtime-proof-artifact
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Enforce binary merge gate
+        if: always()
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path("runtime-proof-artifact/proof-manifest.json")
+          if not path.exists():
+              raise SystemExit("FAIL: proof-manifest.json was not produced")
+          manifest = json.loads(path.read_text(encoding="utf-8"))
+          outcome = manifest.get("overall")
+          merge_gate = manifest.get("merge_gate")
+          print(f"runtime-ui-proof overall={outcome} merge_gate={merge_gate}")
+          if merge_gate != "PASS":
+              raise SystemExit(f"runtime UI proof merge gate failed: overall={outcome}")
+          PY
