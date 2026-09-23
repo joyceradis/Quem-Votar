@@ -2,12 +2,6 @@ name: Evidence discovery — artifact only
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - "scripts/discover_evidence_sources.py"
-      - "tests/test_discover_evidence_sources.py"
-      - ".github/workflows/evidence-discovery.yml"
 
 permissions:
   contents: read
