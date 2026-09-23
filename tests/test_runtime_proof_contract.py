@@ -54,7 +54,7 @@ class RuntimeProofContractTests(unittest.TestCase):
         self.assertIn("pending-route-rejection-propagates", script)
         self.assertIn("cross-tab-storage-sync", script)
         self.assertIn("mobile-390x844", script)
-        self.assertIn("await sleep(700)", script)
+        self.assertIn("withDelayedCandidateRoutes(page, 700", script)
         self.assertIn('manifest.merge_gate = manifest.overall === "PASS" ? "PASS" : "FAIL"', script)
 
     def test_changed_surface_has_no_remote_runtime_or_environment_lane(self):
