@@ -4,9 +4,7 @@
 
 This workflow is the canonical durable browser harness for checkout-level UI validation in _Quem Votar?_.
 
-It intentionally does **one job only**: validate a concrete Git ref/SHA in a real Chromium session and persist a resumable artifact.
-
-It does not attempt to prove GitHub Pages deployment provenance or GA4 privacy. Those are separate concerns with different evidence requirements.
+It does one job only: validate a concrete Git ref/SHA from a local checkout in a real Chromium session and persist a resumable artifact.
 
 ## Invocation
 
@@ -16,20 +14,46 @@ Run `Runtime UI proof harness` with one input:
 
 Pull requests that modify the harness run it automatically against the PR head.
 
+## Scope boundary
+
+The harness is deliberately local-only:
+
+- the tested checkout is served from loopback;
+- the browser context blocks every non-loopback request before it can leave the runner;
+- no application telemetry, external service integration or remote runtime target is configured by this harness;
+- network-observability and privacy assertions belong to a separate validation lane.
+
+## Isolation and teardown contract
+
+Every scenario receives a fresh browser context.
+
+That provides clean cookie, localStorage and sessionStorage state by construction and prevents scenario state from leaking into the next case.
+
+For each scenario the harness also:
+
+- installs lifecycle probes before navigation;
+- captures `pagehide` and `unload` notifications;
+- forces a final local document transition so teardown is observable;
+- requires `pagehide` before the scenario can be recorded as PASS;
+- closes the page and then destroys the browser context;
+- removes temporary route handlers in `finally` blocks when a scenario installs them.
+
+A teardown defect therefore downgrades the scenario to FAIL rather than being hidden by a successful functional assertion.
+
 ## What it validates
 
 The current matrix covers:
 
 - keyboard/focus behavior for comparison selection;
-- 1/2/3 selection states and limit enforcement;
+- independent 1/2/3 selection states and limit enforcement;
 - canonicalization of invalid/duplicate comparison IDs;
-- explicit empty `?ids=` behavior with pre-seeded localStorage preserved through navigation;
+- explicit empty `?ids=` behavior with pre-seeded localStorage;
 - terminal rendering of comparison results;
 - delayed candidate fetch to exercise asynchronous rendering deterministically;
-- cross-tab storage synchronization;
+- cross-tab storage synchronization inside one isolated scenario context;
 - mobile 390×844 interaction and horizontal overflow.
 
-The delayed-fetch scenario proves that the harness waits for terminal comparison state. It does not claim to prove the absence of every theoretical concurrency race in the product.
+The delayed-fetch scenario waits for terminal comparison state and always removes its temporary route handler.
 
 ## Artifact contract
 
@@ -63,26 +87,3 @@ The release decision is binary:
 - every other diagnostic state maps to `merge_gate=FAIL`.
 
 The artifact is uploaded before the merge gate is enforced.
-
-## Why network/privacy is not in this PR
-
-GA4 privacy has a materially higher proof burden:
-
-- lifecycle events can be emitted during `pagehide`/unload;
-- absence of an observed event cannot be treated as proof of absence;
-- the current product privacy lane (#108) is intentionally blocked until network evidence is conclusive.
-
-Therefore the network/privacy harness belongs to #108 and must be validated there with its own negative controls and lifecycle isolation.
-
-Removing network logic from this first slice is a scope reduction, not a privacy relaxation.
-
-## Scope boundary
-
-This harness does not:
-
-- alter public UI or electoral data;
-- write canonical evidence;
-- modify GA4 Admin;
-- reopen or replace #113;
-- modify #35 schedules;
-- prove production deployment provenance.
