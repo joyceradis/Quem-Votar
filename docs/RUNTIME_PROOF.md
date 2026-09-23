@@ -42,6 +42,8 @@ The manifest is governed by `docs/runtime-proof-manifest.schema.json`.
 
 ## Result semantics
 
+Diagnostic evidence keeps four states:
+
 - `PASS`: the scenario was observed and satisfied its contract.
 - `FAIL`: the scenario was observed and violated its contract.
 - `INCONCLUSIVE`: the condition needed for proof was not observed.
@@ -49,9 +51,24 @@ The manifest is governed by `docs/runtime-proof-manifest.schema.json`.
 
 `NOT_OBSERVED` is never promoted to `PASS`.
 
-The workflow always uploads the artifact first. Only after evidence is persisted does the final step fail the run when `overall != PASS`.
+Merge governance is intentionally binary through `merge_gate`:
+
+- `PASS`: every required suite is conclusively PASS;
+- `FAIL`: any diagnostic state is FAIL, INCONCLUSIVE or BLOCKED.
+
+This preserves epistemic detail in the artifact while enforcing an 8-or-80 rule for entry into `main`.
+
+The workflow always uploads the artifact first. Only after evidence is persisted does the final step enforce `merge_gate`.
 
 This prevents fail-fast behavior from destroying the rest of the evidence matrix.
+
+## Production provenance
+
+For `target_mode=checkout`, the manifest records the checked-out SHA as a verified checkout revision.
+
+For `target_mode=production`, the checkout identity is recorded separately from the revision actually served by GitHub Pages. Until the deployed revision is independently proven, `served_revision` remains null and `revision_status=UNVERIFIED_PRODUCTION`.
+
+An unverified production revision adds a BLOCKED provenance scenario, which forces `merge_gate=FAIL`. A production run may still generate useful evidence, but it cannot be treated as attributable proof for merge.
 
 ## Privacy boundary
 
