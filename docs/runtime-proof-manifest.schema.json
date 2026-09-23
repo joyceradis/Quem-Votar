@@ -1,0 +1,154 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:quem-votar:runtime-proof-manifest:1.0.0",
+  "title": "Quem Votar runtime UI proof manifest",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "generated_at",
+    "run",
+    "target",
+    "requested",
+    "overall",
+    "merge_gate",
+    "suites",
+    "artifacts"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "generated_at": {
+      "type": "string"
+    },
+    "run": {
+      "type": "object",
+      "required": [
+        "id",
+        "attempt",
+        "harness_sha"
+      ]
+    },
+    "target": {
+      "type": "object",
+      "required": [
+        "ref",
+        "sha",
+        "mode",
+        "base_url"
+      ],
+      "properties": {
+        "ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "sha": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "mode": {
+          "const": "checkout"
+        },
+        "base_url": {
+          "type": "string"
+        }
+      }
+    },
+    "requested": {
+      "type": "object",
+      "required": [
+        "suite"
+      ],
+      "properties": {
+        "suite": {
+          "const": "ui"
+        }
+      }
+    },
+    "overall": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "INCONCLUSIVE",
+        "BLOCKED"
+      ]
+    },
+    "merge_gate": {
+      "enum": [
+        "PASS",
+        "FAIL"
+      ]
+    },
+    "suites": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "status",
+          "scenarios"
+        ],
+        "properties": {
+          "status": {
+            "enum": [
+              "PASS",
+              "FAIL",
+              "INCONCLUSIVE",
+              "BLOCKED"
+            ]
+          },
+          "scenarios": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "name",
+                "status"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "status": {
+                  "enum": [
+                    "PASS",
+                    "FAIL",
+                    "INCONCLUSIVE",
+                    "BLOCKED"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "path",
+          "bytes",
+          "sha256"
+        ],
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "bytes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        }
+      }
+    }
+  }
+}
