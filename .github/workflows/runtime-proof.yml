@@ -46,7 +46,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: runtime-proof-${{ github.event_name ${{-${{ github.event.pull_request.number || inputs.target_ref || github.ref ${{
+  group: runtime-proof-${{ github.event_name }}-${{ github.event.pull_request.number || inputs.target_ref || github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -54,10 +54,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 18
     env:
-      QV_PROOF_SUITE: ${{ github.event_name == 'workflow_dispatch' && inputs.suite || 'ui' ${{
-      QV_TARGET_MODE: ${{ github.event_name == 'workflow_dispatch' && inputs.target_mode || 'checkout' ${{
-      QV_NETWORK_POLICY: ${{ github.event_name == 'workflow_dispatch' && inputs.network_policy || 'privacy-sentinels' ${{
-      QV_TARGET_REF: ${{ github.event_name == 'workflow_dispatch' && inputs.target_ref || github.event.pull_request.head.sha ${{
+      QV_PROOF_SUITE: ${{ github.event_name == 'workflow_dispatch' && inputs.suite || 'ui' }}
+      QV_TARGET_MODE: ${{ github.event_name == 'workflow_dispatch' && inputs.target_mode || 'checkout' }}
+      QV_NETWORK_POLICY: ${{ github.event_name == 'workflow_dispatch' && inputs.network_policy || 'privacy-sentinels' }}
+      QV_TARGET_REF: ${{ github.event_name == 'workflow_dispatch' && inputs.target_ref || github.event.pull_request.head.sha }}
       QV_PROOF_OUT: ../runtime-proof-artifact
       QV_TARGET_DIR: ../target
 
@@ -65,13 +65,13 @@ jobs:
       - name: Checkout harness source
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha ${{
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
           path: harness
 
       - name: Checkout target ref
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.target_ref || github.event.pull_request.head.sha ${{
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.target_ref || github.event.pull_request.head.sha }}
           path: target
 
       - name: Resolve executed SHAs
@@ -109,18 +109,18 @@ jobs:
       - name: Execute complete proof matrix
         working-directory: harness
         env:
-          QV_BASE_URL: ${{ env.QV_TARGET_MODE == 'production' && 'https://joyceradis.github.io/Quem-Votar/' || 'http://127.0.0.1:8000/' ${{
-          QV_TARGET_SHA: ${{ steps.refs.outputs.target_sha ${{
-          QV_HARNESS_SHA: ${{ steps.refs.outputs.harness_sha ${{
-          QV_RUN_ID: ${{ github.run_id ${{
-          QV_RUN_ATTEMPT: ${{ github.run_attempt ${{
+          QV_BASE_URL: ${{ env.QV_TARGET_MODE == 'production' && 'https://joyceradis.github.io/Quem-Votar/' || 'http://127.0.0.1:8000/' }}
+          QV_TARGET_SHA: ${{ steps.refs.outputs.target_sha }}
+          QV_HARNESS_SHA: ${{ steps.refs.outputs.harness_sha }}
+          QV_RUN_ID: ${{ github.run_id }}
+          QV_RUN_ATTEMPT: ${{ github.run_attempt }}
         run: node scripts/runtime-proof.cjs
 
       - name: Upload canonical proof artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: runtime-proof-${{ github.run_id ${{
+          name: runtime-proof-${{ github.run_id }}
           path: runtime-proof-artifact
           if-no-files-found: error
           retention-days: 14
