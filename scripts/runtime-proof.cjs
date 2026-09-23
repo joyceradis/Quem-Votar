@@ -4,7 +4,19 @@ const crypto = require("node:crypto");
 const fs = require("node:fs");
 const path = require("node:path");
 
-const BASE = process.env.QV_BASE_URL || "http://127.0.0.1:8000/";
+function isLoopbackHost(hostname) {
+  return hostname === "127.0.0.1" || hostname === "localhost" || hostname === "::1";
+}
+
+function normalizeLocalBase(raw) {
+  const url = new URL(raw);
+  assert.equal(url.protocol, "http:", "scope:BASE_MUST_BE_HTTP");
+  assert.ok(isLoopbackHost(url.hostname), "scope:BASE_MUST_BE_LOOPBACK");
+  if (!url.pathname.endsWith("/")) url.pathname += "/";
+  return url.toString();
+}
+
+const BASE = normalizeLocalBase(process.env.QV_BASE_URL || "http://127.0.0.1:8000/");
 const OUT = path.resolve(process.env.QV_PROOF_OUT || "runtime-proof-artifact");
 const SCREENSHOTS = path.join(OUT, "screenshots");
 
@@ -58,6 +70,54 @@ async function screenshot(page, filename) {
   return path.relative(OUT, destination);
 }
 
+async function installLocalOnlyFirewall(context) {
+  await context.route("**/*", async route => {
+    const raw = route.request().url();
+    if (raw.startsWith("data:") || raw.startsWith("blob:") || raw.startsWith("about:")) {
+      await route.continue();
+      return;
+    }
+
+    let url;
+    try {
+      url = new URL(raw);
+    } catch {
+      await route.abort("blockedbyclient");
+      return;
+    }
+
+    if (url.protocol === "http:" && isLoopbackHost(url.hostname)) {
+      await route.continue();
+      return;
+    }
+
+    await route.abort("blockedbyclient");
+  });
+}
+
+async function installLifecycleProbe(page, events) {
+  await page.exposeFunction("__qvLifecycleEvent", eventName => {
+    events.push(String(eventName));
+  });
+  await page.addInitScript(() => {
+    window.addEventListener("pagehide", () => {
+      void window.__qvLifecycleEvent("pagehide");
+    });
+    window.addEventListener("unload", () => {
+      void window.__qvLifecycleEvent("unload");
+    });
+  });
+}
+
+async function exerciseLifecycleAndClose(page, events) {
+  if (!page || page.isClosed()) return;
+  events.length = 0;
+  await page.goto("about:blank", { waitUntil: "load" });
+  await page.waitForTimeout(25);
+  assert.ok(events.includes("pagehide"), "teardown:PAGEHIDE_NOT_OBSERVED");
+  await page.close();
+}
+
 async function waitForComparePeople(page, expected) {
   await page.waitForFunction(count => {
     const mount = document.querySelector("#compareMount");
@@ -80,157 +140,178 @@ async function waitForCompareEmpty(page) {
   assert.ok(!text.includes("Não foi possível carregar todas as candidaturas"), "compare:LOAD_ERROR");
 }
 
+async function loadCandidateIds(page) {
+  await page.goto(BASE + "candidatos.html", { waitUntil: "domcontentloaded" });
+  await page.waitForSelector("button[data-compare-id]");
+  const buttons = page.locator("button[data-compare-id]");
+  assert.ok(await buttons.count() >= 4, "ui:INSUFFICIENT_COMPARE_BUTTONS");
+  return buttons.evaluateAll(nodes => nodes.slice(0, 4).map(node => node.dataset.compareId));
+}
+
+async function runScenario(browser, suite, name, fn, contextOptions = { viewport: { width: 1366, height: 900 } }) {
+  let context;
+  let page;
+  let error = null;
+  const lifecycle = [];
+
+  try {
+    context = await browser.newContext({ ...contextOptions, serviceWorkers: "block" });
+    await installLocalOnlyFirewall(context);
+    page = await context.newPage();
+    await installLifecycleProbe(page, lifecycle);
+    await fn({ context, page });
+  } catch (caught) {
+    error = caught;
+  } finally {
+    try {
+      await exerciseLifecycleAndClose(page, lifecycle);
+    } catch (teardownError) {
+      error = error
+        ? new Error(errText(error) + " | " + errText(teardownError))
+        : teardownError;
+    }
+
+    if (context) {
+      try {
+        await context.close();
+      } catch (contextError) {
+        error = error
+          ? new Error(errText(error) + " | " + errText(contextError))
+          : contextError;
+      }
+    }
+  }
+
+  if (error) {
+    record(suite, name, "FAIL", { error: errText(error), lifecycle: [...new Set(lifecycle)] });
+  } else {
+    record(suite, name, "PASS", { lifecycle: [...new Set(lifecycle)] });
+  }
+}
+
 async function runUi(browser) {
   const suite = { status: "BLOCKED", scenarios: [] };
   manifest.suites.ui = suite;
 
-  let context;
-  try {
-    context = await browser.newContext({ viewport: { width: 1366, height: 900 } });
-    await context.route(/googletagmanager\.com|google-analytics\.com/, route => route.abort());
+  await runScenario(browser, suite, "keyboard-one-selection-focus", async ({ page }) => {
+    const ids = await loadCandidateIds(page);
+    const first = page.locator('[data-compare-id="' + ids[0] + '"]');
+    await first.focus();
+    await page.keyboard.press("Shift+Tab");
+    assert.notEqual(await page.evaluate(() => document.activeElement && document.activeElement.dataset && document.activeElement.dataset.compareId), ids[0]);
+    await page.keyboard.press("Tab");
+    assert.equal(await page.evaluate(() => document.activeElement && document.activeElement.dataset && document.activeElement.dataset.compareId), ids[0]);
+    await page.keyboard.press("Space");
+    assert.equal(await first.getAttribute("aria-pressed"), "true");
+    assert.match(await page.locator("#compareCount").innerText(), /Escolha mais 1/);
+    assert.equal(await page.locator("#openCompare").getAttribute("aria-disabled"), "true");
+    assert.equal(await page.evaluate(() => document.activeElement && document.activeElement.dataset && document.activeElement.dataset.compareId), ids[0]);
+    suite.desktop_screenshot = await screenshot(page, "desktop-1366x900.png");
+  });
 
-    const page = await context.newPage();
-    await page.goto(BASE + "candidatos.html", { waitUntil: "domcontentloaded" });
-    await page.waitForSelector("button[data-compare-id]");
-    await page.evaluate(() => localStorage.removeItem("qv_compare"));
-    await page.reload({ waitUntil: "domcontentloaded" });
-    await page.waitForSelector("button[data-compare-id]");
+  await runScenario(browser, suite, "two-selection-opens", async ({ page }) => {
+    const ids = await loadCandidateIds(page);
+    await page.locator('[data-compare-id="' + ids[0] + '"]').click();
+    await page.locator('[data-compare-id="' + ids[1] + '"]').focus();
+    await page.keyboard.press("Enter");
+    assert.equal(await page.locator("#openCompare").getAttribute("aria-disabled"), "false");
+  });
 
-    const buttons = page.locator("button[data-compare-id]");
-    assert.ok(await buttons.count() >= 4, "ui:INSUFFICIENT_COMPARE_BUTTONS");
-    const ids = await buttons.evaluateAll(nodes => nodes.slice(0, 4).map(node => node.dataset.compareId));
+  await runScenario(browser, suite, "three-selection-limit", async ({ page }) => {
+    const ids = await loadCandidateIds(page);
+    await page.locator('[data-compare-id="' + ids[0] + '"]').click();
+    await page.locator('[data-compare-id="' + ids[1] + '"]').click();
+    await page.locator('[data-compare-id="' + ids[2] + '"]').click();
+    assert.match(await page.locator("#compareCount").innerText(), /Limite de 3/);
+    assert.equal(await page.locator('[data-compare-id="' + ids[3] + '"]').isDisabled(), true);
+  });
 
-    const check = async (name, fn) => {
-      try {
-        await fn();
-        record(suite, name, "PASS");
-      } catch (error) {
-        record(suite, name, "FAIL", { error: errText(error) });
-      }
+  await runScenario(browser, suite, "removal-preserves-node-focus", async ({ page }) => {
+    const ids = await loadCandidateIds(page);
+    await page.locator('[data-compare-id="' + ids[0] + '"]').click();
+    await page.locator('[data-compare-id="' + ids[1] + '"]').click();
+    await page.locator('[data-compare-id="' + ids[2] + '"]').click();
+    const button = page.locator('[data-compare-id="' + ids[1] + '"]');
+    await button.focus();
+    await page.keyboard.press("Enter");
+    assert.equal(await page.evaluate(() => document.activeElement && document.activeElement.dataset && document.activeElement.dataset.compareId), ids[1]);
+    assert.equal(await page.locator('[data-compare-id="' + ids[3] + '"]').isDisabled(), false);
+  });
+
+  await runScenario(browser, suite, "canonical-invalid-duplicate-url", async ({ page }) => {
+    const ids = await loadCandidateIds(page);
+    await page.goto(BASE + "comparar.html?ids=" + encodeURIComponent(ids[0] + "," + ids[0] + ",invalid," + ids[2]), { waitUntil: "domcontentloaded" });
+    await waitForComparePeople(page, 2);
+    assert.equal(await page.locator(".compare-person").count(), 2);
+    assert.equal(new URL(await page.url()).searchParams.get("ids"), ids[0] + "," + ids[2]);
+    assert.deepEqual(await page.evaluate(() => JSON.parse(localStorage.getItem("qv_compare") || "[]")), [ids[0], ids[2]]);
+  });
+
+  await runScenario(browser, suite, "empty-ids-does-not-reuse-storage", async ({ page }) => {
+    const ids = await loadCandidateIds(page);
+    await page.evaluate(values => localStorage.setItem("qv_compare", JSON.stringify(values)), [ids[0], ids[2]]);
+    await page.goto(BASE + "comparar.html?ids=", { waitUntil: "domcontentloaded" });
+    await waitForCompareEmpty(page);
+    assert.deepEqual(await page.evaluate(() => JSON.parse(localStorage.getItem("qv_compare") || "[]")), []);
+    assert.match(await page.locator("#compareMount").innerText(), /Ninguém selecionado/);
+  });
+
+  await runScenario(browser, suite, "delayed-compare-render-waits-for-terminal-state", async ({ page }) => {
+    const ids = await loadCandidateIds(page);
+    await page.evaluate(values => localStorage.setItem("qv_compare", JSON.stringify(values)), [ids[0], ids[2]]);
+    const pattern = /data\/generated\/candidates-(federal|estadual)\.json/;
+    const handler = async route => {
+      await sleep(700);
+      await route.continue();
     };
 
-    await check("keyboard-one-selection-focus", async () => {
-      await buttons.nth(0).focus();
-      await page.keyboard.press("Shift+Tab");
-      assert.notEqual(await page.evaluate(() => document.activeElement?.dataset?.compareId), ids[0]);
-      await page.keyboard.press("Tab");
-      assert.equal(await page.evaluate(() => document.activeElement?.dataset?.compareId), ids[0]);
-      await page.keyboard.press("Space");
-      assert.equal(await buttons.nth(0).getAttribute("aria-pressed"), "true");
-      assert.match(await page.locator("#compareCount").innerText(), /Escolha mais 1/);
-      assert.equal(await page.locator("#openCompare").getAttribute("aria-disabled"), "true");
-      assert.equal(await page.evaluate(() => document.activeElement?.dataset?.compareId), ids[0]);
-    });
-
-    await check("two-selection-opens", async () => {
-      await page.locator(`[data-compare-id="${ids[1]}"]`).focus();
-      await page.keyboard.press("Enter");
-      assert.equal(await page.locator("#openCompare").getAttribute("aria-disabled"), "false");
-    });
-
-    await check("three-selection-limit", async () => {
-      await page.locator(`[data-compare-id="${ids[2]}"]`).click();
-      assert.match(await page.locator("#compareCount").innerText(), /Limite de 3/);
-      assert.equal(await page.locator(`[data-compare-id="${ids[3]}"]`).isDisabled(), true);
-    });
-
-    await check("removal-preserves-node-focus", async () => {
-      const button = page.locator(`[data-compare-id="${ids[1]}"]`);
-      await button.focus();
-      await page.keyboard.press("Enter");
-      assert.equal(await page.evaluate(() => document.activeElement?.dataset?.compareId), ids[1]);
-      assert.equal(await page.locator(`[data-compare-id="${ids[3]}"]`).isDisabled(), false);
-    });
-
-    await check("canonical-invalid-duplicate-url", async () => {
-      await page.goto(BASE + "comparar.html?ids=" + encodeURIComponent(`${ids[0]},${ids[0]},invalid,${ids[2]}`), { waitUntil: "domcontentloaded" });
-      await waitForComparePeople(page, 2);
-      assert.equal(await page.locator(".compare-person").count(), 2);
-      assert.equal(new URL(await page.url()).searchParams.get("ids"), `${ids[0]},${ids[2]}`);
-      assert.deepEqual(await page.evaluate(() => JSON.parse(localStorage.getItem("qv_compare") || "[]")), [ids[0], ids[2]]);
-    });
-
-    await check("empty-ids-does-not-reuse-storage", async () => {
-      await page.evaluate(values => localStorage.setItem("qv_compare", JSON.stringify(values)), [ids[0], ids[2]]);
-      await page.goto(BASE + "comparar.html?ids=", { waitUntil: "domcontentloaded" });
-      await waitForCompareEmpty(page);
-      assert.deepEqual(await page.evaluate(() => JSON.parse(localStorage.getItem("qv_compare") || "[]")), []);
-      assert.match(await page.locator("#compareMount").innerText(), /Ninguém selecionado/);
-    });
-
-    await check("delayed-compare-render-waits-for-terminal-state", async () => {
-      await page.goto(BASE + "candidatos.html", { waitUntil: "domcontentloaded" });
-      await page.evaluate(values => localStorage.setItem("qv_compare", JSON.stringify(values)), [ids[0], ids[2]]);
-      await page.route(/data\/generated\/candidates-(federal|estadual)\.json/, async route => {
-        await sleep(700);
-        await route.continue();
-      });
+    await page.route(pattern, handler);
+    try {
       const started = Date.now();
-      await page.goto(BASE + "comparar.html?ids=" + encodeURIComponent(`${ids[0]},${ids[2]}`), { waitUntil: "domcontentloaded" });
+      await page.goto(BASE + "comparar.html?ids=" + encodeURIComponent(ids[0] + "," + ids[2]), { waitUntil: "domcontentloaded" });
       await waitForComparePeople(page, 2);
       assert.ok(Date.now() - started >= 500, "compare:ASYNC_WAIT_NOT_EXERCISED");
-      await page.unroute(/data\/generated\/candidates-(federal|estadual)\.json/);
-    });
-
-    await check("cross-tab-storage-sync", async () => {
-      await page.goto(BASE + "candidatos.html", { waitUntil: "domcontentloaded" });
-      await page.evaluate(() => localStorage.removeItem("qv_compare"));
-      const profile = await context.newPage();
-      try {
-        await profile.goto(BASE + "candidato.html?id=" + encodeURIComponent(ids[0]), { waitUntil: "domcontentloaded" });
-        await profile.waitForSelector("#profileCompare");
-        await profile.locator("#profileCompare").click();
-        await page.bringToFront();
-        await page.waitForFunction(id => document.querySelector(`[data-compare-id="${id}"]`)?.getAttribute("aria-pressed") === "true", ids[0]);
-        assert.equal(await page.locator(`[data-compare-id="${ids[0]}"]`).innerText(), "Remover");
-      } finally {
-        await profile.close();
-      }
-    });
-
-    try {
-      suite.desktop_screenshot = await screenshot(page, "desktop-1366x900.png");
-    } catch (error) {
-      suite.desktop_screenshot_error = errText(error);
-    }
-
-    await context.close();
-    context = null;
-
-    const mobile = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
-    try {
-      await mobile.route(/googletagmanager\.com|google-analytics\.com/, route => route.abort());
-      const m = await mobile.newPage();
-      try {
-        await m.goto(BASE + "candidatos.html", { waitUntil: "domcontentloaded" });
-        await m.waitForSelector("button[data-compare-id]");
-        assert.ok(await m.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth) <= 1);
-        const first = m.locator("button[data-compare-id]").first();
-        await first.scrollIntoViewIfNeeded();
-        await first.tap();
-        assert.equal(await first.getAttribute("aria-pressed"), "true");
-        assert.equal(await m.locator("#compareTray").isVisible(), true);
-        record(suite, "mobile-390x844", "PASS");
-      } catch (error) {
-        record(suite, "mobile-390x844", "FAIL", { error: errText(error) });
-      }
-
-      try {
-        suite.mobile_screenshot = await screenshot(m, "mobile-390x844.png");
-      } catch (error) {
-        suite.mobile_screenshot_error = errText(error);
-      }
     } finally {
-      await mobile.close();
+      await page.unroute(pattern, handler);
     }
+  });
 
-    suite.status = worst(suite.scenarios.map(item => item.status));
-  } catch (error) {
-    record(suite, "ui-setup", "BLOCKED", { error: errText(error) });
-    suite.status = "BLOCKED";
-  } finally {
-    if (context) await context.close().catch(() => {});
-  }
+  await runScenario(browser, suite, "cross-tab-storage-sync", async ({ context, page }) => {
+    const ids = await loadCandidateIds(page);
+    const profile = await context.newPage();
+    try {
+      await profile.goto(BASE + "candidato.html?id=" + encodeURIComponent(ids[0]), { waitUntil: "domcontentloaded" });
+      await profile.waitForSelector("#profileCompare");
+      await profile.locator("#profileCompare").click();
+      await page.bringToFront();
+      await page.waitForFunction(id => {
+        const node = document.querySelector('[data-compare-id="' + id + '"]');
+        return node && node.getAttribute("aria-pressed") === "true";
+      }, ids[0]);
+      assert.equal(await page.locator('[data-compare-id="' + ids[0] + '"]').innerText(), "Remover");
+    } finally {
+      await profile.close();
+    }
+  });
+
+  await runScenario(
+    browser,
+    suite,
+    "mobile-390x844",
+    async ({ page }) => {
+      await loadCandidateIds(page);
+      assert.ok(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth) <= 1);
+      const first = page.locator("button[data-compare-id]").first();
+      await first.scrollIntoViewIfNeeded();
+      await first.tap();
+      assert.equal(await first.getAttribute("aria-pressed"), "true");
+      assert.equal(await page.locator("#compareTray").isVisible(), true);
+      suite.mobile_screenshot = await screenshot(page, "mobile-390x844.png");
+    },
+    { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true }
+  );
+
+  suite.status = worst(suite.scenarios.map(item => item.status));
 }
 
 function listFiles(root) {
