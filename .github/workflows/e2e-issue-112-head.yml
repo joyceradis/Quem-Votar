@@ -1,0 +1,35 @@
+name: E2E HEAD #112
+
+on:
+  push:
+    branches: [test/issue-112-head-e2e]
+
+permissions:
+  contents: read
+
+jobs:
+  head-e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Instalar Playwright isolado
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Servir HEAD isolado
+        run: |
+          python3 -m http.server 8000 >/tmp/qv-http.log 2>&1 &
+          for attempt in $(seq 1 20); do
+            curl -fsS http://127.0.0.1:8000/ >/dev/null && exit 0
+            sleep 1
+          done
+          exit 1
+      - name: Validar desktop, teclado, abas e mobile
+        env:
+          QV_BASE_URL: http://127.0.0.1:8000/
+        run: node tests/e2e_issue_112_head.cjs
