@@ -1,8 +1,8 @@
 # Checkpoint atual — V5.5
 
-Data: 2026-09-22.
+Data: 2026-09-23.
 
-Estado auditado contra `main` em `3f7a40009ebda1f0ed398494134c1d47709c23c2`.
+Estado auditado contra `main` em `1de5c60bd11cb7c5bbb9d595e5155631772513a8`.
 
 ## Estado canônico
 
@@ -12,7 +12,7 @@ Versão de produto: `5.5.0` ([`VERSION`](../VERSION)).
 
 Baseline visual: V5.5.
 
-Cache atual de assets públicos: `5.5.2`.
+Cache atual de assets públicos: `5.5.4`.
 
 Feature freeze do núcleo eleitoral vigente até **04/10/2026**.
 
@@ -66,6 +66,25 @@ O contrato público continua:
 - temas somente quando há evidência documentada;
 - ausência de evidência não é convertida em ausência de posição.
 
+### Comparação
+
+A #107 foi concluída após estabilização do funil factual de comparação pelo PR #112.
+
+Estado validado em produção:
+
+- seleção de até 3 candidaturas;
+- feedback acessível de seleção/remoção e limite;
+- foco preservado nas interações cobertas;
+- normalização de URLs inválidas/duplicadas;
+- `?ids=` vazio não reutiliza seleção antiga;
+- sincronização entre abas;
+- desktop, teclado e mobile 390×844 verificados em Chromium real;
+- Quality pós-merge: run `35813620149` — **PASS**;
+- Pages do merge: run `35813619940` — **PASS**;
+- E2E de produção: run `35813830689` — **8/8 PASS**.
+
+Merge canônico: `b4d314f22d513db0011e5718a179c6df4a7dc0ec`.
+
 ### Compartilhamento social
 
 A limitação anterior de Open Graph dinâmico foi corrigida pela #93 / PR #94.
@@ -84,7 +103,87 @@ Estado atual:
 
 Google Analytics 4 está instalado no site público com Measurement ID `G-2KY1FDKV88`.
 
-A telemetria não altera conteúdo eleitoral, ordenação ou critérios editoriais.
+A #108 permanece **aberta e bloqueada**. O PR #113 foi fechado **sem merge** e sua barreira client-side não está em `main`.
+
+Estado comprovado até este checkpoint:
+
+- GA4 Admin verificado;
+- pageviews automáticos por alterações de histórico: desligados;
+- Site Search: desligado;
+- Data Redaction de e-mail: ativa;
+- Data Redaction de query: ativa para `id`, `ids`, `q`, `tema`, `partido`, `cargo`, `page` e `institucional`;
+- matriz real do HEAD #113: run `35812949635` — cenários principais sem dados proibidos;
+- falsificação estrita de outbound click: run `35813126591` — `OUTBOUND_CLICK_NOT_OBSERVED`;
+- matriz repetida após reconciliação com #112: run `35814096977` — outbound click continuou não observável.
+
+Consequência: o gate de privacidade permanece incompleto. Não existe autorização para promover #113, ressuscitá-lo ou abrir substituto apenas para contornar a ausência de prova. A direção registrada na #108 é reduzir primeiro a superfície automática do GA4 no plano administrativo e repetir o gate empírico antes de nova implementação.
+
+A telemetria não pode transmitir identidade de candidatura, busca, tema, partido, listas de IDs ou produzir interpretação política.
+
+
+## Harness canônico de runtime — #117 / PR #118
+
+O primeiro slice da #117 foi integrado em `main` pelo PR #118.
+
+Escopo deste slice:
+
+- validação UI sobre checkout de SHA/ref explícito;
+- execução somente em loopback;
+- bloqueio de saída não-loopback no browser;
+- isolamento por `browserContext`;
+- teardown fail-closed com observação de lifecycle;
+- espera determinística de render assíncrono;
+- artifact canônico com manifest e screenshots diagnósticas;
+- `merge_gate=PASS|FAIL`, com incerteza impedindo PASS.
+
+Estado integrado:
+
+- HEAD final do PR #118: `8098972cb1e0c21fea01d44fba7e3531934d78e8`;
+- Runtime UI proof final: run `35882212884` — **PASS**;
+- artifact: `runtime-proof-35882212884`, ID `10761550164`;
+- digest verificado: `sha256:682caf704b391d9d1b6c5b2dfdd3111b93f85124f2fb3532b7e16dec76bb6eda`;
+- manifest: `overall=PASS`, `merge_gate=PASS`;
+- invariantes do harness: 3/3 PASS;
+- cenários UI: 10/10 PASS;
+- mobile 390×844: sem overflow horizontal antes/depois da seleção;
+- merge commit: `1de5c60bd11cb7c5bbb9d595e5155631772513a8`.
+
+Como o executor manual pós-merge não estava disponível na sessão de reconciliação, foi registrada uma prova de equivalência, sem fingir um novo run:
+
+- tree do HEAD efetivamente testado: `240b35809c6ceb8be7d6f70ef5f2b643b1df4443`;
+- tree do merge commit em `main`: `240b35809c6ceb8be7d6f70ef5f2b643b1df4443`;
+- portanto a árvore integrada é byte-equivalente à árvore exercitada pelo run final.
+
+Sinais realmente pós-merge sobre `main@1de5c60...`:
+
+- Quality: run `35883642699` — **PASS**;
+- Pages build/deployment: run `35883637446` — **PASS**.
+
+Isso satisfaz o gate material do primeiro slice UI/checkout. Não é descrito como um novo `workflow_dispatch`.
+
+A #117 permanece aberta para marcos posteriores. Network/privacy/GA4 continuam pertencendo à #108 e não foram absorvidos pelo #118.
+
+
+## Reconciliação de PRs herdados
+
+### PR #114 / #35
+
+Permanece **OPEN + DRAFT + BLOCKED**.
+
+O diff corrige corretamente o falso positivo que tratava falha de collection/materialização em fonte Câmara como falha de reacquisition. Porém o produtor operacional atual não emite `incident_type=institutional_reacquisition_failure`; portanto o ramo explícito proposto não é alcançável no input real.
+
+Não mergear até existir contrato integrado produtor → guard. Não restaurar a inferência antiga.
+
+### PR #115
+
+Fechado **sem merge** como infraestrutura temporária superseded.
+
+Nove dos onze paths do PR são byte-idênticos à `main`. Os dois únicos paths exclusivos eram um workflow E2E temporário e seu script de teste, substituídos pelo harness canônico do #118.
+
+### PR #116
+
+Este PR é o checkpoint documental corrente. Seu escopo continua exclusivamente `docs/CHECKPOINT_CURRENT.md`; ele deve ser validado novamente contra a `main` atual antes do merge.
+
 
 ## Evidências temáticas
 
@@ -117,32 +216,42 @@ Invariantes:
 - zero autoaprovação;
 - zero escrita canônica pelo worker;
 - promoção somente por PR rastreável + gates;
-- falhas institucionais e de anchor são incidentes explícitos;
+- falhas institucionais e de anchor permanecem explícitas;
 - fila de curadoria é delta novo, não repetição de decisões já tomadas.
 
-Último worker concluído e auditável no momento deste checkpoint:
+Resumabilidade está comprovada:
 
-- run: `35665676445`;
-- commit: `c1b664ffe8b1e49036b78b1b4759cfa13bfb2ad8`;
-- artifact: `10668973576`;
-- drafts acumulados no artifact: **751**;
-- evidências canônicas observadas: **22**;
-- URLs não canônicas acumuladas: **624**;
-- novo lote de curadoria: **99 itens**, **11 candidaturas**;
-- incidentes institucionais acionáveis: **0**;
-- transporte Câmara observado nesse run: `api_fallback`.
+- run `35722612606` persistiu estado ao atingir o orçamento de ciclos;
+- run independente `35724917391` restaurou a chave anterior, continuou do estado preservado e drenou o backlog;
+- o worker permaneceu read-only/artifact-only e publicou artifacts auditáveis.
 
-A infraestrutura bulk oficial da Câmara está em `main`, mas o último run concluído acima caiu para o fallback de API. Portanto o bulk não deve ser descrito como transporte efetivamente usado enquanto um artifact posterior não demonstrar `camara_bulk_daily`.
+Estado operacional mais recente auditado:
+
+- run `35792402700`: **SUCCESS**;
+- run `35803561413`: processamento, persistência, artifact e assert de repositório inalterado passaram; falha ocorreu somente no step `Page only on actionable cruise incidents`;
+- `persistent_failures=45`;
+- `actionable_incidents=14`;
+- os 14 foram reportados como `institutional_reacquisition_failure` com detalhe `conteúdo institucional API insuficiente para revisão`;
+- artifact do run `35803561413`: `evidence-worker-35803561413`, ID `10726154995`, digest `sha256:214d1a3f01e211413a28c9e808fa7b8fe4bb275c37b703977cddf3f30a040a21`.
+
+A auditoria da #35 concluiu que esses 14 casos possuem aquisição/proveniência Câmara presentes e falham na materialização por conteúdo insuficiente; o `cruise_worker_guard` ainda os classifica como reacquisition failure pela origem da fonte, sem distinguir o estágio real da falha.
+
+Portanto:
+
+- o vermelho não deve ser apagado, ignorado ou transformado em whitelist;
+- os registros permanecem nos artifacts/exception state;
+- a próxima correção dessa lane deve tornar a classificação do guard explícita e testável, sem tocar evidência canônica, taxonomia ou UI.
 
 Os arquivos versionados de staging no repositório não equivalem ao estado operacional do worker; o worker preserva estado não canônico em artifacts/cache.
 
+
 ## Enriquecimento TSE — #86
 
-A #86 permanece **em andamento**, com integração preparada no **PR #105**, mas ainda sem promoção para `main`.
+A #86 está **closed/completed**.
 
-A branch `data/issue-86-tse-enrichment` incorporou `main` por merge explícito no commit `ec24d9234be823bd73f6c0534c67de7fbf90083c`, preservando o histórico RED/fix/GREEN da validação.
+PR #105 mergeado em `main` no commit `cc7cafe5dda35d8514a053042ef5f02b1046c18e`.
 
-Snapshot pós-merge materializado pelo pipeline no commit `1cc9b994ec3dcf99fb224804ae05a3af8f22715c`:
+Snapshot consolidado:
 
 - 547 candidaturas processadas;
 - 356 candidaturas com bens;
@@ -152,50 +261,54 @@ Snapshot pós-merge materializado pelo pipeline no commit `1cc9b994ec3dcf99fb224
 - 376 candidaturas com histórico;
 - 1.138 registros históricos.
 
-Esses números são cobertura de dados, não interpretação política.
-
 A proveniência preserva explicitamente a cadeia:
 
 `TSE = fonte factual primária → bootstrap versionado = transporte contingencial → freshness + hashes`.
 
-O transporte contingencial é identificado como páginas estáticas do MeuVoto; a indisponibilidade HTTP 403 das rotas oficiais TSE permanece registrada separadamente e não altera o TSE como fonte factual primária.
-
-Contratos preservados no snapshot pós-merge:
+Contratos preservados:
 
 - patrimônio com contagem e soma auditáveis;
-- redes normalizadas e deduplicadas antes da persistência;
-- histórico com chave explícita `year/office/uf/party/result`, preservando `location` quando a granularidade é municipal;
+- redes normalizadas e deduplicadas;
+- histórico com chave `year/office/uf/party/result`, preservando `location` quando aplicável;
 - ausência de CPF, título eleitoral e e-mail pessoal nos registros públicos;
 - `registration_status = "not_available"` para sentinelas TSE, sem inferência jurídica.
 
-Validação pós-merge:
+Validação pós-merge contra o SHA canônico:
 
-- bootstrap/sync + suíte determinística + auditoria: run `35683821238` — **PASS**;
-- provenance: **PASS**;
-- Gate A — patrimônio: **PASS**;
-- Gate B — redes: **PASS**, com `duplicatas_casefold=0`;
-- Gate C — histórico: **PASS**, sem ausência de `year/office/uf/party/result`;
-- Gate D — PII: **PASS**, com zero hits;
-- execução conjunta dos cinco gates: run `35683935859` — **OVERALL PASS**;
-- Quality pós-rematerialização: run `35683939904` — **PASS**.
+- cinco gates de dados: **OVERALL PASS**;
+- patrimônio: PASS;
+- redes: PASS, `duplicatas_casefold=0`;
+- histórico: PASS;
+- PII: PASS, zero hits;
+- Quality: run `35686294433` — **SUCCESS**, 102 testes + `audit-site.py`.
 
-O estado acima autoriza avaliação do PR #105. Merge para `main` continua condicionado a autorização explícita separada.
+A integração está consolidada em `main`; menções anteriores a “aguardando merge” estão obsoletas.
+
 
 ## Sync eleitoral — #88
 
+A #88 está **closed/completed**.
+
 A correção de `__pycache__` foi mergeada em `341251b52df06e8cf4884cb18b4a170b31657534`.
 
-A #88 permanece **aberta** porque merge não equivale a prova operacional.
+A prova operacional pós-merge foi concluída no run `35722902998` sobre `main`:
 
-Critério restante:
+- conclusão: **success**;
+- guard de escopo preservado;
+- artifact: `sync-data-candidate-35722902998`;
+- artifact ID: `10692007813`;
+- digest: `sha256:e77df0c82462391a557a54ca9bd624e387a1026946638aa878339440df8da94e`;
+- 137 federais + 410 estaduais = 547 candidaturas;
+- 547/547 URLs HTTPS de foto;
+- 7 vínculos Câmara;
+- 26 evidências ALES;
+- 22 evidências temáticas;
+- 1.513 bens;
+- 1.253 redes;
+- 1.138 registros históricos.
 
-- run novo em `main` contendo a correção;
-- conclusão verde;
-- guard fail-closed preservado;
-- artifact auditável;
-- SHA, run ID e artifact registrados na issue.
+A prova operacional exigida pela issue está completa; menções anteriores a “pendente” estão obsoletas.
 
-Reexecução de payload antigo não satisfaz esse critério.
 
 ## Governança executável
 
@@ -224,21 +337,33 @@ O endpoint clássico de branch protection pode retornar 403 para a integração 
 
 - #36 — proteção efetiva de `main`;
 - #45 — topologia canônica multiagente;
+- #86 / PR #105 — bens, redes e histórico TSE integrados e validados;
+- #88 — sync eleitoral validado operacionalmente pós-merge;
 - #91 — `registration_status` explícito;
 - #93 — Open Graph estático 1:1 por candidatura;
-- #95 — checkpoint obrigatório no mesmo PR de qualquer mudança em `data/generated/*`.
+- #95 — checkpoint obrigatório no mesmo PR de mudança em `data/generated/*`;
+- #107 / PR #112 — funil factual de comparação validado em produção.
+- #118 — primeiro slice do harness UI/checkout da #117 integrado em `main`;
+- #115 — branch E2E temporária fechada sem merge após supersession pelo #118;
 
 ### Em andamento
 
 - #2 — expansão de propostas e declarações com fonte;
 - #34 — tracking de escala da pipeline de evidências;
-- #35 — worker contínuo War Time;
-- #86 — bens, redes e histórico TSE validados no PR #105, aguardando autorização de merge;
-- #88 — prova operacional pós-merge do sync;
+- #35 — worker contínuo War Time; classificação do cruise guard permanece pendente;
+- #42 — benchmark semântico em shadow mode.
+- #117 — harness canônico: primeiro slice concluído; próximos marcos ainda não iniciados;
 
-### Ainda não consolidada
+### Bloqueada
 
-- #44 — Governance Sentinel periódico permanece aberto.
+- #108 — instrumentação GA4 com minimização de dados; #113 fechado sem merge e gate de outbound click não comprovado.
+- #114 / #35 — guard de reacquisition bloqueado até existir sinal operacional produzido e testado end-to-end;
+
+### Governança
+
+- #44 — Governance Sentinel permanece aberto e pronto para implementação incremental após esta reconciliação documental;
+- #43 — decisão de orquestração permanece pós-freeze.
+
 
 ## Critério de pronto para `data/generated/*`
 
@@ -292,8 +417,12 @@ A camada de sustentabilidade permanece isolada e não pode modificar `topic-evid
 
 ## Próximo passo seguro
 
-Com o enforcement da #95 consolidado, a ordem volta para:
+Ordem canônica após este checkpoint:
 
-1. resolver a prova operacional pendente da #88 quando houver novo run;
-2. avaliar o PR #105 da #86; os cinco gates estão verdes e o merge continua sujeito a autorização explícita;
-3. seguir a expansão de cobertura temática da #2/#35 sob os contratos do freeze.
+1. concluir e mergear esta reconciliação documental do PR #116 somente com gates frescos verdes;
+2. somente depois iniciar o próximo marco da #117, preservando o escopo do primeiro slice já integrado;
+3. manter o PR #114 em draft/BLOCKED até existir contrato produtor → guard para `institutional_reacquisition_failure`;
+4. manter #108 separada: nenhum marco da #117 deve reabsorver GA4/network/privacy por conveniência;
+5. continuar #2/#35 sob os contratos do feature freeze, sem promoção automática de evidência política.
+
+Nenhuma dessas frentes autoriza relaxamento dos gates de `main`.
