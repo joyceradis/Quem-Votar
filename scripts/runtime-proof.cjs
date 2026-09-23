@@ -300,7 +300,7 @@ async function runUi(browser) {
     "mobile-390x844",
     async ({ page }) => {
       await loadCandidateIds(page);
-      const layout = await page.evaluate(() => {
+      const inspectLayout = () => page.evaluate(() => {
         const root = document.documentElement;
         const viewportWidth = root.clientWidth;
         const offenders = Array.from(document.querySelectorAll("body *"))
@@ -327,13 +327,16 @@ async function runUi(browser) {
           offenders
         };
       });
-      suite.mobile_layout = layout;
-      assert.ok(layout.delta <= 1, "ui:HORIZONTAL_OVERFLOW " + JSON.stringify(layout));
+      const beforeSelection = await inspectLayout();
       const first = page.locator("button[data-compare-id]").first();
       await first.scrollIntoViewIfNeeded();
       await first.tap();
       assert.equal(await first.getAttribute("aria-pressed"), "true");
       assert.equal(await page.locator("#compareTray").isVisible(), true);
+      const afterSelection = await inspectLayout();
+      suite.mobile_layout = { before_selection: beforeSelection, after_selection: afterSelection };
+      assert.ok(beforeSelection.delta <= 1, "ui:HORIZONTAL_OVERFLOW_BEFORE_SELECTION " + JSON.stringify(beforeSelection));
+      assert.ok(afterSelection.delta <= 1, "ui:HORIZONTAL_OVERFLOW_AFTER_SELECTION " + JSON.stringify(afterSelection));
       suite.mobile_screenshot = await screenshot(page, "mobile-390x844.png");
     },
     { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true }
