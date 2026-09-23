@@ -138,7 +138,8 @@ jobs:
               raise SystemExit("BLOCKED: proof-manifest.json was not produced")
           manifest = json.loads(path.read_text(encoding="utf-8"))
           outcome = manifest.get("overall")
-          print(f"runtime-proof overall={outcome}")
-          if outcome != "PASS":
-              raise SystemExit(f"runtime proof did not pass: {outcome}")
+          merge_gate = manifest.get("merge_gate")
+          print(f"runtime-proof overall={outcome} merge_gate={merge_gate}")
+          if merge_gate != "PASS":
+              raise SystemExit(f"runtime proof merge gate failed: overall={outcome} merge_gate={merge_gate}")
           PY
