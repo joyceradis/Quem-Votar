@@ -30,7 +30,7 @@ async function settle(page) {
 }
 async function scenario(name, page, path, markers, action) {
   const start = hits.length;
-  await page.goto(BASE + path, { waitUntil: "networkidle" });
+  await page.goto(BASE + path, { waitUntil: "domcontentloaded" });
   if (action) await action(page);
   await settle(page);
   const scope = hits.slice(start);
@@ -57,7 +57,7 @@ async function scenario(name, page, path, markers, action) {
       "candidato.html?id=SENTINEL_ID_91357&tema=SENTINEL_TEMA_24680#SENTINEL_HASH_13579",
       candidateMarkers);
     const reloadStart = hits.length;
-    await page.reload({ waitUntil: "networkidle" });
+    await page.reload({ waitUntil: "domcontentloaded" });
     await settle(page);
     const reloadHits = hits.slice(reloadStart);
     assert.ok(reloadHits.length > 0, "candidate-reload:NO_COLLECT");
@@ -72,7 +72,7 @@ async function scenario(name, page, path, markers, action) {
       ["SENTINEL_A_31415", "SENTINEL_B_92653"]);
 
     const historyStart = hits.length;
-    await page.goto(BASE + "candidatos.html?cargo=federal&q=SENTINEL_HISTORY_44556", { waitUntil: "networkidle" });
+    await page.goto(BASE + "candidatos.html?cargo=federal&q=SENTINEL_HISTORY_44556", { waitUntil: "domcontentloaded" });
     await settle(page);
     const initialPageViews = hits.slice(historyStart).filter(hit => eventName(hit) === "page_view").length;
     await page.evaluate(() => history.pushState({}, "", "?cargo=federal&q=SENTINEL_PUSH_77889"));
@@ -90,7 +90,7 @@ async function scenario(name, page, path, markers, action) {
     const candidateId = String(candidate.tse_id);
     const candidateName = String(candidate.ballot_name || candidate.full_name);
     const dynamicStart = hits.length;
-    await page.goto(BASE + "candidato.html?id=" + encodeURIComponent(candidateId), { waitUntil: "networkidle" });
+    await page.goto(BASE + "candidato.html?id=" + encodeURIComponent(candidateId), { waitUntil: "domcontentloaded" });
     await page.waitForFunction(name => document.title.includes(name), candidateName);
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
     await settle(page);
