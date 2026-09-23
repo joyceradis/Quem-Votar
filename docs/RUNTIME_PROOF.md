@@ -1,89 +1,88 @@
-# Runtime proof harness
+# Runtime UI proof harness
 
 ## Purpose
 
-`Runtime proof harness` is the canonical read-only browser/network validation plane for _Quem Votar?_.
+This workflow is the canonical durable browser harness for checkout-level UI validation in _Quem Votar?_.
 
-It separates durable execution from agent sessions:
+It intentionally does **one job only**: validate a concrete Git ref/SHA in a real Chromium session and persist a resumable artifact.
 
-- GitHub Actions owns runtime and timeout;
-- Codex can define static invariants and falsification scenarios;
-- Work can dispatch/read the run and reconcile canonical state;
-- the maintainer owns merge and governance decisions.
-
-An agent does not need to keep a session open while a run executes.
+It does not attempt to prove GitHub Pages deployment provenance or GA4 privacy. Those are separate concerns with different evidence requirements.
 
 ## Invocation
 
-Use the GitHub Actions workflow `Runtime proof harness` with:
+Run `Runtime UI proof harness` with one input:
 
-- `target_ref`: exact branch, tag or SHA to validate;
-- `suite`: `ui`, `network` or `all`;
-- `target_mode`: `checkout` or `production`;
-- `network_policy`:
-  - `privacy-sentinels`: synthetic identity/query markers must not appear and History API must not create extra pageviews;
-  - `ga4-privacy-strict`: all sentinel checks plus only `page_view` may be observed.
+- `target_ref`: exact branch, tag or SHA to validate.
 
-Pull requests that modify the harness run the UI suite automatically against the PR head.
+Pull requests that modify the harness run it automatically against the PR head.
+
+## What it validates
+
+The current matrix covers:
+
+- keyboard/focus behavior for comparison selection;
+- 1/2/3 selection states and limit enforcement;
+- canonicalization of invalid/duplicate comparison IDs;
+- explicit empty `?ids=` behavior with pre-seeded localStorage preserved through navigation;
+- terminal rendering of comparison results;
+- delayed candidate fetch to exercise asynchronous rendering deterministically;
+- cross-tab storage synchronization;
+- mobile 390×844 interaction and horizontal overflow.
+
+The delayed-fetch scenario proves that the harness waits for terminal comparison state. It does not claim to prove the absence of every theoretical concurrency race in the product.
 
 ## Artifact contract
 
-Every execution uploads one artifact named `runtime-proof-<run_id>`.
-
-The artifact contains:
+Every execution uploads `runtime-proof-<run_id>` containing:
 
 - `proof-manifest.json`;
-- desktop/mobile screenshots when the UI suite runs;
-- `network-summary.json` when the network suite runs.
+- best-effort desktop and mobile screenshots.
 
-The network summary persists only endpoint metadata, parameter **keys**, event names and a SHA-256 of each raw payload. Raw GA request values are not written to the artifact.
+Screenshots are diagnostic evidence, not a release gate. The behavioral scenarios are the acceptance contract.
 
-The manifest is governed by `docs/runtime-proof-manifest.schema.json`.
+The manifest records:
+
+- harness SHA;
+- target ref/SHA;
+- checkout mode;
+- scenario results;
+- artifact hashes.
 
 ## Result semantics
 
-Diagnostic evidence keeps four states:
+Diagnostic states remain:
 
-- `PASS`: the scenario was observed and satisfied its contract.
-- `FAIL`: the scenario was observed and violated its contract.
-- `INCONCLUSIVE`: the condition needed for proof was not observed.
-- `BLOCKED`: the environment/setup prevented a valid test.
+- `PASS`
+- `FAIL`
+- `INCONCLUSIVE`
+- `BLOCKED`
 
-`NOT_OBSERVED` is never promoted to `PASS`.
+The release decision is binary:
 
-Merge governance is intentionally binary through `merge_gate`:
+- `merge_gate=PASS` only when the overall result is PASS;
+- every other diagnostic state maps to `merge_gate=FAIL`.
 
-- `PASS`: every required suite is conclusively PASS;
-- `FAIL`: any diagnostic state is FAIL, INCONCLUSIVE or BLOCKED.
+The artifact is uploaded before the merge gate is enforced.
 
-This preserves epistemic detail in the artifact while enforcing an 8-or-80 rule for entry into `main`.
+## Why network/privacy is not in this PR
 
-The workflow always uploads the artifact first. Only after evidence is persisted does the final step enforce `merge_gate`.
+GA4 privacy has a materially higher proof burden:
 
-This prevents fail-fast behavior from destroying the rest of the evidence matrix.
+- lifecycle events can be emitted during `pagehide`/unload;
+- absence of an observed event cannot be treated as proof of absence;
+- the current product privacy lane (#108) is intentionally blocked until network evidence is conclusive.
 
-## Production provenance
+Therefore the network/privacy harness belongs to #108 and must be validated there with its own negative controls and lifecycle isolation.
 
-For `target_mode=checkout`, the manifest records the checked-out SHA as a verified checkout revision.
-
-For `target_mode=production`, the checkout identity is recorded separately from the revision actually served by GitHub Pages. Until the deployed revision is independently proven, `served_revision` remains null and `revision_status=UNVERIFIED_PRODUCTION`.
-
-An unverified production revision adds a BLOCKED provenance scenario, which forces `merge_gate=FAIL`. A production run may still generate useful evidence, but it cannot be treated as attributable proof for merge.
-
-## Privacy boundary
-
-The harness uses synthetic sentinel values for privacy falsification. It does not write electoral data, promote evidence, change GA4 Admin, or modify the public site.
-
-The browser aborts GA `collect` requests after they are constructed so the proof can inspect client behavior without intentionally delivering the synthetic sentinel traffic to GA4.
+Removing network logic from this first slice is a scope reduction, not a privacy relaxation.
 
 ## Scope boundary
 
-This harness does not authorize:
+This harness does not:
 
-- merge of #113;
-- a replacement PR for #108;
-- canonical evidence changes;
-- UI/product changes;
-- schedule changes for #35.
-
-Those remain separate governance decisions.
+- alter public UI or electoral data;
+- write canonical evidence;
+- modify GA4 Admin;
+- reopen or replace #113;
+- modify #35 schedules;
+- prove production deployment provenance.

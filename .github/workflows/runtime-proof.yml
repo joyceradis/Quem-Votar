@@ -1,4 +1,4 @@
-name: Runtime proof harness
+name: Runtime UI proof harness
 
 on:
   workflow_dispatch:
@@ -8,31 +8,6 @@ on:
         required: true
         default: "main"
         type: string
-      suite:
-        description: "Proof suite"
-        required: true
-        default: "all"
-        type: choice
-        options:
-          - ui
-          - network
-          - all
-      target_mode:
-        description: "Serve checkout or validate public production"
-        required: true
-        default: "checkout"
-        type: choice
-        options:
-          - checkout
-          - production
-      network_policy:
-        description: "Network contract"
-        required: true
-        default: "privacy-sentinels"
-        type: choice
-        options:
-          - privacy-sentinels
-          - ga4-privacy-strict
   pull_request:
     branches: [main]
     paths:
@@ -46,20 +21,16 @@ permissions:
   contents: read
 
 concurrency:
-  group: runtime-proof-${{ github.event_name }}-${{ github.event.pull_request.number || inputs.target_ref || github.ref }}
+  group: runtime-ui-proof-${{ github.event_name }}-${{ github.event.pull_request.number || inputs.target_ref || github.ref }}
   cancel-in-progress: true
 
 jobs:
   proof:
     runs-on: ubuntu-latest
-    timeout-minutes: 18
+    timeout-minutes: 15
     env:
-      QV_PROOF_SUITE: ${{ github.event_name == 'workflow_dispatch' && inputs.suite || 'ui' }}
-      QV_TARGET_MODE: ${{ github.event_name == 'workflow_dispatch' && inputs.target_mode || 'checkout' }}
-      QV_NETWORK_POLICY: ${{ github.event_name == 'workflow_dispatch' && inputs.network_policy || 'privacy-sentinels' }}
       QV_TARGET_REF: ${{ github.event_name == 'workflow_dispatch' && inputs.target_ref || github.event.pull_request.head.sha }}
       QV_PROOF_OUT: ../runtime-proof-artifact
-      QV_TARGET_DIR: ../target
 
     steps:
       - name: Checkout harness source
@@ -94,7 +65,6 @@ jobs:
           npx playwright install --with-deps chromium
 
       - name: Serve target checkout
-        if: env.QV_TARGET_MODE == 'checkout'
         shell: bash
         run: |
           cd target
@@ -106,10 +76,10 @@ jobs:
           cat /tmp/qv-runtime-proof-http.log || true
           exit 1
 
-      - name: Execute complete proof matrix
+      - name: Execute UI proof matrix
         working-directory: harness
         env:
-          QV_BASE_URL: ${{ env.QV_TARGET_MODE == 'production' && 'https://joyceradis.github.io/Quem-Votar/' || 'http://127.0.0.1:8000/' }}
+          QV_BASE_URL: http://127.0.0.1:8000/
           QV_TARGET_SHA: ${{ steps.refs.outputs.target_sha }}
           QV_HARNESS_SHA: ${{ steps.refs.outputs.harness_sha }}
           QV_RUN_ID: ${{ github.run_id }}
@@ -125,7 +95,7 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-      - name: Enforce manifest outcome
+      - name: Enforce binary merge gate
         if: always()
         shell: bash
         run: |
@@ -135,11 +105,11 @@ jobs:
 
           path = Path("runtime-proof-artifact/proof-manifest.json")
           if not path.exists():
-              raise SystemExit("BLOCKED: proof-manifest.json was not produced")
+              raise SystemExit("FAIL: proof-manifest.json was not produced")
           manifest = json.loads(path.read_text(encoding="utf-8"))
           outcome = manifest.get("overall")
           merge_gate = manifest.get("merge_gate")
-          print(f"runtime-proof overall={outcome} merge_gate={merge_gate}")
+          print(f"runtime-ui-proof overall={outcome} merge_gate={merge_gate}")
           if merge_gate != "PASS":
-              raise SystemExit(f"runtime proof merge gate failed: overall={outcome} merge_gate={merge_gate}")
+              raise SystemExit(f"runtime UI proof merge gate failed: overall={outcome}")
           PY

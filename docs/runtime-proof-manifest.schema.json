@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://joyceradis.github.io/Quem-Votar/docs/runtime-proof-manifest.schema.json",
-  "title": "Quem Votar runtime proof manifest",
+  "title": "Quem Votar runtime UI proof manifest",
   "type": "object",
   "required": [
     "schema_version",
@@ -33,11 +33,9 @@
       "type": "object",
       "required": [
         "ref",
-        "checkout_sha",
+        "sha",
         "mode",
-        "base_url",
-        "served_revision",
-        "revision_status"
+        "base_url"
       ],
       "properties": {
         "ref": {
@@ -46,42 +44,30 @@
             "null"
           ]
         },
-        "checkout_sha": {
+        "sha": {
           "type": [
             "string",
             "null"
           ]
         },
         "mode": {
-          "enum": [
-            "checkout",
-            "production"
-          ]
+          "const": "checkout"
         },
         "base_url": {
           "type": "string"
-        },
-        "served_revision": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "revision_status": {
-          "enum": [
-            "VERIFIED_CHECKOUT",
-            "VERIFIED_DEPLOYED",
-            "UNVERIFIED_PRODUCTION"
-          ]
         }
       }
     },
     "requested": {
       "type": "object",
       "required": [
-        "suite",
-        "network_policy"
-      ]
+        "suite"
+      ],
+      "properties": {
+        "suite": {
+          "const": "ui"
+        }
+      }
     },
     "overall": {
       "enum": [
@@ -89,6 +75,12 @@
         "FAIL",
         "INCONCLUSIVE",
         "BLOCKED"
+      ]
+    },
+    "merge_gate": {
+      "enum": [
+        "PASS",
+        "FAIL"
       ]
     },
     "suites": {
@@ -157,12 +149,6 @@
           }
         }
       }
-    },
-    "merge_gate": {
-      "enum": [
-        "PASS",
-        "FAIL"
-      ]
     }
   }
 }
