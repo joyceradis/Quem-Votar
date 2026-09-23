@@ -23,15 +23,22 @@ const manifest = {
   },
   target: {
     ref: process.env.QV_TARGET_REF || null,
-    sha: process.env.QV_TARGET_SHA || null,
+    checkout_sha: process.env.QV_TARGET_SHA || null,
     mode: process.env.QV_TARGET_MODE || "checkout",
-    base_url: BASE
+    base_url: BASE,
+    served_revision: (process.env.QV_TARGET_MODE || "checkout") === "checkout"
+      ? (process.env.QV_TARGET_SHA || null)
+      : null,
+    revision_status: (process.env.QV_TARGET_MODE || "checkout") === "checkout"
+      ? "VERIFIED_CHECKOUT"
+      : "UNVERIFIED_PRODUCTION"
   },
   requested: {
     suite: SUITE,
     network_policy: NETWORK_POLICY
   },
   overall: "BLOCKED",
+  merge_gate: "FAIL",
   suites: {},
   artifacts: []
 };
@@ -84,6 +91,26 @@ async function screenshot(page, filename) {
 }
 async function settle(page) {
   await page.waitForTimeout(2500);
+}
+async function waitForComparePeople(page, expected) {
+  await page.waitForFunction(count => {
+    const mount = document.querySelector("#compareMount");
+    if (!mount) return false;
+    if ((mount.textContent || "").includes("Não foi possível carregar todas as candidaturas")) return true;
+    return mount.querySelectorAll(".compare-person").length === count;
+  }, expected);
+  const failed = await page.locator("#compareMount").innerText();
+  assert.ok(!failed.includes("Não foi possível carregar todas as candidaturas"), "compare:LOAD_ERROR");
+}
+async function waitForCompareEmpty(page) {
+  await page.waitForFunction(() => {
+    const mount = document.querySelector("#compareMount");
+    if (!mount) return false;
+    if ((mount.textContent || "").includes("Não foi possível carregar todas as candidaturas")) return true;
+    return Boolean(mount.querySelector(".compare-empty"));
+  });
+  const failed = await page.locator("#compareMount").innerText();
+  assert.ok(!failed.includes("Não foi possível carregar todas as candidaturas"), "compare:LOAD_ERROR");
 }
 
 async function runUi(browser) {
@@ -145,7 +172,7 @@ async function runUi(browser) {
 
     await check("canonical-invalid-duplicate-url", async () => {
       await page.goto(BASE + "comparar.html?ids=" + encodeURIComponent(`${ids[0]},${ids[0]},invalid,${ids[2]}`), { waitUntil: "domcontentloaded" });
-      await page.waitForSelector("#compareMount:not(.loading)").catch(() => {});
+      await waitForComparePeople(page, 2);
       assert.equal(await page.locator(".compare-person").count(), 2);
       assert.equal(new URL(await page.url()).searchParams.get("ids"), `${ids[0]},${ids[2]}`);
       assert.deepEqual(await page.evaluate(() => JSON.parse(localStorage.getItem("qv_compare") || "[]")), [ids[0], ids[2]]);
@@ -154,7 +181,7 @@ async function runUi(browser) {
     await check("empty-ids-does-not-reuse-storage", async () => {
       await page.evaluate(values => localStorage.setItem("qv_compare", JSON.stringify(values)), [ids[0], ids[2]]);
       await page.goto(BASE + "comparar.html?ids=", { waitUntil: "domcontentloaded" });
-      await page.waitForSelector("#compareMount:not(.loading)").catch(() => {});
+      await waitForCompareEmpty(page);
       assert.deepEqual(await page.evaluate(() => JSON.parse(localStorage.getItem("qv_compare") || "[]")), []);
       assert.match(await page.locator("#compareMount").innerText(), /Ninguém selecionado/);
     });
@@ -390,10 +417,21 @@ function finalizeArtifacts() {
     .sort((a, b) => a.path.localeCompare(b.path));
 }
 function writeManifest() {
+  if (manifest.target.mode === "production" && manifest.target.revision_status !== "VERIFIED_DEPLOYED") {
+    manifest.suites.provenance = {
+      status: "BLOCKED",
+      scenarios: [{
+        name: "production-served-revision",
+        status: "BLOCKED",
+        reason: "SERVED_REVISION_UNVERIFIED"
+      }]
+    };
+  }
   manifest.overall = worst(Object.values(manifest.suites).map(suite => suite.status));
+  manifest.merge_gate = manifest.overall === "PASS" ? "PASS" : "FAIL";
   finalizeArtifacts();
   fs.writeFileSync(path.join(OUT, "proof-manifest.json"), JSON.stringify(manifest, null, 2) + "\n");
-  console.log(JSON.stringify({ overall: manifest.overall, suites: manifest.suites }, null, 2));
+  console.log(JSON.stringify({ overall: manifest.overall, merge_gate: manifest.merge_gate, suites: manifest.suites }, null, 2));
 }
 
 (async () => {
