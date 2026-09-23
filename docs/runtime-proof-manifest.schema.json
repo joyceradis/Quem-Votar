@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://joyceradis.github.io/Quem-Votar/docs/runtime-proof-manifest.schema.json",
+  "$id": "urn:quem-votar:runtime-proof-manifest:1.0.0",
   "title": "Quem Votar runtime UI proof manifest",
   "type": "object",
   "required": [
