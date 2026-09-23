@@ -25,6 +25,9 @@ function assertAbsent(scope, markers, code) {
     assert.ok(!body.includes(String(marker).toLocaleLowerCase("pt-BR")), code);
   }
 }
+function assertOnlyManualPageView(scope, code) {
+  assert.deepEqual([...new Set(scope.map(eventName))], ["page_view"], code);
+}
 async function settle(page) {
   await page.waitForTimeout(2500);
 }
@@ -36,6 +39,7 @@ async function scenario(name, page, path, markers, action) {
   const scope = hits.slice(start);
   assert.ok(scope.length > 0, `${name}:NO_COLLECT`);
   assertAbsent(scope, markers, `${name}:FORBIDDEN_VALUE`);
+  assertOnlyManualPageView(scope, `${name}:ENHANCED_MEASUREMENT_EVENT`);
   results.push({ name, collect: scope.length, events: scope.map(eventName) });
   return scope;
 }
@@ -62,6 +66,7 @@ async function scenario(name, page, path, markers, action) {
     const reloadHits = hits.slice(reloadStart);
     assert.ok(reloadHits.length > 0, "candidate-reload:NO_COLLECT");
     assertAbsent(reloadHits, candidateMarkers, "candidate-reload:FORBIDDEN_VALUE");
+    assertOnlyManualPageView(reloadHits, "candidate-reload:ENHANCED_MEASUREMENT_EVENT");
     results.push({ name: "candidate-reload", collect: reloadHits.length, events: reloadHits.map(eventName) });
 
     await scenario("listing-query", page,
@@ -83,6 +88,7 @@ async function scenario(name, page, path, markers, action) {
     assert.equal(historyHits.filter(hit => eventName(hit) === "page_view").length, initialPageViews,
       "history:AUTOMATIC_PAGE_VIEW");
     assertAbsent(historyHits, ["SENTINEL_HISTORY_44556", "SENTINEL_PUSH_77889"], "history:FORBIDDEN_VALUE");
+    assertOnlyManualPageView(historyHits, "history:ENHANCED_MEASUREMENT_EVENT");
     results.push({ name: "history", collect: historyHits.length, events: historyHits.map(eventName) });
 
     const federal = JSON.parse(fs.readFileSync("data/generated/candidates-federal.json", "utf8"));
@@ -105,12 +111,12 @@ async function scenario(name, page, path, markers, action) {
     if (opened) await opened.close();
     const dynamicHits = hits.slice(dynamicStart);
     assert.ok(dynamicHits.length > 0, "dynamic:NO_COLLECT");
-    assert.ok(dynamicHits.some(hit => eventName(hit) === "click"), "dynamic:OUTBOUND_CLICK_NOT_OBSERVED");
+    assertOnlyManualPageView(dynamicHits, "dynamic:ENHANCED_MEASUREMENT_EVENT");
     assertAbsent(dynamicHits, [candidateId, candidateName], "dynamic:CANDIDATE_IDENTITY_LEAK");
     assertAbsent(dynamicHits, [outboundUrl], "dynamic:OUTBOUND_LINK_URL_LEAK");
     results.push({ name: "dynamic-auto-events", collect: dynamicHits.length, events: dynamicHits.map(eventName) });
 
-    console.log(JSON.stringify({ head: "827fadd8fac42e1654df120da9974e2a18e8b8f7", results }, null, 2));
+    console.log(JSON.stringify({ head: "753c754c4f150070c4dfeb36dc99fccf828f51e3", results }, null, 2));
     await context.close();
   } finally {
     await browser.close();
