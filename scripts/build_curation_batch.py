@@ -198,9 +198,17 @@ def build_batch(
     source_index = latest_source_index(sources_payload)
     known_decisions = decided_ids(decisions_payload)
     canonical_urls = {
-        clean(row.get("source_url"))
+        discovery.canonicalize_url(clean(row.get("source_url")))
         for row in canonical
         if clean(row.get("source_url"))
+    }
+    canonical_candidate_urls = {
+        (
+            clean(row.get("candidate_id")),
+            discovery.canonicalize_url(clean(row.get("source_url"))),
+        )
+        for row in canonical
+        if clean(row.get("candidate_id")) and clean(row.get("source_url"))
     }
 
     skipped_decided = 0
@@ -221,7 +229,7 @@ def build_batch(
         if did in known_decisions:
             skipped_decided += 1
             continue
-        if url in canonical_urls:
+        if (cid, url) in canonical_candidate_urls:
             skipped_canonical += 1
             continue
         if clean(draft.get("review_status") or "pending") != "pending":
@@ -324,6 +332,7 @@ def build_batch(
         "drafts_total": len(drafts),
         "known_decision_ids": len(known_decisions),
         "canonical_urls": len(canonical_urls),
+        "canonical_candidate_urls": len(canonical_candidate_urls),
         "skipped_decided": skipped_decided,
         "skipped_canonical": skipped_canonical,
         "skipped_nonpending": skipped_nonpending,
