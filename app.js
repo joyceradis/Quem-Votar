@@ -784,7 +784,7 @@ async function initProfile(){
     candidate.photo_source?.official_archive_url?{name:"TSE · foto",detail:candidate.photo_source.dataset||"Arquivo oficial",url:candidate.photo_source.official_archive_url}:null,
     (candidate.current_mandate?.profile_url||chamberRow?.profile_url)?{name:"Câmara dos Deputados",detail:"Perfil público",url:candidate.current_mandate?.profile_url||chamberRow?.profile_url}:null,
     ...institutionalEvidence.filter(item=>item.source?.url).map(item=>({name:item.institution||"Fonte pública",detail:item.reference_date||"",url:item.source.url})),
-    ...thematicEvidence.filter(item=>item.source_url).map(item=>({name:topicById(item.topic_id)?.label||"Proposta/declaração",detail:item.source_publisher||item.published_at||"",url:item.source_url}))
+    ...thematicEvidence.filter(item=>item.source_url).map(item=>({name:topicById(item.topic_id)?.label||evidenceTypeLabel(item.evidence_type),detail:item.source_publisher||item.published_at||"",url:item.source_url}))
   ].filter(Boolean);
 
   const profileCompareIds=getCompareIds();
