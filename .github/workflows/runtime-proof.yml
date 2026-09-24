@@ -41,6 +41,7 @@ jobs:
           set -euo pipefail
           [[ "$QV_HARNESS_REF" =~ ^[0-9a-f]{40}$ ]] || { echo 'Invalid harness SHA'; exit 1; }
           [[ "$QV_TARGET_REF" =~ ^[0-9a-f]{40}$ ]] || { echo 'Invalid target SHA'; exit 1; }
+          [[ "$QV_WORKFLOW_SHA" == "$QV_HARNESS_REF" ]] || { echo 'Workflow SHA must equal harness SHA'; exit 1; }
 
       - name: Checkout harness source
         uses: actions/checkout@v4

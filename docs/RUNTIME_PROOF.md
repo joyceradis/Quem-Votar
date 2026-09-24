@@ -11,12 +11,14 @@ It does one job only: validate a concrete Git ref/SHA from a local checkout in a
 After independent review of the bridge and an explicit human command, run
 `Runtime UI proof harness` with two inputs:
 
-- `harness_ref`: audited harness commit, lowercase full 40-character SHA;
+- `harness_ref`: audited commit containing both workflow and harness, lowercase full 40-character SHA;
 - `target_ref`: target commit, lowercase full 40-character SHA.
 
 There are no push, PR, comment or recurring triggers for this browser workflow.
 Neither input has a default. Branches, tags, abbreviated SHAs and malformed inputs
 are rejected before checkout. The two checkouts must match the requested SHAs.
+The preflight also requires `QV_WORKFLOW_SHA == QV_HARNESS_REF` before any checkout,
+dependency installation or browser execution. Reconciliation repeats this check.
 The target must remain clean; tracked harness files must remain unchanged.
 Only dependency installation may create untracked files in the harness checkout.
 
@@ -27,8 +29,12 @@ Submitting a PR or posting a coordination comment does not authorize browser exe
 No comment-to-dispatch bot, extra credential or write permission is needed.
 
 For the complementary proof of PR #128, the frozen target is
-`2423d0ebbcdd0008a44cd052939228ba62c42f4c`. Select the audited bridge HEAD as
-`harness_ref`; do not substitute a moving branch name. Implementation handoff is
+`2423d0ebbcdd0008a44cd052939228ba62c42f4c`. Set `harness_ref` to exactly the audited
+commit from which the selected workflow will execute. After integration, verify
+the integrated commit and use its full SHA when running that workflow revision;
+do not reuse the pre-merge HEAD for a workflow executing from a different merge
+commit. A moving branch selection that advances to another SHA fails closed.
+Implementation handoff is
 `READY_FOR_AUDIT`, not permission to run or merge.
 
 The manifest records `harness_sha` and `target.sha` separately. The former identifies the
@@ -122,7 +128,7 @@ The manifest records:
 - scenario results;
 - artifact hashes.
 
-The bridge adds workflow SHA (distinct from harness SHA), repository, initial and
+The bridge records workflow SHA (required to equal harness SHA), repository, initial and
 triggering actor, run/attempt, requested refs and known limitations. After upload,
 the Actions step summary and logs record the artifact ID, URL, archive digest and
 manifest SHA-256 with the same refs and run/attempt. The archive cannot contain

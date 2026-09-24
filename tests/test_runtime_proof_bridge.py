@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 import subprocess
 import tempfile
+import textwrap
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -36,7 +37,7 @@ class RuntimeBridgeTests(unittest.TestCase):
         self.env = {
             "QV_HARNESS_REF": BRIDGE.git(self.harness, "rev-parse", "HEAD"),
             "QV_TARGET_REF": BRIDGE.git(self.target, "rev-parse", "HEAD"),
-            "QV_WORKFLOW_SHA": "a" * 40,
+            "QV_WORKFLOW_SHA": BRIDGE.git(self.harness, "rev-parse", "HEAD"),
             "QV_RUN_ID": "123", "QV_RUN_ATTEMPT": "1", "QV_ACTOR": "operator",
             "QV_TRIGGERING_ACTOR": "operator", "QV_REPOSITORY": "fixture/repo",
             "QV_MATRIX_OUTCOME": "success",
@@ -59,6 +60,27 @@ class RuntimeBridgeTests(unittest.TestCase):
         result = self.reconcile()
         self.assertEqual(result["overall"], "PASS")
         self.assertEqual(result["bridge"]["artifact_name"], "runtime-proof-123-1")
+
+    def test_workflow_harness_mismatch_blocks_otherwise_complete_evidence(self):
+        self.env["QV_WORKFLOW_SHA"] = "b" * 40
+        result = self.reconcile()
+        self.assertEqual(result["overall"], "BLOCKED")
+        self.assertEqual(result["merge_gate"], "FAIL")
+        self.assertIn("workflow:harness_sha_mismatch", result["bridge"]["problems"])
+
+    def test_actual_workflow_preflight_rejects_mismatch_before_checkout(self):
+        workflow = (ROOT / ".github/workflows/runtime-proof.yml").read_text()
+        preflight = workflow.split("      - name: Reject mutable or malformed refs before checkout\n", 1)[1]
+        preflight = preflight.split("      - name: Checkout harness source\n", 1)[0]
+        script = textwrap.dedent(preflight.split("        run: |\n", 1)[1])
+        for workflow_sha, expected in ((self.env["QV_HARNESS_REF"], 0), ("b" * 40, 1), ("", 1)):
+            with self.subTest(workflow_sha=workflow_sha):
+                result = subprocess.run(["bash", "-c", script],
+                    env={**os.environ, **self.env, "QV_WORKFLOW_SHA": workflow_sha},
+                    capture_output=True, text=True)
+                self.assertEqual(result.returncode, expected)
+                if expected:
+                    self.assertIn("Workflow SHA must equal harness SHA", result.stdout)
 
     def test_mutable_short_and_injected_refs_are_blocked(self):
         for value in ("main", "a" * 7, "a" * 40 + "\n", "$(touch injected)"):

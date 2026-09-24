@@ -32,6 +32,8 @@ def git(root, *args):
 
 def reconcile(manifest, env, target, harness, out):
     problems = []
+    if env.get("QV_WORKFLOW_SHA") != env.get("QV_HARNESS_REF"):
+        problems.append("workflow:harness_sha_mismatch")
     for key in ("QV_HARNESS_REF", "QV_TARGET_REF", "QV_WORKFLOW_SHA"):
         if not SHA.fullmatch(env.get(key, "")):
             problems.append("invalid:" + key)
