@@ -79,6 +79,37 @@ class RuntimeProofContractTests(unittest.TestCase):
         self.assertIn("withDelayedCandidateRoutes(page, 700", script)
         self.assertIn('manifest.merge_gate = manifest.overall === "PASS" ? "PASS" : "FAIL"', script)
 
+    def test_profile_anchor_waits_for_natural_visibility_without_forcing_scroll(self):
+        script = (ROOT / "scripts/runtime-proof.cjs").read_text(encoding="utf-8")
+        self.assertIn("async function waitForViewportIntersection", script)
+        self.assertIn("page.waitForFunction(", script)
+        self.assertIn('throw new Error(label + ": " + errText(error))', script)
+
+        profile = script[
+            script.index('"profile-three-questions-anchors-keyboard"'):
+            script.index('"profile-occupation-is-not-current-activity"')
+        ]
+        self.assertIn("waitForViewportIntersection(page", profile)
+        self.assertIn("profile:ANCHOR_NOT_VISIBLE_", profile)
+        self.assertNotIn("scrollIntoView", profile)
+
+        mobile_start = script.index('"profile-mobile-390x844"')
+        mobile = script[mobile_start:script.index("suite.status = worst", mobile_start)]
+        self.assertIn('waitForViewportIntersection(page, "#impacto", "profile:MOBILE_IMPACT_NOT_VISIBLE")', mobile)
+        self.assertIn("profile:MOBILE_COMPARE_NOT_VISIBLE", mobile)
+        self.assertIn("profile:MOBILE_SHARE_NOT_VISIBLE", mobile)
+        self.assertNotIn("scrollIntoView", mobile)
+
+    def test_occupation_label_check_is_case_insensitive_but_semantic_exclusion_remains(self):
+        script = (ROOT / "scripts/runtime-proof.cjs").read_text(encoding="utf-8")
+        scenario = script[
+            script.index('"profile-occupation-is-not-current-activity"'):
+            script.index('"profile-current-mandate-is-current-activity"')
+        ]
+        self.assertIn("/Ocupação declarada/i", scenario)
+        self.assertIn('page.locator("#faz-hoje").innerText()', scenario)
+        self.assertIn("occupationOnly.occupation", scenario)
+
     def test_changed_surface_has_no_remote_runtime_or_environment_lane(self):
         paths = [
             ROOT / ".github/workflows/runtime-proof.yml",
