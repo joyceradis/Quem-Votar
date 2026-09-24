@@ -3,54 +3,71 @@ name: Runtime UI proof harness
 on:
   workflow_dispatch:
     inputs:
-      target_ref:
-        description: "Git ref or SHA to validate"
+      harness_ref:
+        description: "Audited harness commit (full 40-character SHA)"
         required: true
-        default: "main"
         type: string
-  pull_request:
-    branches: [main]
-    paths:
-      - ".github/workflows/runtime-proof.yml"
-      - "scripts/runtime-proof.cjs"
-      - "docs/RUNTIME_PROOF.md"
-      - "docs/runtime-proof-manifest.schema.json"
-      - "tests/test_runtime_proof_contract.py"
+      target_ref:
+        description: "Target commit (full 40-character SHA)"
+        required: true
+        type: string
 
 permissions:
   contents: read
 
 concurrency:
-  group: runtime-ui-proof-${{ github.event_name }}-${{ github.event.pull_request.number || inputs.target_ref || github.ref }}
-  cancel-in-progress: true
+  group: runtime-ui-proof-${{ inputs.harness_ref }}-${{ inputs.target_ref }}
+  cancel-in-progress: false
 
 jobs:
   proof:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      QV_TARGET_REF: ${{ github.event_name == 'workflow_dispatch' && inputs.target_ref || github.event.pull_request.head.sha }}
+      QV_HARNESS_REF: ${{ inputs.harness_ref }}
+      QV_TARGET_REF: ${{ inputs.target_ref }}
       QV_PROOF_OUT: ../runtime-proof-artifact
+      QV_RUN_ID: ${{ github.run_id }}
+      QV_RUN_ATTEMPT: ${{ github.run_attempt }}
+      QV_WORKFLOW_SHA: ${{ github.workflow_sha }}
+      QV_ACTOR: ${{ github.actor }}
+      QV_TRIGGERING_ACTOR: ${{ github.triggering_actor }}
+      QV_REPOSITORY: ${{ github.repository }}
 
     steps:
+      - name: Reject mutable or malformed refs before checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$QV_HARNESS_REF" =~ ^[0-9a-f]{40}$ ]] || { echo 'Invalid harness SHA'; exit 1; }
+          [[ "$QV_TARGET_REF" =~ ^[0-9a-f]{40}$ ]] || { echo 'Invalid target SHA'; exit 1; }
+
       - name: Checkout harness source
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ inputs.harness_ref }}
           path: harness
+          persist-credentials: false
 
       - name: Checkout target ref
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.target_ref || github.event.pull_request.head.sha }}
+          ref: ${{ inputs.target_ref }}
           path: target
+          persist-credentials: false
 
       - name: Resolve executed SHAs
         id: refs
         shell: bash
         run: |
-          echo "harness_sha=$(git -C harness rev-parse HEAD)" >> "$GITHUB_OUTPUT"
-          echo "target_sha=$(git -C target rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          set -euo pipefail
+          harness_sha=$(git -C harness rev-parse HEAD)
+          target_sha=$(git -C target rev-parse HEAD)
+          [[ "$harness_sha" == "$QV_HARNESS_REF" ]]
+          [[ "$target_sha" == "$QV_TARGET_REF" ]]
+          echo "harness_sha=$harness_sha" >> "$GITHUB_OUTPUT"
+          echo "target_sha=$target_sha" >> "$GITHUB_OUTPUT"
+          mkdir -p runtime-proof-artifact
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -68,32 +85,68 @@ jobs:
         shell: bash
         run: |
           cd target
-          python3 -m http.server 8000 --bind 127.0.0.1 >/tmp/qv-runtime-proof-http.log 2>&1 &
+          python3 -m http.server 8000 --bind 127.0.0.1 >../runtime-proof-artifact/http.log 2>&1 &
+          echo "QV_HTTP_PID=$!" >> "$GITHUB_ENV"
           for attempt in $(seq 1 30); do
             curl -fsS http://127.0.0.1:8000/ >/dev/null && exit 0
             sleep 1
           done
-          cat /tmp/qv-runtime-proof-http.log || true
+          cat ../runtime-proof-artifact/http.log
           exit 1
 
       - name: Execute UI proof matrix
+        id: matrix
         working-directory: harness
         env:
           QV_BASE_URL: http://127.0.0.1:8000/
           QV_TARGET_SHA: ${{ steps.refs.outputs.target_sha }}
           QV_HARNESS_SHA: ${{ steps.refs.outputs.harness_sha }}
-          QV_RUN_ID: ${{ github.run_id }}
-          QV_RUN_ATTEMPT: ${{ github.run_attempt }}
-        run: node scripts/runtime-proof.cjs
+        shell: bash
+        run: |
+          set -o pipefail
+          node scripts/runtime-proof.cjs 2>&1 | tee ../runtime-proof-artifact/runtime.log
+
+      - name: Reconcile evidence and checkout integrity
+        if: always() && steps.refs.outcome == 'success'
+        working-directory: harness
+        env:
+          QV_MATRIX_OUTCOME: ${{ steps.matrix.outcome }}
+        shell: bash
+        run: |
+          if [[ -n "${QV_HTTP_PID:-}" ]]; then kill "$QV_HTTP_PID"; fi
+          python3 scripts/runtime-proof-evidence.py ../target ../runtime-proof-artifact
 
       - name: Upload canonical proof artifact
+        id: artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: runtime-proof-${{ github.run_id }}
+          name: runtime-proof-${{ github.run_id }}-${{ github.run_attempt }}
           path: runtime-proof-artifact
           if-no-files-found: error
           retention-days: 14
+
+      - name: Record upload receipt
+        if: always() && steps.artifact.outcome == 'success'
+        env:
+          ARTIFACT_ID: ${{ steps.artifact.outputs.artifact-id }}
+          ARTIFACT_DIGEST: ${{ steps.artifact.outputs.artifact-digest }}
+          ARTIFACT_URL: ${{ steps.artifact.outputs.artifact-url }}
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          manifest = Path('runtime-proof-artifact/proof-manifest.json')
+          receipt = {key: os.environ[key] for key in (
+              'QV_REPOSITORY', 'QV_RUN_ID', 'QV_RUN_ATTEMPT', 'QV_WORKFLOW_SHA',
+              'QV_HARNESS_REF', 'QV_TARGET_REF', 'ARTIFACT_ID', 'ARTIFACT_DIGEST', 'ARTIFACT_URL')}
+          receipt['manifest_sha256'] = hashlib.sha256(manifest.read_bytes()).hexdigest() if manifest.exists() else None
+          rendered = json.dumps(receipt, indent=2)
+          print(rendered)
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
+              summary.write('## Runtime proof upload receipt\n\n```json\n' + rendered + '\n```\n')
+          PY
 
       - name: Enforce binary merge gate
         if: always()
@@ -102,14 +155,12 @@ jobs:
           python3 - <<'PY'
           import json
           from pathlib import Path
-
           path = Path("runtime-proof-artifact/proof-manifest.json")
           if not path.exists():
-              raise SystemExit("FAIL: proof-manifest.json was not produced")
+              raise SystemExit("BLOCKED: proof-manifest.json was not produced")
           manifest = json.loads(path.read_text(encoding="utf-8"))
-          outcome = manifest.get("overall")
           merge_gate = manifest.get("merge_gate")
-          print(f"runtime-ui-proof overall={outcome} merge_gate={merge_gate}")
-          if merge_gate != "PASS":
-              raise SystemExit(f"runtime UI proof merge gate failed: overall={outcome}")
+          print(f"runtime-ui-proof overall={manifest.get('overall')} merge_gate={merge_gate}")
+          if merge_gate != "PASS" or manifest.get("bridge", {}).get("status") != "PASS":
+              raise SystemExit("Runtime proof incomplete or failed; independent reconciliation required")
           PY

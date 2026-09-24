@@ -8,11 +8,28 @@ It does one job only: validate a concrete Git ref/SHA from a local checkout in a
 
 ## Invocation
 
-Run `Runtime UI proof harness` with one input:
+After independent review of the bridge and an explicit human command, run
+`Runtime UI proof harness` with two inputs:
 
-- `target_ref`: exact branch, tag or SHA to validate.
+- `harness_ref`: audited harness commit, lowercase full 40-character SHA;
+- `target_ref`: target commit, lowercase full 40-character SHA.
 
-Pull requests that modify the harness run it automatically against the PR head.
+There are no push, PR, comment or recurring triggers for this browser workflow.
+Neither input has a default. Branches, tags, abbreviated SHAs and malformed inputs
+are rejected before checkout. The two checkouts must match the requested SHAs.
+The target must remain clean; tracked harness files must remain unchanged.
+Only dependency installation may create untracked files in the harness checkout.
+
+Use the GitHub Actions manual form on the audited workflow revision. The workflow
+must first be available on the default branch through the normal reviewed PR flow.
+The existing Quality and rule-inspection checks still apply to that PR.
+Submitting a PR or posting a coordination comment does not authorize browser execution.
+No comment-to-dispatch bot, extra credential or write permission is needed.
+
+For the complementary proof of PR #128, the frozen target is
+`2423d0ebbcdd0008a44cd052939228ba62c42f4c`. Select the audited bridge HEAD as
+`harness_ref`; do not substitute a moving branch name. Implementation handoff is
+`READY_FOR_AUDIT`, not permission to run or merge.
 
 The manifest records `harness_sha` and `target.sha` separately. The former identifies the
 test implementation; the latter identifies the checkout whose behavior was exercised.
@@ -83,12 +100,19 @@ claim, infer current activity from occupation or assess whether a proposal is de
 
 ## Artifact contract
 
-Every execution uploads `runtime-proof-<run_id>` containing:
+Every execution that reaches checkout reconciliation uploads
+`runtime-proof-<run_id>-<run_attempt>` containing:
 
 - `proof-manifest.json`;
-- best-effort desktop and mobile screenshots.
+- desktop and mobile screenshots;
+- browser matrix output (`runtime.log`) and loopback HTTP log (`http.log`).
 
-Screenshots are diagnostic evidence, not a release gate. The behavioral scenarios are the acceptance contract.
+For this complementary proof, both profile screenshots and both logs must be
+present and nonempty. The bridge checks all 16 UI scenarios and three harness
+invariants, runtime-error capture, input/manifest attribution and checkout integrity.
+Missing evidence is BLOCKED; a material failing scenario remains FAIL even when
+other evidence is missing. Screenshots support independent review; their presence
+alone does not establish visual correctness.
 
 The manifest records:
 
@@ -97,6 +121,18 @@ The manifest records:
 - checkout mode;
 - scenario results;
 - artifact hashes.
+
+The bridge adds workflow SHA (distinct from harness SHA), repository, initial and
+triggering actor, run/attempt, requested refs and known limitations. After upload,
+the Actions step summary and logs record the artifact ID, URL, archive digest and
+manifest SHA-256 with the same refs and run/attempt. The archive cannot contain
+its own upload digest; reconcile this external receipt with the GitHub artifact
+metadata and downloaded manifest. Reruns use distinct artifact names.
+
+Controlled Web Share and clipboard stubs do not prove native device sharing.
+An absent or malformed browser manifest produces a BLOCKED diagnostic receipt,
+not a complete browser-proof manifest. Failures before checkout may have only
+Actions logs and must never be accepted as evidence of a completed proof.
 
 ## Result semantics
 
@@ -112,4 +148,7 @@ The release decision is binary:
 - `merge_gate=PASS` only when the overall result is PASS;
 - every other diagnostic state maps to `merge_gate=FAIL`.
 
-The artifact is uploaded before the merge gate is enforced.
+The artifact is uploaded before the merge gate is enforced. Automated checks do
+not replace the independent audit and final Release Arbiter reconciliation in #128.
+To disable this manual bridge, disable its workflow in Actions; no persistent bot
+or repository-writing credential is installed.
