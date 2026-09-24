@@ -161,6 +161,12 @@ class WartimeThroughputTests(unittest.TestCase):
             "https://www.camara.leg.br/proposicoesWeb/"
             "fichadetramitacao?idProposicao=303"
         )
+        shared_other_candidate = dict(
+            canonical,
+            draft_id="shared-other-candidate",
+            candidate_id="5",
+            candidate_name="C5",
+        )
         listing = {
             "draft_id": "listing",
             "candidate_id": "4",
@@ -173,18 +179,21 @@ class WartimeThroughputTests(unittest.TestCase):
         }
 
         payload, metrics = batching.build_batch(
-            drafts_payload={"drafts": [trusted, decided, canonical, listing]},
-            canonical_payload={"entries": [{"source_url": canonical["source_url"]}]},
+            drafts_payload={"drafts": [trusted, decided, canonical, shared_other_candidate, listing]},
+            canonical_payload={"entries": [{"candidate_id": canonical["candidate_id"], "source_url": canonical["source_url"]}]},
             decisions_payload={"decisions": {"QUARENTENA": ["decided"]}},
             limit=100,
             per_candidate_limit=12,
         )
-        self.assertEqual(1, payload["metrics"]["selected"])
-        self.assertEqual(trusted["draft_id"], payload["items"][0]["draft_id"])
-        self.assertEqual("institutional_trusted", payload["items"][0]["lane"])
+        self.assertEqual(2, payload["metrics"]["selected"])
+        selected_ids = {row["draft_id"] for row in payload["items"]}
+        self.assertEqual({trusted["draft_id"], "shared-other-candidate"}, selected_ids)
+        self.assertTrue(all(row["lane"] == "institutional_trusted" for row in payload["items"]))
         self.assertEqual(1, metrics["skipped_decided"])
         self.assertEqual(1, metrics["skipped_canonical"])
         self.assertEqual(1, metrics["skipped_listing"])
+        self.assertEqual(1, metrics["canonical_urls"])
+        self.assertEqual(1, metrics["canonical_candidate_urls"])
         self.assertFalse(payload["policy"]["autoapproval"])
 
     def test_decision_ledger_has_exactly_154_unique_ids(self):
