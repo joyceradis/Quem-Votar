@@ -102,6 +102,14 @@ def chamber_document_priority(row: dict[str, Any]) -> int:
     return 0 if sigla in PRIMARY_CHAMBER_SIGLAS else 1
 
 
+def publication_recency_key(row: dict[str, Any]) -> int:
+    """Newest valid ISO date first inside the same technical priority."""
+    value = clean(row.get("published_at"))[:10].replace("-", "")
+    if len(value) == 8 and value.isdigit():
+        return -int(value)
+    return 0
+
+
 def is_candidate_site_listing(draft: dict[str, Any]) -> bool:
     if clean(draft.get("source_kind")) not in {"official_candidate", "official_party"}:
         return False
@@ -261,7 +269,7 @@ def build_batch(
                 LANE_PRIORITY.get(lane(row), 9),
                 chamber_document_priority(row),
                 clean(row.get("published_at")) == "",
-                clean(row.get("published_at")),
+                publication_recency_key(row),
                 clean(row.get("source_url")),
                 clean(row.get("draft_id")),
             )
