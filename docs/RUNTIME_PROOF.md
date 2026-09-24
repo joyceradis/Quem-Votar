@@ -14,6 +14,10 @@ Run `Runtime UI proof harness` with one input:
 
 Pull requests that modify the harness run it automatically against the PR head.
 
+The manifest records `harness_sha` and `target.sha` separately. The former identifies the
+test implementation; the latter identifies the checkout whose behavior was exercised.
+Neither SHA is evidence for the other.
+
 ## Scope boundary
 
 The harness is deliberately local-only:
@@ -55,9 +59,27 @@ The current matrix covers:
 - a negative external-URL case proving that the delayed route still falls through to the local-only firewall;
 - negative teardown invariants for pre-closed pages and pending/rejected route callbacks;
 - cross-tab storage synchronization inside one isolated scenario context;
-- mobile 390×844 interaction and horizontal overflow.
+- a real comparison-tray navigation through `comparar.html`, including the selected IDs
+  and terminal comparison render;
+- profile structure for the three public questions, its real fragment links and minimal
+  keyboard reachability without requiring fragment targets to receive focus;
+- browser-rendered separation between declared occupation and documented current mandate;
+- isolated Web Share and clipboard-fallback behavior using in-memory browser stubs;
+- material `pageerror` and console-error capture per scenario, while retaining separately
+  the specific external resource-load diagnostics produced by the local-only firewall;
+- mobile 390×844 interaction and horizontal overflow on both the candidate list and profile.
 
 The delayed-fetch scenarios wait for terminal state, remove their temporary route handler, drain callbacks that were already in flight and use `route.fallback()` so the context firewall remains authoritative.
+
+Share and clipboard stubs are installed only in their scenario's fresh browser context,
+before profile navigation. They store arguments in memory and neither navigate to the
+shared URL nor contact a sharing service. Profile fixtures are selected from the target's
+loopback-served datasets by factual field presence; the harness does not select a person
+by name, party, occupation value or political interpretation.
+
+The profile checks validate rendered structure, interaction and the boundary between TSE
+occupation metadata and documented current mandate. They do not validate a political
+claim, infer current activity from occupation or assess whether a proposal is desirable.
 
 ## Artifact contract
 
