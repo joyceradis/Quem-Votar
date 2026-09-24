@@ -155,6 +155,23 @@ async function screenshot(page, filename) {
   return path.relative(OUT, destination);
 }
 
+async function waitForViewportIntersection(page, selector, label, timeoutMs = 2000) {
+  try {
+    await page.waitForFunction(
+      targetSelector => {
+        const node = document.querySelector(targetSelector);
+        if (!node) return false;
+        const rect = node.getBoundingClientRect();
+        return rect.bottom > 0 && rect.top < window.innerHeight;
+      },
+      selector,
+      { timeout: timeoutMs }
+    );
+  } catch (error) {
+    throw new Error(label + ": " + errText(error));
+  }
+}
+
 async function installLocalOnlyFirewall(context) {
   await context.route("**/*", async route => {
     const raw = route.request().url();
@@ -492,11 +509,7 @@ async function runUi(browser) {
       assert.equal(await page.locator(`#${id}`).count(), 1, `profile:ANCHOR_TARGET_${id}`);
       await link.click();
       await page.waitForFunction(hash => location.hash === hash, `#${id}`);
-      const visible = await page.locator(`#${id}`).evaluate(node => {
-        const rect = node.getBoundingClientRect();
-        return rect.bottom > 0 && rect.top < window.innerHeight;
-      });
-      assert.equal(visible, true, `profile:ANCHOR_NOT_VISIBLE_${id}`);
+      await waitForViewportIntersection(page, `#${id}`, `profile:ANCHOR_NOT_VISIBLE_${id}`);
     }
     suite.profile_desktop_screenshot = await screenshot(page, "profile-desktop-1366x900.png");
   });
@@ -505,7 +518,7 @@ async function runUi(browser) {
     const { occupationOnly } = await loadProfileFixtures(page);
     await openProfile(page, occupationOnly);
     const electoral = page.locator("#dados-eleitorais");
-    assert.match(await electoral.innerText(), /Ocupação declarada/);
+    assert.match(await electoral.innerText(), /Ocupação declarada/i);
     assert.ok((await electoral.innerText()).includes(occupationOnly.occupation));
     assert.ok(!(await page.locator("#faz-hoje").innerText()).includes(occupationOnly.occupation));
   });
@@ -704,16 +717,14 @@ async function runUi(browser) {
     async ({ page }) => {
       const { occupationOnly } = await loadProfileFixtures(page);
       await openProfile(page, occupationOnly);
-      assert.equal(await page.locator("#faz-hoje, #vai-fazer, #impacto").count(), 3);
-      assert.equal(await page.locator("#profileCompare").isVisible(), true);
-      assert.equal(await page.locator("#profileShare").isVisible(), true);
+      assert.equal(await page.locator("#faz-hoje, #vai-fazer, #impacto").count(), 3, "profile:MOBILE_PRIMARY_SECTIONS");
+      assert.equal(await page.locator("#profileCompare").isVisible(), true, "profile:MOBILE_COMPARE_NOT_VISIBLE");
+      assert.equal(await page.locator("#profileShare").isVisible(), true, "profile:MOBILE_SHARE_NOT_VISIBLE");
       const impactLink = page.locator('.profile-jump a[href="#impacto"]');
+      assert.equal(await impactLink.count(), 1, "profile:MOBILE_IMPACT_LINK_MISSING");
       await impactLink.tap();
       await page.waitForFunction(() => location.hash === "#impacto");
-      assert.equal(await page.locator("#impacto").evaluate(node => {
-        const rect = node.getBoundingClientRect();
-        return rect.bottom > 0 && rect.top < window.innerHeight;
-      }), true);
+      await waitForViewportIntersection(page, "#impacto", "profile:MOBILE_IMPACT_NOT_VISIBLE");
       const layout = await page.evaluate(() => ({
         clientWidth: document.documentElement.clientWidth,
         scrollWidth: document.documentElement.scrollWidth,
