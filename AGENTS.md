@@ -1,509 +1,238 @@
 # AGENTS.md — Regras para agentes de código e dados
 
-Este arquivo é normativo para qualquer agente que altere o repositório `Quem-Votar`.
+Este arquivo é normativo para qualquer agente que altere o repositório `Quem-Votar`. Detalhes especializados vivem nos documentos referenciados ao final; este arquivo deve permanecer curto, estável e operacional.
 
-## 1. Objetivo do produto
+## START HERE — roteador de 60 segundos
 
-Construir uma plataforma cívica capixaba para consulta factual e rastreável de candidaturas, histórico eleitoral, atuação institucional e fontes públicas.
+1. **Autoridade humana:** `@joyceradis` é a mantenedora e decide produto, escopo, exceções e conflitos.
+2. **Papéis separados:** `Executor != Auditor != Release Arbiter`. Quem produz mudança material não certifica o próprio HEAD.
+3. **System of record:** GitHub. Issue ativa = contrato; PR = implementação; checks/artifacts/runtime = evidência.
+4. **Ordem de leitura:** `main → AGENTS.md → docs/GOVERNANCE.md → Issue/PR ativa → checks/artifacts/runtime`.
+5. **Checkpoint é histórico:** `docs/CHECKPOINT_CURRENT.md` nunca prevalece sobre `main`, regra normativa posterior ou contrato ativo mais recente.
+6. **Não duplicar trabalho:** confirme lane, owner e HEAD antes de abrir Issue, branch ou PR.
+7. **Roteamento:** UI não corrige dados; dados não são alterados para satisfazer UI; lacuna de evidência não é conclusão.
+8. **Gate:** sem PASS sem evidência ligada ao SHA aplicável. Mudança material de HEAD invalida prova anterior.
 
-A plataforma informa. Ela não decide pelo eleitor.
+Antes de editar, o agente deve saber: quem decide, qual é a lane, onde registrar, o que não tocar e qual é o próximo gate.
 
-## 2. Escopo atual
+## 1. Objetivo e escopo
 
-- Eleições Gerais de 2026
-- Espírito Santo
-- Deputado Federal
-- Deputado Estadual
+Produto cívico factual e rastreável para Eleições Gerais de 2026 no Espírito Santo, atualmente Deputado Federal e Deputado Estadual.
 
-A arquitetura deve permanecer extensível para Senado, Governo do Estado e Presidência sem acoplar regras específicas desses cargos ao núcleo do produto.
+A plataforma **informa; não decide pelo eleitor**.
 
-## 3. Regras políticas do produto
+O núcleo deve continuar extensível a outros cargos sem acoplar regras específicas ao modelo base.
 
-Não implementar:
+## 2. Regras políticas e editoriais
 
-- score de candidato;
-- ranking;
-- recomendação de voto;
-- "melhor candidato";
-- afinidade percentual;
-- eliminação automática de candidatos com base em preferências pessoais;
-- classificação própria de esquerda, direita, centro ou extremos;
-- inferência ideológica a partir de partido, religião, profissão ou associação;
-- previsão de eleição.
+É proibido implementar:
+- score, ranking, “melhor candidato” ou recomendação de voto;
+- afinidade percentual ou eliminação por preferência pessoal;
+- inferência ideológica por partido, profissão, religião, associação ou cor;
+- classificação própria de esquerda/direita/centro/extremos;
+- previsão eleitoral;
+- ausência de evidência apresentada como ausência de proposta/posição.
 
-Pode implementar:
+É permitido, quando factual e documentado:
+- busca e filtros por cargo, partido, nome, número e situação documental;
+- histórico eleitoral, partidário e parlamentar;
+- temas/posições com evidência individualizada, fonte, data e regra publicada;
+- comparação lado a lado sem ordenação valorativa;
+- indicadores de cobertura documental.
 
-- filtros factuais por cargo, partido e situação documental;
-- busca por nome/número;
-- páginas temáticas com documentos e declarações identificadas por fonte, autor e data;
-- histórico partidário documentado;
-- histórico eleitoral;
-- atuação parlamentar documentada;
-- links para fontes primárias;
-- indicadores de cobertura de dados.
+A interface pública prioriza:
+1. o que a pessoa faz hoje;
+2. o que diz que vai fazer;
+3. onde isso pode mexer na vida real.
+
+A terceira pergunta é descritiva: não implica benefício, prejuízo, recomendação ou preferência.
+
+## 3. Identidade e vínculo
+
+Chave eleitoral canônica: `SQ_CANDIDATO`.
+
+Vínculos entre bases devem ser conservadores:
+- preferir identificador oficial;
+- na ausência, usar correspondência exata normalizada e registrar o método;
+- ambiguidade não gera vínculo.
+
+Nunca criar fluxo/código específico por nome de candidatura. O modelo de evidência é:
+
+`candidate → source → draft → review → evidence`
 
 ## 4. Fonte antes de interface
 
 Nenhum novo campo político entra na UI sem:
-
 1. fonte identificada;
 2. data de referência;
 3. tipo de evidência;
 4. regra de normalização;
-5. tratamento de ausência;
+5. tratamento explícito de ausência;
 6. teste contra inferência indevida.
 
-Prioridade:
-1. TSE/TRE
-2. Câmara dos Deputados
-3. ALES
-4. diários e transparência oficiais
-5. documentos oficiais do candidato/partido
-6. fonte jornalística secundária, explicitamente marcada
+Prioridade de fontes:
+1. TSE/TRE;
+2. Câmara dos Deputados;
+3. ALES;
+4. diários/transparência oficiais;
+5. documento oficial da candidatura/partido;
+6. fonte jornalística secundária, marcada como secundária.
+
+Fonte canônica de evidência temática curada: `data/reference/topic-evidence.json`.
+
+O sync pode anexar essa camada por `SQ_CANDIDATO`; não pode reclassificá-la ou editá-la para satisfazer UI.
 
 ## 5. Estados de evidência
 
-Usar apenas:
+Vocabulário:
 - `verified`
 - `dated`
 - `not_integrated`
 - `not_available`
 - `secondary_source`
 
-Nunca converter ausência em zero.
+Ausência nunca vira zero, posição política ou conclusão.
 
-## 6. Temas e posições
+Uma evidência temática deve preservar, quando aplicável:
+`candidate_id`, `topic_id`, `evidence_type`, statement/resumo, fonte/publicador, datas, escopo e `verification_status`.
 
-A futura camada temática deve armazenar evidências, não rótulos opinativos.
+Privacidade: não publicar CPF, título eleitoral, e-mail pessoal, endereço, telefone, data completa de nascimento ou identificador técnico sem necessidade pública explícita.
 
-Fonte canônica para evidências curadas: `data/reference/topic-evidence.json`. O sync deve anexar essa camada por `SQ_CANDIDATO` sem editá-la.
+## 6. Interface pública
 
-Modelo mínimo:
-- `topic_id`
-- `candidate_id`
-- `evidence_type`
-- `statement`
-- `source_url`
-- `source_title`
-- `source_publisher`
-- `published_at`
-- `captured_at`
-- `scope`
-- `quote_or_summary`
-- `verification_status`
-
-Não criar `ideology_score`, `affinity_score` ou `recommended_for_user`.
-
-## 7. Identidade e deduplicação
-
-Chave eleitoral primária: `SQ_CANDIDATO`.
-
-Vínculo entre bases institucionais deve ser conservador. Preferir identificador oficial; quando inexistente, usar correspondência nominal exata normalizada e registrar o método.
-
-Correspondência ambígua não gera vínculo.
-
-## 8. Privacidade
-
-Não publicar dados pessoais desnecessários:
-- CPF
-- título eleitoral
-- e-mail pessoal
-- endereço
-- data completa de nascimento
-- telefone
-- identificadores técnicos usados apenas para junção
-
-## 9. Frontend
-
-Requisitos:
+Requisitos mínimos:
 - mobile first;
-- acessibilidade por teclado;
-- foco visível;
-- `prefers-reduced-motion`;
-- sem animação que impeça leitura;
-- links compartilháveis para fichas;
-- estados de carregamento e erro explícitos;
-- nenhuma métrica sem fonte.
+- teclado, foco visível e `prefers-reduced-motion`;
+- alvos de toque principais ~44 px;
+- aumento de texto sem quebrar layout;
+- links compartilháveis e estados claros de loading/erro;
+- nenhuma informação importante dependente apenas de cor;
+- proveniência acessível, sem dominar a navegação primária.
 
-## 10. Alterações seguras
+Linguagem visual:
+- editorial, não gamificada;
+- azul/branco/navy/cinza como base; rosa apenas como acento de marca;
+- cor não comunica ideologia, qualidade ou ranking;
+- evitar checkmarks de qualidade, semáforos, bolinhas de status, chips excessivos e cardificação indiscriminada;
+- seleção para comparação usa texto (`Comparar` / `Remover`).
 
-Antes de mergear:
-- executar validação de sintaxe;
-- conferir 137/410 apenas enquanto forem as contagens do snapshot vigente, sem hardcode permanente;
-- validar unicidade de `SQ_CANDIDATO`;
-- verificar ausência de sentinelas TSE;
-- verificar que dados institucionais antigos não foram promovidos a mandato atual;
-- impedir regressão de histórico por falha transitória de API.
+Baseline funcional V5/V5.5:
+- busca e caminhos principais visíveis;
+- snapshot e fonte próximos às contagens;
+- 12 resultados por página enquanto este for o contrato vigente;
+- filtros secundários progressivos;
+- ocupação declarada é metadado e não gera tema;
+- tema público deriva apenas de evidência temática documentada.
 
-## 11. Commits
+## 7. Mudança segura e entrega
 
-Usar prefixos:
-- `feat:`
-- `fix:`
-- `data:`
-- `docs:`
-- `ci:`
-- `ux:`
-- `refactor:`
+Branch canônica: `main`.
 
-Snapshots automáticos **não** usam `[skip ci]`. O sync executa testes e auditoria em modo read-only, gera um snapshot candidato como artifact e não escreve diretamente em `main`. A integração do snapshot na branch canônica ocorre por PR rastreável, sujeito aos mesmos gates da entrega.
+Toda mudança deve:
+- ter objetivo delimitado;
+- preservar trabalho válido já existente;
+- separar bug de UI, lacuna de dados e erro de normalização;
+- evitar reescrever pipeline, modelo de dados e interface na mesma unidade sem necessidade.
 
+Dados gerados não são editados manualmente para “corrigir” a interface.
 
-## 12. Código de terceiros
+Antes de consolidar, execute validações aplicáveis: sintaxe, testes, unicidade de `SQ_CANDIDATO`, ausência de sentinelas inválidas e regressões de vínculo/histórico.
 
-Não copiar código de referência sem licença explícita compatível.
+Se um PR tocar `data/generated/*`, deve atualizar `docs/CHECKPOINT_CURRENT.md` no mesmo PR enquanto esse contrato estiver vigente.
 
-Antes de incorporar componente externo:
-- identificar repositório e licença;
-- registrar atribuição quando exigida;
-- preferir implementação própria para padrões simples de interação;
-- não copiar HTML/CSS/JS proprietário de sites usados apenas como benchmark visual.
+Snapshots automáticos:
+- não usam `[skip ci]`;
+- são gerados/auditados antes de integração;
+- não escrevem diretamente em `main`;
+- entram por PR rastreável e gates normais.
 
-Referências de UX ficam em `docs/DESIGN_REFERENCES.md`. Regras de entrega e pós-deploy ficam em `docs/DELIVERY_GOVERNANCE.md`. O objetivo e a linguagem pública do produto ficam em `docs/PRODUCT_NORTH_STAR.md`.
+Fail-closed é obrigatório: falha transitória não pode apagar/reduzir silenciosamente cobertura institucional validada; sem estado anterior seguro, a publicação deve abortar. Espelhos externos devem usar revisão imutável e hash do conteúdo processado.
 
+Mudanças protegidas de governança, control plane ou evidência canônica devem referenciar `Authorization-Issue: #N` com decisão humana rastreável.
 
-## 13. Governança operacional — entrega rápida com rastreabilidade
+Após auditoria, **não rebasear** silenciosamente. Se o HEAD material mudar, revalidar.
 
-Estas regras existem para permitir que vários agentes trabalhem no projeto sem transformar rapidez em regressão.
+Para frontend, “pronto” exige comportamento publicado verificado quando aplicável. `CI verde != cobertura completa`; `feature no código != feature validada em produção`.
 
-### Fonte de verdade
-- branch canônica de entrega: `main`;
-- dados gerados não são editados manualmente para corrigir a UI;
-- `SQ_CANDIDATO` permanece a identidade eleitoral canônica;
-- documentação normativa não é substituída silenciosamente por decisões ad hoc de um agente.
+Commit, deploy e release são conceitos distintos. Release formal exige tag/release correspondente.
 
-### Antes de alterar
-1. ler este arquivo e `docs/GOVERNANCE.md`;
-2. inspecionar o estado atual dos arquivos afetados;
-3. distinguir bug de interface, lacuna de dados e erro de normalização;
-4. preservar trabalho válido já existente.
+Código de terceiros só entra com licença compatível identificada; não copiar HTML/CSS/JS proprietário usado apenas como referência visual.
 
-### Regra de mudança
-- uma alteração deve ter objetivo delimitado;
-- não reescrever pipeline, modelo de dados e interface ao mesmo tempo sem necessidade;
-- mudanças visuais não podem inventar significado político;
-- identidade visual de partido, quando usada, deve vir de fonte oficial e ser tratada como identidade partidária, não como classificação criada pela plataforma;
-- dados faltantes continuam faltantes: placeholder visual não equivale a dado integrado.
+## 8. Governança multiagente
 
-### Critério de pronto
-Uma mudança só pode ser descrita como pronta quando:
-- código foi persistido no repositório;
-- sintaxe/validação aplicável passou;
-- Pages/deploy correspondente concluiu com sucesso;
-- o comportamento publicado foi verificado quando a mudança for de frontend;
-- limitações conhecidas foram registradas;
-- todo PR que toque `data/generated/*` atualiza `docs/CHECKPOINT_CURRENT.md` no mesmo PR, mesmo quando a alteração preserve as contagens, para manter rastreabilidade entre snapshot publicável e checkpoint.
-
-`CI verde != cobertura de dados completa`.
-`feature no código != feature validada em produção`.
-`placeholder != integração`.
-
-### Auditoria por outro agente
-Outro agente deve conseguir responder, apenas pelo repositório:
-- qual é o estado canônico;
-- o que mudou;
-- qual fonte sustenta cada camada de dados;
-- o que está integrado;
-- o que está pendente;
-- quais validações passaram;
-- quais limitações permanecem.
-
-Não esconder pendências para produzir aparência de conclusão.
-
-## 14. Versionamento
-
-Há três conceitos distintos:
-- **commit**: mudança incremental;
-- **deploy**: versão publicada pelo GitHub Pages;
-- **release**: marco estável explicitamente versionado.
-
-Não chamar uma sequência de commits de “V2” ou “V3” como se fosse release formal sem tag/release correspondente.
-
-Para o ciclo atual, trabalhar em `main` e criar release somente quando houver um checkpoint funcional auditado. Uma entrega lógica de frontend deve ser persistida como commit atômico; não fracionar cache-bust ou a mesma revisão visual em vários commits. Usar branch isolada apenas para mudança estrutural de alto risco.
-
-
-## 15. Filtros, temas e comparação
-
-Filtros podem reduzir o universo por **dados factuais/documentados**, sem ordenar valorativamente os candidatos.
-
-Permitido:
-- cargo, partido, nome e número;
-- tema de política pública somente quando houver evidência temática individualizada e documentada;
-- existência de mandato/vínculo/evidência institucional;
-- existência de evidência temática documentada;
-- posição documentada favorável/contrária a um tema, quando o registro possuir fonte, data e regra de classificação publicada;
-- comparação lado a lado de campos documentais.
-
-Não permitido:
-- transformar filtros em score de afinidade;
-- ordenar por “mais compatível”;
-- perguntar preferências políticas pessoais para recomendar candidato;
-- inferir posição temática pela legenda, profissão ou cor do card;
-- tratar ausência de evidência como “não tem proposta” sem cobertura completa auditada.
-
-A semântica operacional dos filtros fica em `docs/FILTERS.md`.
-
-## 16. Acessibilidade de decisão
-
-Para o fluxo eleitoral público:
-- listagem deve ser paginada; padrão atual: 12 cards por página;
-- controles principais devem ter alvo de toque de pelo menos ~44 px;
-- oferecer aumento de texto sem quebrar layout;
-- formulários relacionados devem ser agrupados semanticamente;
-- evitar depender apenas de cor para transmitir informação;
-- texto da interface deve ser curto e em português claro;
-- fontes detalhadas ficam acessíveis, mas não devem dominar a navegação primária.
-
-## 17. Semântica de cor
-
-A identidade visual do projeto usa azul, branco e rosa, em referência à identidade capixaba já documentada. A base estrutural permanece branca/azul/navy/cinza; rosa aparece apenas como acento de marca, sem carregar significado político, de cargo, qualidade ou status.\n\nNão usar vermelho, verde, rosa ou qualquer gradiente estrutural para sugerir esquerda/direita/centro. Identidade visual partidária, se incorporada, precisa ser documentada como identidade da própria legenda e não como classificação ideológica produzida pela plataforma.
-
-
-## 18. Regra visual da interface pública
-
-A interface consolidada usa linguagem editorial, não gamificada.
-
-Não reintroduzir:
-- checkmarks como indicador de qualidade, completude ou seleção;
-- bolinhas/status circulares decorativos;
-- chips em excesso para dados básicos;
-- cards arredondados empilhados como padrão para toda informação;
-- vermelho/rosa ou verde como cor estrutural de cargo, qualidade ou orientação;
-- ícones sem função informacional.
-
-Preferir:
-- tipografia e hierarquia;
-- linhas divisórias;
-- tabelas/listas editoriais;
-- texto explícito;
-- retângulos simples;
-- navegação por páginas;
-- comparação lado a lado.
-
-Seleção para comparação deve usar texto como `Comparar` / `Remover`, não símbolo de aprovação.
-
-
-## 19. Contrato visual V5
-
-A V5 é o baseline de interface.
-
-Requisitos:
-- cargo, busca e caminhos principais visíveis sem parede de texto;
-- snapshot datado e fonte TSE próximos das contagens;
-- 12 resultados por página;
-- busca dominante e filtros secundários progressivos;
-- ficha vertical expansível com Visão geral, Trajetória, Temas e propostas, Registros públicos e Fontes;
-- ocupação declarada é metadado; nunca gera tema;
-- tema público só deriva de `topic_evidence` documentada;
-- fonte auxiliar legível; não reduzir proveniência a texto minúsculo;
-- ausência de checks, score, ranking e semáforo visual de qualidade;
-- azul, branco e rosa compõem a identidade visual; rosa é apenas acento de marca, nunca significado político;
-- ícones são funcionais e mínimos.
-
-
-## 20. Governança multiagente
-
-Este repositório pode ser alterado por diferentes agentes e sessões de IA. Nenhum agente, modelo ou conversa é fonte de verdade isolada.
-
-### Ordem de autoridade
-1. estado atual da branch canônica `main`;
+Ordem de autoridade:
+1. `main`;
 2. `AGENTS.md`;
 3. `docs/GOVERNANCE.md`;
-4. `docs/CHECKPOINT_CURRENT.md`;
-5. contratos e testes automatizados;
-6. instrução específica da tarefa atual, desde que não contradiga os itens anteriores.
+4. contrato ativo da Issue/PR;
+5. checks, artifacts e runtime ligados ao SHA aplicável;
+6. `docs/CHECKPOINT_CURRENT.md` como histórico;
+7. instrução da tarefa atual, se não contrariar os itens anteriores.
 
-O checkpoint registra um estado datado. Se estiver desatualizado em relação à `main` ou a uma regra normativa posterior, ele não autoriza rollback.
+Antes de executar:
+- ler este arquivo e `docs/GOVERNANCE.md`;
+- ler a Issue/PR da lane;
+- confirmar owner e HEAD;
+- inspecionar apenas os arquivos necessários;
+- consultar checkpoint/roadmap quando histórico ou dependência macro for necessário.
 
-### Regra de contexto
-Antes de qualquer mudança substancial, o agente deve:
-- ler este arquivo;
-- ler `docs/GOVERNANCE.md` e `docs/CHECKPOINT_CURRENT.md`;
-- inspecionar os arquivos diretamente afetados;
-- distinguir estado atual de documentação histórica;
-- preservar trabalho válido já consolidado.
+Uma lane ativa tem **um executor por mudança**. Outro agente só entra com handoff explícito.
 
-Nenhum agente pode “corrigir” um estado que não compreendeu. Falta de contexto não autoriza reconstrução, rollback, substituição de arquitetura ou inferência.
+Issues `status:in-progress` autorizam execução técnica dentro do escopo já aprovado: branches, PRs, testes, correções de CI, staging, coletores e documentação técnica não exigem nova autorização a cada etapa.
 
-### Risco proporcional
-- **baixo risco**: CSS, copy, acessibilidade, documentação e bug local usam PR de menor escopo, após validação aplicável;
-- **médio risco**: filtros, comparação, navegação, estrutura de página e comportamento de UI exigem preservação dos contratos e auditoria antes de serem declarados prontos;
-- **alto risco**: pipeline eleitoral, normalização, `SQ_CANDIDATO`, vínculo TSE/Câmara/ALES, proveniência, privacidade e semântica de evidências exigem checkpoint e revisão explícita antes de consolidação.
+Parar para decisão humana quando houver:
+1. mudança de governança/control plane;
+2. publicação de nova evidência política canônica;
+3. mudança destrutiva/irreversível relevante;
+4. conflito de contratos ou ambiguidade real de produto;
+5. decisão final de publicação ou mudança de escopo.
 
-### Conflito entre agentes
-Sugestão de agente não revoga decisão documentada. Em conflito:
-- primeiro aplicar os contratos do repositório;
-- depois preservar o checkpoint canônico;
-- se o conflito continuar, a decisão é humana.
+Agentes persistentes/bots com escrita devem usar permissão mínima, histórico de ações e desativação simples. Merge destrutivo silencioso é proibido.
 
-### Identidade e rastreabilidade
-Para alterações de alto risco, o registro da alteração deve permitir identificar:
-- agente responsável;
-- escopo da alteração;
-- instrução de origem, como regra deste arquivo, checkpoint ou issue aplicável.
+## 9. Feature freeze e sustentabilidade
 
-Para alterações de baixo e médio risco, essa identificação não é obrigatória.
+Durante o freeze V5.5, o núcleo eleitoral permanece congelado salvo correção, segurança, acessibilidade, disponibilidade, atualização factual ou proveniência.
 
-### Agentes persistentes
-Bot, Action, GitHub App ou automação com credencial de escrita deve ter:
-- escopo mínimo de permissão e, quando tecnicamente aplicável, paths permitidos;
-- histórico de ações;
-- forma simples e documentada de desativação;
-- proibição de merge destrutivo silencioso.
+Núcleo eleitoral inclui busca, fichas, comparação, temas/taxonomia, regras editoriais, `topic_evidence`, publicação canônica e qualquer mudança que altere ordem, visibilidade, tratamento ou interpretação de candidaturas.
 
-Sessões interativas não exigem kill switch.
+A camada de sustentabilidade pode evoluir separadamente (`FUNDING.yml`, Sponsors, `apoio.html`, PIX, transparência), desde que:
+- não altere conteúdo/metodologia/ordem de candidaturas;
+- não apareça dentro de ficha, busca, comparação ou tema;
+- não use tracker publicitário, personalização política ou segmentação;
+- não conceda influência editorial a apoiadores;
+- não escreva em `topic-evidence.json`.
 
-### Autonomia operacional delegada
+## 10. Topologia de trabalho
 
-Issues marcadas como `status:in-progress` autorizam execução técnica contínua dentro do escopo aprovado, sem necessidade de nova autorização humana a cada etapa intermediária.
+Função dos artefatos:
+- `README.md`: produto estável, não backlog;
+- `AGENTS.md` + `docs/GOVERNANCE.md`: normas;
+- `docs/ROADMAP_V1.md`: ordem macro;
+- `docs/CHECKPOINT_CURRENT.md`: snapshot técnico datado;
+- Issue: contrato/resultado;
+- Tracking Issue: coordenação de frente;
+- comentário: evidência, finding, decisão ou handoff;
+- PR/commit: implementação.
 
-Essa autonomia inclui:
+Antes de criar Issue/PR:
+1. pesquisar unidades equivalentes;
+2. reutilizar lane existente quando couber;
+3. atribuir uma responsabilidade principal;
+4. registrar dependências;
+5. não duplicar critério de pronto.
 
-- criação de sub-issues;
-- criação de branches e Pull Requests;
-- correção de falhas de CI;
-- ajustes e refatorações necessárias para cumprir o escopo;
-- implementação e ajuste de coletores;
-- criação e manutenção de camadas de staging;
-- tratamento de formatos e fontes, como HTML, JSON, CSV e PDF;
-- testes, validações e documentação técnica;
-- investigação e correção de bloqueios técnicos encontrados durante a execução.
+Não misturar, salvo tracker explícito: descoberta, coleta, confiabilidade, revisão semântica, exceções, publicação canônica, decisão arquitetural e governança.
 
-O agente deve continuar avançando autonomamente enquanto a próxima ação for consequência técnica razoável do escopo já aprovado.
+Dependência explícita prevalece sobre conveniência. Não contornar Issue bloqueadora para “andar mais rápido”.
 
-Não é necessária nova autorização humana para cada commit, sub-issue, correção, teste ou PR intermediário.
+## Referências especializadas
 
-### Gates humanos obrigatórios
+- `docs/GOVERNANCE.md`: proveniência, editorial, multiagente e fail-closed.
+- `docs/DELIVERY_GOVERNANCE.md`: entrega técnica, pré/pós-auditoria e deploy.
+- `docs/FILTERS.md`: semântica de filtros e comparação.
+- `docs/DESIGN_REFERENCES.md`: referências visuais/licenças.
+- `docs/PRODUCT_NORTH_STAR.md`: objetivo e linguagem pública.
+- `docs/ROADMAP_V1.md`: dependências macro.
+- `docs/CHECKPOINT_CURRENT.md`: histórico técnico datado.
 
-A execução deve parar e solicitar decisão explícita da mantenedora quando houver:
-
-1. alteração das regras de governança ou do control plane;
-2. publicação de nova evidência política na fonte canônica;
-3. mudança destrutiva ou irreversível relevante;
-4. conflito entre contratos ou ambiguidade de produto que não possa ser resolvida pelo estado canônico do repositório;
-5. funcionalidade completa que dependa de decisão final de publicação, consolidação ou mudança de escopo.
-
-Descobrir uma limitação técnica durante a execução não constitui, por si só, motivo para interromper o trabalho. O agente deve registrar a limitação, criar a sub-issue apropriada quando necessário e continuar pelo próximo caminho seguro disponível.
-
-
-## 21. Norte de produto público
-
-A interface pública prioriza três perguntas: o que a pessoa faz hoje, o que diz que vai fazer e onde isso pode mexer na vida real.
-
-Não transformar essa terceira pergunta em recomendação personalizada, score, ranking ou conclusão de benefício/prejuízo. A explicação de impacto é descritiva e vinculada a propostas/documentos com fonte.
-
-Jargão técnico de governança de dados fica fora do primeiro nível da interface.
-
-
-## 22. Limites do feature freeze e camada de sustentabilidade
-
-Durante o feature freeze da V5.5, o congelamento se aplica ao **núcleo eleitoral do produto**, não a toda e qualquer superfície operacional do repositório.
-
-### Núcleo eleitoral congelado
-
-Permanecem congelados, salvo correção, segurança, acessibilidade, disponibilidade, atualização factual ou proveniência:
-
-- busca e navegação eleitoral;
-- fichas de candidaturas;
-- comparação;
-- temas e taxonomia política;
-- regras editoriais;
-- `topic_evidence` e sua semântica;
-- pipeline de publicação canônica;
-- qualquer mudança que altere ordem, visibilidade, tratamento ou interpretação de candidaturas.
-
-### Camada de sustentabilidade isolada
-
-Pode evoluir durante o freeze quando a alteração for estritamente separada do conteúdo eleitoral:
-
-- `.github/FUNDING.yml`;
-- GitHub Sponsors;
-- seção de apoio no README;
-- rota estática `apoio.html`;
-- botão local de copiar PIX;
-- documentação de transparência e sustentabilidade;
-- link secundário de apoio em rodapé.
-
-### Invariantes da camada financeira
-
-- apoio financeiro nunca altera fontes, dados, metodologia, classificação, ordem ou apresentação de candidaturas;
-- nenhum CTA financeiro pode aparecer dentro de ficha de candidato, busca, comparação ou páginas temáticas;
-- não usar trackers publicitários, personalização política ou segmentação;
-- valor financeiro não determina destaque;
-- candidatura, campanha, partido, federação, coligação, comitê eleitoral ou intermediário desses atores não deve ser tratado como apoiador institucional neutro;
-- a camada financeira não escreve nem modifica `data/reference/topic-evidence.json`;
-- nenhuma mudança dessa camada reduz os gates humanos exigidos para publicação de evidência política.
-
-A prioridade operacional durante o freeze continua sendo factualidade, proveniência e a frente de evidências #5/#2.
-
-
-## 23. Governança executável
-
-Regras críticas precisam de enforcement técnico sempre que a plataforma permitir.
-
-- indisponibilidade transitória de fonte institucional não pode apagar enriquecimento previamente validado;
-- sem estado anterior seguro, pipelines de snapshot devem falhar fechados em vez de publicar vazio;
-- mudanças de governança, control plane ou evidência canônica em PR devem referenciar uma Issue de autorização por `Authorization-Issue: #N`;
-- a Issue de autorização deve conter decisão explícita da mantenedora;
-- `[skip ci]` é proibido em commits que alterem o estado público;
-- rebase pós-auditoria é proibido: se `main` avançar durante um sync, o run deve abortar e ser regenerado;
-- espelhos de dados devem usar revisão imutável e hash do conteúdo efetivamente processado;
-- testes do pipeline fazem parte do significado de `CI verde`.
-
-A proteção/ruleset da branch `main` é uma configuração externa do GitHub. Enquanto não estiver ativa, essa ausência deve permanecer registrada como lacuna de governança e não pode ser confundida com proteção efetiva.
-
-
-## 24. Topologia canônica de trabalho
-
-A documentação e as Issues têm responsabilidades diferentes e não devem competir como fontes de verdade.
-
-### Função de cada artefato
-
-- `README.md`: estado estável do produto; não é backlog;
-- `AGENTS.md` e `docs/GOVERNANCE.md`: regras normativas;
-- `docs/ROADMAP_V1.md`: ordem macro, dependências e frentes;
-- `docs/CHECKPOINT_CURRENT.md`: estado técnico datado da `main`;
-- Issue de produto: resultado que precisa existir;
-- Tracking Issue: coordena uma frente e suas dependências;
-- Issue executável: uma responsabilidade principal com critério de pronto próprio;
-- comentário: progresso, descoberta ou decisão dentro da Issue;
-- PR/commit: implementação efetivamente proposta/persistida.
-
-### Antes de criar Issue
-
-1. pesquisar Issues abertas e fechadas por termos equivalentes;
-2. identificar se a necessidade pertence a uma Issue existente;
-3. se for nova, escolher uma única responsabilidade principal;
-4. registrar relação com parent/tracking quando existir;
-5. não duplicar critérios de pronto de outra Issue.
-
-### Regra de decomposição
-
-Uma Issue não deve misturar, salvo tracking explícito:
-
-- descoberta de fontes;
-- coleta;
-- confiabilidade/reprocessamento;
-- revisão semântica;
-- fila de exceções;
-- publicação canônica;
-- decisão arquitetural;
-- governança do repositório.
-
-Essas responsabilidades possuem risco e critérios de pronto diferentes.
-
-### Regra de escala
-
-Não criar código específico por candidatura (`candidato_x.py`, fluxos especiais ou exceções codificadas por nome).
-
-O modelo é:
-
-`candidate → source → draft → review → evidence`
-
-e a execução ocorre sobre o universo de `SQ_CANDIDATO`.
-
-### Regra de prioridade
-
-Dependência explícita prevalece sobre conveniência. Uma Issue marcada como bloqueada não deve ser executada em massa contornando a Issue que a bloqueia.
-
-Se um agente encontrar uma dependência ausente, deve registrá-la e ajustar o mapa de execução antes de escalar o trabalho.
+Quando houver conflito, aplique a ordem de autoridade acima; não use documentação antiga para sobrescrever estado mais novo.
