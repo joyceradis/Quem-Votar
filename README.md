@@ -26,9 +26,9 @@ O trabalho executável deve ser acompanhado nas [Issues do repositório](https:/
 Antes de alterar o projeto:
 
 1. leia `AGENTS.md` e `docs/GOVERNANCE.md`;
-2. leia `docs/ROADMAP_V1.md` para entender a ordem macro;
-3. leia `docs/CHECKPOINT_CURRENT.md` para saber o estado datado da `main`;
-4. pesquise Issues existentes antes de criar uma nova;
+2. pesquise a Issue/PR ativa da lane antes de criar trabalho novo;
+3. consulte `docs/ROADMAP_V1.md` quando precisar entender dependências macro;
+4. consulte `docs/CHECKPOINT_CURRENT.md` apenas como snapshot técnico datado, nunca como substituto do estado atual;
 5. trabalhe na Issue de responsabilidade mais específica aplicável.
 
 Uma Issue executável deve ter **uma responsabilidade principal**. Tracking Issues coordenam dependências, mas não substituem os critérios de pronto das Issues-filhas.
