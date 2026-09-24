@@ -2,6 +2,21 @@
 
 Este arquivo é normativo para qualquer agente que altere o repositório `Quem-Votar`.
 
+## START HERE — roteador de 60 segundos
+
+Antes de ler detalhes, situe a mudança:
+
+1. **Autoridade humana:** `@joyceradis` é a mantenedora e autoridade final para escopo, produto, exceções e conflitos de governança.
+2. **Papéis separados:** `Executor != Auditor != Release Arbiter`. Quem produz mudança material não certifica o próprio HEAD.
+3. **System of record:** GitHub. Issue ativa define o contrato; PR contém a implementação; checks/artifacts/runtime fornecem evidência.
+4. **Ordem de leitura:** `main → AGENTS.md → docs/GOVERNANCE.md → Issue/PR ativa → checks/artifacts/runtime`.
+5. **Checkpoint é datado:** `docs/CHECKPOINT_CURRENT.md` ajuda a reconstruir histórico, mas nunca prevalece sobre `main`, regra normativa posterior ou contrato ativo mais recente.
+6. **Não duplicar trabalho:** antes de abrir Issue, branch ou PR, confirme se já existe lane/owner para o mesmo finding.
+7. **Roteamento:** UI não corrige dados; dados não são alterados para satisfazer UI; lacuna de evidência não é conclusão.
+8. **Gate:** sem PASS sem evidência ligada ao SHA correto; mudança de HEAD invalida prova anterior quando material.
+
+Se a resposta a “quem decide, qual é a lane, onde registrar, o que não tocar e qual é o próximo gate?” ainda não estiver clara, leia a Issue/PR ativa antes de editar qualquer arquivo.
+
 ## 1. Objetivo do produto
 
 Construir uma plataforma cívica capixaba para consulta factual e rastreável de candidaturas, histórico eleitoral, atuação institucional e fontes públicas.
@@ -309,18 +324,21 @@ Este repositório pode ser alterado por diferentes agentes e sessões de IA. Nen
 1. estado atual da branch canônica `main`;
 2. `AGENTS.md`;
 3. `docs/GOVERNANCE.md`;
-4. `docs/CHECKPOINT_CURRENT.md`;
-5. contratos e testes automatizados;
-6. instrução específica da tarefa atual, desde que não contradiga os itens anteriores.
+4. contrato ativo da Issue/PR da lane;
+5. contratos, checks, artifacts e provas runtime ligados ao SHA aplicável;
+6. `docs/CHECKPOINT_CURRENT.md` como snapshot histórico/datado;
+7. instrução específica da tarefa atual, desde que não contradiga os itens anteriores.
 
-O checkpoint registra um estado datado. Se estiver desatualizado em relação à `main` ou a uma regra normativa posterior, ele não autoriza rollback.
+O checkpoint registra um estado datado. Se estiver desatualizado em relação à `main`, a uma regra normativa posterior ou ao contrato ativo mais recente, ele não autoriza rollback nem substitui o estado atual.
 
 ### Regra de contexto
 Antes de qualquer mudança substancial, o agente deve:
-- ler este arquivo;
-- ler `docs/GOVERNANCE.md` e `docs/CHECKPOINT_CURRENT.md`;
+- ler este arquivo e `docs/GOVERNANCE.md`;
+- localizar e ler a Issue/PR ativa da lane;
+- consultar `docs/CHECKPOINT_CURRENT.md` somente quando histórico técnico adicional for necessário;
 - inspecionar os arquivos diretamente afetados;
 - distinguir estado atual de documentação histórica;
+- confirmar owner/HEAD antes de iniciar execução;
 - preservar trabalho válido já consolidado.
 
 Nenhum agente pode “corrigir” um estado que não compreendeu. Falta de contexto não autoriza reconstrução, rollback, substituição de arquitetura ou inferência.
@@ -332,8 +350,9 @@ Nenhum agente pode “corrigir” um estado que não compreendeu. Falta de conte
 
 ### Conflito entre agentes
 Sugestão de agente não revoga decisão documentada. Em conflito:
-- primeiro aplicar os contratos do repositório;
-- depois preservar o checkpoint canônico;
+- primeiro aplicar os contratos do repositório e o estado atual da `main`;
+- depois aplicar o contrato ativo mais recente da lane;
+- usar checkpoints datados apenas como evidência histórica, nunca para sobrescrever estado mais novo;
 - se o conflito continuar, a decisão é humana.
 
 ### Identidade e rastreabilidade
