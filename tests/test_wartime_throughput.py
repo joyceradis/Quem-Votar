@@ -196,6 +196,48 @@ class WartimeThroughputTests(unittest.TestCase):
         self.assertEqual(1, metrics["canonical_candidate_urls"])
         self.assertFalse(payload["policy"]["autoapproval"])
 
+    def test_curation_prefers_recent_dated_item_within_same_priority(self):
+        older = collector.collect_source(
+            chamber_source("1", 201),
+            candidates={"1": candidate("1")},
+            fetcher=lambda *args, **kwargs: (_ for _ in ()).throw(
+                AssertionError("no fetch")
+            ),
+        )
+        newer = collector.collect_source(
+            chamber_source("1", 202),
+            candidates={"1": candidate("1")},
+            fetcher=lambda *args, **kwargs: (_ for _ in ()).throw(
+                AssertionError("no fetch")
+            ),
+        )
+        undated = collector.collect_source(
+            chamber_source("1", 203),
+            candidates={"1": candidate("1")},
+            fetcher=lambda *args, **kwargs: (_ for _ in ()).throw(
+                AssertionError("no fetch")
+            ),
+        )
+
+        older["published_at"] = "2023-02-01"
+        newer["published_at"] = "2026-07-01"
+        undated["published_at"] = ""
+
+        payload, metrics = batching.build_batch(
+            drafts_payload={"drafts": [older, undated, newer]},
+            canonical_payload={"entries": []},
+            decisions_payload={"decisions": {}},
+            limit=1,
+            per_candidate_limit=1,
+        )
+
+        self.assertEqual(1, metrics["selected"])
+        self.assertEqual(newer["draft_id"], payload["items"][0]["draft_id"])
+        self.assertEqual("2026-07-01", payload["items"][0]["published_at"])
+        self.assertEqual("institutional_trusted", payload["items"][0]["lane"])
+        self.assertEqual(0, payload["items"][0]["document_priority"])
+        self.assertFalse(payload["policy"]["autoapproval"])
+
     def test_decision_ledger_has_exactly_154_unique_ids(self):
         payload = json.loads(
             (ROOT / "data/staging/wartime-curation-decisions.json").read_text(
