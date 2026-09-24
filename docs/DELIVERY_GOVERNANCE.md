@@ -30,12 +30,13 @@ A cor não pode produzir recomendação, score, qualidade, ideologia ou vencedor
 
 1. branch canônica: `main`;
 2. `AGENTS.md`;
-3. este documento;
-4. `docs/GOVERNANCE.md`;
-5. `docs/CHECKPOINT_CURRENT.md`;
-6. testes automatizados.
+3. `docs/GOVERNANCE.md`;
+4. contrato ativo da Issue/PR;
+5. este documento para regras de entrega;
+6. checks, artifacts e runtime ligados ao SHA aplicável;
+7. `docs/CHECKPOINT_CURRENT.md` como snapshot histórico/datado.
 
-Um agente não deve reconstruir por memória quando o estado canônico puder ser lido.
+Um agente não deve reconstruir por memória quando o estado canônico puder ser lido. Checkpoint datado não sobrescreve `main`, regra normativa posterior ou contrato ativo mais recente.
 
 ## Pré-auditoria obrigatória
 
