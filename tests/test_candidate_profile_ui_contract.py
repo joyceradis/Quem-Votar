@@ -80,6 +80,7 @@ class CandidateProfileUIContractTest(unittest.TestCase):
         sources = self.app.split("  const sources=", 1)[1].split("  const profileCompareIds=", 1)[0]
         self.assertIn("thematicEvidence.filter", sources)
         self.assertNotIn("prospectiveThematicEvidence.filter", sources)
+        self.assertIn("evidenceTypeLabel(item.evidence_type)", sources)
 
     def test_mobile_profile_controls_remain_large_and_single_column(self):
         self.assertIn("/* Candidate profile — issue #127 */", self.styles)
