@@ -1,6 +1,8 @@
 # Arquivos de governança, evidência e control plane exigem atenção explícita da mantenedora.
 # A exigência de review por CODEOWNER depende de proteção/ruleset no GitHub.
 
+/CONTRIBUTING.md @joyceradis
+/CODE_OF_CONDUCT.md @joyceradis
 /AGENTS.md @joyceradis
 /AUDITORIA.md @joyceradis
 /METODOLOGIA.md @joyceradis

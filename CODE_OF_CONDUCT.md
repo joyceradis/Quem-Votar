@@ -12,6 +12,12 @@ Hostilidade pessoal, manipulação editorial e destruição de rastreabilidade n
 
 ⸻
 
+Autoridade e escopo deste documento
+
+Este Código regula comportamento e convivência no contexto do projeto. Ele não redefine autoridade técnica, gates de entrega, regras de merge ou a cadeia normativa estabelecida em `AGENTS.md`, `docs/GOVERNANCE.md` e `docs/DELIVERY_GOVERNANCE.md`.
+
+⸻
+
 2. Princípio fundamental
 
 As pessoas podem discordar sobre:
@@ -165,8 +171,6 @@ Não divulgue publicamente:
 * vulnerabilidades exploráveis ainda não mitigadas;
 * dados pessoais não necessários;
 * material protegido por sigilo.
-
-Problemas de segurança devem seguir o processo definido em SECURITY.md.
 
 ⸻
 

@@ -8,6 +8,17 @@ Contribuições são bem-vindas, mas mudanças neste projeto não são avaliadas
 
 ⸻
 
+Autoridade deste documento
+
+Este documento define o fluxo operacional esperado para contribuições.
+
+Ele não substitui nem redefine `AGENTS.md`, `docs/GOVERNANCE.md` ou `docs/DELIVERY_GOVERNANCE.md`. Em caso de conflito, deve ser aplicada a cadeia normativa já estabelecida pelo repositório.
+
+Alterações de governança não devem ser introduzidas indiretamente por meio deste arquivo.
+
+⸻
+
+
 1. Antes de contribuir
 
 Leia os documentos de governança aplicáveis antes de alterar código, dados, interface ou documentação.

@@ -8,7 +8,7 @@ Plataforma cívica open source para consulta factual e rastreável de candidatur
 
 **Baseline visual atual:** `V5.5` · versão canônica em [`VERSION`](VERSION)
 
-[Produção](https://joyceradis.github.io/Quem-Votar/) · [Como funciona](sobre.html) · [Metodologia](METODOLOGIA.md) · [Apoiar o projeto](apoio.html) · [GitHub Sponsors](https://github.com/sponsors/joyceradis) · [Licença](LICENSE)
+[Produção](https://joyceradis.github.io/Quem-Votar/) · [Como funciona](sobre.html) · [Metodologia](METODOLOGIA.md) · [Como contribuir](CONTRIBUTING.md) · [Código de Conduta](CODE_OF_CONDUCT.md) · [Apoiar o projeto](apoio.html) · [GitHub Sponsors](https://github.com/sponsors/joyceradis) · [Licença](LICENSE)
 
 ## Onde acompanhar o projeto
 
@@ -199,6 +199,8 @@ Antes de fechar uma Issue que altere versão, escopo, experiência pública ou a
 
 Leia antes de alterar:
 
+- `CONTRIBUTING.md`
+- `CODE_OF_CONDUCT.md`
 - `AGENTS.md`
 - `docs/GOVERNANCE.md`
 - `docs/DELIVERY_GOVERNANCE.md`

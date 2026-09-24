@@ -219,7 +219,7 @@ Há três conceitos distintos:
 
 Não chamar uma sequência de commits de “V2” ou “V3” como se fosse release formal sem tag/release correspondente.
 
-Para o ciclo atual, trabalhar em `main` e criar release somente quando houver um checkpoint funcional auditado. Uma entrega lógica de frontend deve ser persistida como commit atômico; não fracionar cache-bust ou a mesma revisão visual em vários commits. Usar branch isolada apenas para mudança estrutural de alto risco.
+A branch canônica de entrega é `main`, mas alterações destinadas a ela devem ser desenvolvidas em branch e integradas por Pull Request conforme o ruleset ativo. Uma entrega lógica de frontend deve ser persistida como commit atômico; não fracionar cache-bust ou a mesma revisão visual em vários commits. Mudanças estruturais de alto risco continuam exigindo branch isolada, checkpoint recuperável e revisão proporcional ao risco.
 
 
 ## 15. Filtros, temas e comparação
@@ -450,7 +450,7 @@ Regras críticas precisam de enforcement técnico sempre que a plataforma permit
 - espelhos de dados devem usar revisão imutável e hash do conteúdo efetivamente processado;
 - testes do pipeline fazem parte do significado de `CI verde`.
 
-A proteção/ruleset da branch `main` é uma configuração externa do GitHub. Enquanto não estiver ativa, essa ausência deve permanecer registrada como lacuna de governança e não pode ser confundida com proteção efetiva.
+A proteção/ruleset da branch `main` é uma configuração externa do GitHub e deve ser verificada no estado real do repositório. No estado canônico atual, o ruleset `Protecao-da-Main` está ativo, sem bypass, exige Pull Request e os checks `audit` e `🛑 Inspetor de Regras da IA`. Divergência entre essa configuração, a documentação e `docs/CHECKPOINT_CURRENT.md` é drift de control plane e deve bloquear integração até reconciliação.
 
 
 ## 24. Topologia canônica de trabalho
