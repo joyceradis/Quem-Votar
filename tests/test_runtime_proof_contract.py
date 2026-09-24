@@ -41,10 +41,23 @@ class RuntimeProofContractTests(unittest.TestCase):
         self.assertIn("await drainPendingTasks(pending)", script)
         self.assertIn("await route.fallback()", script)
 
+    def test_material_runtime_errors_are_checked_after_teardown_before_pass(self):
+        script = (ROOT / "scripts/runtime-proof.cjs").read_text(encoding="utf-8")
+        scenario = script[script.index("async function runScenario"):script.index("async function runHarnessInvariantChecks")]
+        context_closed = scenario.index("await context.close()")
+        final_runtime_check = scenario.index("if (runtimeErrors.material.length)")
+        status_decision = scenario.index("if (error)", final_runtime_check)
+        self.assertLess(context_closed, final_runtime_check)
+        self.assertLess(final_runtime_check, status_decision)
+        self.assertIn("error = combineErrors(", scenario[final_runtime_check:status_decision])
+        self.assertNotIn("runtimeErrors.material, []", scenario)
+        self.assertIn("`${message}: ${errText(primary)} | ${errText(secondary)}`", script)
+
     def test_ui_scenarios_are_independent_and_merge_gate_is_fail_closed(self):
         script = (ROOT / "scripts/runtime-proof.cjs").read_text(encoding="utf-8")
         self.assertIn("keyboard-one-selection-focus", script)
         self.assertIn("two-selection-opens", script)
+        self.assertIn('page.locator("#openCompare").click()', script)
         self.assertIn("three-selection-limit", script)
         self.assertIn("empty-ids-does-not-reuse-storage", script)
         self.assertIn("delayed-compare-render-waits-for-terminal-state", script)
@@ -54,6 +67,15 @@ class RuntimeProofContractTests(unittest.TestCase):
         self.assertIn("pending-route-rejection-propagates", script)
         self.assertIn("cross-tab-storage-sync", script)
         self.assertIn("mobile-390x844", script)
+        self.assertIn("profile-three-questions-anchors-keyboard", script)
+        self.assertIn("profile-occupation-is-not-current-activity", script)
+        self.assertIn("profile-current-mandate-is-current-activity", script)
+        self.assertIn("profile-web-share", script)
+        self.assertIn("profile-clipboard-fallback", script)
+        self.assertIn("profile-mobile-390x844", script)
+        self.assertIn('page.on("pageerror"', script)
+        self.assertIn('page.on("console"', script)
+        self.assertIn('context.addInitScript', script)
         self.assertIn("withDelayedCandidateRoutes(page, 700", script)
         self.assertIn('manifest.merge_gate = manifest.overall === "PASS" ? "PASS" : "FAIL"', script)
 

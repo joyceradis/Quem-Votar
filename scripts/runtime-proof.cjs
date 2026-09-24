@@ -56,6 +56,14 @@ function errText(error) {
   return String(error && (error.message || error) || "unknown error");
 }
 
+function combineErrors(primary, secondary, message) {
+  if (!primary) return secondary;
+  return new AggregateError(
+    [primary, secondary],
+    `${message}: ${errText(primary)} | ${errText(secondary)}`
+  );
+}
+
 function record(suite, name, status, details = {}) {
   suite.scenarios.push({ name, status, ...details });
 }
@@ -186,6 +194,37 @@ async function installLifecycleProbe(page, events) {
   });
 }
 
+function sanitizedLocation(location = {}) {
+  if (!location.url) return null;
+  try {
+    const url = new URL(location.url);
+    return `${url.protocol}//${url.host}${url.pathname}`;
+  } catch {
+    return "unparseable-location";
+  }
+}
+
+function installRuntimeErrorProbe(page, errors) {
+  page.on("pageerror", error => {
+    errors.material.push({ type: "pageerror", text: errText(error) });
+  });
+  page.on("console", message => {
+    if (message.type() !== "error") return;
+    const location = message.location();
+    const text = message.text();
+    let external = false;
+    try {
+      external = Boolean(location.url) && !isLoopbackHost(new URL(location.url).hostname);
+    } catch {}
+    const detail = { type: "console", text, location: sanitizedLocation(location) };
+    if (external && text.startsWith("Failed to load resource:")) {
+      errors.expected_firewall.push(detail);
+      return;
+    }
+    errors.material.push(detail);
+  });
+}
+
 async function exerciseLifecycleAndClose(page, events) {
   assert.ok(page, "teardown:PAGE_NOT_CREATED");
   assert.ok(!page.isClosed(), "teardown:PAGE_ALREADY_CLOSED");
@@ -226,44 +265,113 @@ async function loadCandidateIds(page) {
   return buttons.evaluateAll(nodes => nodes.slice(0, 4).map(node => node.dataset.compareId));
 }
 
+async function loadProfileFixtures(page) {
+  await page.goto(BASE + "candidatos.html", { waitUntil: "domcontentloaded" });
+  return page.evaluate(async () => {
+    const load = async path => {
+      const response = await fetch(path + "?runtime-proof=1", { cache: "no-store" });
+      if (!response.ok) throw new Error(`fixture load failed: ${path} (${response.status})`);
+      return response.json();
+    };
+    const [federal, estadual] = await Promise.all([
+      load("data/generated/candidates-federal.json"),
+      load("data/generated/candidates-estadual.json")
+    ]);
+    const all = [
+      ...federal.map(candidate => ({ ...candidate, kind: "federal" })),
+      ...estadual.map(candidate => ({ ...candidate, kind: "estadual" }))
+    ];
+    const occupationOnly = all.find(candidate =>
+      candidate.occupation &&
+      !candidate.current_mandate &&
+      !(candidate.institutional_evidence || []).length
+    );
+    const currentMandate = all.find(candidate => candidate.current_mandate && candidate.occupation);
+    if (!occupationOnly) throw new Error("fixture:OCCUPATION_WITHOUT_CURRENT_MANDATE_NOT_FOUND");
+    if (!currentMandate) throw new Error("fixture:CURRENT_MANDATE_NOT_FOUND");
+    const pick = candidate => ({
+      id: String(candidate.tse_id),
+      kind: candidate.kind,
+      occupation: candidate.occupation,
+      expectedActivity: candidate.current_mandate
+        ? candidate.kind === "federal" ? "Deputado federal em exercício" : "Mandato atual confirmado"
+        : null
+    });
+    return { occupationOnly: pick(occupationOnly), currentMandate: pick(currentMandate) };
+  });
+}
+
+async function openProfile(page, fixture) {
+  await page.goto(
+    BASE + "candidato.html?id=" + encodeURIComponent(fixture.id) + "&cargo=" + fixture.kind,
+    { waitUntil: "domcontentloaded" }
+  );
+  await page.waitForFunction(() => {
+    const mount = document.querySelector("#profileMount");
+    return mount && !mount.classList.contains("loading") && Boolean(mount.querySelector("#profileCompare"));
+  });
+}
+
+async function tabTo(page, selector, limit = 30) {
+  for (let index = 0; index < limit; index += 1) {
+    await page.keyboard.press("Tab");
+    if (await page.evaluate(value => document.activeElement?.matches(value), selector)) return;
+  }
+  assert.fail(`a11y:TAB_TARGET_NOT_REACHED ${selector}`);
+}
+
 async function runScenario(browser, suite, name, fn, contextOptions = { viewport: { width: 1366, height: 900 } }) {
   let context;
   let page;
   let error = null;
   const lifecycle = [];
+  const runtimeErrors = { material: [], expected_firewall: [] };
 
   try {
     context = await browser.newContext({ ...contextOptions, serviceWorkers: "block" });
     await installLocalOnlyFirewall(context);
     page = await context.newPage();
     await installLifecycleProbe(page, lifecycle);
+    installRuntimeErrorProbe(page, runtimeErrors);
     await fn({ context, page });
+    await page.waitForTimeout(25);
   } catch (caught) {
     error = caught;
   } finally {
     try {
       await exerciseLifecycleAndClose(page, lifecycle);
     } catch (teardownError) {
-      error = error
-        ? new Error(errText(error) + " | " + errText(teardownError))
-        : teardownError;
+      error = combineErrors(error, teardownError, "scenario:PAGE_TEARDOWN_FAILED");
     }
 
     if (context) {
       try {
         await context.close();
       } catch (contextError) {
-        error = error
-          ? new Error(errText(error) + " | " + errText(contextError))
-          : contextError;
+        error = combineErrors(error, contextError, "scenario:CONTEXT_TEARDOWN_FAILED");
       }
     }
   }
 
+  if (runtimeErrors.material.length) {
+    error = combineErrors(
+      error,
+      new Error("runtime:MATERIAL_JAVASCRIPT_ERROR"),
+      "scenario:FUNCTIONAL_OR_TEARDOWN_AND_RUNTIME_ERRORS"
+    );
+  }
+
   if (error) {
-    record(suite, name, "FAIL", { error: errText(error), lifecycle: [...new Set(lifecycle)] });
+    record(suite, name, "FAIL", {
+      error: errText(error),
+      lifecycle: [...new Set(lifecycle)],
+      runtime_errors: runtimeErrors
+    });
   } else {
-    record(suite, name, "PASS", { lifecycle: [...new Set(lifecycle)] });
+    record(suite, name, "PASS", {
+      lifecycle: [...new Set(lifecycle)],
+      runtime_errors: runtimeErrors
+    });
   }
 }
 
@@ -341,6 +449,114 @@ async function runUi(browser) {
     await page.locator('[data-compare-id="' + ids[1] + '"]').focus();
     await page.keyboard.press("Enter");
     assert.equal(await page.locator("#openCompare").getAttribute("aria-disabled"), "false");
+    await Promise.all([
+      page.waitForURL(/\/comparar\.html\?ids=/),
+      page.locator("#openCompare").click()
+    ]);
+    await waitForComparePeople(page, 2);
+    assert.equal(await page.locator(".compare-person").count(), 2);
+    assert.equal(new URL(await page.url()).searchParams.get("ids"), ids.slice(0, 2).join(","));
+    const renderedIds = await page.locator(".compare-person a").evaluateAll(nodes =>
+      nodes.map(node => new URL(node.href).searchParams.get("id"))
+    );
+    assert.deepEqual(renderedIds, ids.slice(0, 2));
+  });
+
+  await runScenario(browser, suite, "profile-three-questions-anchors-keyboard", async ({ page }) => {
+    const { occupationOnly } = await loadProfileFixtures(page);
+    await openProfile(page, occupationOnly);
+
+    const sections = await page.locator("#faz-hoje, #vai-fazer, #impacto").evaluateAll(nodes =>
+      nodes.map(node => ({ id: node.id, title: node.querySelector("h2")?.textContent?.trim() }))
+    );
+    assert.deepEqual(sections, [
+      { id: "faz-hoje", title: "O que essa pessoa faz hoje?" },
+      { id: "vai-fazer", title: "O que ela diz que vai fazer?" },
+      { id: "impacto", title: "Onde isso pode mexer na vida real?" }
+    ]);
+
+    await page.locator("body").click({ position: { x: 1, y: 1 } });
+    await tabTo(page, "#profileCompare");
+    await page.keyboard.press("Enter");
+    assert.equal(await page.locator("#profileCompare").getAttribute("aria-pressed"), "true");
+    await tabTo(page, "#profileShare");
+    await tabTo(page, '.profile-jump a[href="#faz-hoje"]');
+    assert.equal(await page.evaluate(() => document.activeElement?.matches('.profile-jump a[href="#faz-hoje"]')), true);
+    await page.keyboard.press("Enter");
+    await page.waitForFunction(() => location.hash === "#faz-hoje");
+
+    const anchors = ["faz-hoje", "vai-fazer", "impacto", "historico", "dados-eleitorais", "fontes"];
+    for (const id of anchors) {
+      const link = page.locator(`.profile-jump a[href="#${id}"]`);
+      assert.equal(await link.count(), 1, `profile:ANCHOR_LINK_${id}`);
+      assert.equal(await page.locator(`#${id}`).count(), 1, `profile:ANCHOR_TARGET_${id}`);
+      await link.click();
+      await page.waitForFunction(hash => location.hash === hash, `#${id}`);
+      const visible = await page.locator(`#${id}`).evaluate(node => {
+        const rect = node.getBoundingClientRect();
+        return rect.bottom > 0 && rect.top < window.innerHeight;
+      });
+      assert.equal(visible, true, `profile:ANCHOR_NOT_VISIBLE_${id}`);
+    }
+    suite.profile_desktop_screenshot = await screenshot(page, "profile-desktop-1366x900.png");
+  });
+
+  await runScenario(browser, suite, "profile-occupation-is-not-current-activity", async ({ page }) => {
+    const { occupationOnly } = await loadProfileFixtures(page);
+    await openProfile(page, occupationOnly);
+    const electoral = page.locator("#dados-eleitorais");
+    assert.match(await electoral.innerText(), /Ocupação declarada/);
+    assert.ok((await electoral.innerText()).includes(occupationOnly.occupation));
+    assert.ok(!(await page.locator("#faz-hoje").innerText()).includes(occupationOnly.occupation));
+  });
+
+  await runScenario(browser, suite, "profile-current-mandate-is-current-activity", async ({ page }) => {
+    const { currentMandate } = await loadProfileFixtures(page);
+    await openProfile(page, currentMandate);
+    const current = await page.locator("#faz-hoje").innerText();
+    assert.ok(current.includes(currentMandate.expectedActivity));
+    assert.ok(!current.includes(currentMandate.occupation));
+  });
+
+  await runScenario(browser, suite, "profile-web-share", async ({ context, page }) => {
+    await context.addInitScript(() => {
+      globalThis.__qvShareCalls = [];
+      Object.defineProperty(navigator, "share", {
+        configurable: true,
+        value: async payload => { globalThis.__qvShareCalls.push(payload); }
+      });
+    });
+    const ids = await loadCandidateIds(page);
+    await openProfile(page, { id: ids[0], kind: "federal" });
+    await page.locator("#profileShare").focus();
+    await page.keyboard.press("Enter");
+    await page.waitForFunction(() => globalThis.__qvShareCalls?.length === 1);
+    const calls = await page.evaluate(() => globalThis.__qvShareCalls);
+    assert.equal(calls.length, 1);
+    assert.equal(typeof calls[0].title, "string");
+    assert.equal(typeof calls[0].text, "string");
+    const shared = new URL(calls[0].url);
+    assert.equal(shared.origin, new URL(BASE).origin);
+    assert.equal(shared.pathname, new URL(`social/${encodeURIComponent(ids[0])}/`, BASE).pathname);
+  });
+
+  await runScenario(browser, suite, "profile-clipboard-fallback", async ({ context, page }) => {
+    await context.addInitScript(() => {
+      globalThis.__qvClipboardWrites = [];
+      Object.defineProperty(navigator, "share", { configurable: true, value: undefined });
+      Object.defineProperty(navigator, "clipboard", {
+        configurable: true,
+        value: { writeText: async value => { globalThis.__qvClipboardWrites.push(value); } }
+      });
+    });
+    const ids = await loadCandidateIds(page);
+    await openProfile(page, { id: ids[0], kind: "federal" });
+    await page.locator("#profileShare").focus();
+    await page.keyboard.press("Enter");
+    await page.waitForFunction(() => globalThis.__qvClipboardWrites?.length === 1);
+    const writes = await page.evaluate(() => globalThis.__qvClipboardWrites);
+    assert.deepEqual(writes, [new URL(`social/${encodeURIComponent(ids[0])}/`, BASE).toString()]);
+    assert.equal(await page.locator("#profileShare").innerText(), "Link copiado");
   });
 
   await runScenario(browser, suite, "three-selection-limit", async ({ page }) => {
@@ -477,6 +693,35 @@ async function runUi(browser) {
       assert.ok(beforeSelection.delta <= 1, "ui:HORIZONTAL_OVERFLOW_BEFORE_SELECTION " + JSON.stringify(beforeSelection));
       assert.ok(afterSelection.delta <= 1, "ui:HORIZONTAL_OVERFLOW_AFTER_SELECTION " + JSON.stringify(afterSelection));
       suite.mobile_screenshot = await screenshot(page, "mobile-390x844.png");
+    },
+    { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true }
+  );
+
+  await runScenario(
+    browser,
+    suite,
+    "profile-mobile-390x844",
+    async ({ page }) => {
+      const { occupationOnly } = await loadProfileFixtures(page);
+      await openProfile(page, occupationOnly);
+      assert.equal(await page.locator("#faz-hoje, #vai-fazer, #impacto").count(), 3);
+      assert.equal(await page.locator("#profileCompare").isVisible(), true);
+      assert.equal(await page.locator("#profileShare").isVisible(), true);
+      const impactLink = page.locator('.profile-jump a[href="#impacto"]');
+      await impactLink.tap();
+      await page.waitForFunction(() => location.hash === "#impacto");
+      assert.equal(await page.locator("#impacto").evaluate(node => {
+        const rect = node.getBoundingClientRect();
+        return rect.bottom > 0 && rect.top < window.innerHeight;
+      }), true);
+      const layout = await page.evaluate(() => ({
+        clientWidth: document.documentElement.clientWidth,
+        scrollWidth: document.documentElement.scrollWidth,
+        delta: document.documentElement.scrollWidth - document.documentElement.clientWidth
+      }));
+      suite.profile_mobile_layout = layout;
+      assert.ok(layout.delta <= 1, "profile:HORIZONTAL_OVERFLOW " + JSON.stringify(layout));
+      suite.profile_mobile_screenshot = await screenshot(page, "profile-mobile-390x844.png");
     },
     { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true }
   );
