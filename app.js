@@ -50,7 +50,6 @@ function currentActivity(candidate,kind){
   if(candidate?.current_mandate){
     return kind==="federal"?"Deputado federal em exercício":"Mandato atual confirmado";
   }
-  if(candidate?.occupation)return `Trabalho informado ao TSE: ${candidate.occupation}`;
   return "Atuação atual ainda não confirmada nesta base";
 }
 
@@ -729,10 +728,9 @@ async function initProfile(){
   document.querySelector('link[rel="canonical"]')?.setAttribute("href",canonicalUrl);
 
   const currentActivityText=currentActivity(candidate,kind);
-  const todayHasFact=Boolean(institutional||candidate.occupation);
-  const todayContent=todayHasFact||institutionalEvidence.length?`
-    ${todayHasFact?`<div class="plain-fact"><span>Hoje</span><strong>${esc(currentActivityText)}</strong>${institutional?`<small>${esc([institutional.party,institutional.status].filter(Boolean).join(" · "))}</small>`:""}</div>`:""}
-    ${institutionalEvidence.length?`<div class="public-records">${institutionalEvidence.map(item=>`<article><span>${esc(item.reference_date||"Data não informada")}</span><strong>${esc(item.institution||"Órgão público")}</strong><p>${esc([item.legislature,item.type].filter(Boolean).join(" · "))}</p>${item.source?.url?`<a target="_blank" rel="noopener" href="${esc(item.source.url)}">Abrir fonte</a>`:""}</article>`).join("")}</div>`:""}
+  const todayHasFact=Boolean(institutional);
+  const todayContent=todayHasFact?`
+    <div class="plain-fact"><span>Hoje</span><strong>${esc(currentActivityText)}</strong><small>${esc([institutional.party,institutional.status].filter(Boolean).join(" · "))}</small></div>
   `:`<p class="plain-empty">Não encontramos atuação pública atual confirmada nesta base. Isso não significa que ela não exista.</p>`;
 
   const promisesContent=thematicEvidence.length?`<div class="promise-list">${thematicEvidence.map(item=>{
