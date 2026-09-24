@@ -42,6 +42,24 @@ function topicEvidence(candidate){
   return Array.isArray(candidate?.topic_evidence)?candidate.topic_evidence:[];
 }
 
+function normalizedEvidenceType(value){
+  return String(value||"").trim().toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+}
+
+function isProspectiveEvidence(item){
+  const type=normalizedEvidenceType(item?.evidence_type);
+  return type==="proposta"||type==="declaracao";
+}
+
+function prospectiveTopicEvidence(candidate){
+  return topicEvidence(candidate).filter(isProspectiveEvidence);
+}
+
+function documentedActionEvidence(candidate){
+  return topicEvidence(candidate).filter(item=>normalizedEvidenceType(item?.evidence_type)==="atuacao");
+}
+
 function hasInstitutional(candidate){
   return Boolean(candidate?.current_mandate||(candidate?.institutional_evidence||[]).length);
 }
@@ -53,9 +71,13 @@ function currentActivity(candidate,kind){
   return "Atuação atual ainda não confirmada nesta base";
 }
 
-function practicalAreas(candidate){
-  const ids=[...new Set(topicEvidence(candidate).map(item=>item.topic_id).filter(Boolean))];
+function practicalAreasFromEvidence(evidence){
+  const ids=[...new Set((evidence||[]).map(item=>item.topic_id).filter(Boolean))];
   return ids.map(id=>topicById(id)).filter(Boolean);
+}
+
+function practicalAreas(candidate){
+  return practicalAreasFromEvidence(topicEvidence(candidate));
 }
 
 function evidenceTypeLabel(value){
@@ -678,7 +700,9 @@ async function initProfile(){
   const historyItems=candidate.previous_elections||[];
   const institutionalEvidence=candidate.institutional_evidence||[];
   const thematicEvidence=topicEvidence(candidate);
-  const impactTopics=practicalAreas(candidate);
+  const prospectiveThematicEvidence=prospectiveTopicEvidence(candidate);
+  const actionThematicEvidence=documentedActionEvidence(candidate);
+  const impactTopics=practicalAreasFromEvidence(prospectiveThematicEvidence);
   const socialName=candidate.social_name&&norm(candidate.social_name)!==norm(name)?candidate.social_name:null;
   const organization=(
     candidate.coalition&&norm(candidate.coalition)!=="PARTIDO ISOLADO"
@@ -733,26 +757,34 @@ async function initProfile(){
     <div class="plain-fact"><span>Hoje</span><strong>${esc(currentActivityText)}</strong><small>${esc([institutional.party,institutional.status].filter(Boolean).join(" · "))}</small></div>
   `:`<p class="plain-empty">Não encontramos atuação pública atual confirmada nesta base. Isso não significa que ela não exista.</p>`;
 
-  const promisesContent=thematicEvidence.length?`<div class="promise-list">${thematicEvidence.map(item=>{
+  const promisesContent=prospectiveThematicEvidence.length?`<div class="promise-list">${prospectiveThematicEvidence.map(item=>{
       const topic=topicById(item.topic_id);
       const evidenceMeta=[evidenceTypeLabel(item.evidence_type),item.source_publisher,item.published_at].filter(Boolean).join(" · ");
       return `<article class="evidence-item"><span>${esc(topic?.label||item.topic_id||"Assunto")}</span><h3>${esc(item.statement||item.quote_or_summary||"Registro documentado sem resumo disponível.")}</h3><p class="evidence-meta">${esc(evidenceMeta)}</p>${item.source_url?`<a target="_blank" rel="noopener" href="${esc(item.source_url)}">Abrir fonte</a>`:""}</article>`;
-    }).join("")}</div>`:`<div class="plain-empty"><strong>Ainda não há proposta, declaração ou atuação temática integrada com fonte para esta candidatura.</strong><p>Isso não significa que a pessoa não tenha posição ou proposta. O site não usa partido, profissão ou histórico para adivinhar posição.</p></div>`;
+    }).join("")}</div>`:`<div class="plain-empty"><strong>Ainda não há proposta ou declaração documentada nesta base.</strong><p>Ausência de registro não significa ausência de proposta.</p></div>`;
 
-  const impactContent=thematicEvidence.length
+  const impactContent=prospectiveThematicEvidence.length
     ? impactTopics.length
-      ? `<div class="impact-list">${impactTopics.map(topic=>`<article><h3>${esc(topic.label)}</h3><p class="impact-context">Áreas relacionadas a este tema documentado</p><div class="life-areas">${(topic.life_areas||[]).map(area=>`<span>${esc(area)}</span>`).join("")}</div></article>`).join("")}</div><p class="impact-note"><strong>Áreas relacionadas aos temas documentados nesta ficha.</strong> Essas áreas vêm da taxonomia pública do tema e não são previsão de benefício, prejuízo ou efeito individual.</p>`
-      : `<div class="plain-empty"><strong>Há um tema documentado, mas a base ainda não permite explicar um impacto prático específico sem fazer inferências.</strong></div>`
-    : `<div class="plain-empty"><strong>Ainda não há informação suficiente na base para relacionar esta candidatura a impactos práticos documentados.</strong></div>`;
+      ? `<div class="impact-list">${impactTopics.map(topic=>`<article><h3>${esc(topic.label)}</h3><p class="impact-context">Áreas relacionadas a este tema documentado</p><div class="life-areas">${(topic.life_areas||[]).map(area=>`<span>${esc(area)}</span>`).join("")}</div></article>`).join("")}</div><p class="impact-note"><strong>Áreas relacionadas às propostas e declarações documentadas nesta ficha.</strong> Essas áreas vêm da taxonomia pública do tema e não são previsão de benefício, prejuízo ou efeito individual.</p>`
+      : `<div class="plain-empty"><strong>Há proposta ou declaração documentada, mas o tema ainda não permite relacionar impactos práticos sem fazer inferências.</strong></div>`
+    : `<div class="plain-empty"><strong>Ainda não há proposta ou declaração documentada suficiente para relacionar impactos práticos.</strong></div>`;
 
-  const historyContent=historyItems.length?`<div class="timeline-list">${historyItems.map(item=>`<div class="timeline-item"><strong>${esc(item.year||"Data não disponível")}</strong><div>${esc(item.office||"Cargo")}<small>${esc([item.party,item.location,item.result].filter(Boolean).join(" · "))}</small></div></div>`).join("")}</div>`:`<p class="plain-empty">Histórico eleitoral detalhado ainda não está disponível nesta base.</p>`;
+  const electoralHistoryContent=historyItems.length?`<div class="timeline-list">${historyItems.map(item=>`<div class="timeline-item"><strong>${esc(item.year||"Data não disponível")}</strong><div>${esc(item.office||"Cargo")}<small>${esc([item.party,item.location,item.result].filter(Boolean).join(" · "))}</small></div></div>`).join("")}</div>`:"";
+  const actionHistoryContent=actionThematicEvidence.length?`<div class="documented-actions"><h3>Atuação pública documentada</h3><div class="public-records">${actionThematicEvidence.map(item=>{
+      const topic=topicById(item.topic_id);
+      const evidenceMeta=[evidenceTypeLabel(item.evidence_type),item.source_publisher,item.published_at].filter(Boolean).join(" · ");
+      return `<article><span>${esc(topic?.label||item.topic_id||"Assunto")}</span><strong>${esc(item.statement||item.quote_or_summary||"Registro documentado sem resumo disponível.")}</strong><p>${esc(evidenceMeta)}</p>${item.source_url?`<a target="_blank" rel="noopener" href="${esc(item.source_url)}">Abrir fonte</a>`:""}</article>`;
+    }).join("")}</div></div>`:"";
+  const historyContent=electoralHistoryContent||actionHistoryContent
+    ? `${electoralHistoryContent}${actionHistoryContent}`
+    : `<p class="plain-empty">Histórico eleitoral e atuação pública documentada ainda não estão disponíveis nesta base.</p>`;
 
   const sources=[
     candidate.source?.official_portal?{name:"TSE · cadastro eleitoral",detail:`Atualizado em ${formatSnapshot(meta?.collected_at)}`,url:candidate.source.official_portal}:null,
     candidate.photo_source?.official_archive_url?{name:"TSE · foto",detail:candidate.photo_source.dataset||"Arquivo oficial",url:candidate.photo_source.official_archive_url}:null,
     (candidate.current_mandate?.profile_url||chamberRow?.profile_url)?{name:"Câmara dos Deputados",detail:"Perfil público",url:candidate.current_mandate?.profile_url||chamberRow?.profile_url}:null,
     ...institutionalEvidence.filter(item=>item.source?.url).map(item=>({name:item.institution||"Fonte pública",detail:item.reference_date||"",url:item.source.url})),
-    ...thematicEvidence.filter(item=>item.source_url).map(item=>({name:topicById(item.topic_id)?.label||"Proposta/declaração",detail:item.source_publisher||item.published_at||"",url:item.source_url}))
+    ...thematicEvidence.filter(item=>item.source_url).map(item=>({name:topicById(item.topic_id)?.label||evidenceTypeLabel(item.evidence_type),detail:item.source_publisher||item.published_at||"",url:item.source_url}))
   ].filter(Boolean);
 
   const profileCompareIds=getCompareIds();
@@ -871,7 +903,7 @@ async function initCompare(){
         ${row("Hoje",candidate=>`<div class="compare-value">${esc(currentActivity(candidate,candidate._kind))}</div>`)}
                 ${row("Escolaridade",candidate=>`<div class="compare-value">${esc(candidate.education||"Não disponível")}</div>`)}
         ${row("Atuação pública",candidate=>`<div class="compare-value">${hasInstitutional(candidate)?"Há informação pública disponível":"Ainda não encontramos atuação pública atual"}</div>`)}
-        ${row("O que diz que vai fazer",candidate=>`<div class="compare-value">${topicEvidence(candidate).length?practicalAreas(candidate).map(t=>esc(t.label)).join(" · "):"Ainda sem proposta ou declaração com fonte"}</div>`)}
+        ${row("O que diz que vai fazer",candidate=>{const evidence=prospectiveTopicEvidence(candidate);const areas=practicalAreasFromEvidence(evidence);return `<div class="compare-value">${evidence.length?(areas.length?areas.map(t=>esc(t.label)).join(" · "):"Há proposta ou declaração documentada"):"Ainda sem proposta ou declaração com fonte"}</div>`})}
       </div>
     </div>
     <p class="comparison-note">Dados disponíveis em ${esc(formatSnapshot(meta?.collected_at))}. Falta de informação aqui não significa ausência de proposta, posição ou experiência.</p>

@@ -132,8 +132,9 @@ class CandidateProfileBehaviorTest(unittest.TestCase):
 
     def test_empty_topic_evidence_has_fail_safe_proposal_and_impact_states(self):
         html = run_profile(self.base_candidate())["html"]
-        self.assertIn("Ainda não há proposta, declaração ou atuação temática integrada com fonte", html)
-        self.assertIn("Ainda não há informação suficiente na base para relacionar esta candidatura a impactos práticos documentados.", html)
+        self.assertIn("Ainda não há proposta ou declaração documentada nesta base.", html)
+        self.assertIn("Ausência de registro não significa ausência de proposta.", html)
+        self.assertIn("Ainda não há proposta ou declaração documentada suficiente para relacionar impactos práticos.", html)
 
     def test_unknown_topic_id_does_not_invent_impact(self):
         evidence = [{
@@ -146,7 +147,90 @@ class CandidateProfileBehaviorTest(unittest.TestCase):
         }]
         html = run_profile(self.base_candidate(topic_evidence=evidence))["html"]
         self.assertIn("tema-desconhecido", html)
-        self.assertIn("Há um tema documentado, mas a base ainda não permite explicar um impacto prático específico sem fazer inferências.", html)
+        self.assertIn("Há proposta ou declaração documentada, mas o tema ainda não permite relacionar impactos práticos sem fazer inferências.", html)
+
+    def test_action_only_stays_out_of_proposal_and_impact_but_remains_accessible(self):
+        evidence = [{
+            "topic_id": "direitos",
+            "evidence_type": "atuação",
+            "statement": "Atuação histórica documentada",
+            "source_publisher": "Câmara",
+            "published_at": "2025-05-01",
+            "source_url": "https://example.test/acao",
+        }]
+        topics = [{"id": "direitos", "label": "Direitos", "life_areas": ["cidadania"]}]
+        html = run_profile(self.base_candidate(topic_evidence=evidence), topics)["html"]
+        proposal = html.split('id="vai-fazer"', 1)[1].split('id="impacto"', 1)[0]
+        impact = html.split('id="impacto"', 1)[1].split('id="historico"', 1)[0]
+        history = html.split('id="historico"', 1)[1].split('id="dados-eleitorais"', 1)[0]
+        sources = html.split('id="fontes"', 1)[1]
+
+        self.assertIn("Ainda não há proposta ou declaração documentada nesta base.", proposal)
+        self.assertNotIn("Atuação histórica documentada", proposal)
+        self.assertNotIn("Direitos", impact)
+        self.assertIn("Ainda não há proposta ou declaração documentada suficiente para relacionar impactos práticos.", impact)
+        self.assertIn("Atuação pública documentada", history)
+        self.assertIn("Atuação histórica documentada", history)
+        self.assertIn("https://example.test/acao", history)
+        self.assertIn("https://example.test/acao", sources)
+        self.assertNotIn("Médica", proposal)
+        self.assertNotIn("ABC", proposal)
+
+    def test_proposal_only_drives_proposal_and_impact(self):
+        evidence = [{
+            "topic_id": "saude",
+            "evidence_type": "proposta",
+            "statement": "Propõe ampliar atendimento",
+            "source_publisher": "Fonte oficial",
+            "published_at": "2026-09-01",
+            "source_url": "https://example.test/proposta",
+        }]
+        topics = [{"id": "saude", "label": "Saúde", "life_areas": ["SUS", "atenção básica"]}]
+        html = run_profile(self.base_candidate(topic_evidence=evidence), topics)["html"]
+        proposal = html.split('id="vai-fazer"', 1)[1].split('id="impacto"', 1)[0]
+        impact = html.split('id="impacto"', 1)[1].split('id="historico"', 1)[0]
+        history = html.split('id="historico"', 1)[1].split('id="dados-eleitorais"', 1)[0]
+
+        self.assertIn("Propõe ampliar atendimento", proposal)
+        self.assertIn("<h3>Saúde</h3>", impact)
+        self.assertNotIn("Atuação pública documentada", history)
+
+    def test_mixed_evidence_separates_prospective_from_documented_action(self):
+        evidence = [
+            {
+                "topic_id": "saude",
+                "evidence_type": "declaração",
+                "statement": "Declara intenção de ampliar atendimento",
+                "source_publisher": "Canal oficial",
+                "published_at": "2026-09-02",
+                "source_url": "https://example.test/declaracao",
+            },
+            {
+                "topic_id": "direitos",
+                "evidence_type": "atuação",
+                "statement": "Atuação anterior documentada",
+                "source_publisher": "Câmara",
+                "published_at": "2025-05-01",
+                "source_url": "https://example.test/atuacao",
+            },
+        ]
+        topics = [
+            {"id": "saude", "label": "Saúde", "life_areas": ["SUS"]},
+            {"id": "direitos", "label": "Direitos", "life_areas": ["cidadania"]},
+        ]
+        html = run_profile(self.base_candidate(topic_evidence=evidence), topics)["html"]
+        proposal = html.split('id="vai-fazer"', 1)[1].split('id="impacto"', 1)[0]
+        impact = html.split('id="impacto"', 1)[1].split('id="historico"', 1)[0]
+        history = html.split('id="historico"', 1)[1].split('id="dados-eleitorais"', 1)[0]
+        sources = html.split('id="fontes"', 1)[1]
+
+        self.assertIn("Declara intenção de ampliar atendimento", proposal)
+        self.assertNotIn("Atuação anterior documentada", proposal)
+        self.assertIn("<h3>Saúde</h3>", impact)
+        self.assertNotIn("<h3>Direitos</h3>", impact)
+        self.assertIn("Atuação anterior documentada", history)
+        self.assertIn("https://example.test/declaracao", sources)
+        self.assertIn("https://example.test/atuacao", sources)
 
     def test_multiple_evidence_records_preserve_records_and_dedupe_impact_topic(self):
         evidence = [
