@@ -279,7 +279,11 @@ def build_batch(
             key=lambda row: (
                 LANE_PRIORITY.get(lane(row), 9),
                 chamber_document_priority(row),
-                clean(row.get("published_at")) == "",
+                # Derived from the same parse as publication_recency_key, not a
+                # separate empty-string check: an invalid-but-non-empty date
+                # (e.g. "2026-13-40") must land in the same fallback bucket as
+                # a genuinely absent one, never sort ahead of it.
+                publication_recency_key(row) == 0,
                 publication_recency_key(row),
                 clean(row.get("source_url")),
                 clean(row.get("draft_id")),

@@ -312,6 +312,61 @@ class WartimeThroughputTests(unittest.TestCase):
             self.assertEqual(1, metrics["selected"])
             self.assertEqual(expected_winner["draft_id"], payload["items"][0]["draft_id"])
 
+    def test_curation_invalid_date_shares_fallback_bucket_with_absent_date(self):
+        valid = collector.collect_source(
+            chamber_source("1", 231),
+            candidates={"1": candidate("1")},
+            fetcher=lambda *args, **kwargs: (_ for _ in ()).throw(
+                AssertionError("no fetch")
+            ),
+        )
+        # The invalid-date draft's URL/prop_id (239) is lexicographically
+        # *larger* than the absent one's (233). Expecting [valid, absent,
+        # invalid] therefore only holds if invalid and absent share the same
+        # fallback bucket and fall through to the source_url tiebreak; the
+        # pre-fix bug sorted invalid ahead of absent unconditionally
+        # (ignoring source_url), which this ordering would catch.
+        invalid = collector.collect_source(
+            chamber_source("1", 239),
+            candidates={"1": candidate("1")},
+            fetcher=lambda *args, **kwargs: (_ for _ in ()).throw(
+                AssertionError("no fetch")
+            ),
+        )
+        absent = collector.collect_source(
+            chamber_source("1", 233),
+            candidates={"1": candidate("1")},
+            fetcher=lambda *args, **kwargs: (_ for _ in ()).throw(
+                AssertionError("no fetch")
+            ),
+        )
+
+        valid["published_at"] = "2025-03-01"
+        invalid["published_at"] = "2026-13-40"  # non-empty, but no such calendar date
+        absent["published_at"] = ""
+        # Same tiebreak the sort already uses for equal-priority rows, computed
+        # independently of publication_recency_key so this test does not just
+        # restate the implementation.
+        expected_second, expected_third = sorted(
+            (invalid, absent), key=lambda row: (row["source_url"], row["draft_id"])
+        )
+
+        payload, metrics = batching.build_batch(
+            drafts_payload={"drafts": [invalid, absent, valid]},
+            canonical_payload={"entries": []},
+            decisions_payload={"decisions": {}},
+            limit=3,
+            per_candidate_limit=3,
+        )
+
+        self.assertEqual(3, metrics["selected"])
+        got_ids = [item["draft_id"] for item in payload["items"]]
+        self.assertEqual(
+            [valid["draft_id"], expected_second["draft_id"], expected_third["draft_id"]],
+            got_ids,
+        )
+        self.assertFalse(payload["policy"]["autoapproval"])
+
     def test_decision_ledger_has_exactly_154_unique_ids(self):
         payload = json.loads(
             (ROOT / "data/staging/wartime-curation-decisions.json").read_text(
