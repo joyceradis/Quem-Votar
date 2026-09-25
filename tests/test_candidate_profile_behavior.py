@@ -53,7 +53,7 @@ const context={
 context.globalThis=context;
 vm.createContext(context);
 const source=require("fs").readFileSync(process.argv[3],"utf8")+
-  "\n;globalThis.__qv={currentActivity,practicalAreas,normalizeCompareIds,comparisonState,initProfile};";
+  "\n;globalThis.__qv={currentActivity,practicalAreas,normalizeCompareIds,comparisonState,initProfile,hasInstitutional};";
 vm.runInContext(source,context,{filename:"app.js"});
 context.loadCore=async()=>({
   federal:candidate._kind==="federal"?[candidate]:[],
@@ -68,7 +68,8 @@ context.loadTopics=async()=>({version:"test",topics});
     html:elements.profileMount.innerHTML,
     current:context.__qv.currentActivity(candidate,candidate._kind||"estadual"),
     normalized:context.__qv.normalizeCompareIds(["1","1","2","3","4"]),
-    comparison:context.__qv.comparisonState(["1","2","3"])
+    comparison:context.__qv.comparisonState(["1","2","3"]),
+    institutional:context.__qv.hasInstitutional(candidate)
   }));
 })().catch(error=>{console.error(error);process.exit(1);});
 """
@@ -95,6 +96,7 @@ class CandidateProfileBehaviorTest(unittest.TestCase):
             "registration_status": "DEFERIDO",
             "topic_evidence": [],
             "institutional_evidence": [],
+            "institutional_history": None,
             "previous_elections": [],
         }
         candidate.update(overrides)
@@ -129,6 +131,45 @@ class CandidateProfileBehaviorTest(unittest.TestCase):
         today = output["html"].split('id="faz-hoje"', 1)[1].split('id="vai-fazer"', 1)[0]
         self.assertIn("Não encontramos atuação pública atual confirmada nesta base.", today)
         self.assertNotIn("ALES", today)
+
+    def test_institutional_history_without_current_mandate_is_recognized_but_not_current(self):
+        # Caso A (#157): há histórico institucional real, mas nenhum mandato atual.
+        # hasInstitutional deve reconhecer o registro sem inventar atividade atual.
+        history = {
+            "chamber_id": "204521",
+            "profile_url": "https://www.camara.leg.br/deputados/204521",
+            "history": [
+                {"legislature_id": "56", "party": "ABC", "condition": "Titular", "status": "Fim de mandato"}
+            ],
+            "external_mandates": [
+                {"office": "Vereador", "uf": "ES", "municipality": "Vitória", "party": "ABC", "start_year": 2017, "end_year": 2020}
+            ],
+        }
+        output = run_profile(self.base_candidate(institutional_history=history))
+        html = output["html"]
+        today = html.split('id="faz-hoje"', 1)[1].split('id="vai-fazer"', 1)[0]
+        sources = html.split('id="fontes"', 1)[1]
+
+        self.assertTrue(output["institutional"])
+        self.assertEqual(output["current"], "Atuação atual ainda não confirmada nesta base")
+        self.assertIn("Não encontramos atuação pública atual confirmada nesta base.", today)
+        self.assertIn("https://www.camara.leg.br/deputados/204521", sources)
+
+    def test_institutional_history_object_without_records_stays_absent(self):
+        # institutional_history é um objeto estruturado, não um array: presença do
+        # objeto sozinha não pode virar "há atuação institucional" sem history/external_mandates.
+        output = run_profile(self.base_candidate(institutional_history={"chamber_id": "1"}))
+        self.assertFalse(output["institutional"])
+
+    def test_no_institutional_history_and_no_current_mandate_stays_absent(self):
+        # Caso B (#157): nenhum campo presente — ausência permanece ausência.
+        output = run_profile(self.base_candidate())
+        self.assertFalse(output["institutional"])
+
+    def test_current_mandate_marks_institutional_as_present(self):
+        # Caso C (#157): comportamento existente com mandato atual é preservado.
+        output = run_profile(self.base_candidate(current_mandate={"party": "ABC", "status": "em exercício"}))
+        self.assertTrue(output["institutional"])
 
     def test_empty_topic_evidence_has_fail_safe_proposal_and_impact_states(self):
         html = run_profile(self.base_candidate())["html"]

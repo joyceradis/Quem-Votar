@@ -61,7 +61,12 @@ function documentedActionEvidence(candidate){
 }
 
 function hasInstitutional(candidate){
-  return Boolean(candidate?.current_mandate||(candidate?.institutional_evidence||[]).length);
+  return Boolean(candidate?.current_mandate||hasInstitutionalHistoryRecord(candidate));
+}
+
+function hasInstitutionalHistoryRecord(candidate){
+  const record=candidate?.institutional_history;
+  return Boolean(record&&((record.history||[]).length||(record.external_mandates||[]).length));
 }
 
 function currentActivity(candidate,kind){
@@ -698,7 +703,7 @@ async function initProfile(){
   const institutional=candidate.current_mandate||null;
   const chamberRow=kind==="federal"?chamber.find(item=>String(item.candidate_id||item.tse_id||"")===String(id))||null:null;
   const historyItems=candidate.previous_elections||[];
-  const institutionalEvidence=candidate.institutional_evidence||[];
+  const institutionalHistory=candidate.institutional_history||null;
   const thematicEvidence=topicEvidence(candidate);
   const prospectiveThematicEvidence=prospectiveTopicEvidence(candidate);
   const actionThematicEvidence=documentedActionEvidence(candidate);
@@ -782,8 +787,7 @@ async function initProfile(){
   const sources=[
     candidate.source?.official_portal?{name:"TSE · cadastro eleitoral",detail:`Atualizado em ${formatSnapshot(meta?.collected_at)}`,url:candidate.source.official_portal}:null,
     candidate.photo_source?.official_archive_url?{name:"TSE · foto",detail:candidate.photo_source.dataset||"Arquivo oficial",url:candidate.photo_source.official_archive_url}:null,
-    (candidate.current_mandate?.profile_url||chamberRow?.profile_url)?{name:"Câmara dos Deputados",detail:"Perfil público",url:candidate.current_mandate?.profile_url||chamberRow?.profile_url}:null,
-    ...institutionalEvidence.filter(item=>item.source?.url).map(item=>({name:item.institution||"Fonte pública",detail:item.reference_date||"",url:item.source.url})),
+    (candidate.current_mandate?.profile_url||chamberRow?.profile_url||institutionalHistory?.profile_url)?{name:"Câmara dos Deputados",detail:"Perfil público",url:candidate.current_mandate?.profile_url||chamberRow?.profile_url||institutionalHistory?.profile_url}:null,
     ...thematicEvidence.filter(item=>item.source_url).map(item=>({name:topicById(item.topic_id)?.label||evidenceTypeLabel(item.evidence_type),detail:item.source_publisher||item.published_at||"",url:item.source_url}))
   ].filter(Boolean);
 

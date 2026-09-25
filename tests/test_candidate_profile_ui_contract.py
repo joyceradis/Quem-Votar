@@ -51,7 +51,7 @@ class CandidateProfileUIContractTest(unittest.TestCase):
         self.assertNotIn("candidate.party", practical)
         self.assertNotIn("candidate.occupation", practical)
 
-        profile_setup = self.app.split("  const institutionalEvidence=", 1)[1].split("  const socialName=", 1)[0]
+        profile_setup = self.app.split("  const institutionalHistory=", 1)[1].split("  const socialName=", 1)[0]
         self.assertIn("prospectiveTopicEvidence(candidate)", profile_setup)
         self.assertIn("documentedActionEvidence(candidate)", profile_setup)
         self.assertIn("practicalAreasFromEvidence(prospectiveThematicEvidence)", profile_setup)
