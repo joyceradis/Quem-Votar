@@ -76,6 +76,7 @@ def main() -> None:
     profile_page = read(ROOT / "candidato.html")
     compare_page = read(ROOT / "comparar.html")
     topics_page = read(ROOT / "temas.html")
+    about_page = read(ROOT / "sobre.html")
     app = read(ROOT / "app.js")
     styles = read(ROOT / "styles.css")
     quality_workflow = read(ROOT / ".github" / "workflows" / "quality.yml")
@@ -91,8 +92,19 @@ def main() -> None:
     assert "visual depth pass" not in styles.lower(), "override visual legado reapareceu"
     assert "--green:" not in styles, "verde não faz parte da paleta estrutural azul/branco/rosa"
     assert all(token in styles for token in ("--blue:", "--blue-dark:", "--pink:", "--white:")), "tokens da identidade ES incompletos"
-    assert "Tá, mas o que esse candidato pode mudar na sua vida?" in home, "Home deve manter a pergunta prática principal"
-    assert re.search(r"\.desktop-nav\s*\{[^}]*display\s*:\s*none", styles), "navegação principal deve ficar no menu lateral"
+    assert "Entenda uma candidatura em 3 perguntas." in home, "Home deve manter entrada curta e orientada à tarefa"
+    assert re.search(r"@media\(min-width:980px\)\{\.desktop-nav\{display:flex\}", styles), "navegação principal deve ficar visível em desktop amplo"
+    assert '.nav-toggle::before{content:"☰"' in styles, "menu mobile deve ter sinal visual explícito"
+    for name, text in (
+        ("candidatos.html", candidates_page),
+        ("temas.html", topics_page),
+        ("comparar.html", compare_page),
+        ("sobre.html", about_page),
+    ):
+        assert 'aria-current="page"' in text, f"{name}: navegação deve expor página atual semanticamente"
+    assert '.desktop-nav a[aria-current="page"]' in styles and 'text-decoration:underline' in styles, (
+        "estado atual da navegação desktop não pode depender apenas de cor"
+    )
     assert "\n  push:" not in sync_workflow, "sincronização de dados não deve rodar a cada push de interface"
     assert "[skip ci]" not in sync_workflow, "snapshot automático não pode pular CI"
     assert "git pull --rebase" not in sync_workflow, "sync não pode rebasear snapshot depois da auditoria"
@@ -137,10 +149,17 @@ def main() -> None:
     assert "office-card.estadual" not in styles, "cargo estadual não pode receber cor partidária/semântica própria"
     assert "profile-tab" not in public_markup, "V5 não usa abas estreitas na ficha"
     assert "O que essa pessoa faz hoje?" in app and "O que ela diz que vai fazer?" in app and "Onde isso pode mexer na vida real?" in app, "ficha deve responder as três perguntas práticas"
+    profile_question_order = [app.index("O que essa pessoa faz hoje?"), app.index("O que ela diz que vai fazer?"), app.index("Onde isso pode mexer na vida real?")]
+    assert profile_question_order == sorted(profile_question_order), "ordem HOJE → PROPÕE → IMPACTO foi alterada"
+    assert 'id="dados-eleitorais"' in app and app.index('id="dados-eleitorais"') > app.index('id="impacto"'), "dados eleitorais devem permanecer na camada secundária"
+    assert "Essas são áreas que a proposta pode atingir." not in app, "copy causal antiga reapareceu"
+    assert "Áreas relacionadas às propostas e declarações documentadas nesta ficha." in app, "impacto prospectivo deve permanecer taxonômico e não valorativo"
     assert "data-snapshot-date" in home, "Home deve expor data de atualização"
     assert 'id="filterToggle"' in candidates_page and 'id="secondaryFilters"' in candidates_page, "filtros secundários devem usar divulgação progressiva"
     assert 'data-profile-url' in app, "cards devem oferecer navegação por toda a área útil"
-    assert "Não vamos adivinhar posição pelo partido, profissão ou histórico." in app, "ficha deve explicitar limite contra inferência"
+    assert 'type==="proposta"||type==="declaracao"' in app, "PROPÕE deve aceitar apenas proposta/declaração documentada"
+    assert 'normalizedEvidenceType(item?.evidence_type)==="atuacao"' in app, "atuação documentada deve possuir lane própria"
+    assert "prospectiveThematicEvidence" in app and "actionThematicEvidence" in app, "ficha deve separar evidência prospectiva de atuação histórica"
     assert "Orientação política" not in public_markup and "ideology" not in public_markup.lower(), "V5 não integra classificação ideológica própria"
     assert "Área profissional" not in public_markup, "V5 não usa profissão como tema público"
     assert 'id="topicFilter"' in candidates_page, "filtro temático documentado ausente"
