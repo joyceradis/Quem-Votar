@@ -278,9 +278,10 @@ class WartimeThroughputTests(unittest.TestCase):
             per_candidate_limit=12,
         )
 
-        # old_draft was decided, so skipped. new_draft is not decided, so selected.
+        # old_draft is removed by dedup (newer draft exists), so never reaches filter.
+        # new_draft is not decided, so passes all filters and gets selected.
         self.assertEqual(1, payload["metrics"]["selected"])
-        self.assertEqual(1, metrics["skipped_decided"])
+        self.assertEqual(0, metrics["skipped_decided"])
         selected_ids = {row["draft_id"] for row in payload["items"]}
         self.assertEqual({"new-v2"}, selected_ids)
 
