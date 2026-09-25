@@ -2,7 +2,7 @@
 
 Data: 2026-09-25.
 
-Estado auditado a partir de `main` em `c7760b33d4b93538b1374eedce1d8830b1a326a9` (PR #139 já integrado). Este checkpoint é atualizado por PR documental e, por isso, o merge documental subsequente pode avançar o SHA sem alterar o estado de produto descrito.
+Estado auditado a partir de `main` em `04e2d8d51a1b6c2d9cc8e964e5ae372d32fe614f` (PR #146 já integrado). Este checkpoint é atualizado por PR documental e, por isso, o merge documental subsequente pode avançar o SHA sem alterar o estado de produto descrito.
 
 ## Estado canônico
 
@@ -18,7 +18,7 @@ Feature freeze do núcleo eleitoral vigente até **04/10/2026**.
 
 O produto informa e documenta. Não produz score, ranking, vencedor, previsão eleitoral ou recomendação de voto.
 
-## Ficha por três perguntas, navegação e curadoria por recência — #127/#128, #138/#139, #35/#146 (2026-09-24/25)
+## Ficha por três perguntas, navegação e curadoria por recência — #127/#128, #138/#139, #35/#146 (2026-09-24/25, todas mergeadas)
 
 Registro operacional para orientar agentes que chegarem depois: o que foi feito, por quem e onde está o estado, sem duplicar auditoria já concluída.
 
@@ -44,7 +44,7 @@ Registro operacional para orientar agentes que chegarem depois: o que foi feito,
 
 ### #35/#146 — recência dentro da curadoria candidate-fair
 
-**Status: PR #146 aberta/DRAFT, aguardando auditoria independente.** Branch `fix/35-curation-recent-first`, HEAD `c876468390edaa463b0d6657b2d7f3627198a73e`, base `main` atual (reconciliada sem conflito, diff restrito a `scripts/build_curation_batch.py` + `tests/test_wartime_throughput.py`).
+**Status: mergeado.** Merge commit `04e2d8d51a1b6c2d9cc8e964e5ae372d32fe614f` em `main`. Branch `fix/35-curation-recent-first`, HEAD final `b4e886d000f172e1b8f1afa80013783a252cfd4e`, diff restrito a `scripts/build_curation_batch.py` + `tests/test_wartime_throughput.py`.
 
 - finding original: dentro da mesma lane/prioridade documental, o batch ordenava por `published_at` ascendente, então itens de 2023 venciam sistematicamente itens de 2025/2026 das mesmas 7 candidaturas Câmara (artifact `10825249130`, 81/81 selecionados eram de 2023);
 - mudança: dentro da mesma lane/prioridade, a data válida mais recente vem primeiro; datas ausentes ficam atrás de datas válidas; recência nunca aprova, rejeita, pontua ou desqualifica — é só desempate;
@@ -52,8 +52,9 @@ Registro operacional para orientar agentes que chegarem depois: o que foi feito,
 - **finding 2 corrigido** (encontrado pela auditoria independente): o bucket "tem data vs. não tem" usava uma checagem de string separada (`clean(published_at) == ""`) da usada por `publication_recency_key`, e uma data inválida não vazia ordenava **antes** de uma data ausente (`False < True`). Corrigido derivando o bucket diretamente de `publication_recency_key(row) == 0`, eliminando a segunda fonte de verdade;
 - testes cobrindo os 4 casos exigidos (válida, inválida, ausente, empate) em `tests/test_wartime_throughput.py`; o teste do finding 2 foi verificado localmente como discriminante (falha contra o código anterior via `git stash`, passa com a correção);
 - preservado sem alteração: lane/source quality, prioridade documental, round-robin candidate-fair, per-candidate limit, desempate por URL/draft_id, dedupe candidate-aware, `autoapproval=false`, zero canonical write;
-- checks no HEAD atual: CommitCheck/Quality/Cerca **PASS**; passo de governança da Cerca (`scripts/audit-site.py` é caminho protegido, mas não faz parte do diff desta PR) veio `skipped`;
-- **não mergeada.** Aguardando reconciliação da auditoria independente sobre o finding 2; PR permanece DRAFT por decisão da mantenedora.
+- checks no HEAD final: CommitCheck/Quality/Cerca **PASS**; passo de governança da Cerca (`scripts/audit-site.py` é caminho protegido, mas não fez parte do diff desta PR) veio `skipped`;
+- auditoria independente: **PASS** (`FINAL INDEPENDENT AUDIT — PASS`, sem finding material remanescente), confirmada antes do merge;
+- `Qualidade do site` e `pages build and deployment` pós-merge de `04e2d8d` — **PASS**.
 
 Handoffs completos com evidência (runs, digests, hashes) estão nos comentários das respectivas PRs, não duplicados aqui.
 
@@ -404,12 +405,13 @@ O endpoint clássico de branch protection pode retornar 403 para a integração 
 - #120 — preflight noturno aposentado e discovery automático deduplicado;
 - #127 / PR #128 — ficha reorganizada em HOJE → PROPÕE → IMPACTO, mergeada e publicada;
 - #138 / PR #139 — navegação direta desktop + Home enxuta, mergeada e publicada;
+- PR #146 (#35) — recência dentro da curadoria candidate-fair, mergeada;
 
 ### Em andamento
 
 - #2 — expansão de propostas e declarações com fonte;
 - #34 — tracking de escala da pipeline de evidências;
-- #35 / PR #146 — recência dentro da curadoria candidate-fair; finding 2 (bucket de data inválida vs. ausente) corrigido e resubmetido, aguardando reconciliação da auditoria independente; worker contínuo War Time e classificação do cruise guard permanecem pendentes separadamente;
+- #35 — worker contínuo War Time; classificação do cruise guard permanece pendente (ordenação por recência da PR #146 já integrada, separada desta frente);
 - #42 — benchmark semântico em shadow mode, disponível para triagem sem autorização de promoção automática;
 - #117 — simplificação operacional em andamento; três slices (#118/#119/#120) integrados; revisão de cadência da #35 permanece separada;
 
