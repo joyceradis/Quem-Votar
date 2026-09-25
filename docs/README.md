@@ -16,14 +16,16 @@ Para estado executável, consulte a Issue/PR ativa e as evidências ligadas ao S
 
 ## Produto
 
+- `../README.md` — visão pública e estado estável do produto; não é backlog.
 - `PRODUCT_NORTH_STAR.md` — problema que o produto resolve, perguntas públicas e linguagem.
 - `SITE_MAP.md` — superfícies e rotas públicas.
 - `FILTERS.md` — semântica de filtros e comparação.
 - `DESIGN_REFERENCES.md` — referências de design e limites de implementação.
 - `SUSTAINABILITY.md` — separação entre financiamento e camada editorial eleitoral.
 
-## Dados e evidências
+## Dados, evidências e metodologia
 
+- `../METODOLOGIA.md` — metodologia factual, estados epistemológicos, fontes e regras de vínculo.
 - `DATA_MODEL.md` — estruturas e contratos de dados.
 - `TOPIC_EVIDENCE.md` — evidências temáticas por candidatura.
 - `TELEMETRY_PRIVACY.md` — contrato de minimização e prova de privacidade da telemetria.
