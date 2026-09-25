@@ -76,6 +76,7 @@ def main() -> None:
     profile_page = read(ROOT / "candidato.html")
     compare_page = read(ROOT / "comparar.html")
     topics_page = read(ROOT / "temas.html")
+    about_page = read(ROOT / "sobre.html")
     app = read(ROOT / "app.js")
     styles = read(ROOT / "styles.css")
     quality_workflow = read(ROOT / ".github" / "workflows" / "quality.yml")
@@ -91,8 +92,19 @@ def main() -> None:
     assert "visual depth pass" not in styles.lower(), "override visual legado reapareceu"
     assert "--green:" not in styles, "verde não faz parte da paleta estrutural azul/branco/rosa"
     assert all(token in styles for token in ("--blue:", "--blue-dark:", "--pink:", "--white:")), "tokens da identidade ES incompletos"
-    assert "Tá, mas o que esse candidato pode mudar na sua vida?" in home, "Home deve manter a pergunta prática principal"
-    assert re.search(r"\.desktop-nav\s*\{[^}]*display\s*:\s*none", styles), "navegação principal deve ficar no menu lateral"
+    assert "Entenda uma candidatura em 3 perguntas." in home, "Home deve manter entrada curta e orientada à tarefa"
+    assert re.search(r"@media\(min-width:980px\)\{\.desktop-nav\{display:flex\}", styles), "navegação principal deve ficar visível em desktop amplo"
+    assert '.nav-toggle::before{content:"☰"' in styles, "menu mobile deve ter sinal visual explícito"
+    for name, text in (
+        ("candidatos.html", candidates_page),
+        ("temas.html", topics_page),
+        ("comparar.html", compare_page),
+        ("sobre.html", about_page),
+    ):
+        assert 'aria-current="page"' in text, f"{name}: navegação deve expor página atual semanticamente"
+    assert '.desktop-nav a[aria-current="page"]' in styles and 'text-decoration:underline' in styles, (
+        "estado atual da navegação desktop não pode depender apenas de cor"
+    )
     assert "\n  push:" not in sync_workflow, "sincronização de dados não deve rodar a cada push de interface"
     assert "[skip ci]" not in sync_workflow, "snapshot automático não pode pular CI"
     assert "git pull --rebase" not in sync_workflow, "sync não pode rebasear snapshot depois da auditoria"
