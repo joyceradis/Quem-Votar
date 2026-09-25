@@ -245,6 +245,28 @@ def build_batch(
 
         draft = enrich_from_source(raw_draft, source_index.get((cid, url)))
 
+        # Dedup first: keep only the newest draft for each (candidate, source) pair.
+        # Then check decisions on the newest draft_id to avoid selecting an older
+        # version when the newer one was already decided.
+        key = (cid, url)
+        existing = by_key.get(key)
+        if existing is not None and not (
+            clean(draft.get("captured_at")),
+            did,
+        ) > (
+            clean(existing.get("captured_at")),
+            clean(existing.get("draft_id")),
+        ):
+            continue
+        by_key[key] = draft
+
+    # Now apply decision/canonical/status/listing filters to the deduplicated drafts.
+    eligible = []
+    for draft in by_key.values():
+        did = clean(draft.get("draft_id"))
+        cid = clean(draft.get("candidate_id"))
+        url = discovery.canonicalize_url(clean(draft.get("source_url")))
+
         if did in known_decisions:
             skipped_decided += 1
             continue
@@ -258,18 +280,8 @@ def build_batch(
             skipped_listing += 1
             continue
 
-        key = (cid, url)
-        existing = by_key.get(key)
-        if existing is None or (
-            clean(draft.get("captured_at")),
-            did,
-        ) > (
-            clean(existing.get("captured_at")),
-            clean(existing.get("draft_id")),
-        ):
-            by_key[key] = draft
+        eligible.append(draft)
 
-    eligible = list(by_key.values())
     grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in eligible:
         grouped[clean(row.get("candidate_id"))].append(row)
