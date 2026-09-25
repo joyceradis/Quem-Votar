@@ -1,8 +1,8 @@
 # Checkpoint atual — V5.5
 
-Data: 2026-09-23.
+Data: 2026-09-25.
 
-Estado auditado a partir de `main` em `fb67c400b3e753add9f8ae6298d9ae5cb8a6dbb7` (PR #120 já integrado). Este checkpoint é atualizado por PR documental e, por isso, o merge documental subsequente pode avançar o SHA sem alterar o estado de produto descrito.
+Estado auditado a partir de `main` em `04e2d8d51a1b6c2d9cc8e964e5ae372d32fe614f` (PR #146 já integrado). Este checkpoint é atualizado por PR documental e, por isso, o merge documental subsequente pode avançar o SHA sem alterar o estado de produto descrito.
 
 ## Estado canônico
 
@@ -12,11 +12,51 @@ Versão de produto: `5.5.0` ([`VERSION`](../VERSION)).
 
 Baseline visual: V5.5.
 
-Cache atual de assets públicos: `5.5.4`.
+Cache atual de assets públicos: `5.5.8`.
 
 Feature freeze do núcleo eleitoral vigente até **04/10/2026**.
 
 O produto informa e documenta. Não produz score, ranking, vencedor, previsão eleitoral ou recomendação de voto.
+
+## Ficha por três perguntas, navegação e curadoria por recência — #127/#128, #138/#139, #35/#146 (2026-09-24/25, todas mergeadas)
+
+Registro operacional para orientar agentes que chegarem depois: o que foi feito, por quem e onde está o estado, sem duplicar auditoria já concluída.
+
+### #127/#128 — ficha reorganizada em HOJE → PROPÕE → IMPACTO
+
+**Status: mergeado e publicado.** Merge commit `02cf25399b04330b0a79fd59c3cffa634f8b1472` em `main`.
+
+- arquitetura da ficha: `IDENTIDADE → HOJE → PROPÕE → IMPACTO → HISTÓRICO → DADOS ELEITORAIS → FONTES`;
+- ocupação TSE tratada como metadado, nunca como HOJE (`currentActivity()` não lê mais `candidate.occupation`);
+- PROPÕE aceita somente `evidence_type=proposta|declaração`; atuação documentada fica em **Histórico → Atuação pública documentada**, nunca em PROPÕE/IMPACTO;
+- gate final: Quality + Cerca + CommitCheck verdes no HEAD `fd57e5a3f7f52de172e8bfb7a96b4ba452552bd1`; runtime UI real pós-harness (#136) contra esse HEAD — run `36088073371`, `overall=PASS merge_gate=PASS`, 16/16 cenários, 0 erro material; artifact `10844568605` reconciliado (digest e manifest conferidos por três verificações independentes antes do merge);
+- `pages build and deployment` do merge commit — run `36089534940` — **PASS**.
+
+### #138/#139 — navegação direta em desktop + Home enxuta
+
+**Status: mergeado e publicado.** Merge commit `c7760b33d4b93538b1374eedce1d8830b1a326a9` em `main` (base retargetada de `ux/127-three-questions` para `main` após o merge da #128).
+
+- `.desktop-nav` visível a partir de 980px (`Pessoas | Assuntos | Comparar | Como funciona`), botão do drawer oculto quando a navegação direta cabe;
+- mobile preserva o drawer; `Menu` ganhou contraste forte + `☰`;
+- `aria-current="page"` com indicador não cromático (`text-decoration:underline`) além de cor;
+- validação browser final feita localmente (Playwright/Chromium pré-instalado do ambiente, checkout isolado do HEAD exato via `git worktree`, servido em loopback) por não caber no `runtime-proof.yml` oficial — a matriz oficial é centrada na ficha do candidato (#128/`app.js`), não em nav/Home; 47/47 checks PASS, 0 erro material (`HANDOFF: CLAUDE_139_BROWSER_PASS`, PR #139);
+- `Qualidade do site` e `pages build and deployment` do merge commit — runs `36090891177` e `36090890369` — **PASS**.
+
+### #35/#146 — recência dentro da curadoria candidate-fair
+
+**Status: mergeado.** Merge commit `04e2d8d51a1b6c2d9cc8e964e5ae372d32fe614f` em `main`. Branch `fix/35-curation-recent-first`, HEAD final `b4e886d000f172e1b8f1afa80013783a252cfd4e`, diff restrito a `scripts/build_curation_batch.py` + `tests/test_wartime_throughput.py`.
+
+- finding original: dentro da mesma lane/prioridade documental, o batch ordenava por `published_at` ascendente, então itens de 2023 venciam sistematicamente itens de 2025/2026 das mesmas 7 candidaturas Câmara (artifact `10825249130`, 81/81 selecionados eram de 2023);
+- mudança: dentro da mesma lane/prioridade, a data válida mais recente vem primeiro; datas ausentes ficam atrás de datas válidas; recência nunca aprova, rejeita, pontua ou desqualifica — é só desempate;
+- **finding 1 corrigido**: `publication_recency_key` aceitava qualquer string de 8 dígitos como data (ex.: `"2026-13-40"`, mês inexistente) — agora valida calendário real via `datetime.strptime`;
+- **finding 2 corrigido** (encontrado pela auditoria independente): o bucket "tem data vs. não tem" usava uma checagem de string separada (`clean(published_at) == ""`) da usada por `publication_recency_key`, e uma data inválida não vazia ordenava **antes** de uma data ausente (`False < True`). Corrigido derivando o bucket diretamente de `publication_recency_key(row) == 0`, eliminando a segunda fonte de verdade;
+- testes cobrindo os 4 casos exigidos (válida, inválida, ausente, empate) em `tests/test_wartime_throughput.py`; o teste do finding 2 foi verificado localmente como discriminante (falha contra o código anterior via `git stash`, passa com a correção);
+- preservado sem alteração: lane/source quality, prioridade documental, round-robin candidate-fair, per-candidate limit, desempate por URL/draft_id, dedupe candidate-aware, `autoapproval=false`, zero canonical write;
+- checks no HEAD final: CommitCheck/Quality/Cerca **PASS**; passo de governança da Cerca (`scripts/audit-site.py` é caminho protegido, mas não fez parte do diff desta PR) veio `skipped`;
+- auditoria independente: **PASS** (`FINAL INDEPENDENT AUDIT — PASS`, sem finding material remanescente), confirmada antes do merge;
+- `Qualidade do site` e `pages build and deployment` pós-merge de `04e2d8d` — **PASS**.
+
+Handoffs completos com evidência (runs, digests, hashes) estão nos comentários das respectivas PRs, não duplicados aqui.
 
 ## Snapshot eleitoral público
 
@@ -363,12 +403,15 @@ O endpoint clássico de branch protection pode retornar 403 para a integração 
 - #116 — checkpoint documental pós-#118 mergeado;
 - #119 — workflows encerrados da #86 removidos;
 - #120 — preflight noturno aposentado e discovery automático deduplicado;
+- #127 / PR #128 — ficha reorganizada em HOJE → PROPÕE → IMPACTO, mergeada e publicada;
+- #138 / PR #139 — navegação direta desktop + Home enxuta, mergeada e publicada;
+- PR #146 (#35) — recência dentro da curadoria candidate-fair, mergeada;
 
 ### Em andamento
 
 - #2 — expansão de propostas e declarações com fonte;
 - #34 — tracking de escala da pipeline de evidências;
-- #35 — worker contínuo War Time; classificação do cruise guard permanece pendente;
+- #35 — worker contínuo War Time; classificação do cruise guard permanece pendente (ordenação por recência da PR #146 já integrada, separada desta frente);
 - #42 — benchmark semântico em shadow mode, disponível para triagem sem autorização de promoção automática;
 - #117 — simplificação operacional em andamento; três slices (#118/#119/#120) integrados; revisão de cadência da #35 permanece separada;
 
