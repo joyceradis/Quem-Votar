@@ -302,10 +302,152 @@ function toggleCompare(id){
   return ids;
 }
 
+function setupScrollReveal(){
+  const items=[...document.querySelectorAll(".answer-grid article")];
+  if(!items.length)return;
+
+  const reduceMotion=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if(reduceMotion||!("IntersectionObserver"in window))return;
+
+  items.forEach(item=>item.classList.add("reveal-pending"));
+
+  const observer=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add("is-visible");
+        observer.unobserve(entry.target);
+      }
+    });
+  },{threshold:.2,rootMargin:"0px 0px -60px 0px"});
+
+  items.forEach(item=>observer.observe(item));
+}
+
+function buildAutocompleteEntries(all){
+  const seenParties=new Set();
+  const partyEntries=[];
+
+  const nameEntries=all.map(candidate=>{
+    const name=candidate.ballot_name||candidate.full_name||"";
+    const party=candidate.party||"";
+    if(party&&!seenParties.has(party)){
+      seenParties.add(party);
+      partyEntries.push({label:party,sub:"Partido",value:party,norm:norm(party)});
+    }
+    return{
+      label:name,
+      sub:[party,candidate.number?`nº ${candidate.number}`:""].filter(Boolean).join(" · "),
+      value:name,
+      norm:norm([name,party,candidate.number].join(" "))
+    };
+  }).filter(entry=>entry.label);
+
+  return [...nameEntries,...partyEntries];
+}
+
+function setupHeroAutocomplete(all){
+  const input=$("heroSearchInput");
+  const list=$("heroSuggestions");
+  if(!input||!list)return;
+
+  const entries=buildAutocompleteEntries(all);
+  let activeIndex=-1;
+  let currentMatches=[];
+
+  function positionList(){
+    const rect=input.getBoundingClientRect();
+    list.style.left=`${rect.left}px`;
+    list.style.top=`${rect.bottom}px`;
+    list.style.width=`${rect.width}px`;
+  }
+
+  function closeList(){
+    list.hidden=true;
+    list.innerHTML="";
+    input.setAttribute("aria-expanded","false");
+    input.removeAttribute("aria-activedescendant");
+    activeIndex=-1;
+    currentMatches=[];
+  }
+
+  function highlight(index){
+    const options=[...list.querySelectorAll(".autocomplete-option")];
+    options.forEach(option=>option.classList.remove("is-active"));
+    activeIndex=index;
+    if(index>=0&&options[index]){
+      options[index].classList.add("is-active");
+      options[index].scrollIntoView({block:"nearest"});
+      input.setAttribute("aria-activedescendant",options[index].id);
+    }else{
+      input.removeAttribute("aria-activedescendant");
+    }
+  }
+
+  function submitValue(value){
+    input.value=value;
+    closeList();
+    if(input.form?.requestSubmit)input.form.requestSubmit();
+    else input.form?.submit();
+  }
+
+  function openList(matches){
+    currentMatches=matches;
+    activeIndex=-1;
+    list.innerHTML=matches.map((entry,index)=>`
+      <li role="presentation"><button type="button" class="autocomplete-option" role="option" id="heroSuggestion${index}" data-value="${esc(entry.value)}">${esc(entry.label)}${entry.sub?`<small>${esc(entry.sub)}</small>`:""}</button></li>
+    `).join("");
+    positionList();
+    list.hidden=false;
+    input.setAttribute("aria-expanded","true");
+
+    list.querySelectorAll(".autocomplete-option").forEach(option=>{
+      option.addEventListener("mousedown",event=>{
+        event.preventDefault();
+        submitValue(option.dataset.value);
+      });
+    });
+  }
+
+  function refresh(){
+    const query=input.value.trim();
+    if(query.length<2){ closeList(); return; }
+    const needle=norm(query);
+    const matches=entries.filter(entry=>entry.norm.includes(needle)).slice(0,8);
+    if(!matches.length){ closeList(); return; }
+    openList(matches);
+  }
+
+  input.addEventListener("input",refresh);
+  input.addEventListener("focus",()=>{ if(input.value.trim().length>=2)refresh(); });
+  input.addEventListener("blur",closeList);
+
+  input.addEventListener("keydown",event=>{
+    if(list.hidden)return;
+    if(event.key==="ArrowDown"){
+      event.preventDefault();
+      highlight(Math.min(activeIndex+1,currentMatches.length-1));
+    }else if(event.key==="ArrowUp"){
+      event.preventDefault();
+      highlight(Math.max(activeIndex-1,0));
+    }else if(event.key==="Enter"){
+      if(activeIndex>=0&&currentMatches[activeIndex]){
+        event.preventDefault();
+        submitValue(currentMatches[activeIndex].value);
+      }
+    }else if(event.key==="Escape"){
+      closeList();
+    }
+  });
+
+  window.addEventListener("resize",()=>{ if(!list.hidden)positionList(); });
+  window.addEventListener("scroll",()=>{ if(!list.hidden)positionList(); },true);
+}
+
 async function initHome(){
   const[{federal,estadual,meta,all},topics]=await Promise.all([loadCore(),loadTopics()]);
   TOPICS=topics;
   applyGlobalMeta(meta);
+  setupHeroAutocomplete(all);
 
   const homeFederalCount=$("homeFederalCount");
   const homeEstadualCount=$("homeEstadualCount");
@@ -922,6 +1064,7 @@ async function initAbout(){
 setupNavigation();
 setupTextSize();
 setupComparisonSync();
+setupScrollReveal();
 
 const page=document.body.dataset.page;
 if(page==="home")initHome();

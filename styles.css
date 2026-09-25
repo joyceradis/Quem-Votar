@@ -52,3 +52,31 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,su
 #dados-eleitorais .electoral-data{margin-top:0;padding-top:0;border-top:0}
 #dados-eleitorais .electoral-data-head{margin-bottom:8px}
 @media(max-width:620px){.profile-actions{display:grid;grid-template-columns:1fr;width:100%}.profile-actions button{width:100%;min-height:48px}.profile-jump{scrollbar-width:thin}.profile-now{font-size:.9rem}}
+
+/* Elegância e interatividade — hero echo, hover unificado, scroll-reveal, autocomplete, hero-landmark */
+.hero-echo{margin:0 0 10px;color:var(--ink-soft);font-size:.98rem;font-style:italic;font-weight:650;letter-spacing:-.01em}
+@media(max-width:620px){.hero-echo{font-size:.88rem}}
+
+.home-choices a{border-radius:14px;transition:transform .15s ease,box-shadow .15s ease,background-color .15s ease,color .15s ease}
+.home-choices a:hover,.home-choices a:focus-visible{transform:translateY(-2px);background-color:rgba(234,247,255,.5);box-shadow:0 14px 32px rgba(17,59,86,.08)}
+.home-choices a:hover strong,.home-choices a:focus-visible strong{color:var(--pink-strong)}
+
+.topic-row{transition:transform .15s ease,box-shadow .15s ease,background-color .15s ease}
+.topic-row:hover,.topic-row:focus-within{transform:translateY(-2px);background-color:rgba(234,247,255,.35);box-shadow:0 14px 32px rgba(17,59,86,.07)}
+.topic-row>a{transition:color .15s ease}
+.topic-row>a:hover,.topic-row>a:focus-visible{color:var(--pink-strong)}
+
+.hero-landmark{text-decoration:none;color:inherit;transition:transform .2s ease}
+.hero-landmark:hover,.hero-landmark:focus-visible{transform:rotate(1deg) translateY(-3px)}
+.hero-landmark:hover span,.hero-landmark:focus-visible span{color:var(--pink-strong)}
+
+.answer-grid article.reveal-pending{opacity:0;transform:translateY(18px);transition:opacity .3s ease,transform .3s ease}
+.answer-grid article.reveal-pending.is-visible{opacity:1;transform:translateY(0)}
+
+.hero-search{position:relative}
+.autocomplete-list{position:fixed;z-index:60;margin:6px 0 0;padding:6px;list-style:none;border:1px solid var(--line);border-radius:14px;background:#fff;box-shadow:var(--shadow-soft);max-height:280px;overflow:auto}
+.autocomplete-list[hidden]{display:none}
+.autocomplete-list li{margin:0}
+.autocomplete-option{display:flex;flex-direction:column;gap:2px;width:100%;min-height:44px;padding:8px 12px;border:0;border-radius:10px;background:transparent;text-align:left;color:var(--ink);font-weight:750}
+.autocomplete-option small{color:var(--muted);font-weight:600;font-size:.76rem}
+.autocomplete-option:hover,.autocomplete-option:focus-visible,.autocomplete-option.is-active{background:var(--blue-soft);color:var(--blue-dark)}
