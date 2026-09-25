@@ -210,6 +210,80 @@ class WartimeThroughputTests(unittest.TestCase):
         self.assertEqual(154, len(ids))
         self.assertEqual(154, len(set(ids)))
 
+    def test_never_select_old_draft_when_newer_was_decided(self):
+        """Recapture invariant: newer draft_id should prevent older one from selection.
+
+        Scenario:
+        - old_draft: draft_id="old-v1", captured_at="2025-01-01"
+        - new_draft: draft_id="new-v2", captured_at="2025-01-02" (same source as old_draft)
+        - new_draft was already decided (in decisions list)
+
+        Expected: old_draft should NOT be selected because newer version was already evaluated.
+        This ensures we never use an old version of a source when the new version has been reviewed.
+        """
+        old_draft = collector.collect_source(
+            chamber_source("1", 101),
+            candidates={"1": candidate("1")},
+            fetcher=lambda *args, **kwargs: (_ for _ in ()).throw(
+                AssertionError("no fetch")
+            ),
+        )
+        old_draft["draft_id"] = "old-v1"
+        old_draft["captured_at"] = "2025-01-01"
+
+        new_draft = dict(old_draft, draft_id="new-v2", captured_at="2025-01-02")
+
+        payload, metrics = batching.build_batch(
+            drafts_payload={"drafts": [old_draft, new_draft]},
+            canonical_payload={"entries": []},
+            decisions_payload={"decisions": {"QUARENTENA": ["new-v2"]}},
+            limit=100,
+            per_candidate_limit=12,
+        )
+
+        # new-v2 was decided, so neither should be selected
+        self.assertEqual(0, payload["metrics"]["selected"])
+        self.assertEqual(1, metrics["skipped_decided"])
+        self.assertEqual([], payload["items"])
+
+    def test_recapture_newer_draft_not_in_decisions(self):
+        """Recapture positive case: newer draft should be selected even if older existed.
+
+        Scenario:
+        - old_draft: draft_id="old-v1", captured_at="2025-01-01" (already decided)
+        - new_draft: draft_id="new-v2", captured_at="2025-01-02" (same source, NOT decided)
+
+        Expected: new_draft should be selected because:
+        1. old_draft is skipped (was decided)
+        2. new_draft is not decided, so it passes all filters
+        3. Dedup logic ensures we get the newest version
+        """
+        old_draft = collector.collect_source(
+            chamber_source("2", 202),
+            candidates={"2": candidate("2")},
+            fetcher=lambda *args, **kwargs: (_ for _ in ()).throw(
+                AssertionError("no fetch")
+            ),
+        )
+        old_draft["draft_id"] = "old-v1"
+        old_draft["captured_at"] = "2025-01-01"
+
+        new_draft = dict(old_draft, draft_id="new-v2", captured_at="2025-01-02")
+
+        payload, metrics = batching.build_batch(
+            drafts_payload={"drafts": [old_draft, new_draft]},
+            canonical_payload={"entries": []},
+            decisions_payload={"decisions": {"QUARENTENA": ["old-v1"]}},
+            limit=100,
+            per_candidate_limit=12,
+        )
+
+        # old_draft was decided, so skipped. new_draft is not decided, so selected.
+        self.assertEqual(1, payload["metrics"]["selected"])
+        self.assertEqual(1, metrics["skipped_decided"])
+        selected_ids = {row["draft_id"] for row in payload["items"]}
+        self.assertEqual({"new-v2"}, selected_ids)
+
 
 if __name__ == "__main__":
     unittest.main()
