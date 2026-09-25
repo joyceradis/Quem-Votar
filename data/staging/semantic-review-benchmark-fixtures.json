@@ -1,0 +1,583 @@
+{
+  "version": "1.0.0",
+  "updated_at": "2026-09-25",
+  "semantics": "Fixture set for the #42 shadow-mode semantic-review benchmark. Non-canonical. Every fixture is derived from data already committed to this repository (data/reference/topic-evidence.json and data/staging/topic-evidence-reviews.json + topic-evidence-drafts.json). No fixture content is invented. This file is never written by automation and never feeds canonical promotion.",
+  "authorization_issue": 42,
+  "related_product_issue": 2,
+  "coverage_gaps": [
+    "All 22 canonical-derived fixtures are scope=federal; no estadual example exists among verified canonical entries.",
+    "No committed fixture has evidence_type=declaracao; only proposta and atuacao are represented.",
+    "No committed fixture represents a true reject-class case with full source text (the 154-row wartime curation ledger records REJEITAR/QUARENTENA only as draft_id labels, without the underlying draft text, because most of those 5.959 drafts were never promoted from the automated worker's run-scoped CI artifact into git).",
+    "No committed fixture demonstrates homonym collision, PDF document_type, or multi-candidate source conflict; these categories from the issue's heterogeneity list are not yet testable from git-tracked data alone.",
+    "quote_or_summary is an empty string on all 22 canonical entries; classifier input for those fixtures falls back to statement only."
+  ],
+  "fixtures": [
+    {
+      "fixture_id": "canon-001",
+      "candidate_id": "80002542403",
+      "input": {
+        "text": "Parecer do relator Amaro Neto na Comissão de Indústria, Comércio e Serviços (17/06/2025) pela rejeição da matéria analisada.",
+        "source_title": "PRL 1/ — Parecer do Relator, Dep. Amaro Neto (REPUBLIC-ES), pela rejeição.",
+        "source_publisher": "Câmara dos Deputados",
+        "source_kind": "institutional",
+        "document_type": "unknown",
+        "scope": "federal",
+        "published_at": "2025-06-17"
+      },
+      "ground_truth": {
+        "decision": "approve",
+        "topic_id": "economia",
+        "evidence_type": "atuação",
+        "verification_status": "verified"
+      },
+      "provenance": {
+        "origin_file": "data/reference/topic-evidence.json",
+        "origin_note": "Canonical entry, source_url idProposicao=2526647."
+      },
+      "heterogeneity_tags": ["institutional_source", "federal_scope", "committee_report", "atuacao"]
+    },
+    {
+      "fixture_id": "canon-002",
+      "candidate_id": "80002542403",
+      "input": {
+        "text": "Propõe regulamentar a atuação de assessores de investimentos, com obrigações, transparência, dever fiduciário, regras de remuneração, fiscalização e penalidades.",
+        "source_title": "PL 3193/2025 — Dispõe sobre a regulamentação da atuação de assessores de investimentos no mercado financeiro brasileiro.",
+        "source_publisher": "Câmara dos Deputados",
+        "source_kind": "institutional",
+        "document_type": "unknown",
+        "scope": "federal",
+        "published_at": "2025-07-02"
+      },
+      "ground_truth": {
+        "decision": "approve",
+        "topic_id": "economia",
+        "evidence_type": "proposta",
+        "verification_status": "verified"
+      },
+      "provenance": {
+        "origin_file": "data/reference/topic-evidence.json",
+        "origin_note": "Canonical entry, source_url idProposicao=2531269."
+      },
+      "heterogeneity_tags": ["institutional_source", "federal_scope", "bill_text", "proposta"]
+    },
+    {
+      "fixture_id": "canon-003",
+      "candidate_id": "80002542403",
+      "input": {
+        "text": "Propõe a livre escolha do valor de recarga em planos de telefonia móvel pré-paga e um prazo mínimo de validade dos créditos.",
+        "source_title": "PL 3194/2025 — Dispõe sobre a livre escolha de valor de recarga de créditos em planos de telefonia móvel pré-paga.",
+        "source_publisher": "Câmara dos Deputados",
+        "source_kind": "institutional",
+        "document_type": "unknown",
+        "scope": "federal",
+        "published_at": "2025-07-02"
+      },
+      "ground_truth": {
+        "decision": "approve",
+        "topic_id": "economia",
+        "evidence_type": "proposta",
+        "verification_status": "verified"
+      },
+      "provenance": {
+        "origin_file": "data/reference/topic-evidence.json",
+        "origin_note": "Canonical entry, source_url idProposicao=2531284."
+      },
+      "heterogeneity_tags": ["institutional_source", "federal_scope", "bill_text", "proposta"]
+    },
+    {
+      "fixture_id": "canon-004",
+      "candidate_id": "80002542403",
+      "input": {
+        "text": "Propõe regras de transparência, integridade e fiscalização nos concursos públicos para cargos acadêmicos em instituições públicas de ensino superior.",
+        "source_title": "PL 3241/2025 — Dispõe sobre a transparência, integridade e fiscalização dos concursos públicos para cargos acadêmicos.",
+        "source_publisher": "Câmara dos Deputados",
+        "source_kind": "institutional",
+        "document_type": "unknown",
+        "scope": "federal",
+        "published_at": "2025-07-03"
+      },
+      "ground_truth": {
+        "decision": "approve",
+        "topic_id": "educacao",
+        "evidence_type": "proposta",
+        "verification_status": "verified"
+      },
+      "provenance": {
+        "origin_file": "data/reference/topic-evidence.json",
+        "origin_note": "Canonical entry, source_url idProposicao=2531925."
+      },
+      "heterogeneity_tags": ["institutional_source", "federal_scope", "bill_text", "proposta"]
+    },
+    {
+      "fixture_id": "canon-005",
+      "candidate_id": "80002542403",
+      "input": {
+        "text": "Propõe que o trabalhador possa escolher entre o INSS e produtos financeiros públicos ou privados para destinar suas contribuições previdenciárias.",
+        "source_title": "PL 3242/2025 — Institui a livre escolha do trabalhador para destinação das contribuições previdenciárias.",
+        "source_publisher": "Câmara dos Deputados",
+        "source_kind": "institutional",
+        "document_type": "unknown",
+        "scope": "federal",
+        "published_at": "2025-07-03"
+      },
+      "ground_truth": {
+        "decision": "approve",
+        "topic_id": "economia",
+        "evidence_type": "proposta",
+        "verification_status": "verified"
+      },
+      "provenance": {
+        "origin_file": "data/reference/topic-evidence.json",
+        "origin_note": "Canonical entry, source_url idProposicao=2531930."
+      },
+      "heterogeneity_tags": ["institutional_source", "federal_scope", "bill_text", "proposta"]
+    },
+    {
+      "fixture_id": "canon-006",
+      "candidate_id": "80002542403",
+      "input": {
+        "text": "Propõe instituir o Fundo Nacional de Educação Financeira e Proteção do Investidor, definindo sua estrutura, gestão, fontes de recursos e aplicação.",
+        "source_title": "PL 3809/2025 — Institui o Fundo Nacional de Educação Financeira e Proteção do Investidor (FNEFPI).",
+        "source_publisher": "Câmara dos Deputados",
+        "source_kind": "institutional",
+        "document_type": "unknown",
+        "scope": "federal",
+        "published_at": "2025-08-07"
+      },
+      "ground_truth": {
+        "decision": "approve",
+        "topic_id": "economia",
+        "evidence_type": "proposta",
+        "verification_status": "verified"
+      },
+      "provenance": {
+        "origin_file": "data/reference/topic-evidence.json",
+        "origin_note": "Canonical entry, source_url idProposicao=2541309."
+      },
+      "heterogeneity_tags": ["institutional_source", "federal_scope", "bill_text", "proposta"]
+    },
+    {
+      "fixture_id": "canon-007",
+      "candidate_id": "80002542403",
+      "input": {
+        "text": "Propõe tornar obrigatória a educação financeira no currículo de instituições públicas e privadas de todos os níveis, com diretrizes de capacitação docente e avaliação.",
+        "source_title": "PL 3810/2025 — Institui a obrigatoriedade da Educação Financeira no currículo escolar.",
+        "source_publisher": "Câmara dos Deputados",
+        "source_kind": "institutional",
+        "document_type": "unknown",
+        "scope": "federal",
+        "published_at": "2025-08-07"
+      },
+      "ground_truth": {
+        "decision": "approve",
+        "topic_id": "educacao",
+        "evidence_type": "proposta",
+        "verification_status": "verified"
+      },
+      "provenance": {
+        "origin_file": "data/reference/topic-evidence.json",
+        "origin_note": "Canonical entry, source_url idProposicao=2541313."
+      },
+      "heterogeneity_tags": ["institutional_source", "federal_scope", "bill_text", "proposta"]
+    },
+    {
+      "fixture_id": "canon-008",
+      "candidate_id": "80002542403",
+      "input": {
+        "text": "Propõe instituir a Política Nacional de Educação para o Trânsito nas escolas de ensino fundamental e médio, com ênfase no uso consciente de bicicletas, patinetes, skates e veículos elétricos.",
+        "source_title": "PL 3933/2025 — Institui a Política Nacional de Educação para o Trânsito nas Escolas de Ensino Fundamental e Médio.",
+        "source_publisher": "Câmara dos Deputados",
+        "source_kind": "institutional",
+        "document_type": "unknown",
+        "scope": "federal",
+        "published_at": "2025-08-12"
+      },
+      "ground_truth": {
+        "decision": "approve",
+        "topic_id": "infraestrutura",
+        "evidence_type": "proposta",
+        "verification_status": "verified"
+      },
+      "provenance": {
+        "origin_file": "data/reference/topic-evidence.json",
+        "origin_note": "Canonical entry, source_url idProposicao=2543050."
+      },
+      "heterogeneity_tags": ["institutional_source", "federal_scope", "bill_text", "proposta"]
+    },
+    {
+      "fixture_id": "canon-009",
+      "candidate_id": "80002542409",
+      "input": {
+        "text": "Propõe declarar o Município de Ponto Belo (ES) Capital Nacional da Carne de Sol.",
+        "source_title": "PL 2915/2025 — Declara o Município de Ponto Belo, no Estado do Espírito Santo, Capital Nacional da Carne de Sol.",
+        "source_publisher": "Câmara dos Deputados",
+        "source_kind": "institutional",
+        "document_type": "unknown",
+        "scope": "federal",
+        "published_at": "2025-06-17"
+      },
+      "ground_truth": {
+        "decision": "approve",
+        "topic_id": "economia",
+        "evidence_type": "proposta",
+        "verification_status": "verified"
+      },
+      "provenance": {
+        "origin_file": "data/reference/topic-evidence.json",
+        "origin_note": "Canonical entry, source_url idProposicao=2526355. Topic assignment (economia) is non-obvious from lexical content alone — a useful stress case for keyword-based classifiers."
+      },
+      "heterogeneity_tags": ["institutional_source", "federal_scope", "bill_text", "proposta", "weak_lexical_topic_signal"]
+    },
+    {
+      "fixture_id": "canon-010",
+      "candidate_id": "80002542409",
+      "input": {
+        "text": "Propõe alterar a Lei de Drogas (Lei 11.343/2006) para suprimir a fase de notificação prévia para defesa, alinhando o rito ao Código de Processo Penal.",
+        "source_title": "PL 3150/2025 — Altera a Lei nº 11.343, de 23 de agosto de 2006.",
+        "source_publisher": "Câmara dos Deputados",
+        "source_kind": "institutional",
+        "document_type": "unknown",
+        "scope": "federal",
+        "published_at": "2025-07-01"
+      },
+      "ground_truth": {
+        "decision": "approve",
+        "topic_id": "seguranca",
+        "evidence_type": "proposta",
+        "verification_status": "verified"
+      },
+      "provenance": {
+        "origin_file": "data/reference/topic-evidence.json",
+        "origin_note": "Canonical entry, source_url idProposicao=2529590."
+      },
+      "heterogeneity_tags": ["institutional_source", "federal_scope", "bill_text", "proposta"]
+    },
+    {
+      "fixture_id": "canon-011",
+      "candidate_id": "80002542409",
+      "input": {
+        "text": "Propõe incluir, entre os deveres das organizações esportivas profissionais, o oferecimento de curso de educação financeira básica aos atletas.",
+        "source_title": "PL 3151/2025 — Altera a Lei nº 14.597, de 14 de junho de 2023.",
+        "source_publisher": "Câmara dos Deputados",
+        "source_kind": "institutional",
+        "document_type": "unknown",
+        "scope": "federal",
+        "published_at": "2025-07-01"
+      },
+      "ground_truth": {
+        "decision": "approve",
+        "topic_id": "educacao",
+        "evidence_type": "proposta",
+        "verification_status": "verified"
+      },
+      "provenance": {
+        "origin_file": "data/reference/topic-evidence.json",
+        "origin_note": "Canonical entry, source_url idProposicao=2529593. Mentions both education and sport organizations — a plausible economia/educacao boundary case."
+      },
+      "heterogeneity_tags": ["institutional_source", "federal_scope", "bill_text", "proposta", "topic_boundary_case"]
+    },
+    {
+      "fixture_id": "canon-012",
+      "candidate_id": "80002536278",
+      "input": {
+        "text": "Requer visita técnica dos membros da Comissão Especial à Zona da Mata mineira para tratar das consequências das fortes chuvas de 2026.",
+        "source_title": "REQ 1/2026 — Requer a realização de Visita Técnica dos membros da Comissão Especial.",
+        "source_publisher": "Câmara dos Deputados",
+        "source_kind": "institutional",
+        "document_type": "unknown",
+        "scope": "federal",
+        "published_at": "2026-03-02"
+      },
+      "ground_truth": {
+        "decision": "approve",
+        "topic_id": "meio-ambiente",
+        "evidence_type": "atuação",
+        "verification_status": "verified"
+      },
+      "provenance": {
+        "origin_file": "data/reference/topic-evidence.json",
+        "origin_note": "Canonical entry, source_url idProposicao=2605863."
+      },
+      "heterogeneity_tags": ["institutional_source", "federal_scope", "committee_requirement", "atuacao"]
+    },
+    {
+      "fixture_id": "canon-013",
+      "candidate_id": "80002536278",
+      "input": {
+        "text": "Requer audiência pública para avaliar os impactos e danos causados pelas enchentes de 2026 na Zona da Mata de Minas Gerais.",
+        "source_title": "REQ 2/2026 — Requer a realização de audiência pública sobre a avaliação dos impactos e danos causados pelas enchentes.",
+        "source_publisher": "Câmara dos Deputados",
+        "source_kind": "institutional",
+        "document_type": "unknown",
+        "scope": "federal",
+        "published_at": "2026-03-03"
+      },
+      "ground_truth": {
+        "decision": "approve",
+        "topic_id": "meio-ambiente",
+        "evidence_type": "atuação",
+        "verification_status": "verified"
+      },
+      "provenance": {
+        "origin_file": "data/reference/topic-evidence.json",
+        "origin_note": "Canonical entry, source_url idProposicao=2605894. Same candidate/subject-area as canon-012, distinct procedural act — pairs to test whether a classifier collapses near-duplicate committee requirements into one item."
+      },
+      "heterogeneity_tags": ["institutional_source", "federal_scope", "committee_requirement", "atuacao", "near_duplicate_subject"]
+    },
+    {
+      "fixture_id": "canon-014",
+      "candidate_id": "80002536278",
+      "input": {
+        "text": "Requer audiência pública na Comissão de Saúde sobre a efetividade das políticas de saúde e valorização dos agentes de saúde e combate às endemias no SUS.",
+        "source_title": "REQ 61/2026 — Requer a realização de audiência pública na Comissão de Saúde (CSAUDE).",
+        "source_publisher": "Câmara dos Deputados",
+        "source_kind": "institutional",
+        "document_type": "unknown",
+        "scope": "federal",
+        "published_at": "2026-03-05"
+      },
+      "ground_truth": {
+        "decision": "approve",
+        "topic_id": "saude",
+        "evidence_type": "atuação",
+        "verification_status": "verified"
+      },
+      "provenance": {
+        "origin_file": "data/reference/topic-evidence.json",
+        "origin_note": "Canonical entry, source_url idProposicao=2607131."
+      },
+      "heterogeneity_tags": ["institutional_source", "federal_scope", "committee_requirement", "atuacao"]
+    },
+    {
+      "fixture_id": "canon-015",
+      "candidate_id": "80002549470",
+      "input": {
+        "text": "Requer realização de audiência pública conjunta sobre mulheres negras em Brasília (protagonismo político, cultura e resistência) em novembro de 2025.",
+        "source_title": "REQ 53/2025 — Requer a realização de Audiência Pública: “Mulheres Negras em Brasília”.",
+        "source_publisher": "Câmara dos Deputados",
+        "source_kind": "institutional",
+        "document_type": "unknown",
+        "scope": "federal",
+        "published_at": "2025-10-07"
+      },
+      "ground_truth": {
+        "decision": "approve",
+        "topic_id": "direitos",
+        "evidence_type": "atuação",
+        "verification_status": "verified"
+      },
+      "provenance": {
+        "origin_file": "data/reference/topic-evidence.json",
+        "origin_note": "Canonical entry, source_url idProposicao=2567942. Same statement text as canon-016 under a distinct source_url — a real multi-source corroboration pair."
+      },
+      "heterogeneity_tags": ["institutional_source", "federal_scope", "committee_requirement", "atuacao", "multi_source_same_claim"]
+    },
+    {
+      "fixture_id": "canon-016",
+      "candidate_id": "80002549470",
+      "input": {
+        "text": "Requer realização de audiência pública conjunta sobre mulheres negras em Brasília (protagonismo político, cultura e resistência) em novembro de 2025.",
+        "source_title": "REQ 87/2025 — Requer a realização de Audiência Pública: “Mulheres Negras em Brasília”.",
+        "source_publisher": "Câmara dos Deputados",
+        "source_kind": "institutional",
+        "document_type": "unknown",
+        "scope": "federal",
+        "published_at": "2025-10-07"
+      },
+      "ground_truth": {
+        "decision": "approve",
+        "topic_id": "direitos",
+        "evidence_type": "atuação",
+        "verification_status": "verified"
+      },
+      "provenance": {
+        "origin_file": "data/reference/topic-evidence.json",
+        "origin_note": "Canonical entry, source_url idProposicao=2568140. Pairs with canon-015 (identical statement, distinct source_url)."
+      },
+      "heterogeneity_tags": ["institutional_source", "federal_scope", "committee_requirement", "atuacao", "multi_source_same_claim"]
+    },
+    {
+      "fixture_id": "canon-017",
+      "candidate_id": "80002542411",
+      "input": {
+        "text": "Requerimento de retirada da pauta do PL 2668/2024 na Comissão de Direitos Humanos, Minorias e Igualdade Racial (08/07/2026).",
+        "source_title": "RPD 16/0 — Requerimento de Retirada de Matéria da Pauta - PL 2668/2024",
+        "source_publisher": "Câmara dos Deputados",
+        "source_kind": "institutional",
+        "document_type": "unknown",
+        "scope": "federal",
+        "published_at": "2026-07-08"
+      },
+      "ground_truth": {
+        "decision": "approve",
+        "topic_id": "direitos",
+        "evidence_type": "atuação",
+        "verification_status": "verified"
+      },
+      "provenance": {
+        "origin_file": "data/reference/topic-evidence.json",
+        "origin_note": "Canonical entry, source_url idProposicao=2638145. Part of a 5-entry same-candidate/same-day procedural cluster (canon-017..021) testing over-fit to boilerplate RPD language."
+      },
+      "heterogeneity_tags": ["institutional_source", "federal_scope", "procedural_motion", "atuacao", "high_volume_single_candidate"]
+    },
+    {
+      "fixture_id": "canon-018",
+      "candidate_id": "80002542411",
+      "input": {
+        "text": "Votação nominal do requerimento de retirada da pauta do PL 717/2025 na Comissão de Direitos Humanos, Minorias e Igualdade Racial (08/07/2026).",
+        "source_title": "RPD 18/0 — Votação Nominal do Requerimento de Retirada de Pauta - PL 717/2025.",
+        "source_publisher": "Câmara dos Deputados",
+        "source_kind": "institutional",
+        "document_type": "unknown",
+        "scope": "federal",
+        "published_at": "2026-07-08"
+      },
+      "ground_truth": {
+        "decision": "approve",
+        "topic_id": "direitos",
+        "evidence_type": "atuação",
+        "verification_status": "verified"
+      },
+      "provenance": {
+        "origin_file": "data/reference/topic-evidence.json",
+        "origin_note": "Canonical entry, source_url idProposicao=2638156."
+      },
+      "heterogeneity_tags": ["institutional_source", "federal_scope", "procedural_motion", "atuacao", "high_volume_single_candidate"]
+    },
+    {
+      "fixture_id": "canon-019",
+      "candidate_id": "80002542411",
+      "input": {
+        "text": "Requerimento de retirada da pauta do PL 4401/2025 na Comissão de Direitos Humanos, Minorias e Igualdade Racial (08/07/2026).",
+        "source_title": "RPD 2/0 — Requerimento de Retirada de Matéria da Pauta - PL 4401/2025.",
+        "source_publisher": "Câmara dos Deputados",
+        "source_kind": "institutional",
+        "document_type": "unknown",
+        "scope": "federal",
+        "published_at": "2026-07-08"
+      },
+      "ground_truth": {
+        "decision": "approve",
+        "topic_id": "direitos",
+        "evidence_type": "atuação",
+        "verification_status": "verified"
+      },
+      "provenance": {
+        "origin_file": "data/reference/topic-evidence.json",
+        "origin_note": "Canonical entry, source_url idProposicao=2638146."
+      },
+      "heterogeneity_tags": ["institutional_source", "federal_scope", "procedural_motion", "atuacao", "high_volume_single_candidate"]
+    },
+    {
+      "fixture_id": "canon-020",
+      "candidate_id": "80002542411",
+      "input": {
+        "text": "Votação nominal do requerimento de retirada da pauta do PL 2668/2024 na Comissão de Direitos Humanos, Minorias e Igualdade Racial (08/07/2026).",
+        "source_title": "RPD 20/0 — Votação Nominal do Requerimento de Retirada de Pauta - PL 2668/2024.",
+        "source_publisher": "Câmara dos Deputados",
+        "source_kind": "institutional",
+        "document_type": "unknown",
+        "scope": "federal",
+        "published_at": "2026-07-08"
+      },
+      "ground_truth": {
+        "decision": "approve",
+        "topic_id": "direitos",
+        "evidence_type": "atuação",
+        "verification_status": "verified"
+      },
+      "provenance": {
+        "origin_file": "data/reference/topic-evidence.json",
+        "origin_note": "Canonical entry, source_url idProposicao=2638159."
+      },
+      "heterogeneity_tags": ["institutional_source", "federal_scope", "procedural_motion", "atuacao", "high_volume_single_candidate"]
+    },
+    {
+      "fixture_id": "canon-021",
+      "candidate_id": "80002542411",
+      "input": {
+        "text": "Requerimento de retirada da pauta do PL 4205/2021 na Comissão de Direitos Humanos, Minorias e Igualdade Racial (08/07/2026).",
+        "source_title": "RPD 5/0 — Requerimento de Retirada de Matéria da Pauta - PL 4205/2021.",
+        "source_publisher": "Câmara dos Deputados",
+        "source_kind": "institutional",
+        "document_type": "unknown",
+        "scope": "federal",
+        "published_at": "2026-07-08"
+      },
+      "ground_truth": {
+        "decision": "approve",
+        "topic_id": "direitos",
+        "evidence_type": "atuação",
+        "verification_status": "verified"
+      },
+      "provenance": {
+        "origin_file": "data/reference/topic-evidence.json",
+        "origin_note": "Canonical entry, source_url idProposicao=2638144."
+      },
+      "heterogeneity_tags": ["institutional_source", "federal_scope", "procedural_motion", "atuacao", "high_volume_single_candidate"]
+    },
+    {
+      "fixture_id": "canon-022",
+      "candidate_id": "80002542411",
+      "input": {
+        "text": "Votação nominal do requerimento de retirada da pauta do PL 4205/2021 na Comissão de Direitos Humanos, Minorias e Igualdade Racial (08/07/2026).",
+        "source_title": "RPD 8/0 — Votação Nominal do Requerimento de Retirada de Pauta - PL 4205/2021.",
+        "source_publisher": "Câmara dos Deputados",
+        "source_kind": "institutional",
+        "document_type": "unknown",
+        "scope": "federal",
+        "published_at": "2026-07-08"
+      },
+      "ground_truth": {
+        "decision": "approve",
+        "topic_id": "direitos",
+        "evidence_type": "atuação",
+        "verification_status": "verified"
+      },
+      "provenance": {
+        "origin_file": "data/reference/topic-evidence.json",
+        "origin_note": "Canonical entry, source_url idProposicao=2638158."
+      },
+      "heterogeneity_tags": ["institutional_source", "federal_scope", "procedural_motion", "atuacao", "high_volume_single_candidate"]
+    },
+    {
+      "fixture_id": "staging-001",
+      "candidate_id": "80002537487",
+      "input": {
+        "text": "O Projeto de Lei 20/2026, de autoria do deputado Alexandre Xambinho (Podemos), propõe a concessão de duas passagens gratuitas por mês em ônibus intermunicipais convencionais. “Em muitas regiões do Estado, principalmente no interior, os serviços essenciais estão concentrados em polos urbanos maiores. Para muitas famílias, o valor da passagem se torna uma barreira”, afirmou Xambinho.",
+        "source_title": "Projeto quer garantir passagens gratuitas para jovens de baixa renda no ES",
+        "source_publisher": "Conexão ES",
+        "source_kind": "secondary",
+        "document_type": "html",
+        "scope": "estadual",
+        "published_at": "2026-03-04"
+      },
+      "ground_truth": {
+        "decision": null,
+        "topic_id": "infraestrutura",
+        "evidence_type": "atuação",
+        "verification_status": "secondary_source"
+      },
+      "decision_dispute": {
+        "reason": "Two independent human review passes reached different routing decisions for this exact draft_id. Neither is edited or overridden here.",
+        "operational_review": {
+          "source_file": "data/staging/topic-evidence-reviews.json",
+          "status": "approved",
+          "reviewed_at": "2026-09-20T01:41:47Z",
+          "reviewer": "joyceradis"
+        },
+        "wartime_matrix_authorized_baseline": {
+          "source_file": "data/staging/wartime-curation-decisions.json",
+          "status": "QUARENTENA",
+          "authorization_reference": "https://github.com/joyceradis/Quem-Votar/issues/2#issuecomment-5821172320"
+        }
+      },
+      "excluded_from_decision_scoring": true,
+      "provenance": {
+        "origin_file": "data/staging/topic-evidence-drafts.json + data/staging/topic-evidence-reviews.json",
+        "origin_note": "draft_id 2cea3b522948d161a1be. topic_id and evidence_type agree across both review passes; only the approve/quarantine routing differs. Reported to the maintainer via issue #2 comment history prior to this benchmark; not re-litigated here."
+      },
+      "heterogeneity_tags": ["secondary_source", "estadual_scope", "single_source", "direct_quote_attribution", "atuacao_vs_proposta_lexical_trap", "conflicting_human_review_passes"]
+    }
+  ]
+}
