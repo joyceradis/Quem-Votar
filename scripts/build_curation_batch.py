@@ -10,6 +10,7 @@ import argparse
 import hashlib
 import json
 from collections import defaultdict
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -100,6 +101,24 @@ def chamber_document_priority(row: dict[str, Any]) -> int:
     if not sigla:
         return 1
     return 0 if sigla in PRIMARY_CHAMBER_SIGLAS else 1
+
+
+def publication_recency_key(row: dict[str, Any]) -> int:
+    """Newest valid ISO date first inside the same technical priority.
+
+    A digit count alone does not prove a real calendar date (e.g. an
+    "20261340" garbage value is 8 digits but not a month/day that exists),
+    so this rejects anything datetime cannot parse and treats it exactly
+    like a non-date instead of silently sorting it as an arbitrary date.
+    """
+    value = clean(row.get("published_at"))[:10].replace("-", "")
+    if len(value) != 8 or not value.isdigit():
+        return 0
+    try:
+        datetime.strptime(value, "%Y%m%d")
+    except ValueError:
+        return 0
+    return -int(value)
 
 
 def is_candidate_site_listing(draft: dict[str, Any]) -> bool:
@@ -260,8 +279,12 @@ def build_batch(
             key=lambda row: (
                 LANE_PRIORITY.get(lane(row), 9),
                 chamber_document_priority(row),
-                clean(row.get("published_at")) == "",
-                clean(row.get("published_at")),
+                # Derived from the same parse as publication_recency_key, not a
+                # separate empty-string check: an invalid-but-non-empty date
+                # (e.g. "2026-13-40") must land in the same fallback bucket as
+                # a genuinely absent one, never sort ahead of it.
+                publication_recency_key(row) == 0,
+                publication_recency_key(row),
                 clean(row.get("source_url")),
                 clean(row.get("draft_id")),
             )

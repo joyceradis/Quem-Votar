@@ -196,6 +196,177 @@ class WartimeThroughputTests(unittest.TestCase):
         self.assertEqual(1, metrics["canonical_candidate_urls"])
         self.assertFalse(payload["policy"]["autoapproval"])
 
+    def test_curation_prefers_recent_dated_item_within_same_priority(self):
+        older = collector.collect_source(
+            chamber_source("1", 201),
+            candidates={"1": candidate("1")},
+            fetcher=lambda *args, **kwargs: (_ for _ in ()).throw(
+                AssertionError("no fetch")
+            ),
+        )
+        newer = collector.collect_source(
+            chamber_source("1", 202),
+            candidates={"1": candidate("1")},
+            fetcher=lambda *args, **kwargs: (_ for _ in ()).throw(
+                AssertionError("no fetch")
+            ),
+        )
+        undated = collector.collect_source(
+            chamber_source("1", 203),
+            candidates={"1": candidate("1")},
+            fetcher=lambda *args, **kwargs: (_ for _ in ()).throw(
+                AssertionError("no fetch")
+            ),
+        )
+
+        older["published_at"] = "2023-02-01"
+        newer["published_at"] = "2026-07-01"
+        undated["published_at"] = ""
+
+        payload, metrics = batching.build_batch(
+            drafts_payload={"drafts": [older, undated, newer]},
+            canonical_payload={"entries": []},
+            decisions_payload={"decisions": {}},
+            limit=1,
+            per_candidate_limit=1,
+        )
+
+        self.assertEqual(1, metrics["selected"])
+        self.assertEqual(newer["draft_id"], payload["items"][0]["draft_id"])
+        self.assertEqual("2026-07-01", payload["items"][0]["published_at"])
+        self.assertEqual("institutional_trusted", payload["items"][0]["lane"])
+        self.assertEqual(0, payload["items"][0]["document_priority"])
+        self.assertFalse(payload["policy"]["autoapproval"])
+
+    def test_curation_treats_unparseable_date_as_worst_in_priority_not_as_recent(self):
+        valid = collector.collect_source(
+            chamber_source("1", 211),
+            candidates={"1": candidate("1")},
+            fetcher=lambda *args, **kwargs: (_ for _ in ()).throw(
+                AssertionError("no fetch")
+            ),
+        )
+        garbage_digits = collector.collect_source(
+            chamber_source("1", 212),
+            candidates={"1": candidate("1")},
+            fetcher=lambda *args, **kwargs: (_ for _ in ()).throw(
+                AssertionError("no fetch")
+            ),
+        )
+        non_numeric = collector.collect_source(
+            chamber_source("1", 213),
+            candidates={"1": candidate("1")},
+            fetcher=lambda *args, **kwargs: (_ for _ in ()).throw(
+                AssertionError("no fetch")
+            ),
+        )
+
+        valid["published_at"] = "2025-05-01"
+        # 8 digits, so a naive digit-count check would accept this — but month 13
+        # does not exist, so it must fall back exactly like a non-date.
+        garbage_digits["published_at"] = "2026-13-40"
+        non_numeric["published_at"] = "data-desconhecida"
+
+        payload, metrics = batching.build_batch(
+            drafts_payload={"drafts": [garbage_digits, non_numeric, valid]},
+            canonical_payload={"entries": []},
+            decisions_payload={"decisions": {}},
+            limit=3,
+            per_candidate_limit=3,
+        )
+
+        # Unparseable dates never disqualify a draft; recency only orders it.
+        self.assertEqual(3, metrics["selected"])
+        self.assertEqual(valid["draft_id"], payload["items"][0]["draft_id"])
+        self.assertFalse(payload["policy"]["autoapproval"])
+
+    def test_curation_tiebreak_on_identical_date_is_deterministic(self):
+        first = collector.collect_source(
+            chamber_source("1", 221),
+            candidates={"1": candidate("1")},
+            fetcher=lambda *args, **kwargs: (_ for _ in ()).throw(
+                AssertionError("no fetch")
+            ),
+        )
+        second = collector.collect_source(
+            chamber_source("1", 222),
+            candidates={"1": candidate("1")},
+            fetcher=lambda *args, **kwargs: (_ for _ in ()).throw(
+                AssertionError("no fetch")
+            ),
+        )
+        first["published_at"] = "2026-04-10"
+        second["published_at"] = "2026-04-10"
+        expected_winner = min(
+            (first, second), key=lambda row: (row["source_url"], row["draft_id"])
+        )
+
+        for _ in range(3):
+            payload, metrics = batching.build_batch(
+                drafts_payload={"drafts": [second, first]},
+                canonical_payload={"entries": []},
+                decisions_payload={"decisions": {}},
+                limit=1,
+                per_candidate_limit=1,
+            )
+            self.assertEqual(1, metrics["selected"])
+            self.assertEqual(expected_winner["draft_id"], payload["items"][0]["draft_id"])
+
+    def test_curation_invalid_date_shares_fallback_bucket_with_absent_date(self):
+        valid = collector.collect_source(
+            chamber_source("1", 231),
+            candidates={"1": candidate("1")},
+            fetcher=lambda *args, **kwargs: (_ for _ in ()).throw(
+                AssertionError("no fetch")
+            ),
+        )
+        # The invalid-date draft's URL/prop_id (239) is lexicographically
+        # *larger* than the absent one's (233). Expecting [valid, absent,
+        # invalid] therefore only holds if invalid and absent share the same
+        # fallback bucket and fall through to the source_url tiebreak; the
+        # pre-fix bug sorted invalid ahead of absent unconditionally
+        # (ignoring source_url), which this ordering would catch.
+        invalid = collector.collect_source(
+            chamber_source("1", 239),
+            candidates={"1": candidate("1")},
+            fetcher=lambda *args, **kwargs: (_ for _ in ()).throw(
+                AssertionError("no fetch")
+            ),
+        )
+        absent = collector.collect_source(
+            chamber_source("1", 233),
+            candidates={"1": candidate("1")},
+            fetcher=lambda *args, **kwargs: (_ for _ in ()).throw(
+                AssertionError("no fetch")
+            ),
+        )
+
+        valid["published_at"] = "2025-03-01"
+        invalid["published_at"] = "2026-13-40"  # non-empty, but no such calendar date
+        absent["published_at"] = ""
+        # Same tiebreak the sort already uses for equal-priority rows, computed
+        # independently of publication_recency_key so this test does not just
+        # restate the implementation.
+        expected_second, expected_third = sorted(
+            (invalid, absent), key=lambda row: (row["source_url"], row["draft_id"])
+        )
+
+        payload, metrics = batching.build_batch(
+            drafts_payload={"drafts": [invalid, absent, valid]},
+            canonical_payload={"entries": []},
+            decisions_payload={"decisions": {}},
+            limit=3,
+            per_candidate_limit=3,
+        )
+
+        self.assertEqual(3, metrics["selected"])
+        got_ids = [item["draft_id"] for item in payload["items"]]
+        self.assertEqual(
+            [valid["draft_id"], expected_second["draft_id"], expected_third["draft_id"]],
+            got_ids,
+        )
+        self.assertFalse(payload["policy"]["autoapproval"])
+
     def test_decision_ledger_has_exactly_154_unique_ids(self):
         payload = json.loads(
             (ROOT / "data/staging/wartime-curation-decisions.json").read_text(
