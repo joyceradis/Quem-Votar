@@ -1,22 +1,30 @@
-# Checkpoint atual — V5.5
+# Checkpoint atual — V5.5 publicada · V6 preparada
 
-Data: 2026-09-25.
+Data: 2026-09-26 (reconciliação pós-#170/#173).
 
-Estado auditado a partir de `main` em `04e2d8d51a1b6c2d9cc8e964e5ae372d32fe614f` (PR #146 já integrado). Este checkpoint é atualizado por PR documental e, por isso, o merge documental subsequente pode avançar o SHA sem alterar o estado de produto descrito.
+Estado auditado a partir de `main` após o merge do PR #173 (Slice A documental). Este checkpoint é atualizado por PR documental e, por isso, o merge documental subsequente pode avançar o SHA sem alterar o estado de produto descrito. Autorização desta reconciliação de caminho protegido: Issue #132 (`Authorization-Issue`).
 
 ## Estado canônico
 
 Branch: `main`.
 
-Versão de produto: `5.5.0` ([`VERSION`](../VERSION)).
+Versão publicada no ar: **V5.5**, assets `?v=5.5.8`. É o que os capixabas veem hoje.
 
-Baseline visual: V5.5.
-
-Cache atual de assets públicos: `5.5.8`.
+Versão preparada para o corte: **V6.0.0** — [`VERSION`](../VERSION) já registra `6.0.0`, mas essa é a versão **preparada**, ainda não publicada. Só passa a valer no corte da Fase 5 (ver "Reconstrução V6" abaixo). Enquanto isso, `VERSION` ≠ cache publicado por desenho.
 
 Feature freeze do núcleo eleitoral vigente até **04/10/2026**.
 
 O produto informa e documenta. Não produz score, ranking, vencedor, previsão eleitoral ou recomendação de voto.
+
+## Reconstrução V6 — Fases 0–4 concluídas, corte date-gated
+
+Rastreamento: Issue #167; detalhe em [`REBUILD_V6.md`](REBUILD_V6.md).
+
+- **Fases 0–4 concluídas e em `main`** (PRs #168 e #170 mergeados): build-time com Eleventy em `src/`, design system, casco compartilhado, as 7 páginas portadas e a verificação (build + `verify` + Playwright desktop/mobile).
+- **Nenhuma superfície pública foi alterada.** `index.html`, `app.js`, `styles.css`, as 7 rotas, `data/`, `social/` seguem V5.5 no ar.
+- **Caminhos protegidos aplicados pelo #170** (Issue #169): `audit-site.py` desacoplado do nome dos arquivos (`public_css`/`public_js`) e job de CI `frontend-v6` no Quality. A auditoria no estado pós-corte simulado passa — o bloqueador do corte deixou de existir.
+- **Fase 5 (corte atômico) date-gated a partir de 04/10/2026** via `scripts/cutover-v6.sh`, que recusa rodar antes. Substitui a superfície pública preservando URLs, parâmetros e contrato JSON.
+- **Item de #169 não aplicável no ambiente do agente:** a troca da origem do Pages para "GitHub Actions" é recusada pelo proxy de rede; não bloqueia o corte (caminho "branch" já previsto).
 
 ## Ficha por três perguntas, navegação e curadoria por recência — #127/#128, #138/#139, #35/#146 (2026-09-24/25, todas mergeadas)
 
@@ -212,18 +220,14 @@ Após o harness do #118, dois slices adicionais foram integrados:
 - Quality e Pages pós-#120: runs `35888011140` e `35888009578` — **PASS**;
 - merge do #120: `fb67c400b3e753add9f8ae6298d9ae5cb8a6dbb7`.
 
-A auditoria de schedule/concurrency da #35 foi registrada, mas **nenhuma mudança de cadência foi aplicada** neste checkpoint.
+A auditoria de schedule/concurrency da #35 foi registrada. **Atualização (#133, concluída):** a cadência do `evidence-industrial` passou de 5 min para horária (cron `23 * * * *`), aplicada pelo PR #170; `workflow_dispatch` segue disponível. Isso resolveu a classe de enfileiramento; não explica os incidentes de reaquisição, que são a #171 (ver War Time).
 
 
 ## Reconciliação de PRs herdados
 
 ### PR #114 / #35
 
-Permanece **OPEN + DRAFT + BLOCKED**.
-
-O diff corrige corretamente o falso positivo que tratava falha de collection/materialização em fonte Câmara como falha de reacquisition. Porém o produtor operacional atual não emite `incident_type=institutional_reacquisition_failure`; portanto o ramo explícito proposto não é alcançável no input real.
-
-Não mergear até existir contrato integrado produtor → guard. Não restaurar a inferência antiga.
+**CLOSED sem merge.** O diff corrigia o falso positivo que tratava falha de collection/materialização em fonte Câmara como falha de reacquisition, mas o produtor operacional não emitia `incident_type=institutional_reacquisition_failure`, tornando o ramo proposto inalcançável no input real. O trabalho de classificação do guard segue vivo como incidente **#171** (ver War Time), com produtor→guard testável; a inferência antiga não deve ser restaurada.
 
 ### PR #115
 
@@ -283,7 +287,7 @@ Estado operacional recente auditado:
 - run `35792402700`: **SUCCESS** e backlog drenado;
 - runs `35803561413` e `35876193462`: processamento chegou a `queued=0`, `eligible=0`, `progressed=0` no primeiro ciclo; o vermelho final continua vindo do mesmo gate de incidentes;
 - `persistent_failures=45`;
-- `actionable_incidents=14` nos runs vermelhos;
+- `actionable_incidents=14` nos runs vermelhos — **agora roteados para a Issue #171** (`[BUG/DATA] Reaquisição Câmara`), incidente de dados separado, fora da lane V6. A mudança de cadência (#133) não os explica: reincidiram no run `36259466128` sobre `main@a6ff744`, com processamento/estado/coverage/cache/artifact verdes e só o gate final vermelho;
 - os 14 continuam reportados como `institutional_reacquisition_failure` com detalhe `conteúdo institucional API insuficiente para revisão`;
 - artifact plenamente auditado do run `35803561413`: `evidence-worker-35803561413`, ID `10726154995`, digest `sha256:214d1a3f01e211413a28c9e808fa7b8fe4bb275c37b703977cddf3f30a040a21`.
 
@@ -406,23 +410,27 @@ O endpoint clássico de branch protection pode retornar 403 para a integração 
 - #127 / PR #128 — ficha reorganizada em HOJE → PROPÕE → IMPACTO, mergeada e publicada;
 - #138 / PR #139 — navegação direta desktop + Home enxuta, mergeada e publicada;
 - PR #146 (#35) — recência dentro da curadoria candidate-fair, mergeada;
+- #133 — cadência do worker de evidências revisada (5 min → horária), aplicada pelo PR #170;
+- #167 / PRs #168, #170 — reconstrução V6, Fases 0–4 concluídas em `main` (corte na Fase 5, date-gated);
+- #132 / PR #173 — reconciliação documental do estado pós-#170 (Slice A).
 
 ### Em andamento
 
 - #2 — expansão de propostas e declarações com fonte;
 - #34 — tracking de escala da pipeline de evidências;
-- #35 — worker contínuo War Time; classificação do cruise guard permanece pendente (ordenação por recência da PR #146 já integrada, separada desta frente);
+- #35 — worker contínuo War Time; classificação do cruise guard permanece pendente, agora rastreada pela #171;
 - #42 — benchmark semântico em shadow mode, disponível para triagem sem autorização de promoção automática;
-- #117 — simplificação operacional em andamento; três slices (#118/#119/#120) integrados; revisão de cadência da #35 permanece separada;
+- #117 — simplificação operacional em andamento; três slices (#118/#119/#120) integrados;
+- #171 — reaquisição Câmara: 14 incidentes acionáveis do worker, lane de dados, `risk:high`, fora da lane V6;
+- #162 — release da baseline V6, `IN PROGRESS`, sem antecipar o corte date-gated.
 
 ### Bloqueada
 
 - #108 — instrumentação GA4 com minimização de dados; #113 fechado sem merge e gate de outbound click não comprovado.
-- #114 / #35 — guard de reacquisition bloqueado até existir sinal operacional produzido e testado end-to-end;
 
 ### Governança
 
-- #44 — Governance Sentinel permanece aberto em `status:ready`; baseline documental reconciliado, implementação do sentinel ainda pendente;
+- #44 — Governance Sentinel permanece aberto em `status:blocked`; baseline documental reconciliado, implementação do sentinel ainda pendente;
 - #43 — decisão de orquestração permanece pós-freeze.
 
 
@@ -480,11 +488,11 @@ A camada de sustentabilidade permanece isolada e não pode modificar `topic-evid
 
 Estado após a arrumação de governança:
 
-1. manter o PR #114 em draft/BLOCKED até existir contrato produtor → guard para `institutional_reacquisition_failure`;
+1. tratar a classificação do guard de reacquisition pela **#171** (PR #114 foi CLOSED sem merge), com contrato produtor → guard testável; não restaurar a inferência antiga;
 2. manter #108 separada: privacidade/GA4/network não voltam para #117 por conveniência;
 3. manter #43 bloqueada até o pós-freeze;
-4. #44 está pronta para implementação futura do Governance Sentinel, sem misturar isso com alterações eleitorais;
-5. a revisão da cadência wartime da #35 fica como **unidade operacional separada**; este checkpoint não altera cron, concurrency ou timeout;
+4. #44 (`status:blocked`) fica para implementação futura do Governance Sentinel, sem misturar isso com alterações eleitorais;
+5. a cadência wartime da #35 foi revisada pela **#133** (horária); o corte da V6 (Fase 5) permanece date-gated até 04/10/2026 e é executado por `scripts/cutover-v6.sh`;
 6. continuar #2/#35 sob os contratos do feature freeze, sem promoção automática de evidência política.
 
 Nenhuma dessas frentes autoriza relaxamento dos gates de `main`.
