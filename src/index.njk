@@ -1,0 +1,91 @@
+---
+layout: base.njk
+permalink: index.html
+title: "Quem Votar? · Espírito Santo 2026"
+description: "Consulte candidaturas a deputado federal e estadual no Espírito Santo, compare informações públicas e confira as fontes."
+bodyPage: home
+pageScript: js/pages/home.js
+extraStyles:
+  - styles/pages/home.css
+---
+<section class="home-hero">
+  {# Ilustração como camada de fundo que sangra para fora da seção — sem
+     caixa, sem coluna fixa. aria-hidden porque é decorativa: tudo que ela
+     comunica já está no texto. #}
+  <div class="home-hero-art" aria-hidden="true">
+    {{ "v6-penha-sketch.svg" | svgInline | safe }}
+  </div>
+
+  <div class="home-hero-copy">
+    <p class="qv-eyebrow">Espírito Santo · Eleições 2026</p>
+    <h1>Entenda uma candidatura em 3 perguntas.</h1>
+    <p class="home-hero-lead">O que a pessoa faz hoje, o que diz que vai fazer e onde isso pode mexer na vida real — sempre com a fonte do lado. Sem nota, sem ranking, sem dizer em quem votar.</p>
+
+    <form class="qv-pill-search" action="candidatos.html" method="get">
+      <label>
+        <span>Cargo</span>
+        <select name="cargo" aria-label="Cargo">
+          <option value="federal">Deputado Federal</option>
+          <option value="estadual">Deputado Estadual</option>
+        </select>
+      </label>
+      <label>
+        <span>Quem você quer entender?</span>
+        <input type="search" name="q" placeholder="Nome, número ou partido" aria-label="Buscar candidatura">
+      </label>
+      <button type="submit">Buscar</button>
+    </form>
+
+    <p class="home-snapshot"><b id="homeTotalCount">—</b> pessoas na base · atualizado em <span data-snapshot-date>—</span> · <a data-tse-source href="https://dadosabertos.tse.jus.br/dataset/candidatos-2026" target="_blank" rel="noopener">dados do TSE</a></p>
+  </div>
+</section>
+
+<section class="home-answers" aria-labelledby="answersTitle">
+  <div class="home-answers-inner">
+    <p class="qv-eyebrow qv-eyebrow--onDark">Vá direto ao ponto</p>
+    <h2 id="answersTitle">Hoje. Propõe. Impacto.</h2>
+    <ol class="home-answer-list">
+      <li>
+        <span>01</span>
+        <h3>O que essa pessoa faz hoje?</h3>
+        <p>Atuação atual, quando existe registro que confirme. Quando não existe, a ficha diz isso com todas as letras.</p>
+      </li>
+      <li>
+        <span>02</span>
+        <h3>O que ela diz que vai fazer?</h3>
+        <p>Propostas e declarações com fonte, data e tipo de evidência. Nada é deduzido a partir do partido ou da profissão.</p>
+      </li>
+      <li>
+        <span>03</span>
+        <h3>Onde isso pode mexer na vida real?</h3>
+        <p>As áreas que o tema documentado toca — quem usa o SUS, quem estuda, quem depende de transporte. É contexto, não recomendação.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<section class="home-topics" hidden>
+  <div class="home-section-head">
+    <div>
+      <p class="qv-eyebrow">Assuntos</p>
+      <h2>O que pega na vida real?</h2>
+    </div>
+    <p>Só aparecem temas com evidência documentada. A ausência de um tema significa que ainda não encontramos registro — não que a candidatura não tenha posição.</p>
+  </div>
+  <div id="homeTopics" class="home-topic-links" aria-live="polite"></div>
+</section>
+
+<section class="home-choices">
+  <a href="candidatos.html?cargo=federal">
+    <strong>Tenho um nome em mente</strong>
+    <span>Buscar por nome, número ou partido</span>
+  </a>
+  <a href="temas.html">
+    <strong>Quero começar por um assunto</strong>
+    <span>Ver os temas com evidência documentada</span>
+  </a>
+  <a href="comparar.html">
+    <strong>Quero comparar</strong>
+    <span>Até 3 candidaturas lado a lado, sem ranking</span>
+  </a>
+</section>

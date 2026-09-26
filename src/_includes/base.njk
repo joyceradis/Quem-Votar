@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#113b56">
+<meta name="description" content="{{ description }}">
+<meta name="qv-asset-version" content="{{ version }}">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<link rel="canonical" href="{{ site.baseUrl }}{{ page.url | replace("/index.html", "/") }}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Quem Votar?">
+<meta property="og:title" content="{{ title }}">
+<meta property="og:description" content="{{ description }}">
+<meta property="og:url" content="{{ site.baseUrl }}{{ page.url | replace("/index.html", "/") }}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{{ title }}">
+<meta name="twitter:description" content="{{ description }}">
+<link rel="icon" href="assets/favicon.svg?v={{ version }}" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+{# Preload só dos subsets latin (o caso normal em português): evita o "flash"
+   de fonte de sistema antes da fonte real carregar. Os latin-ext ficam a
+   cargo do unicode-range, sem preload. #}
+<link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="styles/fonts.css?v={{ version }}">
+<link rel="stylesheet" href="styles/tokens.css?v={{ version }}">
+<link rel="stylesheet" href="styles/base.css?v={{ version }}">
+<link rel="stylesheet" href="styles/components/button.css?v={{ version }}">
+<link rel="stylesheet" href="styles/components/pill-search.css?v={{ version }}">
+<link rel="stylesheet" href="styles/components/tag.css?v={{ version }}">
+<link rel="stylesheet" href="styles/components/card.css?v={{ version }}">
+<link rel="stylesheet" href="styles/components/page.css?v={{ version }}">
+<link rel="stylesheet" href="styles/components/nav.css?v={{ version }}">
+<link rel="stylesheet" href="styles/components/footer.css?v={{ version }}">
+{% for sheet in extraStyles %}<link rel="stylesheet" href="{{ sheet }}?v={{ version }}">
+{% endfor %}
+<title>{{ title }}</title>
+</head>
+<body data-page="{{ bodyPage }}">
+{% include "nav.njk" %}
+<main id="conteudo"{% if mainClass %} class="{{ mainClass }}"{% endif %}>
+{{ content | safe }}
+</main>
+{% include "footer.njk" %}
+{% if pageScript %}<script type="module" src="{{ pageScript }}?v={{ version }}"></script>{% endif %}
+</body>
+</html>

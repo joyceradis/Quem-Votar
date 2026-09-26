@@ -35,3 +35,13 @@ env/
 # OS
 .DS_Store
 .env
+
+# Eleventy build tooling (Fase 0 — Issue #167)
+node_modules/
+_site/
+.cache/
+
+# Playwright e2e (tests-e2e/ — Fase 1/2, Issue #167)
+test-results/
+playwright-report/
+blob-report/

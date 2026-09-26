@@ -1,0 +1,154 @@
+---
+permalink: styleguide.html
+---
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Styleguide — Quem Votar? (uso interno, Fase 1)</title>
+<link rel="stylesheet" href="styles/fonts.css">
+<link rel="stylesheet" href="styles/tokens.css">
+<link rel="stylesheet" href="styles/base.css">
+<link rel="stylesheet" href="styles/components/button.css">
+<link rel="stylesheet" href="styles/components/pill-search.css">
+<link rel="stylesheet" href="styles/components/tag.css">
+<link rel="stylesheet" href="styles/components/card.css">
+<style>
+  /* Só desta página de revisão interna — nunca publicada em produção. */
+  body { padding: 40px max(20px, calc((100vw - var(--max)) / 2)); }
+  section { margin-bottom: 56px; }
+  h2 { font-size: 1.4rem; letter-spacing: -0.02em; }
+  .swatches { display: flex; flex-wrap: wrap; gap: 14px; }
+  .swatch { display: grid; gap: 6px; width: 120px; font-size: 0.72rem; color: var(--muted); }
+  .swatch i { display: block; height: 56px; border-radius: var(--radius-sm); border: 1px solid var(--line); }
+  .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .hero-preview { display: grid; grid-template-columns: minmax(0,1fr) 300px; gap: 32px; align-items: center; }
+  .hero-preview img { width: 100%; }
+  .type-option { padding: 22px 0; border-top: 1px solid var(--line); }
+  .type-option > small { display: block; margin-bottom: 8px; color: var(--muted); font-size: .72rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+  .type-option p { margin: 6px 0 0; max-width: 62ch; color: var(--ink-soft); font-size: .95rem; }
+  /* mais específico que `.type-option p` abaixo, senão o espécime herda o
+     tamanho do texto de apoio */
+  .type-option .specimen { margin: 0; font-size: clamp(2rem, 4.2vw, 3.1rem); line-height: 1.05; letter-spacing: -.03em; color: var(--ink); }
+  .opt-inter-text .specimen { font-family: var(--font-sans); }
+  .opt-bricolage .specimen { font-family: var(--font-display); font-optical-sizing: auto; }
+  .scale-row { display: grid; gap: 10px; }
+  .scale-row span { color: var(--muted); font-size: .7rem; }
+</style>
+</head>
+<body>
+<p class="qv-tag" style="margin-bottom:24px">Fase 1 — uso interno, não é uma rota pública</p>
+
+<section>
+  <h2>Cor</h2>
+  <div class="swatches">
+    <div class="swatch"><i style="background:var(--blue)"></i>--blue</div>
+    <div class="swatch"><i style="background:var(--blue-strong)"></i>--blue-strong</div>
+    <div class="swatch"><i style="background:var(--blue-dark)"></i>--blue-dark</div>
+    <div class="swatch"><i style="background:var(--blue-soft)"></i>--blue-soft</div>
+    <div class="swatch"><i style="background:var(--pink)"></i>--pink</div>
+    <div class="swatch"><i style="background:var(--pink-strong)"></i>--pink-strong</div>
+    <div class="swatch"><i style="background:var(--pink-soft)"></i>--pink-soft</div>
+    <div class="swatch"><i style="background:var(--ink)"></i>--ink</div>
+  </div>
+</section>
+
+<section>
+  <h2>Tipografia</h2>
+  <p style="color:var(--muted);font-size:.85rem;max-width:62ch"><b>Bricolage Grotesque</b> nos títulos, <b>Inter</b> no texto, interface e dados. Auto-hospedadas, OFL-1.1, sem requisição a terceiros. As serifadas testadas foram descartadas por legibilidade em tela pequena — ver <code>assets/fonts/README.md</code>.</p>
+
+  <div class="type-option opt-bricolage">
+    <small>Títulos · Bricolage Grotesque</small>
+    <p class="specimen">Entenda uma candidatura em 3 perguntas.</p>
+  </div>
+
+  <div class="type-option opt-inter-text">
+    <small>Texto · Inter</small>
+    <p style="max-width:62ch;font-size:1rem;color:var(--ink)">Propostas e declarações sempre com fonte, data e tipo de evidência. Quando não há registro, o site diz que não há — nunca preenche a lacuna com suposição.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Escala de texto (Inter)</h2>
+  <div class="scale-row">
+    <div><span>1.48rem · nome na listagem</span><div style="font-size:1.48rem;font-weight:800;letter-spacing:-.03em">Maria da Penha Santos</div></div>
+    <div><span>1rem · texto corrido</span><div style="font-size:1rem">Propostas e declarações sempre com fonte, data e tipo de evidência.</div></div>
+    <div><span>0.82rem · apoio</span><div style="font-size:.82rem;color:var(--muted)">Atuação atual ainda não confirmada nesta base.</div></div>
+    <div><span>0.7rem · rótulo</span><div style="font-size:.7rem;font-weight:900;letter-spacing:.09em;color:var(--blue-strong)">DEPUTADO ESTADUAL · Nº 00000</div></div>
+  </div>
+</section>
+
+<section>
+  <h2>Ilustração aprovada (assets/v6-penha-sketch.svg — esboço técnico)</h2>
+  <p style="color:var(--muted);font-size:.85rem;max-width:62ch">Tabuleiro em perspectiva pousando na encosta do Morro da Penha, pilares com sombreado, hachura no morro, barco na água. É esta que vai para o rodapé como marca d'água e é a candidata ao Home. Integração real ao Home é Fase 3.</p>
+  <div class="hero-preview">
+    <div>
+      <p class="eyebrow" style="color:var(--blue-strong);font-weight:900;font-size:.7rem;letter-spacing:.14em">ESPÍRITO SANTO · ELEIÇÕES 2026</p>
+      <h1 style="font-size:2.4rem;margin:.3em 0">Entenda uma candidatura em 3 perguntas.</h1>
+    </div>
+    <img src="assets/v6-penha-sketch.svg" alt="">
+  </div>
+</section>
+
+<section>
+  <h2>Ilustração alternativa (assets/v6-penha-line.svg — single-line art)</h2>
+  <p style="color:var(--muted);font-size:.85rem;max-width:62ch">Versão minimalista, mantida como alternativa para usos pequenos (favicon, cabeçalho, og:image) onde o esboço detalhado não sobreviveria à redução.</p>
+  <div class="hero-preview">
+    <div></div>
+    <img src="assets/v6-penha-line.svg" alt="">
+  </div>
+</section>
+
+<section>
+  <h2>Botões</h2>
+  <div class="row">
+    <button class="qv-btn">Padrão</button>
+    <button class="qv-btn qv-btn--primary">Primário</button>
+    <button class="qv-btn qv-btn--ghost">Fantasma</button>
+    <button class="qv-btn qv-btn--selected">Selecionado (Comparar)</button>
+    <button class="qv-btn" disabled>Desabilitado</button>
+  </div>
+</section>
+
+<section>
+  <h2>Busca em pílula</h2>
+  <form class="qv-pill-search" action="#" onsubmit="return false">
+    <label><span>Cargo</span>
+      <select><option>Deputado Federal</option><option>Deputado Estadual</option></select>
+    </label>
+    <label><span>Quem você quer entender?</span>
+      <input type="search" placeholder="Nome, número ou partido">
+    </label>
+    <button type="submit">Buscar</button>
+  </form>
+</section>
+
+<section>
+  <h2>Rótulos de tema</h2>
+  <p style="color:var(--muted);font-size:.85rem;max-width:62ch">Texto com traço fino, não pílula preenchida: um selo colorido seria lido como “aprovado nesse tema”, e tema aqui só significa que existe evidência documentada.</p>
+  <ul class="qv-tag-list">
+    <li><span class="qv-tag">Saúde</span></li>
+    <li><span class="qv-tag">Educação</span></li>
+    <li><span class="qv-tag qv-tag--more">+2 temas</span></li>
+  </ul>
+</section>
+
+<section>
+  <h2>Linha de listagem</h2>
+  <div class="qv-card">
+    <div class="qv-card-photo" aria-hidden="true"></div>
+    <div class="qv-card-body">
+      <p class="qv-card-kicker">DEPUTADO ESTADUAL · Nº 00000</p>
+      <h3>Nome de exemplo</h3>
+      <div class="qv-card-tags">
+        <span class="qv-tag">Saúde</span>
+        <span class="qv-tag">Segurança pública</span>
+        <span class="qv-tag qv-tag--more">+1 tema</span>
+      </div>
+    </div>
+    <div><a class="qv-btn qv-btn--ghost" href="#">Ver ficha</a></div>
+  </div>
+</section>
+</body>
+</html>

@@ -1,0 +1,37 @@
+{# Fat Footer institucional — fonte única, substitui o rodapé fino duplicado
+   em 6 dos 7 HTML públicos hoje (apoio.html tem o seu próprio, que a
+   Fase 3 unifica). data-snapshot-date/data-tse-source continuam sendo
+   preenchidos em runtime por core/data.js (applyGlobalMeta), não aqui. #}
+<footer class="qv-fat-footer">
+  <div class="qv-fat-footer-illustration" aria-hidden="true">
+    {{ "v6-penha-sketch.svg" | svgInline | safe }}
+  </div>
+  <div class="qv-fat-footer-grid">
+    <div class="qv-fat-footer-brand">
+      <strong>Quem Votar? · Espírito Santo 2026</strong>
+      <p>Informação pública, em linguagem normal — sem ranking, sem recomendação de voto.</p>
+      <a href="apoio.html">Apoie o projeto</a>
+    </div>
+    <div class="qv-fat-footer-col">
+      <h3>Navegar</h3>
+      {% for link in navLinks %}
+      <a href="{{ link.href }}">{{ link.label }}</a>
+      {% endfor %}
+    </div>
+    <div class="qv-fat-footer-col">
+      <h3>Sobre</h3>
+      <a href="sobre.html">Como funciona</a>
+      <a href="sobre.html#fontes">Fontes e metodologia</a>
+      <a href="apoio.html">Transparência e apoio</a>
+    </div>
+    <div class="qv-fat-footer-meta">
+      <h3>Data dos dados</h3>
+      <span>Atualizado em <b data-snapshot-date>—</b></span>
+      <a data-tse-source href="https://dadosabertos.tse.jus.br/dataset/candidatos-2026" target="_blank" rel="noopener">Dados do TSE</a>
+    </div>
+  </div>
+  <div class="qv-fat-footer-legal">
+    <span>Licença AGPL-3.0-only do software · dados sujeitos aos termos das fontes originais.</span>
+    <span>Feito no ES, para entender o ES.</span>
+  </div>
+</footer>

@@ -1,0 +1,271 @@
+/*
+ * Home — Fase 3.
+ *
+ * Duas mudanças de direção vindas do feedback da mantenedora:
+ *
+ * 1. A ilustração deixa de morar numa coluna fixa ao lado do texto e passa a
+ *    ser uma camada de fundo que sangra para fora da seção. Não há mais
+ *    "divisão fixa" entre copy e imagem.
+ * 2. O ritmo da página alterna claro/escuro (hero claro → respostas em navy →
+ *    assuntos claro → rodapé navy), em vez de branco do topo ao fim.
+ */
+
+.home-hero {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(48px, 7vw, 104px) 0 clamp(40px, 5vw, 72px);
+}
+
+.home-hero-art {
+  position: absolute;
+  z-index: 0;
+  right: -4%;
+  bottom: 4%;
+  width: min(720px, 64%);
+  opacity: 0.55;
+  pointer-events: none;
+  user-select: none;
+}
+
+.home-hero-art svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.home-hero-copy {
+  position: relative;
+  z-index: 1;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding-inline: max(20px, calc((100vw - var(--max)) / 2));
+}
+
+.home-hero h1 {
+  margin: 0;
+  max-width: 17ch;
+  font-size: clamp(2.6rem, 6.2vw, 4.6rem);
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+}
+
+.home-hero-lead {
+  max-width: 54ch;
+  margin: 20px 0 32px;
+  color: var(--ink-soft);
+  font-size: clamp(1rem, 1.5vw, 1.12rem);
+  line-height: 1.55;
+}
+
+.home-snapshot {
+  margin: 16px 0 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.home-snapshot b {
+  color: var(--ink);
+}
+
+.home-snapshot a {
+  color: var(--blue-strong);
+  font-weight: 700;
+}
+
+/* Seção escura: contraste real no meio da página, não só no rodapé. */
+.home-answers {
+  background: var(--blue-dark);
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.home-answers-inner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(56px, 7vw, 96px) max(20px, calc((100vw - var(--max)) / 2));
+}
+
+.home-answers h2 {
+  margin: 0 0 clamp(28px, 4vw, 48px);
+  max-width: 14ch;
+  color: #fff;
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+
+.home-answer-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(24px, 3vw, 44px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: none;
+}
+
+.home-answer-list li {
+  padding-top: 18px;
+  border-top: 2px solid rgba(255, 255, 255, 0.22);
+}
+
+.home-answer-list span {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--pink);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.home-answer-list h3 {
+  margin: 0 0 8px;
+  color: #fff;
+  font-size: 1.28rem;
+  line-height: 1.15;
+}
+
+.home-answer-list p {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+/* Assuntos */
+.home-topics {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(48px, 6vw, 88px) max(20px, calc((100vw - var(--max)) / 2));
+}
+
+.home-topics[hidden] {
+  display: none;
+}
+
+.home-section-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.8fr);
+  gap: clamp(20px, 4vw, 52px);
+  align-items: end;
+  margin-bottom: 32px;
+}
+
+.home-section-head h2 {
+  margin: 0;
+  font-size: clamp(2rem, 4.4vw, 3.4rem);
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+
+.home-section-head > p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.home-topic-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 0;
+  border-top: 1px solid var(--line);
+}
+
+/* Linhas editoriais, não cartões: divisor fino em vez de caixa por tema. */
+.home-topic-links a {
+  display: grid;
+  gap: 4px;
+  padding: 18px 16px 18px 0;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+  transition: color var(--motion-fast) ease;
+}
+
+.home-topic-links a:hover strong,
+.home-topic-links a:focus-visible strong {
+  color: var(--blue-strong);
+}
+
+.home-topic-links strong {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
+}
+
+.home-topic-links small {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+/* Três caminhos */
+.home-choices {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 max(20px, calc((100vw - var(--max)) / 2)) clamp(56px, 7vw, 96px);
+}
+
+.home-choices a {
+  display: grid;
+  gap: 6px;
+  align-content: start;
+  padding: 28px 24px 28px 0;
+  border-top: 1px solid var(--line);
+  text-decoration: none;
+}
+
+.home-choices strong {
+  font-family: var(--font-display);
+  font-size: 1.12rem;
+  letter-spacing: -0.02em;
+  color: var(--blue-dark);
+}
+
+.home-choices span {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.home-choices a:hover strong,
+.home-choices a:focus-visible strong {
+  color: var(--pink-strong);
+}
+
+@media (max-width: 920px) {
+  .home-answer-list,
+  .home-choices {
+    grid-template-columns: 1fr;
+  }
+
+  .home-section-head {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  /* No mobile a arte vai para o rodapé do hero, abaixo da busca: continua
+     ambientando sem competir com o título nem com o campo de texto. */
+  .home-hero {
+    padding-bottom: clamp(96px, 34vw, 160px);
+  }
+
+  .home-hero-art {
+    right: -10%;
+    bottom: -2%;
+    width: 108%;
+    opacity: 0.4;
+  }
+
+  .home-choices a {
+    padding-right: 0;
+  }
+}
+
+@media (max-width: 620px) {
+  .home-hero {
+    padding-top: 32px;
+  }
+
+  .home-hero-lead {
+    margin-bottom: 26px;
+  }
+}
