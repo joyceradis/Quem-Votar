@@ -4,6 +4,7 @@
 // tests/test_accessibility_contract.py hoje em produção — porte formal para
 // o app real acontece página por página na Fase 3.
 const { test, expect } = require("@playwright/test");
+const { coletarErros } = require("./externo");
 
 test.describe("casco compartilhado — /preview-shell/", () => {
   test("nav responde ao breakpoint (desktop vs. hambúrguer)", async ({ page }) => {
@@ -46,14 +47,7 @@ test.describe("casco compartilhado — /preview-shell/", () => {
   });
 
   test("carrega sem erro de console nem requisição quebrada", async ({ page }) => {
-    const errors = [];
-    page.on("pageerror", (err) => errors.push(String(err)));
-    page.on("console", (msg) => {
-      if (msg.type() === "error") errors.push(msg.text());
-    });
-    page.on("response", (res) => {
-      if (!res.ok()) errors.push(`${res.status()} ${res.url()}`);
-    });
+    const errors = coletarErros(page);
 
     await page.goto("preview-shell.html");
     await page.waitForLoadState("networkidle");
@@ -64,11 +58,7 @@ test.describe("casco compartilhado — /preview-shell/", () => {
 
 test.describe("design system — /styleguide/", () => {
   test("componentes principais renderizam", async ({ page }) => {
-    const errors = [];
-    page.on("pageerror", (err) => errors.push(String(err)));
-    page.on("console", (msg) => {
-      if (msg.type() === "error") errors.push(msg.text());
-    });
+    const errors = coletarErros(page);
 
     await page.goto("styleguide.html");
 

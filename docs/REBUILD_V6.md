@@ -350,7 +350,10 @@ corte, passaria a medir a pasta `styles/`+`js/` publicada. As asserções que
 dependem do texto *minificado* viram regex tolerante a espaço — medem a
 regra, não a formatação.
 
-**Essa mudança não está neste PR.** `scripts/audit-site.py` e
+**Aplicada em 2026-09-26, autorizada pela Issue #169.** O texto abaixo descreve
+o motivo; o parágrafo seguinte registra o que a aplicação revelou.
+
+_Histórico:_ `scripts/audit-site.py` e
 `.github/workflows/` são caminhos protegidos pela Cerca Elétrica, que exige
 uma Issue de autorização aberta pela mantenedora, com rótulos
 `decision-recorded` + `risk:high` e uma decisão explícita dela em comentário.
@@ -390,3 +393,67 @@ O corte da Fase 5 é um comando só, com trava de data (recusa rodar antes de
 superfície pública, regeração dos stubs sociais e auditoria pós-corte. O
 commit final continua sendo manual e único, como exige
 `docs/DELIVERY_GOVERNANCE.md`.
+
+
+## O que a simulação do corte revelou
+
+Antes de aplicar o patch autorizado por #169, simulei o estado pós-corte na
+árvore de trabalho: `styles.css` e `app.js` removidos, `styles/` e `js/` e os
+sete HTML vindos de `_site/`. Rodar a auditoria nesse estado encontrou três
+problemas que nenhuma leitura de código tinha achado — e que teriam quebrado
+o corte no dia 04/10, com o site já no ar.
+
+### 1. Contrato de versão dos assets
+
+`audit-site.py` exigia `styles.css?v=N` **e** `app.js?v=N`, por nome. Na V6 são
+várias folhas em `styles/` e vários módulos em `js/`. A regra que importa —
+"todo CSS e JS da aplicação carrega com `?v=` explícito, numa única versão em
+todo o site" — foi reescrita sem depender de nome de arquivo.
+
+`telemetry.js` ficou explicitamente de fora: é versionado à parte (`?v=1`) de
+propósito, com ciclo de vida próprio, e não faz parte do pacote da aplicação.
+
+### 2. `VERSION` andava para trás
+
+`VERSION` era `5.5.0`; a produção publica `?v=5.5.8`. Como a V6 passou a ter
+`VERSION` como fonte única do cache-bust — justamente a correção de três
+valores divergentes —, o corte teria publicado assets com versão **menor** que
+a atual. O navegador de quem já visitou o site não invalidaria o cache: CSS e
+JS novos, HTML novo, e o navegador servindo o antigo. `VERSION` foi para
+`6.0.0`.
+
+### 3. A V6 tinha perdido a telemetria
+
+As 7 páginas de produção carregam `telemetry.js`; nenhuma página da V6
+carregava. O corte teria desligado a medição de audiência silenciosamente.
+Restaurada em `base.njk`, na mesma posição e com a mesma versão.
+
+Nada disso aparecia em revisão de código, em teste de página ou em CI. Só
+aparece quando se coloca a árvore no estado exato do dia do corte e se roda o
+que roda naquele dia. Fica como método para a Fase 5, não como episódio.
+
+## Testes: coletor de erro unificado
+
+Três specs tinham cada uma o seu coletor de `pageerror`/`console`/`response`, e
+`candidates.spec.js` ainda trazia um filtro de "ruído externo" próprio, que
+ignorava *qualquer* mensagem com `Failed to load resource` — inclusive de asset
+nosso.
+
+Agora há um `tests-e2e/externo.js` só. O critério de "terceiro" é a **origem**,
+não uma lista de domínios: os retratos das candidaturas já migraram de host uma
+vez, e um teste preso a lista desatualizada passa a ignorar o que deveria pegar.
+Verificado pelos dois lados: com o filtro ativo, uma folha de estilo nossa
+inexistente continua reprovando o teste.
+
+## GitHub Pages: origem não alterada
+
+A troca da origem do Pages para "GitHub Actions" foi autorizada em #169, mas
+**não foi feita**: a API de configuração do Pages
+(`PUT /repos/{owner}/{repo}/pages`) é recusada pelo proxy de rede do ambiente
+do agente, com `403`, e nenhuma ferramenta disponível cobre essa configuração.
+
+Isso não bloqueia o corte. Com a origem em "branch", `scripts/cutover-v6.sh`
+escreve a saída do build nos caminhos atuais e o Pages publica como sempre —
+exatamente o caminho alternativo já previsto no plano, que não exige nenhuma
+mudança de configuração. A troca continua possível depois, com calma, e sem
+prazo.

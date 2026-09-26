@@ -3,6 +3,7 @@
 // (data-page, <h1> com conteúdo, type="search"+name="q", data-snapshot-date,
 // ausência de listagem concentrada) e o que o `AGENTS.md` exige do conteúdo.
 const { test, expect } = require("@playwright/test");
+const { coletarErros } = require("./externo");
 
 test.describe("Home", () => {
   test.beforeEach(async ({ page }) => {
@@ -83,14 +84,7 @@ test.describe("Home", () => {
   });
 
   test("carrega sem erro de console nem requisição quebrada", async ({ page }) => {
-    const errors = [];
-    page.on("pageerror", (err) => errors.push(String(err)));
-    page.on("console", (msg) => {
-      if (msg.type() === "error") errors.push(msg.text());
-    });
-    page.on("response", (res) => {
-      if (!res.ok()) errors.push(`${res.status()} ${res.url()}`);
-    });
+    const errors = coletarErros(page);
 
     await page.reload({ waitUntil: "networkidle" });
     expect(errors).toEqual([]);

@@ -4,14 +4,7 @@
 // dependem os links compartilhados e os 548 stubs de /social/) e o funil de
 // comparação com teto de 3.
 const { test, expect } = require("@playwright/test");
-
-// As fotos das candidaturas vêm de host externo do TSE, inacessível no
-// sandbox de CI. Falha de imagem externa não é defeito da página — o
-// fallback textual é justamente o comportamento esperado — então o filtro
-// abaixo ignora só isso, e nada mais.
-const ruidoExterno = (texto) =>
-  /ERR_TUNNEL_CONNECTION_FAILED|ERR_NAME_NOT_RESOLVED|ERR_CONNECTION/.test(texto) ||
-  /Failed to load resource/.test(texto);
+const { coletarErros } = require("./externo");
 
 test.describe("Listagem de candidaturas", () => {
   test.beforeEach(async ({ page }) => {
@@ -94,11 +87,7 @@ test.describe("Listagem de candidaturas", () => {
   });
 
   test("sem erro de script (ruído de imagem externa ignorado)", async ({ page }) => {
-    const errors = [];
-    page.on("pageerror", (err) => errors.push(String(err)));
-    page.on("console", (msg) => {
-      if (msg.type() === "error" && !ruidoExterno(msg.text())) errors.push(msg.text());
-    });
+    const errors = coletarErros(page);
 
     await page.reload();
     await expect(page.locator("#resultCount")).not.toHaveText("Carregando…");
