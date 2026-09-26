@@ -107,3 +107,34 @@ Nenhum arquivo público foi alterado por esta frente.
 
 Confirmado em CI (não só localmente): `Qualidade do site` e
 `🛑 Inspetor de Regras da IA` verdes no commit `9ea2785` (PR #168).
+
+**Revisão de direção de arte (feedback direto da mantenedora sobre a Fase 1).**
+
+- Nova ilustração `assets/v6-penha-line.svg` (+ variante clara
+  `assets/v6-penha-line-watermark.svg` para uso sobre fundo escuro):
+  single-line art, traço 1.2px azul-marinho, `fill:none`, sem sombra/
+  hachura. Três elementos: vão da Terceira Ponte com pilares retos
+  tracejados (sem cabos estaiados), domo único do Morro da Penha, e o
+  Convento no topo (retângulo + triângulo + cruz centralizada, cruz em
+  rosa como único destaque de cor) sobre uma linha de mar cinza-clara.
+  Substitui a ilustração anterior, que não agradou.
+- **Correção de processo:** a primeira tentativa desta ilustração
+  sobrescreveu `assets/capixaba-line.svg` — que já está ao vivo em
+  produção (usado no hero do `index.html` atual). Isso violava o
+  compromisso de não tocar nenhum arquivo público antes da Fase 5. Foi
+  revertido imediatamente (`git checkout -- assets/capixaba-line.svg`) e a
+  nova ilustração foi movida para um caminho próprio da V6
+  (`assets/v6-*.svg`), sem colidir com nada em produção. Daqui para frente,
+  todo asset novo/experimental usa o prefixo `v6-` até o corte da Fase 5.
+- Fat Footer institucional novo (`src/_includes/footer.njk` +
+  `src/styles/components/footer.css`): várias colunas de link (Navegar,
+  Sobre, Snapshot) sobre fundo escuro (`--blue-dark`), com a ilustração
+  como marca d'água em opacidade 0.15 na última coluna
+  (`.qv-fat-footer-illustration`). Responde também ao feedback de
+  contraste fraco/excesso de branco, já que introduz uma seção escura real
+  na página.
+- **Pendente de referência visual:** fonte tipográfica, formato das tags de
+  tema e o modo exato de integrar a ilustração no Home (sem uma divisão
+  fixa em caixa) ficam para quando a mantenedora compartilhar as
+  referências salvas — não foram redesenhados por palpite para evitar
+  repetir o mesmo problema que motivou esta reconstrução.

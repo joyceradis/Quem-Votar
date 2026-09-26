@@ -1,33 +1,131 @@
-/* Rodapé — portado literalmente de styles.css:40. */
-.site-footer {
+/*
+ * Fat Footer institucional — substitui o rodapé fino anterior por um
+ * padrão comum em portais de governo/jornalismo: várias colunas de link
+ * organizadas sem poluir a tela, com a ilustração regional como marca
+ * d'água na última coluna (opacity baixa sobre fundo escuro), sem roubar
+ * atenção da navegação real. Fundo escuro também responde ao feedback de
+ * "contraste fraco, muito branco" na Home.
+ */
+.qv-fat-footer {
+  position: relative;
+  overflow: hidden;
+  background: var(--blue-dark);
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.qv-fat-footer-illustration {
+  position: absolute;
+  right: -60px;
+  bottom: -40px;
+  width: min(560px, 60vw);
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+.qv-fat-footer-illustration svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.qv-fat-footer-grid {
+  position: relative;
+  z-index: 1;
   max-width: var(--max);
   margin: 0 auto;
-  padding: 30px 24px calc(44px + env(safe-area-inset-bottom, 0px));
-  border-top: 1px solid var(--line);
-  display: flex;
-  justify-content: space-between;
-  gap: 30px;
-  color: var(--muted);
-  font-size: 0.76rem;
-}
-
-.site-footer > div {
+  padding: 56px 24px calc(32px + env(safe-area-inset-bottom, 0px));
   display: grid;
-  gap: 2px;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  gap: 40px;
 }
 
-.site-footer strong {
-  color: var(--ink);
+.qv-fat-footer-brand strong {
+  display: block;
+  color: #fff;
+  font-size: 1.05rem;
+  margin-bottom: 10px;
 }
 
-.site-footer a {
-  color: var(--blue-strong);
-  font-weight: 850;
+.qv-fat-footer-brand p {
+  margin: 0 0 16px;
+  max-width: 34ch;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.qv-fat-footer-col h3 {
+  margin: 0 0 14px;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.qv-fat-footer-col,
+.qv-fat-footer-meta {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+  font-size: 0.85rem;
+}
+
+.qv-fat-footer a {
+  color: rgba(255, 255, 255, 0.86);
   text-decoration: none;
 }
 
+.qv-fat-footer a:hover,
+.qv-fat-footer a:focus-visible {
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.qv-fat-footer-brand a {
+  font-weight: 800;
+  color: var(--pink);
+}
+
+.qv-fat-footer-legal {
+  position: relative;
+  z-index: 1;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 18px 24px calc(24px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+@media (max-width: 920px) {
+  .qv-fat-footer-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
 @media (max-width: 620px) {
-  .site-footer {
+  .qv-fat-footer-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding: 40px 20px 24px;
+  }
+
+  .qv-fat-footer-legal {
     flex-direction: column;
+    gap: 6px;
+  }
+
+  .qv-fat-footer-illustration {
+    width: 70vw;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .qv-fat-footer-illustration {
+    transition: opacity var(--motion-base) ease;
   }
 }
