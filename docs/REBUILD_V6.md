@@ -340,3 +340,45 @@ a **saída do build** e não contra o texto-fonte dos arquivos:
 Estado da Fase 4: `npm run build && npm run verify` OK (635 arquivos),
 `npx playwright test` 84 passando / 2 pulados, `scripts/audit-site.py` OK,
 zero arquivo de produção alterado.
+
+### O que ainda trava o corte (Fase 5)
+
+`scripts/audit-site.py` agora resolve a superfície pública em vez de ler um
+arquivo de nome fixo (`public_css()` / `public_js()`): enquanto `styles.css` e
+`app.js` existirem na raiz, ele mede exatamente o que media antes; depois do
+corte, passa a medir a pasta `styles/`+`js/` publicada. As asserções que
+dependiam do texto *minificado* viraram regex tolerante a espaço — medem a
+regra, não a formatação.
+
+Restam **6 asserções que leem o texto-fonte do `app.js`** e não sobrevivem à
+modularização, porque medem implementação e não comportamento:
+
+| Asserção | Coberta hoje por |
+| --- | --- |
+| as três perguntas da ficha | `profile.spec.js` — ordem normativa |
+| `id="dados-eleitorais"` depois de `id="impacto"` | `profile.spec.js` — ordem normativa |
+| `type==="proposta"\|\|type==="declaracao"` | `profile.spec.js` — PROPÕE só aceita proposta/declaração |
+| `evidence_type==="atuacao"` com lane própria | `profile.spec.js` — atuação vai para histórico |
+| `prospectiveThematicEvidence` / `actionThematicEvidence` | idem |
+| nomes das funções `init*` | o casco é verificado em `pages.spec.js` nas 7 páginas |
+
+A troca é substituir cada `assert ... in app` pelo teste de comportamento
+correspondente, que já existe e já roda. Como `scripts/audit-site.py` é
+caminho protegido por CODEOWNERS, isso é uma decisão da mantenedora e está
+registrada aqui para ser feita no PR do corte, não antes.
+
+### Linguagem fácil
+
+O rodapé trazia a coluna **"Snapshot"** — palavra em inglês, em todas as sete
+páginas, para um público de eleitores capixabas. Virou **"Data dos dados"**.
+O restante do vocabulário técnico (`metodologia`, `proveniência`) só aparece
+em links para as páginas que existem justamente para explicá-lo, nunca no
+caminho principal de quem só quer achar uma candidatura.
+
+### `scripts/cutover-v6.sh`
+
+O corte da Fase 5 é um comando só, com trava de data (recusa rodar antes de
+2026-10-04): build, `verify`, suíte de comportamento, substituição da
+superfície pública, regeração dos stubs sociais e auditoria pós-corte. O
+commit final continua sendo manual e único, como exige
+`docs/DELIVERY_GOVERNANCE.md`.

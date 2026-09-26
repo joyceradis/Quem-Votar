@@ -40,3 +40,44 @@ jobs:
 
       - name: Auditar contratos de dados, interface e entrega
         run: python scripts/audit-site.py
+
+  # Frente V6 (Issue #167): build do Eleventy + contratos de comportamento.
+  # Roda em paralelo à auditoria e não toca em nada publicado — a saída do
+  # build é descartada ao fim do job. Authorization-Issue: #167
+  frontend-v6:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Verificar a saída do build
+        # Pega o que teste de página não pega: caminho absoluto que quebra sob
+        # o subcaminho /Quem-Votar/, arquivo público faltando na saída,
+        # referência quebrada e página interna vazando para o público.
+        run: npm run verify
+
+      - name: Instalar navegador do Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: Testes de comportamento (desktop e mobile)
+        run: npm run test:e2e
+
+      - name: Guardar relatório em caso de falha
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7

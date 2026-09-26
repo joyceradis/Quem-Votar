@@ -5,7 +5,7 @@
   "description": "Build tooling (Eleventy) for the Quem Votar? static frontend. Output remains plain HTML/CSS/JS for GitHub Pages — no framework ships to the browser.",
   "scripts": {
     "start": "QV_DEV=1 eleventy --serve",
-    "build": "eleventy",
+    "build": "rm -rf _site && eleventy",
     "test:e2e": "playwright test",
     "verify": "node scripts/verify-build.mjs"
   },

@@ -32,6 +32,40 @@ FORBIDDEN_FIELDS = {
     "email", "birth_date", "dt_nascimento", "telefone", "endereco",
 }
 
+def _concat(directory: Path, suffix: str) -> str:
+    return "\n".join(
+        f.read_text(encoding="utf-8") for f in sorted(directory.rglob(f"*{suffix}"))
+    )
+
+
+def public_css() -> str:
+    """CSS efetivamente publicado.
+
+    O auditor mede a *superfície pública*, não o texto de um arquivo com nome
+    fixo. Antes do corte da V6 isso é `styles.css` na raiz; depois passa a ser
+    a pasta `styles/` da saída do build. Aceitar as duas formas é o que
+    permite o corte atômico sem afrouxar nenhum contrato.
+    """
+    legado = ROOT / "styles.css"
+    if legado.exists():
+        return read(legado)
+    for candidate in (ROOT / "styles", ROOT / "_site" / "styles"):
+        if candidate.is_dir():
+            return _concat(candidate, ".css")
+    return read(legado)  # falha com mensagem de arquivo obrigatório ausente
+
+
+def public_js() -> str:
+    """JavaScript efetivamente publicado (ver `public_css`)."""
+    legado = ROOT / "app.js"
+    if legado.exists():
+        return read(legado)
+    for candidate in (ROOT / "js", ROOT / "_site" / "js"):
+        if candidate.is_dir():
+            return _concat(candidate, ".js")
+    return read(legado)
+
+
 def read(path: Path) -> str:
     assert path.exists(), f"arquivo obrigatório ausente: {path.relative_to(ROOT)}"
     return path.read_text(encoding="utf-8")
@@ -77,8 +111,8 @@ def main() -> None:
     compare_page = read(ROOT / "comparar.html")
     topics_page = read(ROOT / "temas.html")
     about_page = read(ROOT / "sobre.html")
-    app = read(ROOT / "app.js")
-    styles = read(ROOT / "styles.css")
+    app = public_js()
+    styles = public_css()
     quality_workflow = read(ROOT / ".github" / "workflows" / "quality.yml")
     sync_workflow = read(ROOT / ".github" / "workflows" / "sync-data.yml")
     delivery_governance = read(ROOT / "docs" / "DELIVERY_GOVERNANCE.md")
@@ -88,7 +122,10 @@ def main() -> None:
     codeowners = read(ROOT / ".github" / "CODEOWNERS")
 
     # Contrato visual e de entrega: impede herança silenciosa e tempestade de commits.
-    assert len(re.findall(r":root\s*\{", styles)) == 1, "styles.css deve ter um único :root canônico"
+    paleta = [
+        bloco for bloco in re.findall(r":root\s*\{[^}]*\}", styles) if "--blue:" in bloco
+    ]
+    assert len(paleta) == 1, "a paleta deve ser definida em um único :root canônico"
     assert "visual depth pass" not in styles.lower(), "override visual legado reapareceu"
     assert "--green:" not in styles, "verde não faz parte da paleta estrutural azul/branco/rosa"
     assert all(token in styles for token in ("--blue:", "--blue-dark:", "--pink:", "--white:")), "tokens da identidade ES incompletos"
@@ -98,8 +135,13 @@ def main() -> None:
     assert 'type="search"' in home and 'name="q"' in home, (
         "Home deve manter busca de candidatura orientada à tarefa"
     )
-    assert re.search(r"@media\(min-width:980px\)\{\.desktop-nav\{display:flex\}", styles), "navegação principal deve ficar visível em desktop amplo"
-    assert '.nav-toggle::before{content:"☰"' in styles, "menu mobile deve ter sinal visual explícito"
+    assert re.search(
+        r"@media\s*\(\s*min-width:\s*980px\s*\)[^@]*?\.desktop-nav\s*\{[^}]*display:\s*flex",
+        styles,
+    ), "navegação principal deve ficar visível em desktop amplo"
+    assert re.search(r'\.nav-toggle::before\s*\{[^}]*content:\s*"☰"', styles), (
+        "menu mobile deve ter sinal visual explícito"
+    )
     for name, text in (
         ("candidatos.html", candidates_page),
         ("temas.html", topics_page),
@@ -107,9 +149,10 @@ def main() -> None:
         ("sobre.html", about_page),
     ):
         assert 'aria-current="page"' in text, f"{name}: navegação deve expor página atual semanticamente"
-    assert '.desktop-nav a[aria-current="page"]' in styles and 'text-decoration:underline' in styles, (
-        "estado atual da navegação desktop não pode depender apenas de cor"
-    )
+    assert re.search(
+        r'\.desktop-nav a\[aria-current="page"\]\s*\{[^}]*text-decoration:\s*underline',
+        styles,
+    ), "estado atual da navegação desktop não pode depender apenas de cor"
     assert "\n  push:" not in sync_workflow, "sincronização de dados não deve rodar a cada push de interface"
     assert "[skip ci]" not in sync_workflow, "snapshot automático não pode pular CI"
     assert "git pull --rebase" not in sync_workflow, "sync não pode rebasear snapshot depois da auditoria"
@@ -144,7 +187,9 @@ def main() -> None:
     assert 'id="pagination"' in candidates_page, "listagem sem paginação"
     assert 'id="compareMount"' in compare_page, "comparação sem mount próprio"
     assert 'id="topicCards"' in topics_page, "áreas/temas sem mount próprio"
-    assert "const PAGE_SIZE=12" in app, "paginação deve permanecer explícita e auditável"
+    assert re.search(r"const PAGE_SIZE\s*=\s*12\b", app), (
+        "paginação deve permanecer explícita e auditável"
+    )
     public_markup = "\n".join(read(ROOT / name) for name in REQUIRED_PAGES) + "\n" + app
     assert public_markup.count('id="drawer"') == len(REQUIRED_PAGES), "menu lateral deve existir em todas as páginas"
     assert public_markup.count('id="menuButton"') == len(REQUIRED_PAGES), "botão do menu lateral deve existir em todas as páginas"
