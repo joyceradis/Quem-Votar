@@ -1,0 +1,73 @@
+---
+layout: base.njk
+permalink: apoio.html
+title: "Apoie o projeto · Quem Votar? ES 2026"
+description: "Como apoiar a manutenção do Quem Votar? — Pix e GitHub Sponsors — e como a independência editorial é preservada."
+bodyPage: apoio
+pageScript: js/pages/apoio.js
+mainClass: qv-page qv-page--narrow
+extraStyles:
+  - /styles/pages/apoio.css
+---
+{# Camada de sustentabilidade (AGENTS.md §9): vive aqui e só aqui. Não
+   aparece dentro de ficha, busca, comparação ou tema, não usa tracker e não
+   toca a evidência canônica. Antes esta página era órfã do casco — tinha
+   header sem <nav>, CSS e JS inline próprios. Agora usa o mesmo layout,
+   tokens e módulos das demais. #}
+<header class="qv-page-intro qv-page-intro--single">
+  <div>
+    <p class="qv-eyebrow">Apoio ao projeto</p>
+    <h1>Apoie o Quem Votar?</h1>
+    <p>O projeto é gratuito e open source. Se ele foi útil para você, contribua com a coleta e o processamento de dados, a manutenção e o desenvolvimento.</p>
+  </div>
+</header>
+
+<section class="support-grid" aria-label="Formas de apoio">
+  <article class="support-card">
+    <h2>Pix</h2>
+    <p>Escaneie o QR Code ou use uma das opções de cópia.</p>
+    <div class="pix-layout">
+      <div class="pix-qr" role="img" aria-label="QR Code Pix para apoiar o Quem Votar?">
+        {{ "pix-apoio.svg" | svgInline | safe }}
+      </div>
+      <div class="pix-actions">
+        <button class="qv-btn qv-btn--primary" id="copyPayload" type="button">Copiar Pix Copia e Cola</button>
+        <p class="pix-key">
+          <span>Chave Pix · e-mail</span>
+          <code id="pixEmail">contato@drajoyceradis.com</code>
+        </p>
+        <button class="qv-btn" id="copyEmail" type="button">Copiar chave por e-mail</button>
+        <p class="support-feedback" id="pixFeedback" aria-live="polite"></p>
+      </div>
+    </div>
+  </article>
+
+  <article class="support-card">
+    <h2>GitHub Sponsors</h2>
+    <p>Prefere apoiar o desenvolvimento open source pelo GitHub? O perfil Sponsors da mantenedora está ativo.</p>
+    <a class="qv-btn" href="https://github.com/sponsors/joyceradis" target="_blank" rel="noopener noreferrer">Apoiar no GitHub Sponsors ↗</a>
+  </article>
+</section>
+
+<p class="support-trust">
+  <strong>Independência preservada.</strong> Apoio financeiro não interfere em candidaturas, fontes, metodologia, ordem ou apresentação dos dados.
+</p>
+
+<details class="governance-details">
+  <summary>Como garantimos a independência?</summary>
+  <div class="governance-content">
+    <ul>
+      <li>As mesmas regras editoriais e de apresentação se aplicam às candidaturas. A plataforma não produz score, ranking ou recomendação de voto.</li>
+      <li>Apoio financeiro não altera seleção, redação, fontes, temas, ordem ou visibilidade de candidaturas.</li>
+      <li>Apoiadores não recebem acesso antecipado, veto, aprovação editorial ou destaque dentro de fichas, busca, comparação ou páginas temáticas.</li>
+      <li>Nenhuma contribuição escreve ou modifica a camada canônica de evidências eleitorais.</li>
+      <li>Toda afirmação política publicada deve ser rastreável a uma fonte identificável, com prioridade para fontes oficiais.</li>
+      <li>Não usamos trackers publicitários, personalização política ou segmentação baseada em apoio financeiro.</li>
+    </ul>
+    <p class="governance-links">
+      <a href="sobre.html">Como o projeto funciona</a>
+      <a href="docs/SUSTAINABILITY.md">Arquitetura de sustentabilidade</a>
+      <a href="docs/LICENSING.md">Licenciamento</a>
+    </p>
+  </div>
+</details>

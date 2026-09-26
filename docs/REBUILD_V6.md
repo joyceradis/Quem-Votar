@@ -245,20 +245,31 @@ protegido por CODEOWNERS e pela Cerca Elétrica, então esse PR exige revisão d
 
 ## Fase 3 — páginas portadas
 
-| Página | Estado |
-|---|---|
-| Home (`index.html`) | ✅ portada, com dados reais (547 candidaturas, 7 temas) |
-| Candidaturas (`candidatos.html`) | ✅ portada: busca, filtros, 12/página, troca de cargo, funil de comparação |
-| Ficha (`candidato.html`) | ⬜ pendente |
-| Comparar (`comparar.html`) | ⬜ pendente |
-| Assuntos (`temas.html`) | ⬜ pendente |
-| Como funciona (`sobre.html`) | ⬜ pendente |
-| Apoiar (`apoio.html`) | ⬜ pendente |
+**As 7 páginas estão portadas.**
 
-Os módulos `core/` que as páginas restantes precisam já estão prontos e
-testados (`evidence.js`, `compare-state.js`, `data.js`, `format.js`,
-`url-state.js`, `dom.js`, `a11y.js`) — o que falta em cada página é markup e
-a função de render, não regra de negócio.
+| Página | O que foi verificado contra os dados reais |
+|---|---|
+| Home (`index.html`) | 547 candidaturas, 7 temas com evidência, data do snapshot |
+| Candidaturas (`candidatos.html`) | 137 federais / 410 estaduais, 12 por página, busca, filtros, troca de cargo, funil de comparação com teto de 3 |
+| Ficha (`candidato.html`) | ordem HOJE→PROPÕE→IMPACTO→HISTÓRICO→DADOS→FONTES; 7 de 8 evidências em PROPÕE e a 8ª ("atuação") no histórico |
+| Comparar (`comparar.html`) | mesmos campos para todas as colunas, sem destaque/ordem, estados de 0 e 1 seleção |
+| Assuntos (`temas.html`) | só temas com pelo menos uma candidatura com fonte |
+| Como funciona (`sobre.html`) | data do snapshot e a negação explícita de nota/ranking |
+| Apoiar (`apoio.html`) | deixa de ser órfã: mesmo casco, tokens e módulos; firewall editorial mantido |
+
+Tudo roda sobre os módulos `core/` (`evidence.js`, `compare-state.js`,
+`data.js`, `format.js`, `url-state.js`, `dom.js`, `a11y.js`), portados
+literalmente do `app.js`. Cobertura: **84 casos de Playwright** em desktop e
+mobile.
+
+O que a Fase 3 eliminou, em números:
+- nav/drawer/rodapé duplicados em 6-7 arquivos → **1** partial de cada;
+- `app.js` de 992 linhas sem fronteira → **7 módulos `core/` + 7 de página**;
+- 3 reimplementações de sync de URL → **1** (`url-state.js`);
+- `?v=` divergente em 3 lugares → **1** (`VERSION`);
+- `apoio.html` com CSS e JS inline próprios → **0** inline;
+- 2 blocos de CSS colados por número de issue no fim do `styles.css` → integrados ao componente a que pertencem;
+- SVG de marca d'água duplicado em segundo arquivo → **1** arquivo, recolorido por CSS.
 
 ## Estado no fim da Fase 1 (checkpoint para retomada)
 

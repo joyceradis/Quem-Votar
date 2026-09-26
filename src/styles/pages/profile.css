@@ -270,22 +270,6 @@
   font-weight: 600;
 }
 
-.life-areas {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 16px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.life-areas li {
-  color: var(--ink-soft);
-  font-size: 0.82rem;
-  border-bottom: 1px solid var(--line);
-  padding-bottom: 2px;
-}
-
 .impact-note {
   max-width: 68ch;
   margin: 17px 0 0;

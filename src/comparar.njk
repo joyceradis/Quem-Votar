@@ -1,0 +1,27 @@
+---
+layout: base.njk
+permalink: comparar.html
+title: "Comparar · Quem Votar? ES 2026"
+description: "Compare até 3 candidaturas do Espírito Santo lado a lado, com os mesmos campos factuais e sem ranking."
+bodyPage: compare
+activeNav: comparar
+pageScript: js/pages/compare.js
+mainClass: qv-page
+extraStyles:
+  - /styles/pages/compare.css
+---
+<header class="qv-page-intro">
+  <div>
+    <p class="qv-eyebrow">Comparar</p>
+    <h1>Coloque as informações lado a lado.</h1>
+    <p>Veja os mesmos pontos de cada pessoa e tire sua própria conclusão. Sem nota final, ranking ou “vencedor”.</p>
+  </div>
+  <p class="qv-page-snapshot">
+    <span>Atualizado em <b data-snapshot-date>—</b></span>
+    <a data-tse-source href="{{ site.tseDataset }}" target="_blank" rel="noopener">Dados do TSE</a>
+  </p>
+</header>
+
+<section id="compareMount" aria-live="polite">
+  <p class="qv-loading">Carregando comparação…</p>
+</section>
