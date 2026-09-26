@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quem Votar? — Arquitetura Responsiva de Perfil de Candidatura</title>
+<style>
+:root{
+  --ink:#173244;
+  --ink-2:#113b56;
+  --blue:#0c6296;
+  --blue-soft:#eaf7ff;
+  --pink:#b33c72;
+  --pink-soft:#fff0f7;
+  --text:#334155;
+  --muted:#64748b;
+  --line:#e2e8f0;
+  --line-strong:#cbd5e1;
+  --paper:#ffffff;
+  --panel:#f8fafc;
+  --warning:#fff8e8;
+  --max:1180px;
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:var(--font);
+  color:var(--ink);
+  background:#eef3f7;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit}
+button{font:inherit;cursor:pointer}
+.design-shell{max-width:1450px;margin:0 auto;padding:24px}
+.design-toolbar{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:14px 16px;margin-bottom:18px;border:1px solid var(--line);
+  border-radius:16px;background:#fff;position:sticky;top:12px;z-index:50;
+  box-shadow:0 8px 30px rgba(17,59,86,.08)
+}
+.design-toolbar strong{font-size:.95rem}
+.design-toolbar span{font-size:.82rem;color:var(--muted)}
+.preview-buttons{display:flex;gap:8px;flex-wrap:wrap}
+.preview-buttons button{
+  border:1px solid var(--line-strong);background:#fff;color:var(--ink);
+  padding:9px 12px;border-radius:999px;font-weight:750
+}
+.preview-buttons button[aria-pressed="true"]{
+  background:var(--ink);color:#fff;border-color:var(--ink)
+}
+.preview-stage{display:flex;justify-content:center;align-items:flex-start}
+.preview-frame{
+  width:min(100%,1280px);min-height:900px;background:#fff;border-radius:22px;
+  overflow:auto;box-shadow:0 24px 70px rgba(17,59,86,.14);
+  transition:width .25s ease;border:1px solid rgba(17,59,86,.08)
+}
+.preview-frame.mobile{width:390px}
+.preview-frame.desktop{width:min(100%,1280px)}
+.site-header{
+  height:68px;display:flex;align-items:center;justify-content:space-between;gap:18px;
+  padding:0 30px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.97);
+  position:sticky;top:0;z-index:20
+}
+.brand{display:flex;align-items:center;gap:8px;font-weight:900;letter-spacing:-.04em;text-decoration:none}
+.brand .q{color:var(--pink)}
+.brand .es{margin-left:5px;font-size:.62rem;letter-spacing:.08em;color:var(--blue);background:var(--blue-soft);padding:5px 7px;border-radius:7px}
+.nav{display:flex;gap:20px;align-items:center}
+.nav a{font-size:.82rem;color:var(--muted);text-decoration:none;font-weight:750}
+.menu{display:none;border:0;background:var(--blue);color:#fff;border-radius:999px;padding:10px 14px;font-weight:800}
+.profile-page{max-width:var(--max);margin:0 auto;padding:46px 30px 80px}
+.context-line{
+  display:flex;justify-content:space-between;gap:16px;align-items:center;
+  margin-bottom:26px;color:var(--muted);font-size:.78rem
+}
+.context-line a{color:var(--blue);font-weight:800;text-decoration:none}
+.profile-layout{display:grid;grid-template-columns:300px minmax(0,1fr);gap:72px;align-items:start}
+.identity-rail{position:sticky;top:96px}
+.photo-wrap{
+  width:150px;height:150px;overflow:hidden;border-radius:28px;border:1px solid var(--line);
+  background:linear-gradient(135deg,var(--blue-soft),var(--pink-soft));margin-bottom:22px
+}
+.photo-wrap img{width:100%;height:100%;object-fit:cover}
+.office{
+  display:block;margin-bottom:7px;color:var(--blue);font-size:.72rem;
+  font-weight:900;letter-spacing:.09em;text-transform:uppercase
+}
+.candidate-name{margin:0 0 9px;font-size:2.35rem;line-height:.96;letter-spacing:-.055em}
+.identity-primary{margin:0 0 5px;color:var(--ink-2);font-weight:850}
+.identity-secondary{margin:0 0 20px;color:var(--muted);font-size:.9rem}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:25px}
+.action-primary,.action-link{text-decoration:none;font-size:.84rem;font-weight:850}
+.action-primary{padding:10px 14px;border-radius:999px;background:var(--blue);color:#fff}
+.action-link{padding:10px 2px;color:var(--ink);border-bottom:1px solid var(--line)}
+.role-help{display:inline-block;margin-bottom:28px;color:var(--pink);font-weight:800;font-size:.85rem;text-decoration:none}
+.tse-block{border-top:1px solid var(--line);padding-top:20px}
+.mini-title{
+  display:block;color:var(--muted);font-size:.68rem;text-transform:uppercase;
+  letter-spacing:.08em;font-weight:850;margin-bottom:14px
+}
+.mini-row{margin-bottom:13px}
+.mini-row strong{
+  display:block;color:var(--muted);font-size:.67rem;text-transform:uppercase;
+  letter-spacing:.05em
+}
+.mini-row span,.mini-row a{font-size:.86rem;color:var(--text);text-decoration:none}
+.mini-row a{border-bottom:1px solid var(--line)}
+.profile-main{min-width:0}
+.profile-nav{
+  display:flex;flex-wrap:wrap;gap:18px;padding:0 0 18px;margin-bottom:8px;
+  border-bottom:1px solid var(--line);position:sticky;top:68px;z-index:10;
+  background:rgba(255,255,255,.96);backdrop-filter:blur(8px)
+}
+.profile-nav a{font-size:.8rem;color:var(--muted);text-decoration:none;font-weight:800}
+.section{padding:38px 0 42px;border-bottom:1px solid var(--line)}
+.section:last-child{border-bottom:0}
+.section-kicker{margin:0 0 8px;color:var(--pink);font-size:.67rem;font-weight:900;letter-spacing:.09em}
+.section h2{margin:0 0 22px;font-size:1.7rem;letter-spacing:-.035em;line-height:1.05}
+.body-copy{margin:0;max-width:730px;color:var(--text);font-size:1rem}
+.source{font-size:.7rem;color:var(--pink);text-decoration:none;vertical-align:super;font-weight:850;margin-left:2px}
+.quick-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px;margin-top:26px}
+.fact{border-top:1px solid var(--line);padding-top:11px}
+.fact label{
+  display:block;color:var(--muted);font-size:.68rem;font-weight:850;
+  text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px
+}
+.fact div{font-size:.94rem;color:var(--ink)}
+.evidence-list{display:grid;gap:0;border-top:1px solid var(--line)}
+.evidence{padding:19px 0;border-bottom:1px solid var(--line)}
+.evidence-head{display:flex;justify-content:space-between;gap:20px;align-items:flex-start}
+.evidence h3{margin:0;font-size:1.03rem;line-height:1.3}
+.evidence-tag{flex:0 0 auto;color:var(--blue);font-size:.69rem;font-weight:850;text-transform:uppercase}
+.evidence p{margin:8px 0 0;color:var(--text);font-size:.93rem;max-width:760px}
+.inline-meta{margin-top:9px;color:var(--muted);font-size:.76rem}
+.priority-note{margin-bottom:20px;color:var(--muted);font-size:.88rem}
+.priority-box{border-left:3px solid var(--blue);padding:2px 0 2px 18px}
+.priority-box strong{display:block;margin-bottom:7px}
+.priority-box p{margin:0;color:var(--text);font-size:.94rem}
+.record-row{
+  display:grid;grid-template-columns:115px minmax(0,1fr);gap:22px;
+  padding:17px 0;border-top:1px solid var(--line)
+}
+.record-row:last-of-type{border-bottom:1px solid var(--line)}
+.record-kind{color:var(--muted);font-size:.7rem;text-transform:uppercase;font-weight:850;letter-spacing:.04em}
+.record-title{font-weight:800;margin-bottom:4px}
+.record-meta{color:var(--muted);font-size:.78rem}
+.more-link{display:inline-block;margin-top:18px;color:var(--blue);font-size:.86rem;font-weight:850;text-decoration:none}
+.promise{display:grid;grid-template-columns:1fr 1fr;gap:28px;padding:18px 0;border-top:1px solid var(--line)}
+.promise:last-of-type{border-bottom:1px solid var(--line)}
+.promise-col label{display:block;color:var(--muted);font-size:.68rem;font-weight:850;text-transform:uppercase;margin-bottom:7px}
+.promise-col p{margin:0;color:var(--text);font-size:.93rem}
+.external-eval{margin-top:10px;padding-left:14px;border-left:2px solid var(--line-strong);color:var(--text);font-size:.88rem}
+.judicial-note,.gap-note{
+  background:var(--panel);border:1px solid var(--line);border-radius:12px;
+  padding:15px 16px;color:var(--text);font-size:.9rem
+}
+.gap-note{margin-top:24px;background:var(--warning)}
+.sources{list-style:none;padding:0;margin:0}
+.sources li{position:relative;padding:0 0 12px 28px;color:var(--text);font-size:.86rem}
+.sources li span{position:absolute;left:0;color:var(--muted);font-weight:850}
+.sources a{color:var(--ink);text-decoration:underline;text-decoration-color:var(--line-strong);text-underline-offset:3px}
+.sources small{color:var(--muted)}
+.optional{border-left:2px dashed var(--line-strong);padding-left:18px}
+.optional-mark{color:var(--muted);font-size:.72rem;font-weight:800;margin-bottom:8px}
+
+.preview-frame.mobile .site-header{height:62px;padding:0 16px}
+.preview-frame.mobile .brand{font-size:.9rem}
+.preview-frame.mobile .nav{display:none}
+.preview-frame.mobile .menu{display:inline-flex}
+.preview-frame.mobile .profile-page{padding:28px 18px 60px}
+.preview-frame.mobile .context-line{align-items:flex-start;margin-bottom:22px}
+.preview-frame.mobile .context-line span:last-child{display:none}
+.preview-frame.mobile .profile-layout{display:block}
+.preview-frame.mobile .identity-rail{
+  position:relative;top:auto;display:grid;grid-template-columns:88px 1fr;
+  column-gap:16px;align-items:start;padding-bottom:28px;margin-bottom:0;
+  border-bottom:1px solid var(--line)
+}
+.preview-frame.mobile .photo-wrap{
+  width:88px;height:88px;border-radius:20px;margin:0;grid-row:1 / span 4
+}
+.preview-frame.mobile .candidate-name{font-size:2rem;margin-bottom:7px}
+.preview-frame.mobile .office{font-size:.65rem}
+.preview-frame.mobile .identity-secondary{margin-bottom:12px}
+.preview-frame.mobile .actions{grid-column:1 / -1;margin:18px 0 14px}
+.preview-frame.mobile .role-help{grid-column:1 / -1;margin:0 0 18px}
+.preview-frame.mobile .tse-block{
+  grid-column:1 / -1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px 16px;padding-top:18px
+}
+.preview-frame.mobile .mini-title{grid-column:1 / -1;margin-bottom:2px}
+.preview-frame.mobile .mini-row{margin:0}
+.preview-frame.mobile .profile-nav{
+  top:62px;overflow:auto;flex-wrap:nowrap;gap:16px;padding:14px 0;margin:0
+}
+.preview-frame.mobile .profile-nav a{white-space:nowrap}
+.preview-frame.mobile .section{padding:31px 0 34px}
+.preview-frame.mobile .section h2{font-size:1.45rem;margin-bottom:18px}
+.preview-frame.mobile .quick-facts{grid-template-columns:1fr}
+.preview-frame.mobile .evidence-head{display:block}
+.preview-frame.mobile .evidence-tag{display:block;margin-bottom:6px}
+.preview-frame.mobile .record-row{grid-template-columns:1fr;gap:5px}
+.preview-frame.mobile .promise{grid-template-columns:1fr;gap:18px}
+.preview-frame.mobile .body-copy{font-size:.96rem}
+
+@media(max-width:760px){
+  .design-shell{padding:0}
+  .design-toolbar{display:none}
+  .preview-frame,.preview-frame.desktop,.preview-frame.mobile{
+    width:100%;border-radius:0;box-shadow:none;min-height:100vh
+  }
+}
+</style>
+</head>
+<body>
+<div class="design-shell">
+  <div class="design-toolbar">
+    <div>
+      <strong>Arquitetura de perfil — Quem Votar? ES 2026</strong><br>
+      <span>Mesmo padrão para Governador, Senador, Deputado Federal e Deputado Estadual · conteúdo ilustrativo</span>
+    </div>
+    <div class="preview-buttons" aria-label="Alternar visualização">
+      <button id="desktopBtn" aria-pressed="true">Computador</button>
+      <button id="mobileBtn" aria-pressed="false">Mobile 390px</button>
+    </div>
+  </div>
+
+  <div class="preview-stage">
+    <div class="preview-frame desktop" id="previewFrame">
+      <header class="site-header">
+        <a class="brand" href="#"><span>quem votar<span class="q">?</span></span><span class="es">ES 2026</span></a>
+        <nav class="nav">
+          <a href="#">Candidatos</a>
+          <a href="#">Assuntos</a>
+          <a href="#">Comparar</a>
+          <a href="#">Entenda os cargos</a>
+        </nav>
+        <button class="menu">☰ Menu</button>
+      </header>
+
+      <div class="profile-page">
+        <div class="context-line">
+          <a href="#">← Voltar para candidaturas</a>
+          <span>Referência de arquitetura · conteúdo ilustrativo</span>
+        </div>
+
+        <div class="profile-layout">
+          <aside class="identity-rail">
+            <div class="photo-wrap">
+              <img alt="Espaço para foto oficial TSE, sem filtro visual" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'%3E%3Crect width='300' height='300' fill='%23eaf7ff'/%3E%3Ccircle cx='150' cy='105' r='58' fill='%23c4d9e8'/%3E%3Cpath d='M55 300c8-85 55-125 95-125s87 40 95 125' fill='%23c4d9e8'/%3E%3C/svg%3E">
+            </div>
+
+            <div class="identity-body">
+              <span class="office">Deputado Federal · Espírito Santo</span>
+              <h1 class="candidate-name">Nome do Candidato</h1>
+              <p class="identity-primary">PARTIDO · nº 1234</p>
+              <p class="identity-secondary">Ocupação declarada · situação eleitoral</p>
+            </div>
+
+            <div class="actions">
+              <a class="action-primary" href="#">Comparar</a>
+              <a class="action-link" href="#">Compartilhar</a>
+            </div>
+
+            <a class="role-help" href="#">ⓘ O que faz um Deputado Federal?</a>
+
+            <div class="tse-block">
+              <span class="mini-title">Dados oficiais do TSE</span>
+              <div class="mini-row"><strong>Nome completo</strong><span>Nome Civil do Candidato</span></div>
+              <div class="mini-row"><strong>Ocupação</strong><span>Profissão declarada</span></div>
+              <div class="mini-row"><strong>Patrimônio declarado</strong><span>R$ 000.000,00</span></div>
+              <div class="mini-row"><strong>Situação</strong><span>Apto / deferido</span></div>
+              <div class="mini-row"><strong>Redes declaradas</strong><a href="#">Instagram</a> · <a href="#">Site</a></div>
+            </div>
+          </aside>
+
+          <main class="profile-main">
+            <nav class="profile-nav" aria-label="Navegação do perfil">
+              <a href="#quem-e">Quem é</a>
+              <a href="#defende">Defende em 2026</a>
+              <a href="#ja-fez">Já fez</a>
+              <a href="#promessas">Promessas anteriores</a>
+              <a href="#registros">Registros</a>
+              <a href="#fontes">Fontes</a>
+            </nav>
+
+            <section class="section" id="quem-e">
+              <p class="section-kicker">01 · IDENTIDADE E TRAJETÓRIA</p>
+              <h2>Quem é</h2>
+              <p class="body-copy">
+                Resumo factual curto da formação, experiência profissional e trajetória pública.
+                Evitar adjetivos e inferências. Usar fatos verificáveis e fontes primárias sempre que possível.
+                <a class="source" href="#fontes">[1]</a>
+              </p>
+              <div class="quick-facts">
+                <div class="fact"><label>Histórico eleitoral</label><div>Vereador em 2016 · Deputado Estadual em 2022</div></div>
+                <div class="fact"><label>Vínculo territorial documentado</label><div>Atuação institucional em Vitória e na ALES</div></div>
+              </div>
+            </section>
+
+            <section class="section" id="defende">
+              <p class="section-kicker">02 · CAMPANHA 2026</p>
+              <h2>O que defende em 2026</h2>
+              <div class="evidence-list">
+                <article class="evidence">
+                  <div class="evidence-head">
+                    <h3>Proposta ou declaração documentada A</h3>
+                    <span class="evidence-tag">Proposta</span>
+                  </div>
+                  <p>Resumo claro da proposta, sem extrapolar o que a fonte diz.<a class="source" href="#fontes">[2]</a></p>
+                  <div class="inline-meta">Plano oficial · agosto de 2026</div>
+                </article>
+                <article class="evidence">
+                  <div class="evidence-head">
+                    <h3>Posição pública documentada B</h3>
+                    <span class="evidence-tag">Declaração</span>
+                  </div>
+                  <p>Resumo da fala atribuída ao candidato, com data e origem.<a class="source" href="#fontes">[3]</a></p>
+                  <div class="inline-meta">Entrevista · setembro de 2026</div>
+                </article>
+              </div>
+              <a class="more-link" href="#">Ver todas as propostas e declarações →</a>
+            </section>
+
+            <section class="section optional">
+              <div class="optional-mark">SEÇÃO CONDICIONAL</div>
+              <p class="section-kicker">03 · QUANDO HOUVER BASE SUFICIENTE</p>
+              <h2>Prioridades documentadas</h2>
+              <p class="priority-note">Só aparece quando a própria documentação sustenta que o tema é prioridade, eixo ou bandeira central.</p>
+              <div class="priority-box">
+                <strong>Tema documentado como prioridade</strong>
+                <p>A fonte trata este tema explicitamente como prioridade/eixo da candidatura. Não é inferido por contagem de propostas.<a class="source" href="#fontes">[4]</a></p>
+              </div>
+            </section>
+
+            <section class="section" id="ja-fez">
+              <p class="section-kicker">04 · EXPERIÊNCIA PÚBLICA</p>
+              <h2>O que já fez</h2>
+              <p class="body-copy" style="margin-bottom:18px">
+                Primeiro aparecem poucos registros relevantes e compreensíveis. O arquivo completo fica atrás de “ver atuação completa”.
+              </p>
+              <div class="record-row">
+                <div class="record-kind">Projeto de lei</div>
+                <div>
+                  <div class="record-title">PL 000/2024 — título factual da proposição <a class="source" href="#fontes">[5]</a></div>
+                  <div class="record-meta">Autor · tema · situação atual</div>
+                </div>
+              </div>
+              <div class="record-row">
+                <div class="record-kind">Relatoria</div>
+                <div>
+                  <div class="record-title">Relatoria de matéria identificada <a class="source" href="#fontes">[6]</a></div>
+                  <div class="record-meta">Relator · comissão · resultado/status</div>
+                </div>
+              </div>
+              <div class="record-row">
+                <div class="record-kind">Votação</div>
+                <div>
+                  <div class="record-title">Matéria selecionada: voto registrado <a class="source" href="#fontes">[7]</a></div>
+                  <div class="record-meta">Votou a favor / contra / ausente · sem classificar como “bom” ou “ruim”</div>
+                </div>
+              </div>
+              <a class="more-link" href="#">Ver atuação completa →</a>
+            </section>
+
+            <section class="section optional" id="promessas">
+              <div class="optional-mark">SEÇÃO CONDICIONAL</div>
+              <p class="section-kicker">05 · QUANDO HOUVER CAMPANHA ANTERIOR COMPARÁVEL</p>
+              <h2>Prometeu antes × o que aconteceu</h2>
+              <div class="promise">
+                <div class="promise-col">
+                  <label>Promessa documentada</label>
+                  <p>Compromisso registrado em campanha anterior.<a class="source" href="#fontes">[8]</a></p>
+                </div>
+                <div class="promise-col">
+                  <label>Resultado observado</label>
+                  <p>Resultado objetivo ou dado institucional relacionado ao compromisso.<a class="source" href="#fontes">[9]</a></p>
+                  <div class="external-eval">Quando houver classificação externa, dizer claramente quem classificou e qual foi o critério.</div>
+                </div>
+              </div>
+            </section>
+
+            <section class="section optional" id="registros">
+              <div class="optional-mark">SEÇÃO CONDICIONAL</div>
+              <p class="section-kicker">06 · FONTES OFICIAIS E CONTEXTO</p>
+              <h2>Registros judiciais e eleitorais</h2>
+              <div class="judicial-note">
+                <strong>Exibir registros específicos, não conclusões absolutas.</strong><br>
+                Cada item deve informar órgão, número, papel da pessoa, status, decisão disponível, data e link oficial.
+                “Nada encontrado” só aparece com escopo e data da consulta explicitados.
+              </div>
+            </section>
+
+            <section class="section" id="fontes">
+              <p class="section-kicker">07 · PROVENIÊNCIA E LIMITAÇÕES</p>
+              <h2>Fontes e o que ainda não sabemos</h2>
+              <ol class="sources">
+                <li><span>[1]</span> <a href="#">TSE / biografia institucional</a> <small>· consultado em 26/09/2026</small></li>
+                <li><span>[2]</span> <a href="#">Plano ou documento oficial da candidatura</a> <small>· fonte primária</small></li>
+                <li><span>[3]</span> <a href="#">Entrevista/debate identificado</a> <small>· fala atribuída</small></li>
+                <li><span>[4]</span> <a href="#">Fonte que chama o tema de prioridade/eixo</a></li>
+                <li><span>[5]</span> <a href="#">Fonte institucional / proposição</a></li>
+                <li><span>[6]</span> <a href="#">Fonte institucional / relatoria</a></li>
+                <li><span>[7]</span> <a href="#">Fonte institucional / votação nominal</a></li>
+                <li><span>[8]</span> <a href="#">Programa eleitoral anterior</a></li>
+                <li><span>[9]</span> <a href="#">Fonte institucional ou avaliação externa atribuída</a></li>
+              </ol>
+              <div class="gap-note">
+                <strong>O que ainda não sabemos</strong><br>
+                Lacunas de integração ou ausência de confirmação são registradas sem virar conclusão sobre a candidatura.
+              </div>
+            </section>
+          </main>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const frame=document.getElementById('previewFrame');
+const desktopBtn=document.getElementById('desktopBtn');
+const mobileBtn=document.getElementById('mobileBtn');
+
+desktopBtn.addEventListener('click',()=>{
+  frame.classList.remove('mobile');
+  frame.classList.add('desktop');
+  desktopBtn.setAttribute('aria-pressed','true');
+  mobileBtn.setAttribute('aria-pressed','false');
+});
+
+mobileBtn.addEventListener('click',()=>{
+  frame.classList.remove('desktop');
+  frame.classList.add('mobile');
+  desktopBtn.setAttribute('aria-pressed','false');
+  mobileBtn.setAttribute('aria-pressed','true');
+});
+</script>
+</body>
+</html>
