@@ -1,29 +1,37 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 330" role="img" aria-labelledby="title desc">
-  <title id="title">Traço inspirado no Espírito Santo</title>
-  <desc id="desc">Ilustração em linha do Convento da Penha e da Terceira Ponte, em azul e rosa.</desc>
-  <path d="M24 250c130-16 250-18 472-4" fill="none" stroke="#2F98D4" stroke-width="1.5" opacity=".22" stroke-linecap="round"/>
+  <title id="title">Convento da Penha e Terceira Ponte</title>
+  <desc id="desc">Ilustração em linha do Convento da Penha e da Terceira Ponte, em tons de cinza, com um traço rosa no horizonte.</desc>
 
-  <path d="M58 244c40-58 88-80 128-70" fill="none" stroke="#2F98D4" stroke-width="2" opacity=".4" stroke-linecap="round"/>
-  <path d="M34 244c46-84 104-124 150-124 40 0 78 24 104 62" fill="none" stroke="#0C6296" stroke-width="4" stroke-linecap="round"/>
+  <path d="M12 290c160-12 340-12 500 6" fill="none" stroke="#AFC0C9" stroke-width="2" opacity=".55" stroke-linecap="round"/>
+  <path d="M12 302c160-10 340-10 500 8" fill="none" stroke="#EE8FBD" stroke-width="2.5" opacity=".6" stroke-linecap="round"/>
 
-  <g transform="translate(184 120)">
-    <path d="M-18 0v-18l18-16 18 16v18z" fill="#fff" stroke="#0C6296" stroke-width="3" stroke-linejoin="round"/>
-    <path d="M-6 0v-13h12v13" fill="none" stroke="#0C6296" stroke-width="2.5" stroke-linejoin="round"/>
-    <path d="M0-34v-12M-5-39h10" stroke="#B33C72" stroke-width="3" stroke-linecap="round"/>
+  <path d="M10 272C30 162 70 92 140 87 190 84 210 132 190 172 175 202 160 232 150 272Z" fill="#B9C7CE"/>
+
+  <g fill="none" stroke="#22343F" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M114 122V95h44v27z"/>
+    <path d="M114 95 140 72 166 95"/>
+    <path d="M133 122v-15h14v15"/>
+  </g>
+  <path d="M140 72v-13M134 63h12" stroke="#22343F" stroke-width="2.5" stroke-linecap="round"/>
+
+  <path d="M350 60 345 250" stroke="#293D49" stroke-width="6" stroke-linecap="round"/>
+
+  <g stroke="#8CA2AF" stroke-width="1.6" opacity=".8" stroke-linecap="round">
+    <path d="M349 78 250 244"/>
+    <path d="M348 96 275 246"/>
+    <path d="M347 114 300 248"/>
+    <path d="M346 132 325 249"/>
+    <path d="M347 78 400 236"/>
+    <path d="M347 96 430 240"/>
+    <path d="M346 114 460 244"/>
+    <path d="M346 132 495 248"/>
   </g>
 
-  <g stroke="#2F98D4" stroke-width="2" opacity=".55" stroke-linecap="round">
-    <path d="M380 110 270 249"/>
-    <path d="M380 110 300 247"/>
-    <path d="M380 110 330 245"/>
-    <path d="M380 110 420 240"/>
-    <path d="M380 110 450 239"/>
-    <path d="M380 110 480 237"/>
-  </g>
-  <path d="M380 110V243" stroke="#0C6296" stroke-width="4" stroke-linecap="round"/>
-  <path d="M250 250L495 236" stroke="#0C6296" stroke-width="4" stroke-linecap="round"/>
-  <path d="M250 258L495 244" stroke="#2F98D4" stroke-width="2" opacity=".35" stroke-linecap="round"/>
+  <path d="M210 258c60-16 180-16 295 4" fill="none" stroke="#293D49" stroke-width="6" stroke-linecap="round"/>
 
-  <path d="M40 276c140-10 300-9 450 3" fill="none" stroke="#2F98D4" stroke-width="1.5" opacity=".25" stroke-linecap="round"/>
-  <path d="M20 288c150-14 320-12 480 4" fill="none" stroke="#EE8FBD" stroke-width="3" opacity=".4" stroke-linecap="round"/>
+  <g stroke="#293D49" stroke-width="4" stroke-linecap="round">
+    <path d="M432 262v28"/>
+    <path d="M462 266v26"/>
+    <path d="M492 270v24"/>
+  </g>
 </svg>
