@@ -8,8 +8,8 @@
     <path d="M-60 407Q258 307 478 267" stroke-width=".7" opacity=".65"/>
     <path d="M-60 393Q262 293 482 253" stroke-width=".4" opacity=".5" stroke-dasharray="10 4 2 3"/>
 
-    <path d="M330 150 322 480" stroke-width="1.3"/>
-    <path d="M352 152 366 480" stroke-width="1.3"/>
+    <path d="M330 150 322 480" stroke-width="2"/>
+    <path d="M352 152 366 480" stroke-width="2"/>
     <path d="M326 251 358 255" stroke-width=".9"/>
 
     <g stroke-width=".7" opacity=".8">
@@ -25,20 +25,20 @@
 
     <path d="M358 255Q460 246 560 262" stroke-width="1"/>
 
-    <path d="M540 300C555 240 585 190 620 165C650 145 690 138 725 150C755 160 775 190 780 230C782 270 765 300 735 315C690 335 610 330 560 320Z" stroke-width="1.1" opacity=".85"/>
+    <path d="M540 300C555 240 585 190 620 165C650 145 690 138 725 150C755 160 775 190 780 230C782 270 765 300 735 315C690 335 610 330 560 320Z" stroke-width="1.7" opacity=".85"/>
     <path d="M560 285 578 278M575 295 592 287M600 275 615 267" stroke-width=".6" opacity=".55"/>
     <path d="M690 305 705 298M710 310 726 303" stroke-width=".6" opacity=".55"/>
 
-    <path d="M608 260 608 192 660 190 660 260" stroke-width="1.6"/>
-    <path d="M605 192 634 172 664 190" stroke-width="1.4"/>
-    <path d="M660 260 660 162 706 160 706 260" stroke-width="1.6"/>
+    <path d="M608 260 608 192 660 190 660 260" stroke-width="2.2"/>
+    <path d="M605 192 634 172 664 190" stroke-width="1.7"/>
+    <path d="M660 260 660 162 706 160 706 260" stroke-width="2.2"/>
     <path d="M672 200 672 216" stroke-width="1"/>
     <path d="M688 200 688 216" stroke-width="1"/>
-    <path d="M706 260 706 132 731 130 731 260" stroke-width="1.6"/>
-    <path d="M701 132 718 106 736 130" stroke-width="1.3"/>
-    <path d="M718 106 718 84" stroke-width="1.2"/>
-    <path d="M710 92 726 92" stroke-width="1.2"/>
-    <path d="M731 260 731 212 761 210 761 260" stroke-width="1.5"/>
+    <path d="M706 260 706 132 731 130 731 260" stroke-width="2.2"/>
+    <path d="M701 132 718 106 736 130" stroke-width="1.7"/>
+    <path d="M718 106 718 84" stroke-width="1.5"/>
+    <path d="M710 92 726 92" stroke-width="1.5"/>
+    <path d="M731 260 731 212 761 210 761 260" stroke-width="2"/>
     <path d="M742 228 742 242" stroke-width=".9"/>
 
     <path d="M600 318 590 330M612 320 606 332M630 322 626 334" stroke-width=".7" opacity=".6"/>
