@@ -3,6 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+{# Paridade com a produção: todas as 7 páginas carregam telemetry.js hoje, na
+   mesma posição. Versionado à parte (?v=1) porque tem ciclo de vida próprio e
+   não faz parte do pacote da aplicação. Mantém a allowlist de rotas e não
+   personaliza nada (AGENTS.md §9). #}
+<script src="telemetry.js?v=1"></script>
 <meta name="theme-color" content="#113b56">
 <meta name="description" content="{{ description }}">
 <meta name="qv-asset-version" content="{{ version }}">

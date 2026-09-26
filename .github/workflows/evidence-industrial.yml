@@ -3,7 +3,17 @@ name: Evidence wartime worker — artifact only
 on:
   workflow_dispatch:
   schedule:
-    - cron: "2/5 * * * *"
+    # Horária, não a cada 5 minutos (Authorization-Issue: #169).
+    #
+    # A cadência de 5 minutos era desproporcional à taxa real de mudança das
+    # fontes (TSE, Câmara e ALES publicam no máximo uma vez ao dia) e, com
+    # timeout-minutes: 300 e cancel-in-progress: false, permitia empilhar
+    # dezenas de execuções na fila — provável origem do ruído de
+    # persistent_failures registrado no checkpoint.
+    #
+    # workflow_dispatch continua disponível para execução sob demanda, que é
+    # o caminho certo quando há urgência real.
+    - cron: "23 * * * *"
   push:
     branches: [main]
     paths:
