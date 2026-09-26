@@ -11,7 +11,7 @@ module.exports = defineConfig({
   retries: process.env.CI ? 1 : 0,
   reporter: [["list"]],
   use: {
-    baseURL: "http://127.0.0.1:4173",
+    baseURL: "http://127.0.0.1:4173/Quem-Votar/",
     trace: "retain-on-failure",
   },
   projects: [
@@ -19,8 +19,9 @@ module.exports = defineConfig({
     { name: "mobile", use: { ...devices["Pixel 5"], viewport: { width: 390, height: 844 } } },
   ],
   webServer: {
+    env: { QV_DEV: "1" },
     command: "npx eleventy --serve --port=4173 --quiet",
-    url: "http://127.0.0.1:4173/preview-shell/",
+    url: "http://127.0.0.1:4173/Quem-Votar//preview-shell/",
     reuseExistingServer: !process.env.CI,
     timeout: 30000,
   },

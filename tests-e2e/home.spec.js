@@ -6,7 +6,7 @@ const { test, expect } = require("@playwright/test");
 
 test.describe("Home", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/");
+    await page.goto("index.html");
   });
 
   test("contratos exigidos pelo audit-site.py", async ({ page }) => {
@@ -40,6 +40,10 @@ test.describe("Home", () => {
   });
 
   test("assuntos só aparecem com evidência documentada", async ({ page }) => {
+    // a Home monta os assuntos depois do fetch do snapshot: sem esperar o
+    // sinal de dados carregados, a contagem lia o estado intermediário
+    await expect(page.locator("[data-snapshot-date]").first()).not.toHaveText("—");
+
     const links = page.locator("#homeTopics a");
     const count = await links.count();
     const sectionVisible = await page.locator(".home-topics").isVisible();

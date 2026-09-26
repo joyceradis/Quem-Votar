@@ -12,7 +12,7 @@ const federais = JSON.parse(
 const comEvidencia = federais.find((c) => (c.topic_evidence || []).length > 1) || federais[0];
 const semEvidencia = federais.find((c) => (c.topic_evidence || []).length === 0);
 
-const fichaUrl = (c) => `/candidato.html?id=${c.tse_id}&cargo=federal`;
+const fichaUrl = (c) => `candidato.html?id=${c.tse_id}&cargo=federal`;
 
 test.describe("Ficha do candidato", () => {
   test("ordem normativa HOJE → PROPÕE → IMPACTO → HISTÓRICO → DADOS → FONTES", async ({ page }) => {
@@ -126,10 +126,10 @@ test.describe("Ficha do candidato", () => {
   });
 
   test("id inexistente e id ausente falham de forma explícita", async ({ page }) => {
-    await page.goto("/candidato.html?id=000000000&cargo=federal");
+    await page.goto("candidato.html?id=000000000&cargo=federal");
     await expect(page.locator("#profileMount")).toHaveText("Pessoa não encontrada na base atual.");
 
-    await page.goto("/candidato.html");
+    await page.goto("candidato.html");
     await expect(page.locator("#profileMount")).toHaveText("Pessoa não informada.");
   });
 });

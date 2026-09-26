@@ -16,23 +16,23 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="{{ title }}">
 <meta name="twitter:description" content="{{ description }}">
-<link rel="icon" href="/assets/favicon.svg?v={{ version }}" type="image/svg+xml">
-<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="assets/favicon.svg?v={{ version }}" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
 {# Preload só dos subsets latin (o caso normal em português): evita o "flash"
    de fonte de sistema antes da fonte real carregar. Os latin-ext ficam a
    cargo do unicode-range, sem preload. #}
-<link rel="preload" href="/assets/fonts/inter-latin.woff2?v={{ version }}" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/assets/fonts/bricolage-grotesque-latin.woff2?v={{ version }}" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/styles/fonts.css?v={{ version }}">
-<link rel="stylesheet" href="/styles/tokens.css?v={{ version }}">
-<link rel="stylesheet" href="/styles/base.css?v={{ version }}">
-<link rel="stylesheet" href="/styles/components/button.css?v={{ version }}">
-<link rel="stylesheet" href="/styles/components/pill-search.css?v={{ version }}">
-<link rel="stylesheet" href="/styles/components/tag.css?v={{ version }}">
-<link rel="stylesheet" href="/styles/components/card.css?v={{ version }}">
-<link rel="stylesheet" href="/styles/components/page.css?v={{ version }}">
-<link rel="stylesheet" href="/styles/components/nav.css?v={{ version }}">
-<link rel="stylesheet" href="/styles/components/footer.css?v={{ version }}">
+<link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="styles/fonts.css?v={{ version }}">
+<link rel="stylesheet" href="styles/tokens.css?v={{ version }}">
+<link rel="stylesheet" href="styles/base.css?v={{ version }}">
+<link rel="stylesheet" href="styles/components/button.css?v={{ version }}">
+<link rel="stylesheet" href="styles/components/pill-search.css?v={{ version }}">
+<link rel="stylesheet" href="styles/components/tag.css?v={{ version }}">
+<link rel="stylesheet" href="styles/components/card.css?v={{ version }}">
+<link rel="stylesheet" href="styles/components/page.css?v={{ version }}">
+<link rel="stylesheet" href="styles/components/nav.css?v={{ version }}">
+<link rel="stylesheet" href="styles/components/footer.css?v={{ version }}">
 {% for sheet in extraStyles %}<link rel="stylesheet" href="{{ sheet }}?v={{ version }}">
 {% endfor %}
 <title>{{ title }}</title>
@@ -43,6 +43,6 @@
 {{ content | safe }}
 </main>
 {% include "footer.njk" %}
-{% if pageScript %}<script type="module" src="/{{ pageScript }}?v={{ version }}"></script>{% endif %}
+{% if pageScript %}<script type="module" src="{{ pageScript }}?v={{ version }}"></script>{% endif %}
 </body>
 </html>

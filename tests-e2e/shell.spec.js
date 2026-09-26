@@ -7,7 +7,7 @@ const { test, expect } = require("@playwright/test");
 
 test.describe("casco compartilhado — /preview-shell/", () => {
   test("nav responde ao breakpoint (desktop vs. hambúrguer)", async ({ page }) => {
-    await page.goto("/preview-shell/");
+    await page.goto("preview-shell.html");
     const viewport = page.viewportSize();
     const isDesktop = viewport.width >= 980;
 
@@ -16,14 +16,14 @@ test.describe("casco compartilhado — /preview-shell/", () => {
   });
 
   test("item ativo do nav usa aria-current, não só cor", async ({ page }) => {
-    await page.goto("/preview-shell/");
+    await page.goto("preview-shell.html");
     const active = page.locator('[aria-current="page"]').first();
     await expect(active).toHaveText("Candidatos");
   });
 
   test("abrir o drawer move o foco e Esc devolve ao botão Menu", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto("/preview-shell/");
+    await page.goto("preview-shell.html");
 
     await page.click("#menuButton");
     await expect(page.locator("#drawer")).toHaveClass(/open/);
@@ -37,7 +37,7 @@ test.describe("casco compartilhado — /preview-shell/", () => {
   });
 
   test("aumento de texto persiste entre recarregamentos", async ({ page }) => {
-    await page.goto("/preview-shell/");
+    await page.goto("preview-shell.html");
     await page.click("#textSizeButton");
     await expect(page.locator("html")).toHaveAttribute("data-scale", "large");
 
@@ -55,7 +55,7 @@ test.describe("casco compartilhado — /preview-shell/", () => {
       if (!res.ok()) errors.push(`${res.status()} ${res.url()}`);
     });
 
-    await page.goto("/preview-shell/");
+    await page.goto("preview-shell.html");
     await page.waitForLoadState("networkidle");
 
     expect(errors).toEqual([]);
@@ -70,7 +70,7 @@ test.describe("design system — /styleguide/", () => {
       if (msg.type() === "error") errors.push(msg.text());
     });
 
-    await page.goto("/styleguide/");
+    await page.goto("styleguide.html");
 
     await expect(page.locator(".qv-btn--primary")).toBeVisible();
     await expect(page.locator(".qv-pill-search")).toBeVisible();

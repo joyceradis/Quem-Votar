@@ -12,13 +12,13 @@ const federais = JSON.parse(
 const doisIds = federais.slice(0, 2).map((c) => c.tse_id);
 
 const TODAS = [
-  ["/", "home"],
-  ["/candidatos.html", "candidates"],
-  ["/candidato.html", "profile"],
-  ["/comparar.html", "compare"],
-  ["/temas.html", "topics"],
-  ["/sobre.html", "about"],
-  ["/apoio.html", "apoio"],
+  ["index.html", "home"],
+  ["candidatos.html", "candidates"],
+  ["candidato.html", "profile"],
+  ["comparar.html", "compare"],
+  ["temas.html", "topics"],
+  ["sobre.html", "about"],
+  ["apoio.html", "apoio"],
 ];
 
 test.describe("Casco em todas as páginas", () => {
@@ -36,7 +36,7 @@ test.describe("Casco em todas as páginas", () => {
 
 test.describe("Comparar", () => {
   test("mostra os mesmos campos para todos e não elege vencedor", async ({ page }) => {
-    await page.goto(`/comparar.html?ids=${doisIds.join(",")}`);
+    await page.goto(`comparar.html?ids=${doisIds.join(",")}`);
     await expect(page.locator(".comparison-grid")).toBeVisible();
 
     await expect(page.locator(".compare-person")).toHaveCount(2);
@@ -68,20 +68,20 @@ test.describe("Comparar", () => {
   });
 
   test("menos de 2 selecionados leva de volta para a escolha", async ({ page }) => {
-    await page.goto("/comparar.html?ids=");
+    await page.goto("comparar.html?ids=");
     await expect(page.locator(".compare-empty")).toBeVisible();
     await expect(page.locator(".compare-empty a")).toHaveAttribute("href", /candidatos\.html/);
   });
 
   test("ids inválidos são descartados sem quebrar a página", async ({ page }) => {
-    await page.goto("/comparar.html?ids=000,111,222");
+    await page.goto("comparar.html?ids=000,111,222");
     await expect(page.locator(".compare-empty")).toBeVisible();
   });
 });
 
 test.describe("Assuntos", () => {
   test("lista só temas com evidência e liga para a listagem filtrada", async ({ page }) => {
-    await page.goto("/temas.html");
+    await page.goto("temas.html");
     await expect(page.locator("#topicCards")).toBeVisible();
 
     const linhas = page.locator(".topic-row");
@@ -101,7 +101,7 @@ test.describe("Assuntos", () => {
 
 test.describe("Como funciona", () => {
   test("explica ausência de dado e nega recomendação de voto", async ({ page }) => {
-    await page.goto("/sobre.html");
+    await page.goto("sobre.html");
     const texto = await page.locator("main").innerText();
     expect(texto).toContain("Não transforma ausência de informação");
     expect(texto.toLowerCase()).toContain("não existe nota, ranking");
@@ -111,7 +111,7 @@ test.describe("Como funciona", () => {
 
 test.describe("Apoiar", () => {
   test("usa o casco padrão e mantém o firewall editorial explícito", async ({ page }) => {
-    await page.goto("/apoio.html");
+    await page.goto("apoio.html");
     await expect(page.locator(".support-trust")).toContainText("Independência preservada");
     await expect(page.locator(".governance-details")).toBeAttached();
     // nenhum dado de candidatura é exibido nesta página
@@ -121,7 +121,7 @@ test.describe("Apoiar", () => {
 
   test("copiar chave Pix dá retorno visível", async ({ page, context, browserName }) => {
     await context.grantPermissions(["clipboard-read", "clipboard-write"]).catch(() => {});
-    await page.goto("/apoio.html");
+    await page.goto("apoio.html");
     await page.locator("#copyEmail").click();
     await expect(page.locator("#pixFeedback")).not.toBeEmpty();
   });

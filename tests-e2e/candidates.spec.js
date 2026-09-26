@@ -15,7 +15,7 @@ const ruidoExterno = (texto) =>
 
 test.describe("Listagem de candidaturas", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/candidatos.html");
+    await page.goto("candidatos.html");
     await expect(page.locator("#resultCount")).not.toHaveText("Carregando…");
   });
 

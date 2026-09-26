@@ -286,3 +286,57 @@ O que a Fase 3 eliminou, em números:
   ilustração no Home sem divisão fixa — todos aguardando as referências
   salvas da mantenedora, ou uma decisão explícita dela para seguir sem
   elas.
+
+## Fase 4 — verificação antes do corte
+
+### Correções vindas da revisão de código (2026-09-26)
+
+A revisão apontou uma classe inteira de problema que nenhum teste de página
+pegava: **a prévia local servia a saída na raiz do domínio, mas a produção
+serve sob `/Quem-Votar/`**. Caminho absoluto (`/styles/base.css`) funcionava
+na prévia e viraria 404 em produção — todo CSS, módulo JS e fonte.
+
+Correções aplicadas:
+
+1. **Caminhos relativos em todo o markup gerado** (`base.njk`, `nav.njk`,
+   `extraStyles`, `pageScript`, `fonts.css`). Como todas as rotas públicas
+   são planas na raiz (`candidatos.html`, e não `candidatos/`), caminho
+   relativo funciona sob qualquer prefixo de publicação — inclusive um
+   eventual domínio próprio no futuro, sem reconfigurar nada.
+   `preview-shell` e `styleguide` também passaram a ser planos, pela mesma
+   razão.
+2. **`pathPrefix: "/Quem-Votar/"`** no Eleventy. Ele não reescreve link
+   nenhum (os links já são relativos): serve para o servidor de prévia e o
+   Playwright montarem a saída **sob o mesmo subcaminho da produção**, que é
+   onde o defeito aparecia. A partir daqui, a suíte exercita a forma real da
+   URL.
+3. **Arquivos públicos faltando na saída**: `manifest.webmanifest`,
+   `sitemap.xml`, `METODOLOGIA.md`, `AUDITORIA.md`, `telemetry.js`, `docs/`
+   e os 548 stubs de `social/`. Sem eles, entre outras coisas, o botão de
+   compartilhar de toda ficha apontava para um 404.
+4. **Preload de fonte sem `?v=`**: o `@font-face` não versiona a URL, então o
+   arquivo pré-carregado nunca casava com o requisitado — a fonte baixava
+   duas vezes e o FOUT que o preload existe para evitar acontecia mesmo assim.
+5. **`?page=N` era descartado**: `setKind()` zerava a página antes do
+   primeiro render. Agora só zera em troca de cargo feita pela pessoa.
+6. **Filtro fantasma**: `tema`/`partido` eram relidos da URL original a cada
+   remontagem do select, então limpar o filtro e trocar de cargo ressuscitava
+   o valor antigo. O valor da URL agora vale só na primeira montagem.
+   (5 e 6 existem igualmente no `app.js` de produção — foram portados fiéis e
+   corrigidos aqui, onde o código estava sendo reescrito de qualquer forma.)
+7. **Páginas internas fora do público**: `styleguide` e `preview-shell` só
+   entram na saída com `QV_DEV=1` (`npm start` e o servidor do Playwright).
+
+### `npm run verify`
+
+`scripts/verify-build.mjs` transforma tudo isso em garantia permanente, contra
+a **saída do build** e não contra o texto-fonte dos arquivos:
+
+- as 10 rotas/arquivos públicos obrigatórios existem;
+- nenhuma página interna vazou;
+- nenhum caminho absoluto de asset próprio sobrou em HTML ou CSS;
+- toda referência local do HTML gerado aponta para um arquivo que existe.
+
+Estado da Fase 4: `npm run build && npm run verify` OK (635 arquivos),
+`npx playwright test` 84 passando / 2 pulados, `scripts/audit-site.py` OK,
+zero arquivo de produção alterado.

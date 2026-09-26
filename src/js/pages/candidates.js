@@ -166,9 +166,16 @@ async function initCandidates() {
   $("estadualCount").textContent = estadual.length;
   $("listUpdate").textContent = `Atualizado em ${formatSnapshot(meta?.collected_at)}`;
 
+  // O valor vindo da URL vale só na primeira montagem. Depois disso quem
+  // manda é o select: sem isso, limpar o filtro e trocar de cargo
+  // ressuscitava silenciosamente o tema/partido da URL original.
+  let temaInicial = url.get("tema");
+  let partidoInicial = url.get("partido");
+
   function populateTopics() {
     const select = $("topicFilter");
-    const requested = url.get("tema") || select.value;
+    const requested = temaInicial ?? select.value;
+    temaInicial = null;
     const availableIds = new Set(datasets[kind].flatMap((c) => candidateTopicIds(c)));
     const topicsForKind = allTopics().filter((topic) => availableIds.has(topic.id));
     select.innerHTML =
@@ -179,7 +186,8 @@ async function initCandidates() {
 
   function populateParties() {
     const select = $("partyFilter");
-    const requested = url.get("partido") || select.value;
+    const requested = partidoInicial ?? select.value;
+    partidoInicial = null;
     const parties = [...new Set(datasets[kind].map((item) => item.party).filter(Boolean))].sort();
     select.innerHTML =
       '<option value="">Todos os partidos</option>' +
@@ -306,9 +314,10 @@ async function initCandidates() {
     syncUrl();
   }
 
-  function setKind(nextKind) {
+  // resetPage=false só na montagem inicial, para não descartar ?page=N.
+  function setKind(nextKind, resetPage = true) {
     kind = nextKind;
-    page = 1;
+    if (resetPage) page = 1;
     document.querySelectorAll(".office-button").forEach((button) => {
       const active = button.dataset.kind === kind;
       button.classList.toggle("active", active);
@@ -355,7 +364,7 @@ async function initCandidates() {
 
   setupComparisonSync(updateCompareTray);
   populateParties();
-  setKind(kind);
+  setKind(kind, false);
 }
 
 initCandidates();
