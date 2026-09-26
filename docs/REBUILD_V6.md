@@ -5,6 +5,26 @@ Rastreamento: [Issue #167](https://github.com/joyceradis/Quem-Votar/issues/167).
 Autorização: decisão direta de @joyceradis (mantenedora), registrada na Issue
 #167, conforme `AGENTS.md` §8.
 
+## Estado atual (reconciliado em 2026-09-26, pós-#170)
+
+- **Fases 0–4 concluídas e em `main`.** PRs #168 e #170 mergeados.
+- **Fase 5 (corte) date-gated:** `scripts/cutover-v6.sh` recusa rodar antes
+  de 2026-10-04. A superfície pública (`index.html`, `app.js`, `styles.css`,
+  as 7 rotas) permanece **V5.5** no ar, sem alteração.
+- **`VERSION` = `6.0.0`** já está preparada na `main`, mas ainda **não é a
+  versão publicada**: as páginas no ar servem `?v=5.5.8`. `VERSION` só passa
+  a valer no corte — ver README, "produção V5.5 / V6.0.0 preparada".
+- **Caminhos protegidos já aplicados** (não mais "patch pendente"): a
+  auditoria desacoplada (`public_css`/`public_js`) e o job de CI
+  `frontend-v6` entraram pelo #170, autorizados pela Issue #169. O diretório
+  `docs/patches/` deixou de existir.
+- **Cadência do worker (#133): concluída** — `evidence-industrial` passou de
+  5 min para horário. O incidente #171 (reaquisição da Câmara) é lane de
+  dados separada e **não** é bloqueador da V6.
+- **Único item de #169 não aplicável aqui:** a troca da origem do Pages,
+  recusada pelo proxy de rede do ambiente; não bloqueia o corte (ver seção
+  própria ao fim).
+
 ## Por quê
 
 O frontend acumulou fragmentação por patches sucessivos de múltiplos agentes:
@@ -50,7 +70,7 @@ uma reinterpretação de dado.
 
 **Fase 0 concluída.** `package.json`/`.eleventy.js` funcionando.
 
-**Fase 1 em andamento — design system.**
+**Fase 1 concluída — design system.**
 
 - `src/styles/tokens.css`: cor, raio, sombra e movimento — valores idênticos
   ao `:root` canônico de `styles.css`, apenas nomeados e documentados.
@@ -274,18 +294,19 @@ O que a Fase 3 eliminou, em números:
 ## Estado no fim da Fase 1 (checkpoint para retomada)
 
 - Fases 0, 1 e 2 commitadas na branch `claude/inspiring-keller-c98fd2`
-  (PR #168, draft), todas com CI verde (`Qualidade do site` +
+  (PR #168, **mergeado**), com CI verde (`Qualidade do site` +
   `🛑 Inspetor de Regras da IA`) e zero arquivo público alterado.
+  _(Registro histórico do fim da Fase 1; as Fases 3 e 4 vieram depois no
+  mesmo PR — ver o banner "Estado atual" no topo.)_
 - Design system utilizável hoje via `npm start` → `/styleguide/` (tokens,
   botão, busca em pílula, tag, card) e `/preview-shell/` (casco completo:
   nav, drawer, rodapé fat footer, ilustração).
 - Duas ilustrações aprovadas e prontas para uso: `assets/v6-penha-line.svg`
   (minimalista) e `assets/v6-penha-sketch.svg` (esboço técnico).
-- Em aberto antes de avançar para a Fase 3: (1) qual ilustração vai onde,
-  (2) fonte tipográfica, (3) formato das tags, (4) integração exata da
-  ilustração no Home sem divisão fixa — todos aguardando as referências
-  salvas da mantenedora, ou uma decisão explícita dela para seguir sem
-  elas.
+- _(Resolvido.)_ As decisões de direção de arte que estavam em aberto no fim
+  da Fase 1 — qual ilustração vai onde, fonte tipográfica, formato das tags,
+  integração da ilustração no Home — foram fechadas ao longo das Fases 3 e 4,
+  com o feedback da mantenedora, e estão refletidas nas páginas em `src/`.
 
 ## Fase 4 — verificação antes do corte
 
@@ -341,42 +362,46 @@ Estado da Fase 4: `npm run build && npm run verify` OK (635 arquivos),
 `npx playwright test` 84 passando / 2 pulados, `scripts/audit-site.py` OK,
 zero arquivo de produção alterado e zero caminho protegido tocado.
 
-### O que ainda trava o corte (Fase 5)
+### Auditoria desacoplada do nome dos arquivos (aplicada em #170)
 
-`scripts/audit-site.py` precisa resolver a superfície pública em vez de ler um
-arquivo de nome fixo (`public_css()` / `public_js()`): enquanto `styles.css` e
-`app.js` existirem na raiz, ele mediria exatamente o que mede hoje; depois do
-corte, passaria a medir a pasta `styles/`+`js/` publicada. As asserções que
-dependem do texto *minificado* viram regex tolerante a espaço — medem a
+`scripts/audit-site.py` passou a resolver a superfície pública em vez de ler
+um arquivo de nome fixo (`public_css()` / `public_js()`): enquanto `styles.css`
+e `app.js` existirem na raiz, ele mede exatamente o que media antes; depois do
+corte, passa a medir a pasta `styles/`+`js/` publicada. As asserções que
+dependiam do texto *minificado* viraram regex tolerante a espaço — medem a
 regra, não a formatação.
 
-**Aplicada em 2026-09-26, autorizada pela Issue #169.** O texto abaixo descreve
-o motivo; o parágrafo seguinte registra o que a aplicação revelou.
+**Aplicada em 2026-09-26 pelo PR #170, autorizada pela Issue #169.** Não é mais
+"patch pendente": `scripts/audit-site.py` e `.github/workflows/quality.yml`
+(job `frontend-v6`) já estão na `main`. O diretório `docs/patches/`, que
+guardava a mudança enquanto ela aguardava autorização, foi removido no mesmo
+PR — a Cerca Elétrica validou a Issue #169 (`decision-recorded` + `risk:high`
++ decisão explícita da mantenedora) e liberou os caminhos protegidos.
 
-_Histórico:_ `scripts/audit-site.py` e
-`.github/workflows/` são caminhos protegidos pela Cerca Elétrica, que exige
-uma Issue de autorização aberta pela mantenedora, com rótulos
-`decision-recorded` + `risk:high` e uma decisão explícita dela em comentário.
-A mudança está escrita, verificada e guardada em
-`docs/patches/v6-fase5-caminhos-protegidos.patch`, junto com o job de CI
-`frontend-v6` (build + verify + Playwright). Ver `docs/patches/README.md`.
+O bloqueador do corte que esta seção registrava **deixou de existir**: a
+auditoria no estado pós-corte simulado passa (`AUDITORIA OK`), provado no #170,
+não argumentado.
 
-Restam **6 asserções que leem o texto-fonte do `app.js`** e não sobrevivem à
-modularização, porque medem implementação e não comportamento:
+O #170 foi além de trocar os nomes de arquivo: tornou as 6 asserções que liam
+o texto-fonte do `app.js` **tolerantes à modularização**. Onde antes casavam
+contra o texto minificado ou um nome de função específico, agora usam regex
+tolerante a espaço ou aceitam o nome novo e o antigo — de modo que o mesmo
+conteúdo, concatenado a partir de `js/`, continua satisfazendo a regra:
 
-| Asserção | Coberta hoje por |
+| Asserção | Como sobrevive ao corte |
 | --- | --- |
-| as três perguntas da ficha | `profile.spec.js` — ordem normativa |
-| `id="dados-eleitorais"` depois de `id="impacto"` | `profile.spec.js` — ordem normativa |
-| `type==="proposta"\|\|type==="declaracao"` | `profile.spec.js` — PROPÕE só aceita proposta/declaração |
-| `evidence_type==="atuacao"` com lane própria | `profile.spec.js` — atuação vai para histórico |
-| `prospectiveThematicEvidence` / `actionThematicEvidence` | idem |
-| nomes das funções `init*` | o casco é verificado em `pages.spec.js` nas 7 páginas |
+| as três perguntas da ficha | strings preservadas em `js/pages/profile.js` |
+| `id="dados-eleitorais"` depois de `id="impacto"` | ordem preservada no markup gerado |
+| `type==="proposta"\|\|type==="declaracao"` | regex tolerante a espaço |
+| `evidence_type==="atuacao"` com lane própria | regex tolerante a espaço |
+| lanes prospectiva/atuação | aceita nomes V5 e V6 (`prospectiveTopicEvidence` etc.) |
+| nomes das funções `init*` | `async function init*` em `js/pages/*` |
 
-A troca é substituir cada `assert ... in app` pelo teste de comportamento
-correspondente, que já existe e já roda. Como `scripts/audit-site.py` é
-caminho protegido por CODEOWNERS, isso é uma decisão da mantenedora e está
-registrada aqui para ser feita no PR do corte, não antes.
+Cada uma continua **coberta em comportamento** por `profile.spec.js` e
+`pages.spec.js`. A auditoria no estado pós-corte simulado passa — foi o que o
+#170 provou. Substituir de vez cada `assert ... in app` pelo teste de
+comportamento equivalente segue sendo uma melhoria desejável, mas **não é mais
+pré-condição do corte**; pode acontecer em slice próprio, depois.
 
 ### Linguagem fácil
 

@@ -6,6 +6,8 @@ A V5.5 organiza a consulta em três perguntas simples: quem é a candidatura, qu
 
 O mapa descreve superfícies públicas. Rotas técnicas de compartilhamento não substituem a ficha canônica.
 
+> **Baseline:** a superfície publicada é a **V5.5**. A reconstrução **V6** está preparada em `src/` (Fases 0–4 concluídas), com corte date-gated a partir de 04/10/2026 — as rotas e o contrato de URL abaixo não mudam no corte. Ver [`REBUILD_V6.md`](REBUILD_V6.md).
+
 ## Rotas públicas
 
 ### `/index.html`
@@ -29,13 +31,15 @@ Exploração por temas de política pública. A associação candidatura-tema ex
 Taxonomia: `data/reference/policy-topics.json`.
 
 ### `/candidato.html?id=<SQ_CANDIDATO>&cargo=<cargo>`
-Ficha vertical em camadas:
+Ficha vertical em camadas, na ordem normativa consolidada pelas #127/#128:
 
-1. Visão geral
-2. Trajetória
-3. Temas e propostas
-4. Registros públicos
-5. Fontes e limitações
+1. Identidade
+2. O que a pessoa faz hoje (HOJE)
+3. O que diz que vai fazer (PROPÕE)
+4. Onde isso pode mexer na vida real (IMPACTO — descritivo, não valorativo)
+5. Histórico
+6. Dados eleitorais
+7. Fontes e limitações
 
 A URL usa o identificador público da candidatura como chave de navegação. A ausência de informação não é convertida em inferência.
 

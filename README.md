@@ -6,7 +6,11 @@ Plataforma cívica open source para consulta factual e rastreável de candidatur
 
 **Produção:** https://joyceradis.github.io/Quem-Votar/
 
-**Baseline visual atual:** `V5.5` · versão canônica em [`VERSION`](VERSION)
+**Baseline visual:** produção **V5.5** no ar · **V6.0.0 preparada para cutover**
+(reconstrução em `src/`, corte date-gated a partir de 04/10/2026). O arquivo
+[`VERSION`](VERSION) já registra `6.0.0`, a versão **preparada** — não a
+publicada: as páginas no ar ainda servem os assets `V5.5`. Ver
+[`docs/REBUILD_V6.md`](docs/REBUILD_V6.md).
 
 [Produção](https://joyceradis.github.io/Quem-Votar/) · [Como funciona](sobre.html) · [Metodologia](METODOLOGIA.md) · [Apoiar o projeto](apoio.html) · [GitHub Sponsors](https://github.com/sponsors/joyceradis) · [Licença](LICENSE)
 
