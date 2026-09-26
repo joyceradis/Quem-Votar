@@ -92,6 +92,14 @@ function evidenceTypeLabel(value){
   if(normalized==="atuação"||normalized==="atuacao")return "Atuação pública";
   return "Registro documentado";
 }
+function formatBRL(value){
+  if(typeof value!=="number"||!isFinite(value))return null;
+  try{
+    return new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(value);
+  }catch{
+    return `R$ ${value}`;
+  }
+}
 function formatSnapshot(iso){
   if(!iso)return "data não disponível";
   try{
@@ -356,6 +364,16 @@ function candidateCard(candidate,kind,selectedIds){
   const topicTags=visibleTopics.length
     ? `<div class="candidate-topic-tags" aria-label="Temas com evidência documentada">${visibleTopics.map(topic=>`<span>${esc(topic.label)}</span>`).join("")}${remainingTopics?`<span class="more">+${remainingTopics}</span>`:""}</div>`
     : "";
+  const occupation=candidate.occupation?esc(candidate.occupation):null;
+  const electionsCount=(candidate.previous_elections||[]).length;
+  const assetsCount=candidate.assets?.count||(candidate.assets?.items||[]).length||0;
+  const socialCount=(candidate.social_links||[]).length;
+  const densityParts=[
+    electionsCount?`${electionsCount} eleiç${electionsCount===1?"ão":"ões"} anterior${electionsCount===1?"":"es"} documentada${electionsCount===1?"":"s"}`:null,
+    assetsCount?`${assetsCount} ${assetsCount===1?"bem declarado":"bens declarados"} ao TSE`:null,
+    socialCount?`${socialCount} rede${socialCount===1?"":"s"} ${socialCount===1?"social":"sociais"} informada${socialCount===1?"":"s"}`:null
+  ].filter(Boolean);
+  const densityLine=densityParts.length?`<p class="candidate-density">${densityParts.join(" · ")}</p>`:"";
 
   return `
     <article class="candidate-card" data-profile-url="${profileUrl}">
@@ -367,8 +385,10 @@ function candidateCard(candidate,kind,selectedIds){
         <h3><a href="${profileUrl}">${esc(name)}</a></h3>
         <p class="candidate-electoral">${esc(candidate.party||"Partido não informado")} · nº ${esc(candidate.number||"—")}</p>
         <p class="candidate-now">${esc(today)}</p>
+        ${occupation?`<p class="candidate-occupation">${occupation}</p>`:""}
         ${topicTags}
         ${proposalCount?`<p class="candidate-proposals">${proposalCount} registro${proposalCount===1?"":"s"} temático${proposalCount===1?"":"s"} com fonte</p>`:""}
+        ${densityLine}
       </div>
       <div class="candidate-actions">
         <a class="profile-link" href="${profileUrl}">Entender</a>
@@ -708,6 +728,8 @@ async function initProfile(){
   const prospectiveThematicEvidence=prospectiveTopicEvidence(candidate);
   const actionThematicEvidence=documentedActionEvidence(candidate);
   const impactTopics=practicalAreasFromEvidence(prospectiveThematicEvidence);
+  const assets=candidate.assets||null;
+  const socialLinks=candidate.social_links||[];
   const socialName=candidate.social_name&&norm(candidate.social_name)!==norm(name)?candidate.social_name:null;
   const organization=(
     candidate.coalition&&norm(candidate.coalition)!=="PARTIDO ISOLADO"
@@ -784,10 +806,38 @@ async function initProfile(){
     ? `${electoralHistoryContent}${actionHistoryContent}`
     : `<p class="plain-empty">Histórico eleitoral e atuação pública documentada ainda não estão disponíveis nesta base.</p>`;
 
+  const assetsTotalLabel=formatBRL(assets?.total_declared_brl);
+  const assetsCount=assets?.count||(assets?.items||[]).length||0;
+  const assetsContent=assetsCount?`
+    <div class="declared-assets" aria-label="Bens declarados ao TSE">
+      <div class="declared-assets-head">
+        <strong>Bens declarados ao TSE</strong>
+        <span>${esc(assets?.source?.dataset||"Bens de candidatos")}</span>
+      </div>
+      <p class="declared-assets-total">${assetsCount} ${assetsCount===1?"bem declarado":"bens declarados"} ao TSE${assetsTotalLabel?` · valor total declarado ao TSE: ${esc(assetsTotalLabel)}`:""}</p>
+      <ul class="declared-assets-list">
+        ${(assets.items||[]).map(item=>`<li><span>${esc(item.description||item.type||"Bem declarado")}</span>${formatBRL(item.value_brl)?`<strong>${esc(formatBRL(item.value_brl))}</strong>`:""}</li>`).join("")}
+      </ul>
+      ${assets?.source?.official_candidate_url?`<a class="declared-assets-source" target="_blank" rel="noopener" href="${esc(assets.source.official_candidate_url)}">Abrir declaração de bens</a>`:""}
+    </div>
+  `:"";
+  const socialLinksContent=socialLinks.length?`
+    <div class="declared-social" aria-label="Redes sociais informadas ao TSE">
+      <div class="declared-assets-head">
+        <strong>Redes sociais informadas ao TSE</strong>
+        <span>${socialLinks.length} link${socialLinks.length===1?"":"s"}</span>
+      </div>
+      <ul class="declared-social-list">
+        ${socialLinks.map(url=>`<li><a target="_blank" rel="noopener" href="${esc(url)}">${esc(url)}</a></li>`).join("")}
+      </ul>
+    </div>
+  `:"";
+
   const sources=[
     candidate.source?.official_portal?{name:"TSE · cadastro eleitoral",detail:`Atualizado em ${formatSnapshot(meta?.collected_at)}`,url:candidate.source.official_portal}:null,
     candidate.photo_source?.official_archive_url?{name:"TSE · foto",detail:candidate.photo_source.dataset||"Arquivo oficial",url:candidate.photo_source.official_archive_url}:null,
     (candidate.current_mandate?.profile_url||chamberRow?.profile_url||institutionalHistory?.profile_url)?{name:"Câmara dos Deputados",detail:"Perfil público",url:candidate.current_mandate?.profile_url||chamberRow?.profile_url||institutionalHistory?.profile_url}:null,
+    assets?.source?.official_candidate_url?{name:"TSE · bens declarados",detail:assets.source.dataset||"Bens de candidatos",url:assets.source.official_candidate_url}:null,
     ...thematicEvidence.filter(item=>item.source_url).map(item=>({name:topicById(item.topic_id)?.label||evidenceTypeLabel(item.evidence_type),detail:item.source_publisher||item.published_at||"",url:item.source_url}))
   ].filter(Boolean);
 
@@ -823,7 +873,7 @@ async function initProfile(){
     <section class="answer-section" id="vai-fazer"><p class="section-number">02</p><div><h2>O que ela diz que vai fazer?</h2>${promisesContent}</div></section>
     <section class="answer-section impact-section" id="impacto"><p class="section-number">03</p><div><h2>Onde isso pode mexer na vida real?</h2>${impactContent}</div></section>
     <section class="answer-section secondary-answer" id="historico"><p class="section-number">04</p><div><h2>Histórico</h2>${historyContent}</div></section>
-    <section class="answer-section secondary-answer" id="dados-eleitorais"><p class="section-number">05</p><div><h2>Dados eleitorais</h2>${electoralFactsContent}</div></section>
+    <section class="answer-section secondary-answer" id="dados-eleitorais"><p class="section-number">05</p><div><h2>Dados eleitorais</h2>${electoralFactsContent}${assetsContent}${socialLinksContent}</div></section>
     <section class="answer-section secondary-answer" id="fontes"><p class="section-number">06</p><div><h2>De onde saiu isso?</h2><div class="source-list">${sources.map(s=>`<div class="source-item"><div><strong>${esc(s.name)}</strong><span>${esc(s.detail)}</span></div><a target="_blank" rel="noopener" href="${esc(s.url)}">Abrir</a></div>`).join("")||'<p class="plain-empty">Nenhuma fonte adicional disponível.</p>'}</div></div></section>
   `;
 
@@ -908,6 +958,12 @@ async function initCompare(){
                 ${row("Escolaridade",candidate=>`<div class="compare-value">${esc(candidate.education||"Não disponível")}</div>`)}
         ${row("Atuação pública",candidate=>`<div class="compare-value">${hasInstitutional(candidate)?"Há informação pública disponível":"Ainda não encontramos atuação pública atual"}</div>`)}
         ${row("O que diz que vai fazer",candidate=>{const evidence=prospectiveTopicEvidence(candidate);const areas=practicalAreasFromEvidence(evidence);return `<div class="compare-value">${evidence.length?(areas.length?areas.map(t=>esc(t.label)).join(" · "):"Há proposta ou declaração documentada"):"Ainda sem proposta ou declaração com fonte"}</div>`})}
+        ${row("Partido e número",candidate=>`<div class="compare-value">${esc(candidate.party||"Partido não informado")} · nº ${esc(candidate.number||"—")}</div>`)}
+        ${row("Ocupação declarada",candidate=>`<div class="compare-value">${esc(candidate.occupation||"Não disponível")}</div>`)}
+        ${row("Histórico eleitoral",candidate=>{const count=(candidate.previous_elections||[]).length;return `<div class="compare-value">${count?`${count} eleiç${count===1?"ão":"ões"} anterior${count===1?"":"es"} documentada${count===1?"":"s"}`:"Nenhuma eleição anterior documentada"}</div>`})}
+        ${row("Bens declarados ao TSE",candidate=>{const count=candidate.assets?.count||(candidate.assets?.items||[]).length||0;const total=formatBRL(candidate.assets?.total_declared_brl);return `<div class="compare-value">${count?`${count} ${count===1?"bem declarado":"bens declarados"}${total?` · valor declarado ao TSE: ${esc(total)}`:""}`:"Nenhum bem declarado nesta base"}</div>`})}
+        ${row("Redes sociais informadas ao TSE",candidate=>{const count=(candidate.social_links||[]).length;return `<div class="compare-value">${count?`${count} rede${count===1?"":"s"} ${count===1?"social":"sociais"} informada${count===1?"":"s"}`:"Nenhuma rede social informada"}</div>`})}
+        ${row("Atuação documentada",candidate=>{const count=documentedActionEvidence(candidate).length;return `<div class="compare-value">${count?`${count} registro${count===1?"":"s"} de atuação documentado${count===1?"":"s"}`:"Ainda sem atuação pública documentada"}</div>`})}
       </div>
     </div>
     <p class="comparison-note">Dados disponíveis em ${esc(formatSnapshot(meta?.collected_at))}. Falta de informação aqui não significa ausência de proposta, posição ou experiência.</p>
