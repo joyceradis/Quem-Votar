@@ -5,7 +5,7 @@
   <path d="M12 290c160-12 340-12 500 6" fill="none" stroke="#9AB9C9" stroke-width="2" opacity=".55" stroke-linecap="round"/>
   <path d="M12 302c160-10 340-10 500 8" fill="none" stroke="#EE8FBD" stroke-width="2.5" opacity=".6" stroke-linecap="round"/>
 
-  <path d="M10 272C30 162 70 92 140 87 190 84 210 132 190 172 175 202 160 232 150 272Z" fill="#B7CCD8"/>
+  <path d="M8 270C20 205 45 145 80 110C100 90 120 78 140 75C160 78 180 92 198 120C212 145 208 205 198 270Z" fill="#B7CCD8"/>
 
   <g fill="none" stroke="#DCEAF0" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
     <path d="M114 122V95h44v27z"/>
