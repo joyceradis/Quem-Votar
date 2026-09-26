@@ -6,6 +6,16 @@
 <meta name="theme-color" content="#113b56">
 <meta name="description" content="{{ description }}">
 <meta name="qv-asset-version" content="{{ version }}">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<link rel="canonical" href="{{ site.baseUrl }}{{ page.url | replace("/index.html", "/") }}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Quem Votar?">
+<meta property="og:title" content="{{ title }}">
+<meta property="og:description" content="{{ description }}">
+<meta property="og:url" content="{{ site.baseUrl }}{{ page.url | replace("/index.html", "/") }}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{{ title }}">
+<meta name="twitter:description" content="{{ description }}">
 <link rel="icon" href="/assets/favicon.svg?v={{ version }}" type="image/svg+xml">
 <link rel="manifest" href="/manifest.webmanifest">
 {# Preload só dos subsets latin (o caso normal em português): evita o "flash"

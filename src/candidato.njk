@@ -1,0 +1,17 @@
+---
+layout: base.njk
+permalink: candidato.html
+title: "Candidatura · Quem Votar? ES 2026"
+description: "Ficha factual de uma candidatura no Espírito Santo: atuação atual, propostas documentadas, histórico e fontes."
+bodyPage: profile
+pageScript: js/pages/profile.js
+mainClass: profile-shell
+socialMeta: true
+extraStyles:
+  - /styles/pages/profile.css
+---
+{# O conteúdo é montado em runtime por js/pages/profile.js a partir do
+   snapshot, porque a ficha depende do ?id= da URL. O casco (nav, rodapé,
+   metadados) vem do layout; os metadados og:/twitter: são reescritos pelo
+   módulo assim que a candidatura é identificada. #}
+<div id="profileMount" class="qv-loading">Carregando candidatura…</div>

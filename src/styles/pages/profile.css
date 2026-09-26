@@ -1,0 +1,546 @@
+/*
+ * Ficha do candidato — portado de styles.css:36-37 e dos dois blocos que lá
+ * estavam colados ao fim do arquivo por número de issue (#127 e #156).
+ * Aqui eles vivem junto do componente a que pertencem, em vez de acumulados
+ * como camada posterior.
+ */
+
+.profile-shell {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 26px max(20px, calc((100vw - var(--max)) / 2)) clamp(64px, 8vw, 96px);
+}
+
+.qv-loading,
+.profile-shell > .qv-empty {
+  padding: 48px 0;
+  color: var(--muted);
+}
+
+.back-link {
+  display: inline-block;
+  margin: 14px 0 18px;
+  color: var(--blue-strong);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+/* Identidade */
+.profile-hero {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 42px);
+  align-items: center;
+  padding: clamp(22px, 3vw, 32px);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, #eff9ff 0%, #fff 54%, #fff0f7 100%);
+  box-shadow: var(--shadow-soft);
+}
+
+.profile-photo-wrap {
+  display: flex;
+  justify-content: center;
+}
+
+.profile-photo {
+  width: 220px;
+  height: 272px;
+  object-fit: cover;
+  border-radius: 30px;
+  background: linear-gradient(145deg, var(--blue-soft), var(--pink-soft));
+  box-shadow: 0 18px 50px rgba(17, 59, 86, 0.14);
+}
+
+.profile-photo.profile-fallback {
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+.profile-copy h1 {
+  margin: 0;
+  max-width: 18ch;
+  font-size: clamp(2.4rem, 5.4vw, 4.2rem);
+  line-height: 0.98;
+  letter-spacing: -0.04em;
+}
+
+.full-name {
+  margin: 10px 0 0;
+  color: var(--muted);
+}
+
+.social-name {
+  margin: 5px 0 0;
+  color: var(--ink-soft);
+  font-size: 0.86rem;
+}
+
+.identity-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin: 16px 0 0;
+  color: var(--ink-soft);
+}
+
+.identity-line strong {
+  color: var(--ink);
+}
+
+/* Atuação atual no topo — nunca ocupação declarada (#127/#128). */
+.profile-now {
+  max-width: 62ch;
+  margin: 14px 0 0;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.profile-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* Navegação entre as perguntas */
+.profile-jump {
+  display: flex;
+  gap: 22px;
+  overflow: auto;
+  white-space: nowrap;
+  margin: 26px 0 0;
+  border-bottom: 1px solid var(--line);
+  scrollbar-width: thin;
+}
+
+.profile-jump a {
+  padding: 15px 0;
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.profile-jump a:hover {
+  color: var(--pink-strong);
+}
+
+/* Seções numeradas 01..06 */
+.answer-section {
+  display: grid;
+  grid-template-columns: 90px minmax(0, 1fr);
+  gap: 28px;
+  padding: clamp(36px, 5vw, 54px) 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.section-number {
+  margin: 0;
+  color: var(--pink-strong);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.answer-section h2 {
+  margin: 0 0 22px;
+  font-size: clamp(1.8rem, 3.6vw, 3rem);
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+
+.secondary-answer h2 {
+  font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+}
+
+/* Fato simples e estado de ausência.
+   O estado de ausência é texto corrido explícito — nunca um zero, um traço
+   ou um ícone, que o leitor poderia interpretar como "não tem". */
+.plain-fact {
+  display: grid;
+  gap: 5px;
+  padding: 20px 0;
+}
+
+.plain-fact span {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.plain-fact strong {
+  font-size: 1.2rem;
+}
+
+.plain-fact small {
+  color: var(--muted);
+}
+
+.plain-empty {
+  max-width: 62ch;
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+.plain-empty strong {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--ink);
+  font-size: 1.05rem;
+}
+
+.plain-empty p {
+  margin: 0;
+}
+
+/* Propostas, atuação documentada e registros */
+.promise-list,
+.public-records,
+.impact-list {
+  display: grid;
+  gap: 0;
+  border-top: 1px solid var(--line);
+}
+
+.promise-list article,
+.public-records article,
+.impact-list article {
+  padding: 18px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.promise-list article > span,
+.public-records article > span {
+  color: var(--blue-strong);
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.promise-list article h3 {
+  margin: 6px 0 0;
+  font-size: 1.1rem;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+
+.public-records article strong {
+  display: block;
+  margin-top: 3px;
+}
+
+.evidence-meta,
+.public-records article p {
+  margin: 7px 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.promise-list a,
+.public-records a {
+  color: var(--blue-strong);
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-decoration: none;
+}
+
+.documented-actions h3 {
+  margin: 28px 0 10px;
+  font-size: 1.05rem;
+}
+
+/* Impacto — áreas relacionadas, sem afirmação causal. */
+.impact-list article h3 {
+  margin: 0 0 10px;
+  font-size: 1.05rem;
+}
+
+.impact-context {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.life-areas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.life-areas li {
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 2px;
+}
+
+.impact-note {
+  max-width: 68ch;
+  margin: 17px 0 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.impact-note strong {
+  color: var(--ink);
+}
+
+/* Histórico */
+.timeline-list {
+  display: grid;
+  border-top: 1px solid var(--line);
+}
+
+.timeline-item {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 24px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.timeline-item > strong {
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.timeline-item > div {
+  display: grid;
+}
+
+.timeline-item small {
+  margin-top: 3px;
+  color: var(--muted);
+}
+
+/* Dados eleitorais, bens e redes (#156) */
+.electoral-data,
+.declared-assets,
+.declared-social {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(17, 59, 86, 0.12);
+}
+
+#dados-eleitorais .electoral-data {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.electoral-data-head,
+.declared-assets-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.electoral-data-head strong,
+.declared-assets-head strong {
+  color: var(--blue-dark);
+  font-size: 0.84rem;
+}
+
+.electoral-data-head span,
+.declared-assets-head span {
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+
+.electoral-data-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 26px;
+  margin: 10px 0 0;
+}
+
+.electoral-data-item {
+  padding: 11px 0;
+  border-top: 1px solid rgba(17, 59, 86, 0.08);
+}
+
+.electoral-data-item dt {
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.electoral-data-item dd {
+  margin: 4px 0 0;
+  color: var(--ink);
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.declared-assets-total {
+  margin: 10px 0 0;
+  color: var(--ink);
+  font-size: 0.86rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.declared-assets-list,
+.declared-social-list {
+  display: grid;
+  gap: 0;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.declared-assets-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  padding: 9px 0;
+  border-top: 1px solid rgba(17, 59, 86, 0.08);
+}
+
+.declared-assets-list li span {
+  color: var(--ink-soft);
+  font-size: 0.84rem;
+}
+
+.declared-assets-list li strong {
+  color: var(--ink);
+  font-size: 0.84rem;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.declared-assets-source {
+  display: inline-block;
+  margin-top: 10px;
+  color: var(--blue-strong);
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-decoration: none;
+}
+
+.declared-social-list li {
+  padding: 8px 0;
+  border-top: 1px solid rgba(17, 59, 86, 0.08);
+  word-break: break-all;
+}
+
+.declared-social-list a {
+  color: var(--blue-strong);
+  font-weight: 600;
+  font-size: 0.82rem;
+  text-decoration: none;
+}
+
+/* Fontes */
+.source-list {
+  display: grid;
+  border-top: 1px solid var(--line);
+}
+
+.source-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.source-item > div {
+  display: grid;
+}
+
+.source-item span {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.source-item a {
+  color: var(--blue-strong);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+@media (max-width: 920px) {
+  .profile-hero {
+    grid-template-columns: 180px minmax(0, 1fr);
+    gap: 28px;
+  }
+
+  .profile-photo {
+    width: 170px;
+    height: 210px;
+  }
+}
+
+@media (max-width: 620px) {
+  .profile-hero {
+    grid-template-columns: 1fr;
+    padding: 22px;
+    border-radius: var(--radius-md);
+  }
+
+  .profile-photo-wrap {
+    justify-content: flex-start;
+  }
+
+  .profile-photo {
+    width: 122px;
+    height: 150px;
+    border-radius: 22px;
+  }
+
+  .profile-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .profile-actions button {
+    width: 100%;
+    min-height: 48px;
+  }
+
+  .answer-section {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .electoral-data-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .timeline-item {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .declared-assets-list li {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+  }
+
+  .declared-assets-list li strong {
+    white-space: normal;
+  }
+}
