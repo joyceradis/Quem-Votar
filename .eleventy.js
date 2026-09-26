@@ -6,6 +6,7 @@ module.exports = function (eleventyConfig) {
   // qual para a saída, sem duplicar arquivos de imagem/ícone dentro de src/.
   eleventyConfig.addPassthroughCopy({ assets: "assets" });
   eleventyConfig.addPassthroughCopy("src/styles");
+  eleventyConfig.addPassthroughCopy("src/js");
 
   return {
     dir: {

@@ -72,3 +72,35 @@ uma reinterpretação de dado.
 
 Nenhum arquivo público (`index.html`, `app.js`, `styles.css`, `data/*`) foi
 alterado por esta frente.
+
+**Fase 2 concluída — casco compartilhado.**
+
+- `src/_includes/nav.njk` + `src/_includes/footer.njk`: fonte única do
+  header/drawer/rodapé hoje duplicados byte-a-byte em 6 dos 7 HTML.
+  `src/_data/navLinks.js` é a lista única de links (antes copiada à mão em
+  cada página e também em `telemetry.js`).
+- `src/_includes/base.njk`: layout único que monta `<head>`, os partials
+  acima e o carregamento do módulo JS da página.
+- `src/js/core/{dom,a11y,data,url-state}.js`: `dom.js` e `a11y.js` portados
+  **literalmente** de `app.js:10-14` e `app.js:152-218` (mesmo
+  comportamento, só em módulo próprio); `url-state.js` é novo e substitui
+  as duas implementações quase idênticas de "ajustar searchParams da URL +
+  `history.replaceState`" que existiam separadas em `initCandidates` e
+  `initCompare`.
+- `src/_data/version.js`: fonte única de cache-busting. Antes, o `?v=`
+  divergia em três lugares (`5.5.8` no HTML, `5.5` dentro do `app.js`,
+  `5.5.0` no arquivo `VERSION`) sem nenhum aviso quando saíam de sincronia;
+  agora todo template/módulo lê o mesmo `VERSION`.
+- `src/styles/components/{nav,footer}.css`: portados literalmente de
+  `styles.css` (mesmas classes que a produção já usa), para a Fase 3 poder
+  trocar o markup das páginas reais sem reescrever este CSS.
+- Validação comportamental (não só visual) via Playwright contra o casco
+  real: nav desktop visível/hambúrguer oculto ≥980px e o inverso <980px,
+  abrir o drawer move o foco para "Fechar", `Esc` fecha e devolve o foco ao
+  botão "Menu", aumento de texto persiste — mesmo contrato de
+  `tests/test_accessibility_contract.py` hoje em produção, sem nenhum erro
+  de console. Porte formal desse teste para os novos módulos fica para a
+  Fase 3, junto com o corte de cada página real (não faz sentido testar
+  formalmente um casco que ainda não está no ar).
+
+Nenhum arquivo público foi alterado por esta frente.

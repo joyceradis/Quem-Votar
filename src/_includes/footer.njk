@@ -1,0 +1,16 @@
+{# Rodapé — fonte única, portado literalmente do rodapé hoje duplicado em
+   6 dos 7 HTML públicos (apoio.html tem o seu próprio, que a Fase 3
+   unifica). data-snapshot-date/data-tse-source continuam sendo preenchidos
+   em runtime por applyGlobalMeta() (app.js:142-150 hoje; core/data.js na
+   V6), não aqui. #}
+<footer class="site-footer">
+  <div>
+    <strong>Quem Votar? · Espírito Santo 2026</strong>
+    <span>Informação pública, em linguagem normal.</span>
+    <a href="apoio.html">Apoie o projeto</a>
+  </div>
+  <div>
+    <span>Atualizado em <b data-snapshot-date>—</b></span>
+    <a data-tse-source href="https://dadosabertos.tse.jus.br/dataset/candidatos-2026" target="_blank" rel="noopener">Dados do TSE</a>
+  </div>
+</footer>

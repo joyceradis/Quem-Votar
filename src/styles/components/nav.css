@@ -1,0 +1,195 @@
+/*
+ * Casco de navegação — portado literalmente de styles.css:13-17,41,43
+ * (site-header, drawer, backdrop, desktop-nav e seus breakpoints). Mesmas
+ * classes que a produção já usa hoje, para que a Fase 3 troque o markup
+ * das páginas reais sem precisar reescrever este CSS.
+ */
+.site-header {
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 0 max(18px, calc((100vw - var(--max)) / 2));
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(255, 255, 255, 0.86);
+  border-bottom: 1px solid rgba(17, 59, 86, 0.08);
+  backdrop-filter: blur(18px) saturate(150%);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.brand img {
+  width: 206px;
+  max-height: 44px;
+}
+
+.desktop-nav {
+  display: none;
+  align-items: center;
+  gap: 22px;
+}
+
+.desktop-nav a {
+  color: var(--ink-soft);
+  font-size: 0.84rem;
+  font-weight: 850;
+  text-decoration: none;
+}
+
+.desktop-nav a:hover {
+  color: var(--blue-strong);
+}
+
+.desktop-nav a[aria-current="page"] {
+  color: var(--blue-strong);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.text-size,
+.nav-toggle,
+.drawer-close {
+  min-height: var(--tap-min);
+  padding: 0 15px;
+  border: 1px solid rgba(17, 59, 86, 0.14);
+  border-radius: var(--radius-pill);
+  background: #fff;
+  color: var(--blue-dark);
+  font-weight: 800;
+  box-shadow: 0 4px 14px rgba(17, 59, 86, 0.05);
+}
+
+.nav-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--blue-strong);
+  border-color: var(--blue-strong);
+  color: #fff;
+  box-shadow: 0 7px 18px rgba(22, 121, 182, 0.18);
+}
+
+.nav-toggle::before {
+  content: "☰";
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.text-size:hover,
+.drawer-close:hover {
+  background: var(--blue-soft);
+}
+
+.nav-toggle:hover {
+  background: #0e679d;
+}
+
+.drawer {
+  position: fixed;
+  inset: 0 0 0 auto;
+  width: min(420px, 92vw);
+  height: 100dvh;
+  z-index: 80;
+  padding: 96px 32px 32px;
+  display: grid;
+  align-content: start;
+  transform: translateX(105%);
+  transition: transform var(--motion-base) var(--motion-ease);
+  background: linear-gradient(180deg, #fff 0%, #f7fbfe 58%, #fff4fa 100%);
+  box-shadow: -30px 0 80px rgba(17, 59, 86, 0.16);
+}
+
+.drawer.open {
+  transform: none;
+}
+
+.drawer::before {
+  content: "onde você quer ir?";
+  position: absolute;
+  left: 32px;
+  top: 38px;
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.drawer a {
+  padding: 19px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 1.25rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.drawer a:hover {
+  color: var(--pink-strong);
+}
+
+.drawer a[aria-current="page"] {
+  color: var(--blue-strong);
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+
+.drawer-close {
+  position: absolute;
+  right: 22px;
+  top: 24px;
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  background: rgba(15, 44, 60, 0.28);
+  backdrop-filter: blur(4px);
+}
+
+@media (min-width: 980px) {
+  .desktop-nav {
+    display: flex;
+  }
+
+  .nav-toggle {
+    display: none;
+  }
+}
+
+@media (max-width: 620px) {
+  .site-header {
+    height: 64px;
+    padding-inline: 14px;
+  }
+
+  .brand img {
+    width: 176px;
+  }
+
+  .text-size,
+  .nav-toggle {
+    min-width: var(--tap-min);
+    padding: 0 11px;
+  }
+
+  .drawer {
+    padding-inline: 24px;
+  }
+
+  .drawer::before {
+    left: 24px;
+  }
+}

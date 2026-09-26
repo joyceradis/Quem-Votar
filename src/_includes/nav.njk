@@ -1,0 +1,28 @@
+{# Casco de navegação — fonte única para o que hoje está duplicado
+   byte-a-byte em index.html, candidatos.html, candidato.html, comparar.html,
+   temas.html e sobre.html (apoio.html tinha um 7º header divergente, que a
+   Fase 3 vai unificar aqui também). `activeNav` é definido no front matter
+   de cada página (ex.: `activeNav: candidatos`). #}
+<a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
+<header class="site-header">
+  <a class="brand" href="/index.html" aria-label="Quem Votar? início">
+    <img src="/assets/logo.svg" alt="Quem Votar? ES 2026">
+  </a>
+  <nav class="desktop-nav" aria-label="Navegação principal">
+    {% for link in navLinks %}
+    <a href="{{ link.href }}"{% if activeNav == link.key %} aria-current="page"{% endif %}>{{ link.label }}</a>
+    {% endfor %}
+  </nav>
+  <div class="header-actions">
+    <button class="text-size" id="textSizeButton" type="button" aria-label="Aumentar tamanho do texto">A+</button>
+    <button class="nav-toggle" id="menuButton" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="drawer">Menu</button>
+  </div>
+</header>
+<aside class="drawer" id="drawer" aria-hidden="true" inert>
+  <button class="drawer-close" id="closeMenu" type="button">Fechar</button>
+  <a href="index.html"{% if not activeNav %} aria-current="page"{% endif %}>Início</a>
+  {% for link in navLinks %}
+  <a href="{{ link.href }}"{% if activeNav == link.key %} aria-current="page"{% endif %}>{{ link.label }}</a>
+  {% endfor %}
+</aside>
+<div class="backdrop" id="backdrop" hidden></div>

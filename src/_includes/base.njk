@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#113b56">
+<meta name="description" content="{{ description }}">
+<meta name="qv-asset-version" content="{{ version }}">
+<link rel="icon" href="/assets/favicon.svg?v={{ version }}" type="image/svg+xml">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="stylesheet" href="/styles/tokens.css?v={{ version }}">
+<link rel="stylesheet" href="/styles/base.css?v={{ version }}">
+<link rel="stylesheet" href="/styles/components/button.css?v={{ version }}">
+<link rel="stylesheet" href="/styles/components/pill-search.css?v={{ version }}">
+<link rel="stylesheet" href="/styles/components/tag.css?v={{ version }}">
+<link rel="stylesheet" href="/styles/components/card.css?v={{ version }}">
+<link rel="stylesheet" href="/styles/components/nav.css?v={{ version }}">
+<link rel="stylesheet" href="/styles/components/footer.css?v={{ version }}">
+<title>{{ title }}</title>
+</head>
+<body data-page="{{ bodyPage }}">
+{% include "nav.njk" %}
+<main id="conteudo"{% if mainClass %} class="{{ mainClass }}"{% endif %}>
+{{ content | safe }}
+</main>
+{% include "footer.njk" %}
+{% if pageScript %}<script type="module" src="/{{ pageScript }}?v={{ version }}"></script>{% endif %}
+</body>
+</html>
