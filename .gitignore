@@ -35,3 +35,8 @@ env/
 # OS
 .DS_Store
 .env
+
+# Eleventy build tooling (Fase 0 — Issue #167)
+node_modules/
+_site/
+.cache/

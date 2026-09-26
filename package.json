@@ -1,0 +1,13 @@
+{
+  "name": "quem-votar",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Build tooling (Eleventy) for the Quem Votar? static frontend. Output remains plain HTML/CSS/JS for GitHub Pages — no framework ships to the browser.",
+  "scripts": {
+    "start": "eleventy --serve",
+    "build": "eleventy"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^3.0.0"
+  }
+}
