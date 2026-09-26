@@ -42,6 +42,21 @@ h3 {
   font-variant-numeric: tabular-nums;
 }
 
+/* Rótulo de seção. Sempre acompanhado de um título de verdade logo abaixo —
+   nunca é a única indicação do que vem a seguir. */
+.qv-eyebrow {
+  margin: 0 0 12px;
+  color: var(--blue-strong);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.qv-eyebrow--onDark {
+  color: var(--pink);
+}
+
 body.page-lock {
   overflow: hidden;
 }

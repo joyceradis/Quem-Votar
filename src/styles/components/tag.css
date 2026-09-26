@@ -1,24 +1,50 @@
 /*
- * Tag de tema — mesmo padrão de `.candidate-topic-tags span` já em produção.
- * Texto simples em pílula; nunca cor sozinha carregando significado
- * (AGENTS.md §6 — "nenhuma informação importante dependente apenas de cor").
- * Sempre acompanhada do rótulo do tema por extenso, nunca só ícone/cor.
+ * Rótulo de tema documentado.
+ *
+ * Antes era uma pílula preenchida (chip). O `AGENTS.md` §6 pede justamente o
+ * contrário — "evitar checkmarks de qualidade, semáforos, bolinhas de status,
+ * chips excessivos e cardificação indiscriminada" — então o rótulo passa a ser
+ * texto editorial com um traço fino embaixo, não um selo.
+ *
+ * Isso também elimina um risco real: uma pílula colorida lida como "selo de
+ * qualidade"/"aprovado naquele tema", e tema aqui significa apenas que existe
+ * evidência documentada — nunca endosso, nota ou posição.
+ *
+ * A cor não carrega significado: o rótulo sempre traz o nome do tema por
+ * extenso ("nenhuma informação importante dependente apenas de cor").
  */
 .qv-tag {
-  display: inline-flex;
-  align-items: center;
-  min-height: 27px;
-  padding: 4px 10px;
-  border: 1px solid rgba(42, 117, 211, 0.11);
-  border-radius: var(--radius-pill);
-  background: #f3f8fd;
-  color: #215f9d;
-  font-size: 0.7rem;
-  font-weight: 800;
+  display: inline-block;
+  padding-bottom: 2px;
+  border-bottom: 1px solid rgba(22, 121, 182, 0.35);
+  color: var(--blue-strong);
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.3;
+  text-decoration: none;
+  white-space: nowrap;
 }
 
+a.qv-tag:hover,
+a.qv-tag:focus-visible {
+  border-bottom-color: var(--blue-strong);
+  color: var(--blue-dark);
+}
+
+/* Contador de temas não exibidos ("+2"). Sem cor de destaque: é informação
+   de contagem, não um tema a mais. */
 .qv-tag--more {
-  background: #fff6fa;
-  border-color: rgba(179, 60, 114, 0.12);
-  color: var(--pink-strong);
+  border-bottom-color: transparent;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+/* Lista de rótulos: separação por espaço, sem empilhar caixas. */
+.qv-tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }

@@ -56,8 +56,8 @@
 .qv-card-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 10px;
+  gap: 6px 18px;
+  margin-top: 12px;
 }
 
 @media (max-width: 620px) {

@@ -21,6 +21,10 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy({ assets: "assets" });
   eleventyConfig.addPassthroughCopy("src/styles");
   eleventyConfig.addPassthroughCopy("src/js");
+  // Snapshot público: copiado como está, para a prévia local consumir os
+  // mesmos JSON que a produção. Nada aqui é gerado nem alterado pelo build.
+  eleventyConfig.addPassthroughCopy({ "data/generated": "data/generated" });
+  eleventyConfig.addPassthroughCopy({ "data/reference": "data/reference" });
 
   return {
     dir: {

@@ -28,10 +28,8 @@
   /* mais específico que `.type-option p` abaixo, senão o espécime herda o
      tamanho do texto de apoio */
   .type-option .specimen { margin: 0; font-size: clamp(2rem, 4.2vw, 3.1rem); line-height: 1.05; letter-spacing: -.03em; color: var(--ink); }
-  .opt-fraunces .specimen { font-family: "Fraunces", serif; font-optical-sizing: auto; }
-  .opt-instrument .specimen { font-family: "Instrument Serif", serif; }
-  .opt-bricolage .specimen { font-family: "Bricolage Grotesque", sans-serif; }
-  .opt-inter .specimen { font-family: "Inter", sans-serif; font-weight: 800; }
+  .opt-inter-text .specimen { font-family: var(--font-sans); }
+  .opt-bricolage .specimen { font-family: var(--font-display); font-optical-sizing: auto; }
   .scale-row { display: grid; gap: 10px; }
   .scale-row span { color: var(--muted); font-size: .7rem; }
 </style>
@@ -54,31 +52,17 @@
 </section>
 
 <section>
-  <h2>Tipografia — escolher a família de títulos</h2>
-  <p style="color:var(--muted);font-size:.85rem;max-width:62ch">O texto e a interface usam <b>Inter</b> (definido). Falta escolher a família dos títulos. Todas são OFL-1.1 e ficam auto-hospedadas, sem requisição a terceiros. Depois da escolha, as não usadas saem do repositório.</p>
-
-  <div class="type-option opt-fraunces">
-    <small>A · Fraunces — padrão atual</small>
-    <p class="specimen">Entenda uma candidatura em 3 perguntas.</p>
-    <p>Serifada variável, editorial e com personalidade — mais próxima de revista/jornal do que de portal institucional.</p>
-  </div>
-
-  <div class="type-option opt-instrument">
-    <small>B · Instrument Serif</small>
-    <p class="specimen">Entenda uma candidatura em 3 perguntas.</p>
-    <p>Serifada de alto contraste, mais sóbria e clássica. Menos “falante” que a Fraunces.</p>
-  </div>
+  <h2>Tipografia</h2>
+  <p style="color:var(--muted);font-size:.85rem;max-width:62ch"><b>Bricolage Grotesque</b> nos títulos, <b>Inter</b> no texto, interface e dados. Auto-hospedadas, OFL-1.1, sem requisição a terceiros. As serifadas testadas foram descartadas por legibilidade em tela pequena — ver <code>assets/fonts/README.md</code>.</p>
 
   <div class="type-option opt-bricolage">
-    <small>C · Bricolage Grotesque</small>
+    <small>Títulos · Bricolage Grotesque</small>
     <p class="specimen">Entenda uma candidatura em 3 perguntas.</p>
-    <p>Sem serifa, contemporânea e um pouco irreverente — combina com a marca “descontraída” do logo.</p>
   </div>
 
-  <div class="type-option opt-inter">
-    <small>D · Inter pesada (sem família extra)</small>
-    <p class="specimen">Entenda uma candidatura em 3 perguntas.</p>
-    <p>Mesma família do texto, só em peso alto. Opção mais neutra e mais leve de carregar.</p>
+  <div class="type-option opt-inter-text">
+    <small>Texto · Inter</small>
+    <p style="max-width:62ch;font-size:1rem;color:var(--ink)">Propostas e declarações sempre com fonte, data e tipo de evidência. Quando não há registro, o site diz que não há — nunca preenche a lacuna com suposição.</p>
   </div>
 </section>
 
@@ -138,12 +122,13 @@
 </section>
 
 <section>
-  <h2>Tags de tema</h2>
-  <div class="row">
-    <span class="qv-tag">Saúde</span>
-    <span class="qv-tag">Educação</span>
-    <span class="qv-tag qv-tag--more">+2</span>
-  </div>
+  <h2>Rótulos de tema</h2>
+  <p style="color:var(--muted);font-size:.85rem;max-width:62ch">Texto com traço fino, não pílula preenchida: um selo colorido seria lido como “aprovado nesse tema”, e tema aqui só significa que existe evidência documentada.</p>
+  <ul class="qv-tag-list">
+    <li><span class="qv-tag">Saúde</span></li>
+    <li><span class="qv-tag">Educação</span></li>
+    <li><span class="qv-tag qv-tag--more">+2 temas</span></li>
+  </ul>
 </section>
 
 <section>
@@ -156,6 +141,7 @@
       <div class="qv-card-tags">
         <span class="qv-tag">Saúde</span>
         <span class="qv-tag">Segurança pública</span>
+        <span class="qv-tag qv-tag--more">+1 tema</span>
       </div>
     </div>
     <div><a class="qv-btn qv-btn--ghost" href="#">Ver ficha</a></div>

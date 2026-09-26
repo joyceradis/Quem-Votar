@@ -27,14 +27,21 @@ português, o caso normal carrega apenas o `latin`.
 
 | Família | Uso | Copyright | Upstream |
 |---|---|---|---|
-| Inter | Texto e interface | Copyright 2020 The Inter Project Authors | https://github.com/rsms/inter |
-| Fraunces | Títulos (display) | Copyright 2018 The Fraunces Project Authors | https://github.com/undercasetype/Fraunces |
-| Instrument Serif | Candidata a display | Copyright 2022 The Instrument Serif Project Authors | https://github.com/Instrument/instrument-serif |
-| Bricolage Grotesque | Candidata a display | Copyright 2022 The Bricolage Grotesque Project Authors | https://github.com/ateliertriay/bricolage |
+| Inter | Texto, interface e dados | Copyright 2020 The Inter Project Authors | https://github.com/rsms/inter |
+| Bricolage Grotesque | Títulos (display) | Copyright 2022 The Bricolage Grotesque Project Authors | https://github.com/ateliertriay/bricolage |
 
-## Pendência antes da Fase 5
+## Por que estas duas
 
-`Instrument Serif` e `Bricolage Grotesque` estão aqui apenas como **candidatas
-em comparação** na página interna de styleguide. Assim que a mantenedora
-escolher a família de títulos, as não escolhidas devem ser removidas deste
-diretório e de `src/styles/fonts.css` — não faz sentido publicar peso morto.
+Quatro famílias foram comparadas lado a lado (Fraunces, Instrument Serif,
+Bricolage Grotesque e Inter em peso alto). As duas serifadas foram descartadas
+por legibilidade: têm traço fino de alto contraste, que degrada em tela pequena
+e em telas de baixa qualidade — e o público real do produto acessa
+majoritariamente por celular. `AGENTS.md` §6 trata legibilidade e acessibilidade
+como requisito, não preferência.
+
+`Bricolage Grotesque` mantém personalidade (o `PRODUCT_NORTH_STAR.md` pede
+"produto de consumo, não portal institucional") sem pagar esse preço, e conversa
+com o desenho do logo. `Inter` cobre texto corrido, interface e dados numéricos.
+
+As famílias descartadas foram removidas deste diretório e de
+`src/styles/fonts.css` — não se publica peso morto.

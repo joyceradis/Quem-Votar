@@ -12,7 +12,7 @@
    de fonte de sistema antes da fonte real carregar. Os latin-ext ficam a
    cargo do unicode-range, sem preload. #}
 <link rel="preload" href="/assets/fonts/inter-latin.woff2?v={{ version }}" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/assets/fonts/fraunces-latin.woff2?v={{ version }}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/bricolage-grotesque-latin.woff2?v={{ version }}" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/styles/fonts.css?v={{ version }}">
 <link rel="stylesheet" href="/styles/tokens.css?v={{ version }}">
 <link rel="stylesheet" href="/styles/base.css?v={{ version }}">
@@ -22,6 +22,8 @@
 <link rel="stylesheet" href="/styles/components/card.css?v={{ version }}">
 <link rel="stylesheet" href="/styles/components/nav.css?v={{ version }}">
 <link rel="stylesheet" href="/styles/components/footer.css?v={{ version }}">
+{% for sheet in extraStyles %}<link rel="stylesheet" href="{{ sheet }}?v={{ version }}">
+{% endfor %}
 <title>{{ title }}</title>
 </head>
 <body data-page="{{ bodyPage }}">
