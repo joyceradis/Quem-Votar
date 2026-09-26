@@ -133,8 +133,42 @@ Confirmado em CI (não só localmente): `Qualidade do site` e
   (`.qv-fat-footer-illustration`). Responde também ao feedback de
   contraste fraco/excesso de branco, já que introduz uma seção escura real
   na página.
-- **Pendente de referência visual:** fonte tipográfica, formato das tags de
-  tema e o modo exato de integrar a ilustração no Home (sem uma divisão
-  fixa em caixa) ficam para quando a mantenedora compartilhar as
-  referências salvas — não foram redesenhados por palpite para evitar
-  repetir o mesmo problema que motivou esta reconstrução.
+- Ilustração `v6-penha-line.svg` recebeu uma segunda rodada: sombra suave
+  (`feDropShadow`) e contornos internos concêntricos na ponte/morro/parede
+  do convento, dando sensação de volume sem virar hachura, a pedido da
+  mantenedora (commit `74069ab`). **Aprovada.**
+- Exploração paralela `assets/v6-penha-sketch.svg`: variante em estilo de
+  esboço técnico a nanquim, a partir de referência do Pinterest —
+  tabuleiro em perspectiva sobre pilares que diminuem ao fundo,
+  guarda-corpo/postes de luz, morro com hachura de sombreado, barco e
+  ondulações na água. Corrigida em uma segunda rodada (commit `33fa0b9`)
+  para o tabuleiro pousar de fato na encosta do morro (antes ficava
+  flutuando sem tocar) e para dar mais volume 3D (sombra do conjunto,
+  sombreado cilíndrico dentro dos pilares, hachura sob a viga). **Aprovada
+  pela mantenedora ("Beleza, ok").**
+- **Decisão em aberto:** qual das duas ilustrações (`v6-penha-line.svg`
+  minimalista ou `v6-penha-sketch.svg` estilo esboço técnico) vai para o
+  Home — ou se as duas convivem em usos diferentes (ex.: uma no hero, outra
+  em `sobre.html`/`apoio.html`) — fica para a Fase 3, quando a integração
+  real de cada página for desenhada.
+- **Ainda pendente de referência visual:** fonte tipográfica, formato das
+  tags de tema e o modo exato de integrar a ilustração escolhida no Home
+  (sem uma divisão fixa em caixa) ficam para quando a mantenedora
+  compartilhar as referências salvas — não foram redesenhados por palpite
+  para evitar repetir o mesmo problema que motivou esta reconstrução.
+
+## Estado no fim da Fase 1 (checkpoint para retomada)
+
+- Fases 0, 1 e 2 commitadas na branch `claude/inspiring-keller-c98fd2`
+  (PR #168, draft), todas com CI verde (`Qualidade do site` +
+  `🛑 Inspetor de Regras da IA`) e zero arquivo público alterado.
+- Design system utilizável hoje via `npm start` → `/styleguide/` (tokens,
+  botão, busca em pílula, tag, card) e `/preview-shell/` (casco completo:
+  nav, drawer, rodapé fat footer, ilustração).
+- Duas ilustrações aprovadas e prontas para uso: `assets/v6-penha-line.svg`
+  (minimalista) e `assets/v6-penha-sketch.svg` (esboço técnico).
+- Em aberto antes de avançar para a Fase 3: (1) qual ilustração vai onde,
+  (2) fonte tipográfica, (3) formato das tags, (4) integração exata da
+  ilustração no Home sem divisão fixa — todos aguardando as referências
+  salvas da mantenedora, ou uma decisão explícita dela para seguir sem
+  elas.
