@@ -1,28 +1,42 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 280" role="img" aria-labelledby="title desc">
   <title id="title">Traço do Espírito Santo</title>
-  <desc id="desc">Ilustração de linha única: Terceira Ponte, Morro da Penha e Convento da Penha, sem preenchimento.</desc>
-  <g fill="none" stroke="#113b56" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
-    <!-- Base: linha do mar -->
-    <line x1="20" y1="222" x2="620" y2="222" stroke="#CBD5E1"/>
+  <desc id="desc">Ilustração de linha única: Terceira Ponte, Morro da Penha e Convento da Penha, com sombra suave e contornos de volume, sem preenchimento.</desc>
+  <defs>
+    <filter id="qv-lift" x="-30%" y="-30%" width="170%" height="200%">
+      <feDropShadow dx="6" dy="16" stdDeviation="9" flood-color="#113b56" flood-opacity="0.35"/>
+    </filter>
+  </defs>
 
-    <!-- Terceira Ponte: vão central curvo, sem cabos estaiados -->
-    <path d="M50 202c40-46 90-68 130-68s90 22 130 68"/>
-    <!-- Pilares retos, em linha tracejada -->
-    <line x1="118" y1="176" x2="118" y2="222" stroke-dasharray="3 4"/>
-    <line x1="180" y1="163" x2="180" y2="222" stroke-dasharray="3 4"/>
-    <line x1="242" y1="176" x2="242" y2="222" stroke-dasharray="3 4"/>
+  <g filter="url(#qv-lift)">
+    <g fill="none" stroke="#113b56" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+      <!-- Terceira Ponte: vão central curvo, sem cabos estaiados -->
+      <path d="M50 202c40-46 90-68 130-68s90 22 130 68"/>
+      <!-- Contorno interno do vão, sugerindo espessura/volume da viga -->
+      <path d="M62 200c37-40 82-61 118-61s81 21 118 61" opacity="0.45"/>
+      <!-- Pilares retos, em linha tracejada -->
+      <line x1="118" y1="176" x2="118" y2="222" stroke-dasharray="3 4"/>
+      <line x1="180" y1="163" x2="180" y2="222" stroke-dasharray="3 4"/>
+      <line x1="242" y1="176" x2="242" y2="222" stroke-dasharray="3 4"/>
 
-    <!-- Morro da Penha: domo único, curvo e liso -->
-    <path d="M330 222c14-92 76-150 150-150s136 58 150 150"/>
+      <!-- Morro da Penha: domo único, curvo e liso -->
+      <path d="M330 222c14-92 76-150 150-150s136 58 150 150"/>
+      <!-- Contorno interno do morro, sugerindo volume arredondado -->
+      <path d="M366 222c16-72 62-118 114-118s98 46 114 118" opacity="0.35"/>
 
-    <!-- Convento da Penha: corpo -->
-    <rect x="452" y="46" width="56" height="42"/>
-    <!-- Convento da Penha: frontão -->
-    <path d="M446 46 480 20 514 46"/>
+      <!-- Convento da Penha: corpo -->
+      <rect x="452" y="46" width="56" height="42"/>
+      <!-- Aresta interna do corpo, sugerindo profundidade da parede -->
+      <line x1="486" y1="46" x2="486" y2="88" opacity="0.45"/>
+      <!-- Convento da Penha: frontão -->
+      <path d="M446 46 480 20 514 46"/>
+    </g>
+    <!-- Cruz: único elemento com cor de destaque -->
+    <g stroke="#EE8FBD" stroke-width="1.2" stroke-linecap="round">
+      <line x1="480" y1="20" x2="480" y2="4"/>
+      <line x1="473" y1="9" x2="487" y2="9"/>
+    </g>
   </g>
-  <!-- Cruz: único elemento com cor de destaque -->
-  <g stroke="#EE8FBD" stroke-width="1.2" stroke-linecap="round">
-    <line x1="480" y1="20" x2="480" y2="4"/>
-    <line x1="473" y1="9" x2="487" y2="9"/>
-  </g>
+
+  <!-- Base: linha do mar (fora do grupo com sombra, para ficar nítida) -->
+  <line x1="20" y1="222" x2="620" y2="222" stroke="#CBD5E1" stroke-width="1.2"/>
 </svg>
