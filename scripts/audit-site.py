@@ -92,7 +92,12 @@ def main() -> None:
     assert "visual depth pass" not in styles.lower(), "override visual legado reapareceu"
     assert "--green:" not in styles, "verde não faz parte da paleta estrutural azul/branco/rosa"
     assert all(token in styles for token in ("--blue:", "--blue-dark:", "--pink:", "--white:")), "tokens da identidade ES incompletos"
-    assert "Entenda uma candidatura em 3 perguntas." in home, "Home deve manter entrada curta e orientada à tarefa"
+    assert re.search(r"<h1\\b[^>]*>\\s*[^<]+\\s*</h1>", home), (
+        "Home deve manter um H1 principal não vazio"
+    )
+    assert 'type="search"' in home and 'name="q"' in home, (
+        "Home deve manter busca de candidatura orientada à tarefa"
+    )
     assert re.search(r"@media\(min-width:980px\)\{\.desktop-nav\{display:flex\}", styles), "navegação principal deve ficar visível em desktop amplo"
     assert '.nav-toggle::before{content:"☰"' in styles, "menu mobile deve ter sinal visual explícito"
     for name, text in (
