@@ -104,3 +104,6 @@ alterado por esta frente.
   formalmente um casco que ainda não está no ar).
 
 Nenhum arquivo público foi alterado por esta frente.
+
+Confirmado em CI (não só localmente): `Qualidade do site` e
+`🛑 Inspetor de Regras da IA` verdes no commit `9ea2785` (PR #168).
