@@ -82,3 +82,20 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,su
 .autocomplete-option{display:flex;flex-direction:column;gap:2px;width:100%;min-height:44px;padding:8px 12px;border:0;border-radius:10px;background:transparent;text-align:left;color:var(--ink);font-weight:750}
 .autocomplete-option small{color:var(--muted);font-weight:600;font-size:.76rem}
 .autocomplete-option:hover,.autocomplete-option:focus-visible,.autocomplete-option.is-active{background:var(--blue-soft);color:var(--blue-dark)}
+
+/* Candidate profile — issue #156 (dossiê factual) */
+.candidate-occupation{margin:4px 0 0;color:var(--muted);font-size:.78rem}
+.candidate-density{margin:7px 0 0;color:var(--muted);font-size:.74rem;font-weight:750}
+.declared-assets,.declared-social{margin-top:22px;padding-top:18px;border-top:1px solid rgba(17,59,86,.12)}
+.declared-assets-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px}
+.declared-assets-head strong{color:var(--blue-dark);font-size:.84rem;letter-spacing:.02em}
+.declared-assets-head span{color:var(--muted);font-size:.72rem}
+.declared-assets-total{margin:10px 0 0;color:var(--ink);font-size:.86rem;font-weight:750}
+.declared-assets-list,.declared-social-list{display:grid;gap:0;margin:10px 0 0;padding:0;list-style:none}
+.declared-assets-list li{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:9px 0;border-top:1px solid rgba(17,59,86,.08)}
+.declared-assets-list li span{color:var(--ink-soft);font-size:.84rem}
+.declared-assets-list li strong{color:var(--ink);font-size:.84rem;white-space:nowrap}
+.declared-assets-source{display:inline-block;margin-top:10px;color:var(--blue-strong);font-weight:850;font-size:.8rem;text-decoration:none}
+.declared-social-list li{padding:8px 0;border-top:1px solid rgba(17,59,86,.08);word-break:break-all}
+.declared-social-list a{color:var(--blue-strong);font-weight:750;font-size:.82rem;text-decoration:none}
+@media(max-width:620px){.declared-assets-list li{flex-direction:column;align-items:flex-start;gap:3px}.declared-assets-list li strong{white-space:normal}}
