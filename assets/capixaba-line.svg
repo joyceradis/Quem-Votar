@@ -1,37 +1,50 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 330" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" role="img" aria-labelledby="title desc">
   <title id="title">Convento da Penha e Terceira Ponte</title>
-  <desc id="desc">Ilustração em linha do Convento da Penha e da Terceira Ponte, em tons de cinza, com um traço rosa no horizonte.</desc>
+  <desc id="desc">Ilustração em traço, estilo gravura, do Convento da Penha e da Terceira Ponte, em azul-marinho sobre fundo transparente.</desc>
 
-  <path d="M12 290c160-12 340-12 500 6" fill="none" stroke="#AFC0C9" stroke-width="2" opacity=".55" stroke-linecap="round"/>
-  <path d="M12 302c160-10 340-10 500 8" fill="none" stroke="#EE8FBD" stroke-width="2.5" opacity=".6" stroke-linecap="round"/>
+  <g fill="none" stroke="#113b56" stroke-linecap="round" stroke-linejoin="round">
 
-  <path d="M8 270C20 205 45 145 80 110C100 90 120 78 140 75C160 78 180 92 198 120C212 145 208 205 198 270Z" fill="#B9C7CE"/>
+    <path d="M-60 400Q260 300 480 260" stroke-width="1.4"/>
+    <path d="M-60 407Q258 307 478 267" stroke-width=".7" opacity=".65"/>
+    <path d="M-60 393Q262 293 482 253" stroke-width=".4" opacity=".5" stroke-dasharray="10 4 2 3"/>
 
-  <g fill="none" stroke="#22343F" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
-    <path d="M114 122V95h44v27z"/>
-    <path d="M114 95 140 72 166 95"/>
-    <path d="M133 122v-15h14v15"/>
+    <path d="M330 150 322 480" stroke-width="1.3"/>
+    <path d="M352 152 366 480" stroke-width="1.3"/>
+    <path d="M326 251 358 255" stroke-width=".9"/>
+
+    <g stroke-width=".7" opacity=".8">
+      <path d="M335 160 40 340"/>
+      <path d="M338 165 110 320"/>
+      <path d="M340 170 180 300"/>
+      <path d="M343 175 250 280"/>
+      <path d="M355 160 420 250"/>
+      <path d="M357 165 460 245"/>
+      <path d="M359 170 500 242"/>
+      <path d="M361 175 540 240"/>
+    </g>
+
+    <path d="M358 255Q460 246 560 262" stroke-width="1"/>
+
+    <path d="M540 300C555 240 585 190 620 165C650 145 690 138 725 150C755 160 775 190 780 230C782 270 765 300 735 315C690 335 610 330 560 320Z" stroke-width="1.1" opacity=".85"/>
+    <path d="M560 285 578 278M575 295 592 287M600 275 615 267" stroke-width=".6" opacity=".55"/>
+    <path d="M690 305 705 298M710 310 726 303" stroke-width=".6" opacity=".55"/>
+
+    <path d="M608 260 608 192 660 190 660 260" stroke-width="1.6"/>
+    <path d="M605 192 634 172 664 190" stroke-width="1.4"/>
+    <path d="M660 260 660 162 706 160 706 260" stroke-width="1.6"/>
+    <path d="M672 200 672 216" stroke-width="1"/>
+    <path d="M688 200 688 216" stroke-width="1"/>
+    <path d="M706 260 706 132 731 130 731 260" stroke-width="1.6"/>
+    <path d="M701 132 718 106 736 130" stroke-width="1.3"/>
+    <path d="M718 106 718 84" stroke-width="1.2"/>
+    <path d="M710 92 726 92" stroke-width="1.2"/>
+    <path d="M731 260 731 212 761 210 761 260" stroke-width="1.5"/>
+    <path d="M742 228 742 242" stroke-width=".9"/>
+
+    <path d="M600 318 590 330M612 320 606 332M630 322 626 334" stroke-width=".7" opacity=".6"/>
+
+    <path d="M0 396C160 384 340 384 520 392C620 396 720 390 800 384" stroke-width="1" opacity=".45"/>
   </g>
-  <path d="M140 72v-13M134 63h12" stroke="#22343F" stroke-width="2.5" stroke-linecap="round"/>
 
-  <path d="M350 60 345 250" stroke="#293D49" stroke-width="6" stroke-linecap="round"/>
-
-  <g stroke="#8CA2AF" stroke-width="1.6" opacity=".8" stroke-linecap="round">
-    <path d="M349 78 250 244"/>
-    <path d="M348 96 275 246"/>
-    <path d="M347 114 300 248"/>
-    <path d="M346 132 325 249"/>
-    <path d="M347 78 400 236"/>
-    <path d="M347 96 430 240"/>
-    <path d="M346 114 460 244"/>
-    <path d="M346 132 495 248"/>
-  </g>
-
-  <path d="M210 258c60-16 180-16 295 4" fill="none" stroke="#293D49" stroke-width="6" stroke-linecap="round"/>
-
-  <g stroke="#293D49" stroke-width="4" stroke-linecap="round">
-    <path d="M432 262v28"/>
-    <path d="M462 266v26"/>
-    <path d="M492 270v24"/>
-  </g>
+  <circle cx="718" cy="79" r="3" fill="#b33c72"/>
 </svg>
