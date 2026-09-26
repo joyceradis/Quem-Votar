@@ -339,16 +339,24 @@ a **saída do build** e não contra o texto-fonte dos arquivos:
 
 Estado da Fase 4: `npm run build && npm run verify` OK (635 arquivos),
 `npx playwright test` 84 passando / 2 pulados, `scripts/audit-site.py` OK,
-zero arquivo de produção alterado.
+zero arquivo de produção alterado e zero caminho protegido tocado.
 
 ### O que ainda trava o corte (Fase 5)
 
-`scripts/audit-site.py` agora resolve a superfície pública em vez de ler um
+`scripts/audit-site.py` precisa resolver a superfície pública em vez de ler um
 arquivo de nome fixo (`public_css()` / `public_js()`): enquanto `styles.css` e
-`app.js` existirem na raiz, ele mede exatamente o que media antes; depois do
-corte, passa a medir a pasta `styles/`+`js/` publicada. As asserções que
-dependiam do texto *minificado* viraram regex tolerante a espaço — medem a
+`app.js` existirem na raiz, ele mediria exatamente o que mede hoje; depois do
+corte, passaria a medir a pasta `styles/`+`js/` publicada. As asserções que
+dependem do texto *minificado* viram regex tolerante a espaço — medem a
 regra, não a formatação.
+
+**Essa mudança não está neste PR.** `scripts/audit-site.py` e
+`.github/workflows/` são caminhos protegidos pela Cerca Elétrica, que exige
+uma Issue de autorização aberta pela mantenedora, com rótulos
+`decision-recorded` + `risk:high` e uma decisão explícita dela em comentário.
+A mudança está escrita, verificada e guardada em
+`docs/patches/v6-fase5-caminhos-protegidos.patch`, junto com o job de CI
+`frontend-v6` (build + verify + Playwright). Ver `docs/patches/README.md`.
 
 Restam **6 asserções que leem o texto-fonte do `app.js`** e não sobrevivem à
 modularização, porque medem implementação e não comportamento:
