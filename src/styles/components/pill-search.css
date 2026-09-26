@@ -1,0 +1,76 @@
+/*
+ * Barra de busca em pílula — mesma estrutura já validada em produção
+ * (.hero-search em index.html / styles.css:23-24), formalizada como
+ * componente nomeado para a Fase 3. Cargo + busca no mesmo fluxo, botão
+ * de ação sempre visível, sem depender de cor para indicar obrigatoriedade.
+ */
+.qv-pill-search {
+  display: grid;
+  grid-template-columns: 190px minmax(280px, 1fr) auto;
+  max-width: 850px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 18px 50px rgba(31, 94, 128, 0.13);
+}
+
+.qv-pill-search label {
+  display: grid;
+  gap: 2px;
+  padding: 10px 15px;
+  border-right: 1px solid var(--line);
+}
+
+.qv-pill-search label span {
+  font-size: 0.66rem;
+  font-weight: 900;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.qv-pill-search input,
+.qv-pill-search select {
+  min-height: 38px;
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--ink);
+}
+
+.qv-pill-search input:focus-visible,
+.qv-pill-search select:focus-visible {
+  outline: 3px solid var(--blue-strong);
+  outline-offset: -3px;
+}
+
+.qv-pill-search button {
+  min-width: 120px;
+  border: 0;
+  background: var(--blue-strong);
+  color: #fff;
+  font-weight: 900;
+  padding: 0 24px;
+  transition: background var(--motion-fast) ease;
+}
+
+.qv-pill-search button:hover {
+  background: #0e679d;
+}
+
+@media (max-width: 620px) {
+  .qv-pill-search {
+    grid-template-columns: 1fr;
+  }
+
+  .qv-pill-search label {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .qv-pill-search button {
+    min-height: 52px;
+  }
+}

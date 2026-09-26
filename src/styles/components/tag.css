@@ -1,0 +1,24 @@
+/*
+ * Tag de tema — mesmo padrão de `.candidate-topic-tags span` já em produção.
+ * Texto simples em pílula; nunca cor sozinha carregando significado
+ * (AGENTS.md §6 — "nenhuma informação importante dependente apenas de cor").
+ * Sempre acompanhada do rótulo do tema por extenso, nunca só ícone/cor.
+ */
+.qv-tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 27px;
+  padding: 4px 10px;
+  border: 1px solid rgba(42, 117, 211, 0.11);
+  border-radius: var(--radius-pill);
+  background: #f3f8fd;
+  color: #215f9d;
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+.qv-tag--more {
+  background: #fff6fa;
+  border-color: rgba(179, 60, 114, 0.12);
+  color: var(--pink-strong);
+}

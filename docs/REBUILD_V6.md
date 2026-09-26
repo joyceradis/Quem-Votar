@@ -48,7 +48,27 @@ uma reinterpretação de dado.
 
 ## Estado atual
 
-**Fase 0 em andamento.** `package.json` e `.eleventy.js` adicionados;
-`npm run build` produz `_site/` vazio (nenhum template ainda — conteúdo real
-entra na Fase 1+). Nenhum arquivo público (`index.html`, `app.js`,
-`styles.css`, `data/*`) foi alterado por esta frente.
+**Fase 0 concluída.** `package.json`/`.eleventy.js` funcionando.
+
+**Fase 1 em andamento — design system.**
+
+- `src/styles/tokens.css`: cor, raio, sombra e movimento — valores idênticos
+  ao `:root` canônico de `styles.css`, apenas nomeados e documentados.
+- `src/styles/base.css`: reset e comportamento global, portado literalmente
+  de `styles.css` (skip-link, foco visível, `prefers-reduced-motion`).
+- `src/styles/components/{button,pill-search,tag,card}.css`: formalizam
+  padrões já validados em produção (`.hero-search`, `.compare-button`,
+  `.candidate-topic-tags`, `.candidate-card`) com nomenclatura `qv-*`
+  reutilizável, sem inventar visual novo.
+- `src/styleguide.njk`: página de revisão interna (não é rota pública,
+  não referenciada por nenhum nav) para conferir os componentes via
+  `npm start`. Reaproveita `assets/capixaba-line.svg` — a ilustração
+  regional (Terceira Ponte + Convento da Penha) já existente e original do
+  projeto — em vez de desenhar uma nova, já que a atual está correta e é
+  a mesma direção visual que a mantenedora pediu.
+- Validado localmente: `npm run build` + Playwright screenshot do
+  styleguide renderizando corretamente; `scripts/audit-site.py` sem
+  mudança (547/547, 22 evidências temáticas).
+
+Nenhum arquivo público (`index.html`, `app.js`, `styles.css`, `data/*`) foi
+alterado por esta frente.

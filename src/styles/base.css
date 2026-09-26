@@ -1,0 +1,79 @@
+/*
+ * Reset e comportamento global — portado literalmente de styles.css:9-12,44.
+ * A regra de prefers-reduced-motion é a rede de segurança do site inteiro;
+ * os tokens de --motion-* em tokens.css já zeram sozinhos, isto é reforço.
+ */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: var(--base-font);
+  scroll-behavior: smooth;
+  scroll-padding-top: 88px;
+  scroll-padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+}
+
+body {
+  margin: 0;
+  color: var(--ink);
+  line-height: 1.5;
+  background: #fff;
+  -webkit-font-smoothing: antialiased;
+}
+
+body.page-lock {
+  overflow: hidden;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+summary:focus-visible {
+  outline: 3px solid var(--blue-strong);
+  outline-offset: 3px;
+}
+
+.skip-link {
+  position: fixed;
+  left: 16px;
+  top: 10px;
+  z-index: 100;
+  background: var(--blue-dark);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: var(--radius-pill);
+  transform: translateY(-160%);
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto !important;
+    transition: none !important;
+  }
+}

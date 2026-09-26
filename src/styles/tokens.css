@@ -1,0 +1,69 @@
+/*
+ * Tokens — fonte única de verdade para cor, raio, sombra e movimento.
+ *
+ * Os valores de cor abaixo são extraídos literalmente do :root canônico em
+ * `styles.css` (linha 1) — não é uma paleta nova. Azul/branco/rosa seguem a
+ * identidade capixaba registrada em docs/DESIGN_REFERENCES.md. O rosa é
+ * acento de marca e não carrega significado político ou de qualidade
+ * (docs/GOVERNANCE.md — "cor não pode produzir recomendação, score,
+ * qualidade, ideologia ou vencedor").
+ *
+ * Raio, sombra e movimento generalizam padrões já usados de forma repetida
+ * em `styles.css` (pílulas 999px, cards ~20-22px, heros ~34-36px, inputs
+ * ~14px) em vez de impor uma escala nova sobre um layout que já funciona.
+ */
+:root {
+  /* Cor — idêntico ao :root de styles.css */
+  --blue: #2f98d4;
+  --blue-strong: #1679b6;
+  --blue-dark: #113b56;
+  --blue-soft: #eaf7ff;
+
+  --pink: #ee8fbd;
+  --pink-accent: #ff6b8b;
+  --pink-strong: #b33c72;
+  --pink-soft: #fff0f7;
+
+  --ink: #173244;
+  --ink-soft: #536b79;
+  --muted: #5c6f7a;
+
+  --line: rgba(17, 59, 86, 0.12);
+  --line-strong: rgba(17, 59, 86, 0.2);
+  --white: #fff;
+
+  /* Layout */
+  --max: 1160px;
+  --base-font: 17px;
+
+  /* Sombra — mesmos dois níveis já usados em todo o site */
+  --shadow: 0 24px 70px rgba(23, 76, 108, 0.13);
+  --shadow-soft: 0 12px 36px rgba(23, 76, 108, 0.08);
+
+  /* Raio — três níveis que já cobrem o site inteiro */
+  --radius-pill: 999px;
+  --radius-lg: 34px;   /* heros, ficha do candidato */
+  --radius-md: 20px;   /* cards de listagem, painéis */
+  --radius-sm: 14px;   /* inputs, botões secundários */
+
+  /* Alvo de toque mínimo (AGENTS.md §6 — "alvos de toque principais ~44 px") */
+  --tap-min: 44px;
+
+  /* Movimento — discreto por padrão; zerado com prefers-reduced-motion */
+  --motion-fast: 150ms;
+  --motion-base: 250ms;
+  --motion-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", sans-serif;
+}
+
+html[data-scale="large"] {
+  --base-font: 19px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-fast: 0ms;
+    --motion-base: 0ms;
+  }
+}
