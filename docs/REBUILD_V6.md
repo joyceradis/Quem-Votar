@@ -176,6 +176,10 @@ versionados:
   aumento de texto entre recargas, zero erro de console/requisição
   quebrada no casco, e o styleguide renderizando os componentes
   principais. **12/12 passando** (`npm run test:e2e`).
+- Roda hoje localmente (validado nesta sessão); ainda não está plugado em
+  nenhum workflow do `.github/workflows/` (arquivo protegido por
+  CODEOWNERS) — wiring em CI fica para a Fase 4 (verificação completa
+  antes do corte), junto com o `runtime-proof` já existente.
 
 ## Estado no fim da Fase 1 (checkpoint para retomada)
 
