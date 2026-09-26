@@ -357,3 +357,62 @@ A ficha deve responder, sem julgamento:
 5. O que prometeu antes e o que aconteceu?
 6. De onde saiu cada informação?
 7. O que ainda não sabemos?
+
+
+## Contrato de disposição visual — mesmo padrão para os quatro cargos
+
+A disposição base da ficha deve ser a mesma para:
+- Governador;
+- Senador;
+- Deputado Federal;
+- Deputado Estadual.
+
+Sugestão de arquitetura:
+
+### Desktop
+**Coluna lateral de identidade**
+- foto oficial TSE, sem filtro que altere a aparência da imagem;
+- cargo;
+- nome de urna;
+- partido + número;
+- ocupação/cargo atual confirmado;
+- ações: comparar, compartilhar;
+- link educativo `O que faz este cargo?`;
+- dados eleitorais/TSE em hierarquia secundária.
+
+**Coluna principal editorial**
+1. Quem é;
+2. O que defende em 2026;
+3. Prioridades documentadas — somente se sustentadas;
+4. O que já fez;
+5. Prometeu antes × o que aconteceu — quando aplicável;
+6. Registros judiciais e eleitorais — somente com fonte/contexto suficiente;
+7. Fontes e o que ainda não sabemos.
+
+### Mobile
+A mesma ordem semântica, empilhada em uma coluna. A identidade deixa de ser sticky.
+
+### Campos específicos não mudam a arquitetura
+- Governador acrescenta vice, plano de governo e entregas executivas;
+- Senador acrescenta suplentes e atuação do Senado;
+- Deputado Federal acrescenta atuação da Câmara;
+- Deputado Estadual acrescenta atuação da ALES.
+
+Nenhum cargo recebe uma ficha visual estruturalmente diferente.
+
+### Critérios de design
+Isto é uma sugestão de IA/UX, não um wireframe obrigatório. O executor pode alterar largura, sticky rail, disclosures, tipografia, densidade e composição após validar:
+- legibilidade;
+- acessibilidade;
+- responsividade;
+- performance;
+- coerência com a identidade visual da #153;
+- comportamento real dos dados.
+
+Evitar:
+- excesso de cards;
+- patrimônio no hero;
+- contagens de projetos como sinal de mérito;
+- cores como julgamento;
+- seção vazia de prioridade;
+- afirmação judicial negativa absoluta quando a pesquisa não for exaustiva.
