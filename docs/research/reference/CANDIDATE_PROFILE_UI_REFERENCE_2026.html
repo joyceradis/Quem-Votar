@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Referência de UI — Perfil de Candidatura ES 2026</title>
+<style>
+  :root {
+    --es-marinho: #09152B;
+    --es-azul-claro: #15325C;
+    --es-rosa: #D81B60;
+    --es-rosa-claro: #FCE4EC;
+    --es-fundo: #FAFAFA;
+    --es-cinza: #E2E8F0;
+    --es-texto: #4A5568;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--es-fundo);
+    color: var(--es-texto);
+    margin: 0;
+    padding: 40px 20px;
+  }
+
+  .notice {
+    max-width: 900px;
+    margin: 0 auto 20px;
+    padding: 16px 18px;
+    background: #fff7e6;
+    border-left: 4px solid #c68a00;
+    color: #5f4a00;
+    font-size: .95rem;
+  }
+
+  .perfil-container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #FFF;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(9, 21, 43, 0.05);
+    overflow: hidden;
+  }
+
+  .header-candidato {
+    background-color: var(--es-marinho);
+    color: #FFF;
+    padding: 40px;
+    display: flex;
+    gap: 30px;
+    align-items: center;
+  }
+
+  .foto-tse {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    border: 4px solid var(--es-rosa);
+    object-fit: cover;
+    background: var(--es-cinza);
+  }
+
+  .info-principal h1 {
+    margin: 0 0 8px 0;
+    font-size: 2.5rem;
+    line-height: 1.1;
+  }
+
+  .tag-cargo {
+    display: inline-block;
+    background: var(--es-rosa);
+    color: #FFF;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .info-meta {
+    display: flex;
+    gap: 16px;
+    font-size: 0.9rem;
+    color: #A0AEC0;
+    flex-wrap: wrap;
+  }
+
+  .info-meta span strong { color: #FFF; }
+
+  .sessao-perfil {
+    padding: 30px 40px;
+    border-bottom: 1px solid var(--es-cinza);
+  }
+
+  .sessao-titulo {
+    font-size: 1.2rem;
+    color: var(--es-azul-claro);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .sessao-titulo::before {
+    content: "";
+    display: block;
+    width: 24px;
+    height: 4px;
+    background-color: var(--es-rosa);
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .card-dado {
+    background: var(--es-fundo);
+    border: 1px solid var(--es-cinza);
+    padding: 20px;
+    border-radius: 8px;
+  }
+
+  .card-dado h3 {
+    margin-top: 0;
+    color: var(--es-marinho);
+    font-size: 1.05rem;
+  }
+
+  .fonte-badge {
+    display: inline-block;
+    background: var(--es-rosa-claro);
+    color: var(--es-rosa);
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    margin-top: 8px;
+  }
+
+  .promessa-row {
+    display: flex;
+    border-left: 4px solid var(--es-cinza);
+    padding-left: 20px;
+    margin-bottom: 24px;
+    position: relative;
+  }
+
+  .promessa-row.verificada { border-left-color: var(--es-azul-claro); }
+  .promessa-row.nao-cumprida { border-left-color: var(--es-rosa); }
+
+  .col-promessa, .col-resultado { flex: 1; }
+  .col-promessa { padding-right: 20px; border-right: 1px dashed var(--es-cinza); }
+  .col-resultado { padding-left: 20px; }
+
+  .alerta-gap {
+    background-color: #FFF3CD;
+    color: #856404;
+    padding: 16px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    border-left: 4px solid #FFEBA8;
+  }
+
+  @media (max-width: 768px) {
+    .header-candidato { flex-direction: column; text-align: center; }
+    .grid-2 { grid-template-columns: 1fr; }
+    .promessa-row { flex-direction: column; gap: 16px; border-right: none; }
+    .col-promessa { border-right: none; padding-right: 0; border-bottom: 1px dashed var(--es-cinza); padding-bottom: 16px;}
+    .col-resultado { padding-left: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="notice">
+  <strong>REFERÊNCIA DE UI — NÃO É ESPECIFICAÇÃO OBRIGATÓRIA.</strong>
+  Este arquivo registra uma proposta concreta de organização da ficha para apoiar o trabalho de design/frontend.
+  O executor deve preservar a arquitetura de informação, mas pode alterar composição, densidade, tipografia, cards, badges,
+  hierarquia visual e interações quando uma solução tecnicamente superior for encontrada.
+  Reconciliar sempre com #153, #160, #161 e #163.
+</div>
+
+<div class="perfil-container">
+
+  <header class="header-candidato">
+    <img src="https://via.placeholder.com/140" alt="Foto Oficial TSE" class="foto-tse">
+    <div class="info-principal">
+      <span class="tag-cargo">Deputado Federal</span>
+      <h1>Nome do Candidato</h1>
+      <div class="info-meta">
+        <span>Partido: <strong>SIGLA (12)</strong></span>
+        <span>Patrimônio: <strong>R$ 1.250.000,00</strong></span>
+        <span>Ocupação: <strong>Advogado</strong></span>
+        <span>Situação: <strong>Apto</strong></span>
+      </div>
+    </div>
+  </header>
+
+  <section class="sessao-perfil">
+    <h2 class="sessao-titulo">Quem é e Trajetória</h2>
+    <div class="grid-2">
+      <div class="card-dado">
+        <h3>Histórico Eleitoral</h3>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem;">
+          <li>2022: Eleito Deputado Estadual (45.000 votos)</li>
+          <li>2018: Suplente Deputado Estadual</li>
+          <li>2016: Vereador em Vitória (Eleito)</li>
+        </ul>
+      </div>
+      <div class="card-dado">
+        <h3>Formação e Atuação</h3>
+        <p style="margin: 0; font-size: 0.95rem;">Formado em Direito pela UFES, atua na advocacia pública. Foi Secretário de Estado de Direitos Humanos entre 2019 e 2021.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sessao-perfil">
+    <h2 class="sessao-titulo">Prioridades e Propostas 2026</h2>
+    <p>O que esta candidatura defende publicamente, com base em documentos oficiais e declarações recentes.</p>
+
+    <div class="grid-2">
+      <div class="card-dado">
+        <h3>Ampliação do Porto de Vitória</h3>
+        <p style="font-size: 0.9rem; margin-bottom: 8px;">Defende a concessão integral da área portuária e dragagem do canal para navios de grande porte.</p>
+        <span class="fonte-badge">Fonte: Plano de Governo (Ago/2026)</span>
+      </div>
+      <div class="card-dado">
+        <h3>Teto ICMS sobre Energia</h3>
+        <p style="font-size: 0.9rem; margin-bottom: 8px;">Promessa de articular no Congresso a trava de cobrança estadual sobre transição energética.</p>
+        <span class="fonte-badge">Fonte: Entrevista TV Gazeta (Set/2026)</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="sessao-perfil">
+    <h2 class="sessao-titulo">Histórico Legislativo</h2>
+    <p>Atuação como Deputado Estadual na ALES (2023-2026):</p>
+    <div class="card-dado">
+      <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem;">
+        <li><strong>Autoria:</strong> Lei Estadual 11.XXX/2024 (Incentivo à cultura capixaba).</li>
+        <li><strong>Relatorias:</strong> Foi relator do orçamento estadual de 2025 na Comissão de Finanças.</li>
+        <li><strong>Votação selecionada:</strong> Votou a FAVOR de matéria documentada na fonte oficial.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sessao-perfil">
+    <h2 class="sessao-titulo">Prometeu × O que Aconteceu</h2>
+
+    <div class="promessa-row verificada">
+      <div class="col-promessa">
+        <h3 style="margin-top:0; font-size: 1rem; color: var(--es-marinho);">O que prometeu</h3>
+        <p style="font-size: 0.9rem;">Exemplo ilustrativo de compromisso documentado em uma campanha anterior.</p>
+        <span class="fonte-badge">Fonte original</span>
+      </div>
+      <div class="col-resultado">
+        <h3 style="margin-top:0; font-size: 1rem; color: var(--es-marinho);">Resultado observado</h3>
+        <p style="font-size: 0.9rem;">Exemplo ilustrativo de resultado observado com fonte separada.</p>
+        <span class="fonte-badge">Fonte de resultado</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="sessao-perfil" style="background-color: var(--es-fundo);">
+    <h2 class="sessao-titulo">Fontes e o que ainda não sabemos</h2>
+    <p style="font-size: 0.9rem;">Cada afirmação material deve apontar para a fonte correspondente e reaparecer numa lista consolidada ao final da ficha.</p>
+
+    <div class="alerta-gap">
+      <strong>Gap de informação:</strong> quando uma informação relevante ainda não estiver integrada ou não puder ser confirmada, a interface deve registrar a lacuna sem transformá-la em conclusão.
+    </div>
+  </section>
+
+</div>
+
+</body>
+</html>
