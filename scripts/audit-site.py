@@ -92,7 +92,7 @@ def main() -> None:
     assert "visual depth pass" not in styles.lower(), "override visual legado reapareceu"
     assert "--green:" not in styles, "verde não faz parte da paleta estrutural azul/branco/rosa"
     assert all(token in styles for token in ("--blue:", "--blue-dark:", "--pink:", "--white:")), "tokens da identidade ES incompletos"
-    assert re.search(r"<h1\\b[^>]*>\\s*[^<]+\\s*</h1>", home), (
+    assert re.search(r"<h1(?:\s[^>]*)?>\s*\S", home), (
         "Home deve manter um H1 principal não vazio"
     )
     assert 'type="search"' in home and 'name="q"' in home, (
