@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420" role="img" aria-labelledby="title desc">
+  <title id="title">Terceira Ponte — esboço técnico</title>
+  <desc id="desc">Ilustração em estilo de esboço a nanquim: Terceira Ponte com pilares em perspectiva, morro com hachura de sombreado e barco na água.</desc>
+  <defs>
+    <clipPath id="qv-hill-clip">
+      <path d="M596 320 C640 224 696 152 760 140 C826 150 878 230 900 316 L900 420 L596 420 Z"/>
+    </clipPath>
+  </defs>
+
+  <g fill="none" stroke="#113b56" stroke-linecap="round" stroke-linejoin="round">
+
+    <!-- Morro: silhueta -->
+    <path d="M596 320 C640 224 696 152 760 140 C826 150 878 230 900 316" stroke-width="1.6"/>
+
+    <!-- Morro: hachura de sombreado, clipada pela silhueta -->
+    <g clip-path="url(#qv-hill-clip)" stroke-width="0.6" opacity="0.7">
+      <path d="M560 420 L650 300"/>
+      <path d="M580 420 L672 288"/>
+      <path d="M600 420 L694 276"/>
+      <path d="M620 420 L716 264"/>
+      <path d="M640 420 L738 252"/>
+      <path d="M660 420 L758 244"/>
+      <path d="M680 420 L774 240"/>
+      <path d="M700 420 L788 240"/>
+      <path d="M720 420 L802 244"/>
+      <path d="M740 420 L816 252"/>
+      <path d="M760 420 L830 264"/>
+      <path d="M780 420 L844 278"/>
+      <path d="M800 420 L858 296"/>
+      <path d="M820 420 L872 316"/>
+      <path d="M840 420 L884 336"/>
+      <path d="M860 420 L896 358"/>
+    </g>
+
+    <!-- Convento no topo do morro: corpo, frontão, cruz -->
+    <rect x="736" y="104" width="40" height="30" stroke-width="1.1"/>
+    <path d="M730 104 756 84 782 104" stroke-width="1.1"/>
+    <line x1="756" y1="84" x2="756" y2="70" stroke-width="1.1"/>
+    <line x1="749" y1="75" x2="763" y2="75" stroke-width="1.1"/>
+
+    <!-- Terceira Ponte: tabuleiro em perspectiva -->
+    <path d="M60 196 C130 178 200 164 268 152 C336 141 404 132 470 126 C540 120 606 116 664 114" stroke-width="1.8"/>
+    <!-- Guarda-corpo: segunda linha, sugerindo espessura do tabuleiro -->
+    <path d="M62 188 C132 170 202 156 269 144 C337 133 404 124 470 118 C538 112 604 108 662 106" stroke-width="0.7" opacity="0.65"/>
+    <!-- Postes de luz ao longo do tabuleiro -->
+    <line x1="150" y1="171" x2="150" y2="160" stroke-width="0.8"/>
+    <line x1="300" y1="147" x2="300" y2="136" stroke-width="0.8"/>
+    <line x1="450" y1="128" x2="450" y2="117" stroke-width="0.8"/>
+    <line x1="600" y1="116" x2="600" y2="105" stroke-width="0.8"/>
+
+    <!-- Pilares em perspectiva: mais largos/próximos à esquerda, afinando à direita -->
+    <path d="M118 182 L112 320 M132 180 L138 320" stroke-width="1.3"/>
+    <path d="M255 156 L250 320 M267 155 L272 320" stroke-width="1.2"/>
+    <path d="M392 136 L388 320 M402 135 L406 320" stroke-width="1.1"/>
+    <path d="M518 122 L515 320 M527 121 L530 320" stroke-width="1"/>
+    <path d="M628 113 L626 320 M635 113 L637 320" stroke-width="0.9"/>
+
+    <!-- Bases dos pilares na água (fundação alargada) -->
+    <path d="M104 320 L146 320 L138 308 L112 308 Z" stroke-width="1"/>
+    <path d="M244 320 L278 320 L272 310 L250 310 Z" stroke-width="0.9"/>
+    <path d="M382 320 L412 320 L406 312 L388 312 Z" stroke-width="0.85"/>
+    <path d="M509 320 L536 320 L530 313 L515 313 Z" stroke-width="0.8"/>
+    <path d="M620 320 L643 320 L637 314 L626 314 Z" stroke-width="0.75"/>
+
+    <!-- Linha d'água -->
+    <line x1="20" y1="320" x2="900" y2="320" stroke-width="1.2"/>
+
+    <!-- Água: ondulações leves, menos densas ao fundo -->
+    <g stroke-width="0.6" opacity="0.6">
+      <path d="M20 336 q18 -8 36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0"/>
+      <path d="M40 356 q18 -7 36 0 t36 0 t36 0 t36 0 t36 0"/>
+      <path d="M60 376 q18 -6 36 0 t36 0 t36 0"/>
+    </g>
+
+    <!-- Barco pequeno -->
+    <path d="M96 334 Q126 348 156 334" stroke-width="1.2"/>
+    <line x1="126" y1="334" x2="126" y2="315" stroke-width="0.9"/>
+    <line x1="126" y1="318" x2="141" y2="322" stroke-width="0.8"/>
+  </g>
+</svg>
