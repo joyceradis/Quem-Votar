@@ -1,0 +1,65 @@
+---
+layout: base.njk
+permalink: candidatos.html
+title: "Candidaturas · Quem Votar? ES 2026"
+description: "Busque candidaturas a deputado federal e estadual no Espírito Santo por nome, número ou partido."
+bodyPage: candidates
+activeNav: candidatos
+pageScript: js/pages/candidates.js
+mainClass: qv-page
+extraStyles:
+  - /styles/pages/candidates.css
+---
+<header class="qv-page-intro">
+  <div>
+    <p class="qv-eyebrow">Pessoas · Espírito Santo</p>
+    <h1>Procure uma pessoa.</h1>
+    <p>Digite nome, número ou partido. O resto aparece só se você quiser aprofundar.</p>
+  </div>
+  <p class="qv-page-snapshot">
+    <span id="listUpdate">Carregando atualização…</span>
+    <a data-tse-source href="https://dadosabertos.tse.jus.br/dataset/candidatos-2026" target="_blank" rel="noopener">Dados do TSE</a>
+  </p>
+</header>
+
+<div class="office-switch" role="tablist" aria-label="Cargo">
+  <button class="office-button" data-kind="federal" role="tab" type="button">Deputado Federal <b id="federalCount">—</b></button>
+  <button class="office-button" data-kind="estadual" role="tab" type="button">Deputado Estadual <b id="estadualCount">—</b></button>
+</div>
+
+<section class="search-panel" aria-label="Busca e filtros">
+  <div class="primary-search">
+    <label>
+      <span>Buscar candidatura</span>
+      <input id="searchInput" type="search" placeholder="Nome, número ou partido" autocomplete="off">
+    </label>
+    <button id="filterToggle" class="filter-toggle" type="button" aria-expanded="false" aria-controls="secondaryFilters">Filtros<span id="activeFilterCount"></span></button>
+  </div>
+  <div id="secondaryFilters" class="secondary-filters" hidden>
+    <label><span>Partido</span><select id="partyFilter"><option value="">Todos os partidos</option></select></label>
+    <label><span>Assunto</span><select id="topicFilter"><option value="">Todos os assuntos</option></select></label>
+    <label><span>Atuação pública</span><select id="institutionalFilter"><option value="">Todas</option><option value="1">Com atuação pública na base</option></select></label>
+    <button id="clearFilters" class="clear-button" type="button">Limpar filtros</button>
+  </div>
+</section>
+
+<div class="results-head" aria-live="polite" aria-atomic="true">
+  <div>
+    <strong id="resultCount">Carregando…</strong>
+    <span>Pessoas encontradas</span>
+  </div>
+  <span id="pageStatus"></span>
+</div>
+
+<div id="cards" class="candidate-list"></div>
+<div id="pagination" class="pagination"></div>
+
+<p id="compareStatus" class="qv-visually-hidden" role="status" aria-live="polite"></p>
+
+<div id="compareTray" class="compare-tray" hidden>
+  <div>
+    <span id="compareCount">0 selecionados</span>
+    <button id="clearCompare" type="button">Limpar</button>
+  </div>
+  <a id="openCompare" aria-disabled="true" tabindex="-1">Escolha mais 1</a>
+</div>

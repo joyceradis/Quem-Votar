@@ -215,6 +215,51 @@ versionados:
   CODEOWNERS) — wiring em CI fica para a Fase 4 (verificação completa
   antes do corte), junto com o `runtime-proof` já existente.
 
+## ⚠ Bloqueador conhecido da Fase 5: `audit-site.py` está acoplado ao formato
+
+Achado durante a Fase 3, antes de virar problema no corte. Várias asserções de
+`scripts/audit-site.py` não verificam **comportamento**, e sim o **texto
+literal dos arquivos atuais**. Como a V6 gera esses arquivos a partir de
+`src/`, elas quebram no corte mesmo que o site esteja idêntico para quem usa:
+
+| Asserção | Por que quebra |
+|---|---|
+| `"const PAGE_SIZE=12" in app` | lê `app.js`; na V6 a constante vive em `src/js/pages/candidates.js` |
+| `@media\(min-width:980px\)\{\.desktop-nav\{display:flex\}` | casa com o `styles.css` **minificado**; o CSS da V6 é formatado |
+| `'.nav-toggle::before{content:"☰"' in styles` | idem, dependente de minificação |
+| `"O que essa pessoa faz hoje?" in app` (e a ordem das 3 perguntas) | lê `app.js`; na V6 está no módulo da ficha |
+| `'id="dados-eleitorais"' in app` depois de `id="impacto"` | idem |
+| `public_markup.count('id="drawer"') == len(REQUIRED_PAGES)` | conta ocorrências somando os 6 HTML + `app.js` |
+
+Nenhuma delas indica um contrato de produto quebrado — indicam que o teste
+mede a implementação. O que essas asserções *querem* garantir (12 por página,
+nav desktop visível ≥980px, ordem HOJE→PROPÕE→IMPACTO, drawer em toda página,
+dados eleitorais na camada secundária) já está coberto por teste de
+comportamento real em `tests-e2e/`.
+
+**Encaminhamento:** a Fase 5 precisa atualizar `scripts/audit-site.py` no
+mesmo PR do corte, reescrevendo essas asserções para lerem a saída construída
+(`_site/`) em vez dos arquivos-fonte. `scripts/audit-site.py` é caminho
+protegido por CODEOWNERS e pela Cerca Elétrica, então esse PR exige revisão de
+@joyceradis e provavelmente `Authorization-Issue:`. Não fazer isso de véspera.
+
+## Fase 3 — páginas portadas
+
+| Página | Estado |
+|---|---|
+| Home (`index.html`) | ✅ portada, com dados reais (547 candidaturas, 7 temas) |
+| Candidaturas (`candidatos.html`) | ✅ portada: busca, filtros, 12/página, troca de cargo, funil de comparação |
+| Ficha (`candidato.html`) | ⬜ pendente |
+| Comparar (`comparar.html`) | ⬜ pendente |
+| Assuntos (`temas.html`) | ⬜ pendente |
+| Como funciona (`sobre.html`) | ⬜ pendente |
+| Apoiar (`apoio.html`) | ⬜ pendente |
+
+Os módulos `core/` que as páginas restantes precisam já estão prontos e
+testados (`evidence.js`, `compare-state.js`, `data.js`, `format.js`,
+`url-state.js`, `dom.js`, `a11y.js`) — o que falta em cada página é markup e
+a função de render, não regra de negócio.
+
 ## Estado no fim da Fase 1 (checkpoint para retomada)
 
 - Fases 0, 1 e 2 commitadas na branch `claude/inspiring-keller-c98fd2`
