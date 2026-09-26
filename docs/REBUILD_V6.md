@@ -157,6 +157,26 @@ Confirmado em CI (não só localmente): `Qualidade do site` e
   compartilhar as referências salvas — não foram redesenhados por palpite
   para evitar repetir o mesmo problema que motivou esta reconstrução.
 
+## Verificação de ponta a ponta (Playwright, versionado)
+
+As checagens comportamentais que vinham sendo rodadas como scripts
+descartáveis em `/tmp` (e somem no fim da sessão) agora são testes reais
+versionados:
+
+- `@playwright/test` como devDependency (`package.json`), pinada na mesma
+  versão já instalada globalmente no ambiente (`1.56.1`) para reaproveitar
+  o cache de browsers sem novo download.
+- `playwright.config.js`: sobe o próprio `npx eleventy --serve` como
+  `webServer`, roda contra `http://127.0.0.1:4173`, dois projetos
+  (`desktop` 1200×900, `mobile` 390×844 via `Pixel 5`). Não tem relação com
+  a suíte Python em `tests/` (pipeline/produção atual) nem a substitui.
+- `tests-e2e/shell.spec.js`: 6 testes × 2 viewports = 12 casos —
+  breakpoint desktop/hambúrguer, `aria-current` no item ativo, foco ao
+  abrir o drawer + `Esc` devolvendo foco ao botão Menu, persistência do
+  aumento de texto entre recargas, zero erro de console/requisição
+  quebrada no casco, e o styleguide renderizando os componentes
+  principais. **12/12 passando** (`npm run test:e2e`).
+
 ## Estado no fim da Fase 1 (checkpoint para retomada)
 
 - Fases 0, 1 e 2 commitadas na branch `claude/inspiring-keller-c98fd2`
