@@ -16,10 +16,30 @@ html {
 
 body {
   margin: 0;
+  font-family: var(--font-sans);
   color: var(--ink);
   line-height: 1.5;
   background: #fff;
   -webkit-font-smoothing: antialiased;
+}
+
+/*
+ * Títulos na família de display. `font-optical-sizing: auto` deixa o eixo
+ * variável `opsz` da Fraunces responder ao tamanho: títulos grandes ganham
+ * o desenho de display (mais contraste), textos pequenos o de leitura.
+ */
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+/* Números e dados eleitorais alinhados em colunas (tabelas, comparação). */
+.qv-tabular {
+  font-variant-numeric: tabular-nums;
 }
 
 body.page-lock {

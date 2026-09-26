@@ -54,7 +54,21 @@
   --motion-base: 250ms;
   --motion-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
 
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", sans-serif;
+  /*
+   * Tipografia. Antes, o :root apenas *nomeava* "Inter" numa pilha de fontes
+   * de sistema — sem nunca carregá-la. Na prática o site caía no fallback
+   * genérico de cada SO (Arial/Liberation Sans no Linux), que é justamente o
+   * que dava o aspecto "sem tipografia". Agora as famílias são de fato
+   * carregadas, auto-hospedadas (src/styles/fonts.css, assets/fonts/).
+   *
+   * --font-sans    texto corrido, interface, dados
+   * --font-display títulos e números grandes ("tipografia forte" do
+   *                docs/PRODUCT_NORTH_STAR.md)
+   */
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+
+  font-family: var(--font-sans);
 }
 
 html[data-scale="large"] {

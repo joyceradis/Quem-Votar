@@ -28,6 +28,17 @@
   height: auto;
 }
 
+/*
+ * O SVG é inlinado (ver filtro svgInline em .eleventy.js) justamente para
+ * poder ser recolorido aqui: sobre o fundo escuro, o traço azul-marinho
+ * original desapareceria. CSS vence atributo de apresentação, então isto
+ * reescreve o stroke de todas as formas — inclusive a cruz rosa, que numa
+ * marca d'água deve recuar junto com o resto em vez de chamar atenção.
+ */
+.qv-fat-footer-illustration svg * {
+  stroke: #fff;
+}
+
 .qv-fat-footer-grid {
   position: relative;
   z-index: 1;

@@ -6,7 +6,9 @@
  */
 .qv-pill-search {
   display: grid;
-  grid-template-columns: 190px minmax(280px, 1fr) auto;
+  /* 1ª coluna dimensionada para caber "Deputado Estadual" na Inter, que tem
+     métrica mais larga que a pilha de fontes de sistema usada antes. */
+  grid-template-columns: 215px minmax(280px, 1fr) auto;
   max-width: 850px;
   border: 1px solid var(--line);
   border-radius: var(--radius-md);

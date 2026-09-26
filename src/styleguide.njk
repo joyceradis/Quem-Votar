@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Styleguide — Quem Votar? (uso interno, Fase 1)</title>
+<link rel="stylesheet" href="/styles/fonts.css">
 <link rel="stylesheet" href="/styles/tokens.css">
 <link rel="stylesheet" href="/styles/base.css">
 <link rel="stylesheet" href="/styles/components/button.css">
@@ -19,8 +20,20 @@
   .swatch { display: grid; gap: 6px; width: 120px; font-size: 0.72rem; color: var(--muted); }
   .swatch i { display: block; height: 56px; border-radius: var(--radius-sm); border: 1px solid var(--line); }
   .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
-  .hero-preview { display: grid; grid-template-columns: minmax(0,1fr) 260px; gap: 32px; align-items: center; }
+  .hero-preview { display: grid; grid-template-columns: minmax(0,1fr) 300px; gap: 32px; align-items: center; }
   .hero-preview img { width: 100%; }
+  .type-option { padding: 22px 0; border-top: 1px solid var(--line); }
+  .type-option > small { display: block; margin-bottom: 8px; color: var(--muted); font-size: .72rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+  .type-option p { margin: 6px 0 0; max-width: 62ch; color: var(--ink-soft); font-size: .95rem; }
+  /* mais específico que `.type-option p` abaixo, senão o espécime herda o
+     tamanho do texto de apoio */
+  .type-option .specimen { margin: 0; font-size: clamp(2rem, 4.2vw, 3.1rem); line-height: 1.05; letter-spacing: -.03em; color: var(--ink); }
+  .opt-fraunces .specimen { font-family: "Fraunces", serif; font-optical-sizing: auto; }
+  .opt-instrument .specimen { font-family: "Instrument Serif", serif; }
+  .opt-bricolage .specimen { font-family: "Bricolage Grotesque", sans-serif; }
+  .opt-inter .specimen { font-family: "Inter", sans-serif; font-weight: 800; }
+  .scale-row { display: grid; gap: 10px; }
+  .scale-row span { color: var(--muted); font-size: .7rem; }
 </style>
 </head>
 <body>
@@ -41,13 +54,61 @@
 </section>
 
 <section>
-  <h2>Ilustração regional v2 (assets/v6-penha-line.svg — single-line art, revisada após feedback)</h2>
-  <p style="color:var(--muted);font-size:.85rem;max-width:60ch">Traço único de 1.2px, sem preenchimento, sem sombra: vão da Terceira Ponte com pilares tracejados (sem cabos estaiados), domo do Morro da Penha e o Convento no topo com a cruz em rosa como único destaque de cor. Ainda não integrada ao Home real — isso é Fase 3.</p>
+  <h2>Tipografia — escolher a família de títulos</h2>
+  <p style="color:var(--muted);font-size:.85rem;max-width:62ch">O texto e a interface usam <b>Inter</b> (definido). Falta escolher a família dos títulos. Todas são OFL-1.1 e ficam auto-hospedadas, sem requisição a terceiros. Depois da escolha, as não usadas saem do repositório.</p>
+
+  <div class="type-option opt-fraunces">
+    <small>A · Fraunces — padrão atual</small>
+    <p class="specimen">Entenda uma candidatura em 3 perguntas.</p>
+    <p>Serifada variável, editorial e com personalidade — mais próxima de revista/jornal do que de portal institucional.</p>
+  </div>
+
+  <div class="type-option opt-instrument">
+    <small>B · Instrument Serif</small>
+    <p class="specimen">Entenda uma candidatura em 3 perguntas.</p>
+    <p>Serifada de alto contraste, mais sóbria e clássica. Menos “falante” que a Fraunces.</p>
+  </div>
+
+  <div class="type-option opt-bricolage">
+    <small>C · Bricolage Grotesque</small>
+    <p class="specimen">Entenda uma candidatura em 3 perguntas.</p>
+    <p>Sem serifa, contemporânea e um pouco irreverente — combina com a marca “descontraída” do logo.</p>
+  </div>
+
+  <div class="type-option opt-inter">
+    <small>D · Inter pesada (sem família extra)</small>
+    <p class="specimen">Entenda uma candidatura em 3 perguntas.</p>
+    <p>Mesma família do texto, só em peso alto. Opção mais neutra e mais leve de carregar.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Escala de texto (Inter)</h2>
+  <div class="scale-row">
+    <div><span>1.48rem · nome na listagem</span><div style="font-size:1.48rem;font-weight:800;letter-spacing:-.03em">Maria da Penha Santos</div></div>
+    <div><span>1rem · texto corrido</span><div style="font-size:1rem">Propostas e declarações sempre com fonte, data e tipo de evidência.</div></div>
+    <div><span>0.82rem · apoio</span><div style="font-size:.82rem;color:var(--muted)">Atuação atual ainda não confirmada nesta base.</div></div>
+    <div><span>0.7rem · rótulo</span><div style="font-size:.7rem;font-weight:900;letter-spacing:.09em;color:var(--blue-strong)">DEPUTADO ESTADUAL · Nº 00000</div></div>
+  </div>
+</section>
+
+<section>
+  <h2>Ilustração aprovada (assets/v6-penha-sketch.svg — esboço técnico)</h2>
+  <p style="color:var(--muted);font-size:.85rem;max-width:62ch">Tabuleiro em perspectiva pousando na encosta do Morro da Penha, pilares com sombreado, hachura no morro, barco na água. É esta que vai para o rodapé como marca d'água e é a candidata ao Home. Integração real ao Home é Fase 3.</p>
   <div class="hero-preview">
     <div>
       <p class="eyebrow" style="color:var(--blue-strong);font-weight:900;font-size:.7rem;letter-spacing:.14em">ESPÍRITO SANTO · ELEIÇÕES 2026</p>
-      <h1 style="font-size:2.4rem;letter-spacing:-.03em;margin:.3em 0">Entenda uma candidatura em 3 perguntas.</h1>
+      <h1 style="font-size:2.4rem;margin:.3em 0">Entenda uma candidatura em 3 perguntas.</h1>
     </div>
+    <img src="/assets/v6-penha-sketch.svg" alt="">
+  </div>
+</section>
+
+<section>
+  <h2>Ilustração alternativa (assets/v6-penha-line.svg — single-line art)</h2>
+  <p style="color:var(--muted);font-size:.85rem;max-width:62ch">Versão minimalista, mantida como alternativa para usos pequenos (favicon, cabeçalho, og:image) onde o esboço detalhado não sobreviveria à redução.</p>
+  <div class="hero-preview">
+    <div></div>
     <img src="/assets/v6-penha-line.svg" alt="">
   </div>
 </section>

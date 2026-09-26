@@ -110,8 +110,7 @@ Confirmado em CI (não só localmente): `Qualidade do site` e
 
 **Revisão de direção de arte (feedback direto da mantenedora sobre a Fase 1).**
 
-- Nova ilustração `assets/v6-penha-line.svg` (+ variante clara
-  `assets/v6-penha-line-watermark.svg` para uso sobre fundo escuro):
+- Nova ilustração `assets/v6-penha-line.svg`:
   single-line art, traço 1.2px azul-marinho, `fill:none`, sem sombra/
   hachura. Três elementos: vão da Terceira Ponte com pilares retos
   tracejados (sem cabos estaiados), domo único do Morro da Penha, e o
@@ -156,6 +155,41 @@ Confirmado em CI (não só localmente): `Qualidade do site` e
   (sem uma divisão fixa em caixa) ficam para quando a mantenedora
   compartilhar as referências salvas — não foram redesenhados por palpite
   para evitar repetir o mesmo problema que motivou esta reconstrução.
+
+## Tipografia (feedback "fonte ruim")
+
+O `:root` antigo apenas **nomeava** `"Inter"` numa pilha de fontes de sistema,
+sem nunca carregá-la — então o site caía no fallback genérico de cada SO
+(Arial/Liberation Sans), que é exatamente o aspecto de "sem tipografia" que a
+mantenedora apontou. Corrigido:
+
+- famílias de fato carregadas e **auto-hospedadas** em `assets/fonts/`
+  (`src/styles/fonts.css`), sem nenhuma requisição ao CDN do Google — carregar
+  de terceiros exporia o IP de cada visitante, contrariando
+  `docs/TELEMETRY_PRIVACY.md` e `docs/GOVERNANCE.md`;
+- subsets `latin` + `latin-ext` em `woff2`, com `unicode-range`: em português
+  o navegador baixa só o `latin` (~47 KB Inter, ~65 KB display);
+- `preload` apenas dos dois subsets `latin` críticos, para não haver "flash"
+  de fonte de sistema;
+- tokens novos `--font-sans` (texto/interface) e `--font-display` (títulos),
+  com `font-optical-sizing: auto` nos títulos;
+- origem, licença (todas OFL-1.1) e atribuição registradas em
+  `assets/fonts/README.md`, como exige `docs/DESIGN_REFERENCES.md`.
+
+**Decisão pendente:** a família de títulos. O styleguide mostra quatro
+candidatas lado a lado com a mesma frase (`/styleguide/`): **A** Fraunces
+(padrão atual), **B** Instrument Serif, **C** Bricolage Grotesque, **D** Inter
+em peso alto. Escolhida uma, as outras saem de `assets/fonts/` e de
+`src/styles/fonts.css`.
+
+## Ilustração no rodapé — SVG corrigido
+
+O rodapé e o styleguide ainda apontavam para a ilustração minimalista, não
+para o esboço técnico aprovado. Corrigido, e a duplicação que existia para
+isso foi eliminada: em vez de manter um segundo arquivo quase idêntico só
+para a versão clara (`v6-penha-line-watermark.svg`, **removido**), o SVG passa
+a ser inlinado pelo filtro `svgInline` (`.eleventy.js`) e recolorido por CSS
+sobre o fundo escuro. Um arquivo, duas aparências.
 
 ## Verificação de ponta a ponta (Playwright, versionado)
 

@@ -8,6 +8,12 @@
 <meta name="qv-asset-version" content="{{ version }}">
 <link rel="icon" href="/assets/favicon.svg?v={{ version }}" type="image/svg+xml">
 <link rel="manifest" href="/manifest.webmanifest">
+{# Preload só dos subsets latin (o caso normal em português): evita o "flash"
+   de fonte de sistema antes da fonte real carregar. Os latin-ext ficam a
+   cargo do unicode-range, sem preload. #}
+<link rel="preload" href="/assets/fonts/inter-latin.woff2?v={{ version }}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/fraunces-latin.woff2?v={{ version }}" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/styles/fonts.css?v={{ version }}">
 <link rel="stylesheet" href="/styles/tokens.css?v={{ version }}">
 <link rel="stylesheet" href="/styles/base.css?v={{ version }}">
 <link rel="stylesheet" href="/styles/components/button.css?v={{ version }}">
