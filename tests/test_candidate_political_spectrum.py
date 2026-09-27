@@ -49,9 +49,12 @@ class CandidatePoliticalSpectrumStagingTests(unittest.TestCase):
         self.assertEqual(len(all_drafts), len(set(all_drafts)))
 
     def test_public_ui_does_not_consume_spectrum_metadata_during_freeze(self):
+        public_files = [
+            ROOT / "index.html",
+            *sorted((ROOT / "src" / "js").rglob("*.js")),
+        ]
         public_text = "\n".join(
-            (ROOT / path).read_text(encoding="utf-8")
-            for path in ("index.html", "app.js")
+            path.read_text(encoding="utf-8") for path in public_files
         )
         self.assertNotIn("candidate-political-spectrum", public_text)
         self.assertNotIn("political_spectrum", public_text)

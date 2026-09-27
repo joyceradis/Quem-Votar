@@ -1,0 +1,49 @@
+name: V6 cutover executor
+
+on:
+  push:
+    branches:
+      - release/v6-publish-now-r2
+    paths:
+      - ".v6-cutover-trigger"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: v6-cutover-release
+  cancel-in-progress: false
+
+jobs:
+  cutover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - name: Checkout release branch
+        uses: actions/checkout@v4
+        with:
+          ref: release/v6-publish-now-r2
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Execute authorized V6 cutover
+        shell: bash
+        run: bash scripts/run-v6-cutover-authorized.sh
+
+      - name: Commit prepared V6 release
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "release: cut over V6 to public surface"
+          git push origin HEAD:release/v6-publish-now-r2

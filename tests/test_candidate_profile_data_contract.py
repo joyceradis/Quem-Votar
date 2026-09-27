@@ -39,8 +39,8 @@ class CandidateProfileDataContractTest(unittest.TestCase):
                 )
 
     def test_profile_surfaces_facts_and_explicit_unresolved_registration(self):
-        app = (ROOT / "app.js").read_text(encoding="utf-8")
-        css = (ROOT / "styles.css").read_text(encoding="utf-8")
+        app = (ROOT / "src" / "js" / "pages" / "profile.js").read_text(encoding="utf-8")
+        css = (ROOT / "src" / "styles" / "pages" / "profile.css").read_text(encoding="utf-8")
 
         for token in (
             "Dados eleitorais do TSE",
@@ -51,7 +51,7 @@ class CandidateProfileDataContractTest(unittest.TestCase):
             "registrationStatusLabel(candidate.registration_status)",
             "candidate.totalization_status",
             "Ainda não disponível na fonte atual",
-            ".filter(item=>item.value)",
+            ".filter((item) => item.value)",
         ):
             self.assertIn(token, app)
 
