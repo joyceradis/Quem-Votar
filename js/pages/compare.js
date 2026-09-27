@@ -121,9 +121,9 @@ async function initCompare() {
   if (selected.length < 2) {
     mount.innerHTML = `
       <div class="compare-empty">
-        <h2>${selected.length ? "Escolha mais 1 pessoa." : "Ninguém selecionado."}</h2>
-        <p>Abra a lista e escolha de duas a três pessoas para comparar.</p>
-        <a href="candidatos.html?cargo=federal">Escolher pessoas</a>
+        <h2>${selected.length ? "Escolha mais 1 candidatura." : "Ninguém selecionado."}</h2>
+        <p>Abra a lista e escolha de duas a três candidaturas para comparar.</p>
+        <a href="candidatos.html?cargo=federal">Escolher candidaturas</a>
       </div>`;
     return;
   }
