@@ -1,0 +1,74 @@
+/* Assuntos — portado de styles.css:35. Linhas com divisor, não cartões. */
+
+.topic-table {
+  display: grid;
+  gap: 0;
+  border-top: 1px solid var(--line);
+}
+
+.topic-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 210px auto;
+  gap: 26px;
+  align-items: center;
+  padding: 30px 2px;
+  border-bottom: 1px solid var(--line);
+  scroll-margin-top: 100px;
+}
+
+.topic-main h2 {
+  margin: 0;
+  font-size: 1.55rem;
+  letter-spacing: -0.025em;
+}
+
+.topic-main p {
+  max-width: 62ch;
+  margin: 8px 0 14px;
+  color: var(--ink-soft);
+}
+
+/* Contagem de pessoas com fonte no assunto. É volume de registro, nunca
+   qualidade ou ordenação de relevância entre temas. */
+.topic-status {
+  display: grid;
+  margin: 0;
+}
+
+.topic-status strong {
+  font-size: 1.8rem;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.topic-status span {
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+
+.topic-row > a {
+  color: var(--blue-strong);
+  font-weight: 800;
+  text-decoration: none;
+}
+
+@media (max-width: 920px) {
+  .topic-row {
+    grid-template-columns: 1fr 180px;
+  }
+
+  .topic-row > a {
+    grid-column: 2;
+  }
+}
+
+@media (max-width: 620px) {
+  .topic-row {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .topic-row > a {
+    grid-column: auto;
+  }
+}

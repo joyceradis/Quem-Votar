@@ -6,11 +6,10 @@ Plataforma cívica open source para consulta factual e rastreável de candidatur
 
 **Produção:** https://joyceradis.github.io/Quem-Votar/
 
-**Baseline visual:** produção **V5.5** no ar · **V6.0.0 preparada para cutover**
-(reconstrução em `src/`, corte date-gated a partir de 04/10/2026). O arquivo
-[`VERSION`](VERSION) já registra `6.0.0`, a versão **preparada** — não a
-publicada: as páginas no ar ainda servem os assets `V5.5`. Ver
-[`docs/REBUILD_V6.md`](docs/REBUILD_V6.md).
+**Baseline visual:** produção **V6.0.0** no ar.
+A reconstrução em `src/` foi promovida para a superfície pública em 26/09/2026,
+preservando as URLs e os contratos editoriais/dados. [`VERSION`](VERSION) = `6.0.0`.
+Ver [`docs/REBUILD_V6.md`](docs/REBUILD_V6.md).
 
 [Produção](https://joyceradis.github.io/Quem-Votar/) · [Como funciona](sobre.html) · [Metodologia](METODOLOGIA.md) · [Apoiar o projeto](apoio.html) · [GitHub Sponsors](https://github.com/sponsors/joyceradis) · [Licença](LICENSE)
 
@@ -65,7 +64,7 @@ O site mostra:
 
 A data é exibida no fuso `America/Sao_Paulo`.
 
-## Experiência pública V5.5
+## Experiência pública V6.0.0
 
 ### Home
 
@@ -103,10 +102,11 @@ Profissão/ocupação declarada ao TSE é apenas metadado da ficha e não associ
 
 Leitura em camadas:
 
-- Visão geral;
-- Trajetória;
-- Temas e propostas;
-- Registros públicos;
+- Identidade;
+- O que a pessoa faz hoje;
+- O que diz que vai fazer;
+- Onde isso pode mexer na vida real, de forma descritiva;
+- Histórico e dados eleitorais;
 - Fontes e limitações;
 - compartilhamento direto da ficha por URL.
 

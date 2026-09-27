@@ -1,12 +1,12 @@
-# Mapa do site — V5.5
+# Mapa do site — V6.0.0
 
 ## Princípio
 
-A V5.5 organiza a consulta em três perguntas simples: quem é a candidatura, qual é sua trajetória documentada e o que existe de evidência sobre temas de política pública.
+A V6.0.0 organiza a consulta em três perguntas simples: o que a pessoa faz hoje, o que diz que vai fazer e onde isso pode mexer na vida real, sempre com tratamento explícito de lacunas e fontes.
 
 O mapa descreve superfícies públicas. Rotas técnicas de compartilhamento não substituem a ficha canônica.
 
-> **Baseline:** a superfície publicada é a **V5.5**. A reconstrução **V6** está preparada em `src/` (Fases 0–4 concluídas), com corte date-gated a partir de 04/10/2026 — as rotas e o contrato de URL abaixo não mudam no corte. Ver [`REBUILD_V6.md`](REBUILD_V6.md).
+> **Baseline:** a superfície publicada é a **V6.0.0**, promovida em 26/09/2026. As rotas e o contrato de URL foram preservados no cutover. Ver [`REBUILD_V6.md`](REBUILD_V6.md).
 
 ## Rotas públicas
 

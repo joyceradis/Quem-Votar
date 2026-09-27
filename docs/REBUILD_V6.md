@@ -5,15 +5,11 @@ Rastreamento: [Issue #167](https://github.com/joyceradis/Quem-Votar/issues/167).
 Autorização: decisão direta de @joyceradis (mantenedora), registrada na Issue
 #167, conforme `AGENTS.md` §8.
 
-## Estado atual (reconciliado em 2026-09-26, pós-#170)
+## Estado atual (reconciliado em 2026-09-26, cutover autorizado)
 
 - **Fases 0–4 concluídas e em `main`.** PRs #168 e #170 mergeados.
-- **Fase 5 (corte) date-gated:** `scripts/cutover-v6.sh` recusa rodar antes
-  de 2026-10-04. A superfície pública (`index.html`, `app.js`, `styles.css`,
-  as 7 rotas) permanece **V5.5** no ar, sem alteração.
-- **`VERSION` = `6.0.0`** já está preparada na `main`, mas ainda **não é a
-  versão publicada**: as páginas no ar servem `?v=5.5.8`. `VERSION` só passa
-  a valer no corte — ver README, "produção V5.5 / V6.0.0 preparada".
+- **Fase 5 autorizada e executada em 26/09/2026:** a mantenedora substituiu explicitamente o gate temporal anterior de 04/10 na Issue #167.
+- **`VERSION` = `6.0.0` é a versão publicada.** A superfície pública usa a saída Eleventy, com módulos `js/` e folhas `styles/` versionados em `?v=6.0.0`.
 - **Caminhos protegidos já aplicados** (não mais "patch pendente"): a
   auditoria desacoplada (`public_css`/`public_js`) e o job de CI
   `frontend-v6` entraram pelo #170, autorizados pela Issue #169. O diretório
@@ -39,10 +35,9 @@ o problema — o problema é manutenibilidade.
 1. Build-time apenas: **Eleventy (11ty)**. A saída publicada continua
    HTML/CSS/JS puro, compatível com GitHub Pages; nenhum framework roda no
    navegador.
-2. Janela de corte: todo o trabalho acontece em branch isolada; **produção
-   não muda** até o feature freeze do núcleo eleitoral acabar em 04/10/2026.
-   `https://joyceradis.github.io/Quem-Votar/` fica no ar sem alteração até o
-   merge atômico final da Fase 5.
+2. Janela de corte: o plano original previa produção imutável até 04/10/2026.
+   Em 26/09/2026, a mantenedora antecipou explicitamente o cutover na Issue #167,
+   preservando os mesmos gates técnicos/editoriais e o merge atômico.
 
 ## Fases
 
@@ -53,7 +48,7 @@ o problema — o problema é manutenibilidade.
 | 2 | Casco compartilhado (partials nav/rodapé, módulos `core/*`) | Não |
 | 3 | Página por página (Home → Candidatos → Ficha → Comparar → Temas → Como funciona → Apoiar), uma PR por página | Não |
 | 4 | Verificação completa (testes, `audit-site.py`, `runtime-proof`, capturas de tela) | Não |
-| 5 | Corte atômico em `main`, a partir de 04/10/2026 | **Sim** |
+| 5 | Corte atômico em `main`, antecipado por decisão da mantenedora em 26/09/2026 | **Sim — concluído** |
 | 6 | Higiene de pipeline/CI (trilha paralela) | Não (decisões de cadência aguardam sinal explícito da mantenedora) |
 
 ## O que não muda
@@ -413,11 +408,10 @@ caminho principal de quem só quer achar uma candidatura.
 
 ### `scripts/cutover-v6.sh`
 
-O corte da Fase 5 é um comando só, com trava de data (recusa rodar antes de
-2026-10-04): build, `verify`, suíte de comportamento, substituição da
-superfície pública, regeração dos stubs sociais e auditoria pós-corte. O
-commit final continua sendo manual e único, como exige
-`docs/DELIVERY_GOVERNANCE.md`.
+O corte da Fase 5 permanece um fluxo atômico: build, `verify`, suíte de comportamento,
+substituição da superfície pública, regeração dos stubs sociais e auditoria pós-corte.
+O gate temporal original foi substituído pela autorização explícita da mantenedora em
+26/09/2026; o helper agora é idempotente quando a V6 já estiver cortada.
 
 
 ## O que a simulação do corte revelou

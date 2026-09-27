@@ -1,27 +1,59 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<script src="telemetry.js?v=1"></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0B456F">
-<meta name="description" content="Busque e filtre candidaturas a deputado federal e estadual no Espírito Santo com dados públicos e fontes rastreáveis.">
+
+<script src="telemetry.js?v=1"></script>
+<meta name="theme-color" content="#113b56">
+<meta name="description" content="Busque candidaturas a deputado federal e estadual no Espírito Santo por nome, número ou partido.">
+<meta name="qv-asset-version" content="6.0.0">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
 <link rel="canonical" href="https://joyceradis.github.io/Quem-Votar/candidatos.html">
-<link rel="icon" href="assets/favicon.svg?v=2" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Quem Votar?">
+<meta property="og:title" content="Candidaturas · Quem Votar? ES 2026">
+<meta property="og:description" content="Busque candidaturas a deputado federal e estadual no Espírito Santo por nome, número ou partido.">
+<meta property="og:url" content="https://joyceradis.github.io/Quem-Votar/candidatos.html">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Candidaturas · Quem Votar? ES 2026">
+<meta name="twitter:description" content="Busque candidaturas a deputado federal e estadual no Espírito Santo por nome, número ou partido.">
+<link rel="icon" href="assets/favicon.svg?v=6.0.0" type="image/svg+xml">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="styles.css?v=5.5.8">
-<title>Candidaturas · Quem Votar?</title>
+
+<link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="styles/fonts.css?v=6.0.0">
+<link rel="stylesheet" href="styles/tokens.css?v=6.0.0">
+<link rel="stylesheet" href="styles/base.css?v=6.0.0">
+<link rel="stylesheet" href="styles/components/button.css?v=6.0.0">
+<link rel="stylesheet" href="styles/components/pill-search.css?v=6.0.0">
+<link rel="stylesheet" href="styles/components/tag.css?v=6.0.0">
+<link rel="stylesheet" href="styles/components/card.css?v=6.0.0">
+<link rel="stylesheet" href="styles/components/page.css?v=6.0.0">
+<link rel="stylesheet" href="styles/components/nav.css?v=6.0.0">
+<link rel="stylesheet" href="styles/components/footer.css?v=6.0.0">
+<link rel="stylesheet" href="styles/pages/candidates.css?v=6.0.0">
+
+<title>Candidaturas · Quem Votar? ES 2026</title>
 </head>
 <body data-page="candidates">
+
 <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
 <header class="site-header">
-  <a class="brand" href="index.html" aria-label="Quem Votar? início"><img src="assets/logo.svg" alt="Quem Votar? ES 2026"></a>
+  <a class="brand" href="index.html" aria-label="Quem Votar? início">
+    <img src="assets/logo.svg" alt="Quem Votar? ES 2026">
+  </a>
   <nav class="desktop-nav" aria-label="Navegação principal">
-    <a class="active" aria-current="page" href="candidatos.html?cargo=federal">Candidatos</a>
+    
+    <a href="candidatos.html?cargo=federal" aria-current="page">Candidatos</a>
+    
     <a href="temas.html">Assuntos</a>
+    
     <a href="comparar.html">Comparar</a>
+    
     <a href="sobre.html">Como funciona</a>
+    
   </nav>
   <div class="header-actions">
     <button class="text-size" id="textSizeButton" type="button" aria-label="Aumentar tamanho do texto">A+</button>
@@ -31,61 +63,221 @@
 <aside class="drawer" id="drawer" aria-hidden="true" inert>
   <button class="drawer-close" id="closeMenu" type="button">Fechar</button>
   <a href="index.html">Início</a>
-  <a aria-current="page" href="candidatos.html?cargo=federal">Candidatos</a>
+  
+  <a href="candidatos.html?cargo=federal" aria-current="page">Candidatos</a>
+  
   <a href="temas.html">Assuntos</a>
+  
   <a href="comparar.html">Comparar</a>
+  
   <a href="sobre.html">Como funciona</a>
+  
 </aside>
 <div class="backdrop" id="backdrop" hidden></div>
-<main id="conteudo" class="page-shell">
-  <header class="page-intro">
-    <div>
-      <p class="eyebrow">PESSOAS · ESPÍRITO SANTO</p>
-      <h1>Procure uma pessoa.</h1>
-      <p>Digite nome, número ou partido. O resto aparece só se você quiser aprofundar.</p>
-    </div>
-    <div class="snapshot-inline"><span id="listUpdate">Carregando atualização…</span><a data-tse-source href="https://dadosabertos.tse.jus.br/dataset/candidatos-2026" target="_blank" rel="noopener">Dados do TSE</a></div>
-  </header>
 
-  <div class="office-switch" role="tablist" aria-label="Cargo">
-    <button class="office-button" data-kind="federal" role="tab">Deputado Federal <b id="federalCount">—</b></button>
-    <button class="office-button" data-kind="estadual" role="tab">Deputado Estadual <b id="estadualCount">—</b></button>
+<main id="conteudo" class="qv-page">
+<header class="qv-page-intro">
+  <div>
+    <p class="qv-eyebrow">Pessoas · Espírito Santo</p>
+    <h1>Procure uma pessoa.</h1>
+    <p>Digite nome, número ou partido. O resto aparece só se você quiser aprofundar.</p>
   </div>
+  <p class="qv-page-snapshot">
+    <span id="listUpdate">Carregando atualização…</span>
+    <a data-tse-source href="https://dadosabertos.tse.jus.br/dataset/candidatos-2026" target="_blank" rel="noopener">Dados do TSE</a>
+  </p>
+</header>
 
-  <section class="search-panel" aria-label="Busca e filtros">
-    <div class="primary-search">
-      <label>
-        <span>Buscar candidatura</span>
-        <input id="searchInput" type="search" placeholder="Nome, número ou partido" autocomplete="off">
-      </label>
-      <button id="filterToggle" class="filter-toggle" type="button" aria-expanded="false" aria-controls="secondaryFilters"><img src="assets/icon-filter.svg" alt="">Filtros<span id="activeFilterCount"></span></button>
-    </div>
-    <div id="secondaryFilters" class="secondary-filters" hidden>
-      <label><span>Partido</span><select id="partyFilter"><option value="">Todos os partidos</option></select></label>
-      <label><span>Assunto</span><select id="topicFilter"><option value="">Todos os assuntos</option></select></label>
-      <label><span>Atuação pública</span><select id="institutionalFilter"><option value="">Todas</option><option value="1">Com atuação pública na base</option></select></label>
-      <button id="clearFilters" class="clear-button" type="button">Limpar filtros</button>
-    </div>
-  </section>
+<div class="office-switch" role="tablist" aria-label="Cargo">
+  <button class="office-button" data-kind="federal" role="tab" type="button">Deputado Federal <b id="federalCount">—</b></button>
+  <button class="office-button" data-kind="estadual" role="tab" type="button">Deputado Estadual <b id="estadualCount">—</b></button>
+</div>
 
-  <div class="results-head" aria-live="polite" aria-atomic="true">
-    <div><strong id="resultCount">Carregando…</strong><span>Pessoas encontradas</span></div>
-    <span id="pageStatus"></span>
+<section class="search-panel" aria-label="Busca e filtros">
+  <div class="primary-search">
+    <label>
+      <span>Buscar candidatura</span>
+      <input id="searchInput" type="search" placeholder="Nome, número ou partido" autocomplete="off">
+    </label>
+    <button id="filterToggle" class="filter-toggle" type="button" aria-expanded="false" aria-controls="secondaryFilters">Filtros<span id="activeFilterCount"></span></button>
   </div>
+  <div id="secondaryFilters" class="secondary-filters" hidden>
+    <label><span>Partido</span><select id="partyFilter"><option value="">Todos os partidos</option></select></label>
+    <label><span>Assunto</span><select id="topicFilter"><option value="">Todos os assuntos</option></select></label>
+    <label><span>Atuação pública</span><select id="institutionalFilter"><option value="">Todas</option><option value="1">Com atuação pública na base</option></select></label>
+    <button id="clearFilters" class="clear-button" type="button">Limpar filtros</button>
+  </div>
+</section>
 
-  <p id="compareStatus" role="status" aria-live="polite" aria-atomic="true"></p>
-  <section id="cards" class="candidate-list"><div class="loading">Carregando candidaturas…</div></section>
-  <nav id="pagination" class="pagination" aria-label="Paginação"></nav>
-</main>
+<div class="results-head" aria-live="polite" aria-atomic="true">
+  <div>
+    <strong id="resultCount">Carregando…</strong>
+    <span>Pessoas encontradas</span>
+  </div>
+  <span id="pageStatus"></span>
+</div>
+
+<div id="cards" class="candidate-list"></div>
+<div id="pagination" class="pagination"></div>
+
+<p id="compareStatus" class="qv-visually-hidden" role="status" aria-live="polite"></p>
 
 <div id="compareTray" class="compare-tray" hidden>
-  <div><strong id="compareCount">0 selecionados</strong><span>Até 3 candidaturas</span></div>
-  <div><button id="clearCompare" type="button">Limpar</button><a id="openCompare" href="comparar.html">Comparar</a></div>
+  <div>
+    <span id="compareCount">0 selecionados</span>
+    <button id="clearCompare" type="button">Limpar</button>
+  </div>
+  <a id="openCompare" aria-disabled="true" tabindex="-1">Escolha mais 1</a>
 </div>
-<footer class="site-footer">
-  <div><strong>Quem Votar? · Espírito Santo 2026</strong><span>Informação pública, em linguagem normal.</span></div>
-  <div><span>Atualizado em <b data-snapshot-date>—</b></span><a data-tse-source href="https://dadosabertos.tse.jus.br/dataset/candidatos-2026" target="_blank" rel="noopener">Dados do TSE</a></div>
+
+</main>
+
+<footer class="qv-fat-footer">
+  <div class="qv-fat-footer-illustration" aria-hidden="true">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420" role="img" aria-labelledby="title desc">
+  <title id="title">Terceira Ponte — esboço técnico</title>
+  <desc id="desc">Ilustração em estilo de esboço a nanquim: Terceira Ponte pousando no Morro da Penha, pilares em perspectiva com sombreado, morro com hachura e barco na água.</desc>
+  <defs>
+    <clipPath id="qv-hill-clip">
+      <path d="M596 320 C640 224 696 152 760 140 C826 150 878 230 900 316 L900 420 L596 420 Z"/>
+    </clipPath>
+    <filter id="qv-sketch-lift" x="-15%" y="-15%" width="130%" height="150%">
+      <feDropShadow dx="4" dy="10" stdDeviation="6" flood-color="#113b56" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <g filter="url(#qv-sketch-lift)" fill="none" stroke="#113b56" stroke-linecap="round" stroke-linejoin="round">
+
+    <!-- Morro: silhueta -->
+    <path d="M596 320 C640 224 696 152 760 140 C826 150 878 230 900 316" stroke-width="1.6"/>
+
+    <!-- Morro: hachura de sombreado, clipada pela silhueta -->
+    <g clip-path="url(#qv-hill-clip)" stroke-width="0.6" opacity="0.7">
+      <path d="M560 420 L650 300"/>
+      <path d="M580 420 L672 288"/>
+      <path d="M600 420 L694 276"/>
+      <path d="M620 420 L716 264"/>
+      <path d="M640 420 L738 252"/>
+      <path d="M660 420 L758 244"/>
+      <path d="M680 420 L774 240"/>
+      <path d="M700 420 L788 240"/>
+      <path d="M720 420 L802 244"/>
+      <path d="M740 420 L816 252"/>
+      <path d="M760 420 L830 264"/>
+      <path d="M780 420 L844 278"/>
+      <path d="M800 420 L858 296"/>
+      <path d="M820 420 L872 316"/>
+      <path d="M840 420 L884 336"/>
+      <path d="M860 420 L896 358"/>
+      <!-- reforço perto do topo/pouso da ponte, onde a hachura anterior ficava rala -->
+      <path d="M630 340 L700 250"/>
+      <path d="M650 360 L722 262"/>
+      <path d="M670 380 L744 274"/>
+    </g>
+
+    <!-- Convento no topo do morro: corpo, frontão -->
+    <rect x="736" y="104" width="40" height="30" stroke-width="1.1"/>
+    <path d="M730 104 756 84 782 104" stroke-width="1.1"/>
+    <!-- Cruz: único elemento com cor de destaque -->
+    <g stroke="#EE8FBD" stroke-width="1.1">
+      <line x1="756" y1="84" x2="756" y2="68"/>
+      <line x1="748" y1="74" x2="764" y2="74"/>
+    </g>
+
+    <!-- Terceira Ponte: tabuleiro em perspectiva, pousando no morro (sem vão flutuando) -->
+    <path d="M60 196 C130 178 200 164 268 152 C336 141 404 132 470 126 C540 120 606 116 670 198"
+          stroke-width="2"/>
+    <!-- Guarda-corpo: segunda linha, dando espessura/volume à viga -->
+    <path d="M62 188 C132 170 202 156 269 144 C337 133 404 124 470 118 C540 112 610 110 662 168"
+          stroke-width="0.7" opacity="0.65"/>
+    <!-- Sombreado sob o tabuleiro: hachura curta entre as duas linhas, dando volume à viga -->
+    <g stroke-width="0.55" opacity="0.55">
+      <line x1="140" y1="176" x2="146" y2="186"/>
+      <line x1="230" y1="158" x2="236" y2="168"/>
+      <line x1="320" y1="144" x2="326" y2="154"/>
+      <line x1="410" y1="130" x2="416" y2="140"/>
+      <line x1="500" y1="120" x2="506" y2="130"/>
+      <line x1="580" y1="114" x2="586" y2="124"/>
+    </g>
+    <!-- Postes de luz ao longo do tabuleiro -->
+    <line x1="150" y1="171" x2="150" y2="160" stroke-width="0.8"/>
+    <line x1="300" y1="147" x2="300" y2="136" stroke-width="0.8"/>
+    <line x1="450" y1="128" x2="450" y2="117" stroke-width="0.8"/>
+
+    <!-- Pilares em perspectiva: mais largos/próximos à esquerda, afinando à direita -->
+    <path d="M118 182 L112 320 M132 180 L138 320" stroke-width="1.3"/>
+    <!-- Sombreado cilíndrico do pilar (volume) -->
+    <line x1="122" y1="200" x2="122" y2="308" stroke-width="0.5" opacity="0.5"/>
+
+    <path d="M255 156 L250 320 M267 155 L272 320" stroke-width="1.2"/>
+    <line x1="259" y1="172" x2="259" y2="308" stroke-width="0.5" opacity="0.5"/>
+
+    <path d="M392 136 L388 320 M402 135 L406 320" stroke-width="1.1"/>
+    <line x1="395" y1="150" x2="395" y2="308" stroke-width="0.45" opacity="0.5"/>
+
+    <path d="M518 122 L515 320 M527 121 L530 320" stroke-width="1"/>
+    <line x1="521" y1="134" x2="521" y2="308" stroke-width="0.4" opacity="0.5"/>
+
+    <!-- Bases dos pilares na água (fundação alargada) -->
+    <path d="M104 320 L146 320 L138 308 L112 308 Z" stroke-width="1"/>
+    <path d="M244 320 L278 320 L272 310 L250 310 Z" stroke-width="0.9"/>
+    <path d="M382 320 L412 320 L406 312 L388 312 Z" stroke-width="0.85"/>
+    <path d="M509 320 L536 320 L530 313 L515 313 Z" stroke-width="0.8"/>
+
+    <!-- Linha d'água -->
+    <line x1="20" y1="320" x2="900" y2="320" stroke-width="1.2"/>
+
+    <!-- Água: ondulações leves, menos densas ao fundo -->
+    <g stroke-width="0.6" opacity="0.6">
+      <path d="M20 336 q18 -8 36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0"/>
+      <path d="M40 356 q18 -7 36 0 t36 0 t36 0 t36 0 t36 0"/>
+      <path d="M60 376 q18 -6 36 0 t36 0 t36 0"/>
+    </g>
+
+    <!-- Barco pequeno -->
+    <path d="M96 334 Q126 348 156 334" stroke-width="1.2"/>
+    <line x1="126" y1="334" x2="126" y2="315" stroke-width="0.9"/>
+    <line x1="126" y1="318" x2="141" y2="322" stroke-width="0.8"/>
+  </g>
+</svg>
+
+  </div>
+  <div class="qv-fat-footer-grid">
+    <div class="qv-fat-footer-brand">
+      <strong>Quem Votar? · Espírito Santo 2026</strong>
+      <p>Informação pública, em linguagem normal — sem ranking, sem recomendação de voto.</p>
+      <a href="apoio.html">Apoie o projeto</a>
+    </div>
+    <div class="qv-fat-footer-col">
+      <h3>Navegar</h3>
+      
+      <a href="candidatos.html?cargo=federal">Candidatos</a>
+      
+      <a href="temas.html">Assuntos</a>
+      
+      <a href="comparar.html">Comparar</a>
+      
+      <a href="sobre.html">Como funciona</a>
+      
+    </div>
+    <div class="qv-fat-footer-col">
+      <h3>Sobre</h3>
+      <a href="sobre.html">Como funciona</a>
+      <a href="sobre.html#fontes">Fontes e metodologia</a>
+      <a href="apoio.html">Transparência e apoio</a>
+    </div>
+    <div class="qv-fat-footer-meta">
+      <h3>Data dos dados</h3>
+      <span>Atualizado em <b data-snapshot-date>—</b></span>
+      <a data-tse-source href="https://dadosabertos.tse.jus.br/dataset/candidatos-2026" target="_blank" rel="noopener">Dados do TSE</a>
+    </div>
+  </div>
+  <div class="qv-fat-footer-legal">
+    <span>Licença AGPL-3.0-only do software · dados sujeitos aos termos das fontes originais.</span>
+    <span>Feito no ES, para entender o ES.</span>
+  </div>
 </footer>
-<script src="app.js?v=5.5.8" defer></script>
+
+<script type="module" src="js/pages/candidates.js?v=6.0.0"></script>
 </body>
 </html>
