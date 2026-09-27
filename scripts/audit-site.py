@@ -253,7 +253,7 @@ def main() -> None:
     federal = json.loads(read(DATA / "candidates-federal.json"))
     estadual = json.loads(read(DATA / "candidates-estadual.json"))
     meta = json.loads(read(DATA / "meta.json"))
-    rows = federal + estadual
+    rows = federal + estadual  # universo deputado; os stubs sociais cobrem estes.
 
     assert federal and estadual, "snapshot eleitoral vazio"
     assert meta["counts"]["federal"] == len(federal), "contagem federal divergente"
@@ -265,6 +265,27 @@ def main() -> None:
     ids = [str(x.get("tse_id") or "") for x in rows]
     assert all(ids), "registro sem SQ_CANDIDATO"
     assert len(ids) == len(set(ids)), "SQ_CANDIDATO duplicado"
+
+    # Cargos majoritários (#161): validados com o mesmo rigor quando seus
+    # snapshots existem, sem excluí-los da validação obrigatória e sem quebrar
+    # o contrato dos deputados (nem os stubs sociais, que hoje cobrem só eles).
+    all_ids = list(ids)
+    for kind, fname, label in (
+        ("governador", "candidates-governador.json", "GOVERNADOR"),
+        ("senador", "candidates-senador.json", "SENADOR"),
+    ):
+        path = DATA / fname
+        if not path.exists():
+            continue
+        group = json.loads(read(path))
+        assert group, f"snapshot {kind} vazio"
+        assert meta["counts"].get(kind) == len(group), f"contagem {kind} divergente"
+        assert all(x.get("office") == label for x in group), f"{kind}: office divergente"
+        assert all(x.get("uf") == "ES" for x in group), f"{kind}: UF divergente"
+        gids = [str(x.get("tse_id") or "") for x in group]
+        assert all(gids), f"{kind}: registro sem SQ_CANDIDATO"
+        all_ids.extend(gids)
+    assert len(all_ids) == len(set(all_ids)), "SQ_CANDIDATO duplicado entre cargos"
 
     social_root = ROOT / "social"
     fallback_og_image = ROOT / "assets" / "og-fallback-neutral.png"

@@ -52,20 +52,30 @@ jobs:
           from pathlib import Path
 
           base = Path('data/generated')
-          federal = json.loads((base / 'candidates-federal.json').read_text())
-          estadual = json.loads((base / 'candidates-estadual.json').read_text())
           meta = json.loads((base / 'meta.json').read_text())
-          assert federal and estadual
-          ids = [x.get('tse_id') for x in federal + estadual]
-          assert all(ids) and len(ids) == len(set(ids))
+          offices = meta.get('offices') or {
+              'federal': {}, 'estadual': {}
+          }
           mirrors = meta.get('sources', {}).get('operational_mirror') or {}
-          for kind in ('federal', 'estadual'):
+          all_ids = []
+          summary = []
+          for kind in offices:
+              rows = json.loads((base / f'candidates-{kind}.json').read_text())
+              assert rows, f'{kind} vazio'
+              assert meta['counts'].get(kind) == len(rows), f'contagem {kind} divergente'
+              ids = [x.get('tse_id') for x in rows]
+              assert all(ids), f'{kind}: registro sem SQ_CANDIDATO'
+              all_ids.extend(ids)
               source = mirrors.get(kind) or {}
-              assert source.get('commit_sha')
-              assert source.get('blob_sha')
-              assert source.get('content_sha256')
+              assert source.get('commit_sha'), f'{kind}: sem commit_sha'
+              assert source.get('blob_sha'), f'{kind}: sem blob_sha'
+              assert source.get('content_sha256'), f'{kind}: sem content_sha256'
+              summary.append(f"{len(rows)} {kind}")
+          assert len(all_ids) == len(set(all_ids)), 'SQ_CANDIDATO duplicado entre cargos'
+          # Deputados federais permanecem obrigatórios (contrato vigente).
+          assert 'federal' in offices and 'estadual' in offices
           assert meta.get('sources', {}).get('camara_federal')
-          print(f"Validação OK: {len(federal)} federais / {len(estadual)} estaduais / {meta['counts'].get('federal_current_mandates_linked', 0)} vínculos Câmara")
+          print("Validação OK: " + " / ".join(summary) + f" / {meta['counts'].get('federal_current_mandates_linked', 0)} vínculos Câmara")
           PY
 
       - name: Garantir que o sync só alterou snapshot e previews derivados

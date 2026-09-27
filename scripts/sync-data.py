@@ -409,15 +409,19 @@ def _load_enrichment_bootstrap(candidate_ids):
     }
     expected = set(candidate_ids)
     actual = set(by_id)
-    if actual != expected:
-        missing = sorted(expected - actual)
-        unknown = sorted(actual - expected)
+    # Cobertura parcial é permitida (múltiplos cargos): o bootstrap de
+    # contingência de patrimônio pode cobrir só um subconjunto — hoje os
+    # deputados. Candidaturas fora dele (governador/senador) simplesmente não
+    # têm fallback versionado e usam a fonte TSE ao vivo. O que NÃO se admite é
+    # bootstrap com ID desconhecido (sinal de bootstrap stale/errado).
+    unknown = sorted(actual - expected)
+    if unknown:
         raise RuntimeError(
-            "bootstrap TSE não corresponde ao universo atual: "
-            f"missing={missing[:8]} unknown={unknown[:8]}"
+            "bootstrap TSE contém IDs fora do universo atual: "
+            f"unknown={unknown[:8]}"
         )
     source = payload.get("source") or {}
-    if int(source.get("candidate_count") or 0) != len(expected):
+    if int(source.get("candidate_count") or 0) != len(by_id):
         raise RuntimeError("bootstrap TSE com candidate_count inconsistente")
     if not clean(source.get("aggregate_sha256")):
         raise RuntimeError("bootstrap TSE sem aggregate_sha256")
@@ -1295,6 +1299,7 @@ def main():
     # Todos os cargos configurados no registry; a ordem segue o registry.
     groups = [candidates[kind] for kind in OFFICE_REGISTRY]
     federal = candidates["federal"]
+    estadual = candidates["estadual"]
 
     tse_enrichment_sources, tse_enrichment_counts = enrich_tse_open_data(groups)
 
