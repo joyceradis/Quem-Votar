@@ -45,6 +45,29 @@ test.describe("Listagem de candidaturas", () => {
     expect(new URL(page.url()).searchParams.get("cargo")).toBe("estadual");
   });
 
+  // Cargos majoritários (#161/#186/#193): Governador e Senador entram no
+  // mesmo seletor, com o mesmo contrato de URL/paginação/busca dos dois
+  // cargos legislativos — sem tratamento especial.
+  test("Governador e Senador aparecem no seletor de cargo com contagem própria", async ({ page }) => {
+    await expect(page.locator('.office-button[data-kind="governador"]')).toBeAttached();
+    await expect(page.locator('.office-button[data-kind="senador"]')).toBeAttached();
+
+    const governador = await page.locator("#governadorCount").textContent();
+    const senador = await page.locator("#senadorCount").textContent();
+    expect(Number(governador)).toBeGreaterThan(0);
+    expect(Number(senador)).toBeGreaterThan(0);
+
+    await page.locator('.office-button[data-kind="governador"]').click();
+    await expect(page.locator("#resultCount")).toHaveText(`${governador} candidaturas`);
+    expect(new URL(page.url()).searchParams.get("cargo")).toBe("governador");
+    await expect(page.locator(".qv-card-kicker").first()).toHaveText("GOVERNADOR");
+
+    await page.locator('.office-button[data-kind="senador"]').click();
+    await expect(page.locator("#resultCount")).toHaveText(`${senador} candidaturas`);
+    expect(new URL(page.url()).searchParams.get("cargo")).toBe("senador");
+    await expect(page.locator(".qv-card-kicker").first()).toHaveText("SENADOR");
+  });
+
   test("comparação respeita o teto de 3 e monta o link canônico", async ({ page }) => {
     const botoes = page.locator("[data-compare-id]");
     await botoes.nth(0).click();

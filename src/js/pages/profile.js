@@ -15,7 +15,7 @@
 // - IMPACTO descreve áreas relacionadas ao tema, sem afirmar benefício,
 //   prejuízo ou efeito individual.
 import { $, esc, norm, params } from "../core/dom.js";
-import { loadCore, getJSON, DATA, applyGlobalMeta } from "../core/data.js";
+import { loadCore, getJSON, DATA, applyGlobalMeta, officeLabel } from "../core/data.js";
 import { formatBRL, formatSnapshot } from "../core/format.js";
 import { buildUrl } from "../core/url-state.js";
 import { setupNavigation, setupTextSize } from "../core/a11y.js";
@@ -79,7 +79,7 @@ function renderHero(candidate, kind, name, socialName, currentActivityText) {
     <section class="profile-hero">
       <div class="profile-photo-wrap">${photoMarkup(candidate)}</div>
       <div class="profile-copy">
-        <p class="qv-eyebrow">${kind === "federal" ? "Deputado Federal" : "Deputado Estadual"} · Espírito Santo</p>
+        <p class="qv-eyebrow">${esc(officeLabel(kind))} · Espírito Santo</p>
         <h1>${esc(name)}</h1>
         <p class="full-name">${esc(candidate.full_name || "")}</p>
         ${socialName ? `<p class="social-name">Nome social: ${esc(socialName)}</p>` : ""}
@@ -335,7 +335,7 @@ async function initProfile() {
   const id = params().get("id");
   const requested = params().get("cargo");
 
-  const [{ federal, estadual, meta }, chamber, topics] = await Promise.all([
+  const [{ all, meta }, chamber, topics] = await Promise.all([
     loadCore(),
     getJSON(DATA.chamber),
     loadTopics(),
@@ -345,10 +345,6 @@ async function initProfile() {
 
   if (!id) return showMessage("Candidatura não informada.");
 
-  const all = [
-    ...federal.map((item) => ({ ...item, _kind: "federal" })),
-    ...estadual.map((item) => ({ ...item, _kind: "estadual" })),
-  ];
   const candidate = all.find((item) => String(item.tse_id) === String(id));
   if (!candidate) return showMessage("Candidatura não encontrada na base atual.");
 
@@ -372,7 +368,7 @@ async function initProfile() {
   // Metadados de compartilhamento: og:url aponta para o stub estático de
   // /social/<SQ_CANDIDATO>/, que é quem serve preview em rede social.
   document.title = `${name} · Quem Votar?`;
-  const roleLabel = kind === "federal" ? "Deputado Federal" : "Deputado Estadual";
+  const roleLabel = officeLabel(kind);
   const shareDescription = `${name} · ${roleLabel} · ${candidate.party || "Partido não informado"} · nº ${candidate.number || "—"}. Consulte dados públicos e fontes.`;
   const canonicalUrl = buildUrl(null, { id: String(candidate.tse_id), cargo: kind }).toString();
   const socialUrl = new URL(`social/${encodeURIComponent(candidate.tse_id)}/`, location.href).toString();

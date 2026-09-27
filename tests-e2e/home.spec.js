@@ -24,9 +24,13 @@ test.describe("Home", () => {
     await expect(form).toHaveAttribute("action", "candidatos.html");
     await expect(form).toHaveAttribute("method", "get");
     await expect(form.locator('select[name="cargo"]')).toBeAttached();
+    // Cargos majoritários (#193): o seletor cresceu de 2 para 4 opções, mesmo
+    // registry de scripts/sync-data.py.
     await expect(form.locator('select[name="cargo"] option')).toHaveText([
       "Deputado Federal",
       "Deputado Estadual",
+      "Governador",
+      "Senador",
     ]);
   });
 

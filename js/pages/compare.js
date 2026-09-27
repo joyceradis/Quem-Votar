@@ -6,7 +6,7 @@
 // docs/GOVERNANCE.md "Comparação"). Nenhuma linha aqui pode virar
 // pontuação ou destaque de "melhor".
 import { $, esc, params } from "../core/dom.js";
-import { loadCore, applyGlobalMeta } from "../core/data.js";
+import { loadCore, applyGlobalMeta, officeLabel } from "../core/data.js";
 import { formatBRL, formatSnapshot } from "../core/format.js";
 import { updateSearchParams } from "../core/url-state.js";
 import { setupNavigation, setupTextSize } from "../core/a11y.js";
@@ -32,9 +32,18 @@ function photoMarkup(candidate) {
   return `<img src="${esc(source)}" alt="Foto de ${esc(name)}" loading="lazy" data-photo>`;
 }
 
+// "not_available" nunca é confundido com "zero verificado" (#193/AGENTS.md
+// §2/§5): quando o campo está em enrichment_gaps, nenhuma fonte (ao vivo,
+// estado anterior ou bootstrap) cobriu esse candidato para ele — a resposta
+// certa é "não sabemos", nunca "nenhum"/"zero".
+const NAO_DISPONIVEL = "Ainda não disponível na fonte atual";
+function hasGap(candidate, field) {
+  return (candidate.enrichment_gaps || []).includes(field);
+}
+
 // Cada linha é um campo factual igual para todas as colunas.
 const LINHAS = [
-  ["Cargo", (c) => (c._kind === "federal" ? "Deputado Federal" : "Deputado Estadual")],
+  ["Cargo", (c) => officeLabel(c._kind)],
   ["Hoje", (c) => currentActivity(c, c._kind)],
   ["Escolaridade", (c) => c.education || "Não disponível"],
   [
@@ -59,9 +68,9 @@ const LINHAS = [
     "Histórico eleitoral",
     (c) => {
       const count = (c.previous_elections || []).length;
-      return count
-        ? `${count} eleiç${count === 1 ? "ão" : "ões"} anterior${count === 1 ? "" : "es"} documentada${count === 1 ? "" : "s"}`
-        : "Nenhuma eleição anterior documentada";
+      if (count)
+        return `${count} eleiç${count === 1 ? "ão" : "ões"} anterior${count === 1 ? "" : "es"} documentada${count === 1 ? "" : "s"}`;
+      return hasGap(c, "previous_elections") ? NAO_DISPONIVEL : "Nenhuma eleição anterior documentada";
     },
   ],
   [
@@ -69,18 +78,18 @@ const LINHAS = [
     (c) => {
       const count = c.assets?.count || (c.assets?.items || []).length || 0;
       const total = formatBRL(c.assets?.total_declared_brl);
-      return count
-        ? `${count} ${count === 1 ? "bem declarado" : "bens declarados"}${total ? ` · valor declarado ao TSE: ${total}` : ""}`
-        : "Nenhum bem declarado nesta base";
+      if (count)
+        return `${count} ${count === 1 ? "bem declarado" : "bens declarados"}${total ? ` · valor declarado ao TSE: ${total}` : ""}`;
+      return hasGap(c, "assets") ? NAO_DISPONIVEL : "Nenhum bem declarado nesta base";
     },
   ],
   [
     "Redes sociais informadas ao TSE",
     (c) => {
       const count = (c.social_links || []).length;
-      return count
-        ? `${count} rede${count === 1 ? "" : "s"} ${count === 1 ? "social" : "sociais"} informada${count === 1 ? "" : "s"}`
-        : "Nenhuma rede social informada";
+      if (count)
+        return `${count} rede${count === 1 ? "" : "s"} ${count === 1 ? "social" : "sociais"} informada${count === 1 ? "" : "s"}`;
+      return hasGap(c, "social_links") ? NAO_DISPONIVEL : "Nenhuma rede social informada";
     },
   ],
   [

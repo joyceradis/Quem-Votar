@@ -4,6 +4,7 @@
 /* Cargo */
 .office-switch {
   display: flex;
+  flex-wrap: wrap;
   gap: 9px;
   margin-bottom: 18px;
 }

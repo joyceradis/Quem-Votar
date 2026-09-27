@@ -10,12 +10,12 @@ setupNavigation();
 setupTextSize();
 
 async function initHome() {
-  const [{ federal, estadual, meta, all }, topics] = await Promise.all([loadCore(), loadTopics()]);
+  const [{ meta, all }, topics] = await Promise.all([loadCore(), loadTopics()]);
   setTopics(topics);
   applyGlobalMeta(meta);
 
   const total = $("homeTotalCount");
-  if (total) total.textContent = federal.length + estadual.length || "—";
+  if (total) total.textContent = all.length || "—";
 
   const evidencedTopicIds = new Set(all.flatMap((candidate) => candidateTopicIds(candidate)));
   const visibleTopics = allTopics().filter((topic) => evidencedTopicIds.has(topic.id));
