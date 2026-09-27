@@ -48,7 +48,7 @@ def run_app(expression):
         }};
         sandbox.window = sandbox;
         vm.createContext(sandbox);
-        vm.runInContext(fs.readFileSync("app.js", "utf8"), sandbox);
+        vm.runInContext(fs.readFileSync("tests/fixtures/legacy-v5-app.js", "utf8"), sandbox);
         const result = vm.runInContext(`{expression}`, sandbox);
         Promise.resolve(result).then(value=>process.stdout.write(JSON.stringify(value)));
         """
