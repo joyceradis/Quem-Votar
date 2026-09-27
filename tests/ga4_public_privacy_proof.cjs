@@ -239,7 +239,12 @@ async function noTelemetryScenario(browser, spec) {
     if (error) throw error;
     assertAbsent(hits, spec.markers || [], spec.name);
     if (hits.length) {
-      assertCanonical(hits, BASE.toString(), "Quem Votar? · Espírito Santo 2026", spec.name);
+      assertCanonical(
+        hits,
+        spec.expectedLocation || BASE.toString(),
+        spec.expectedTitle || "Quem Votar? · Espírito Santo 2026",
+        spec.name
+      );
     }
     results.push({
       name: spec.name,
@@ -247,7 +252,7 @@ async function noTelemetryScenario(browser, spec) {
       navigation_status: navStatus,
       collect_count: hits.length,
       events: hits.map(eventName),
-      interpretation: hits.length ? "telemetry-failed-closed-to-root" : "no-ga4-on-route",
+      interpretation: hits.length ? (spec.interpretation || "telemetry-observed-and-sanitized") : "no-ga4-on-route",
       hits: hits.map(safeHitSummary),
     });
   } catch (caught) {
@@ -459,8 +464,8 @@ async function syntheticOutboundScenario(browser) {
       a.textContent = "privacy proof outbound";
       a.addEventListener("click", event => event.preventDefault(), { once: true });
       document.body.appendChild(a);
-      a.click();
     }, { markerPath, markerQuery });
+    await page.locator("#privacy-proof-outbound").click();
     await new Promise(resolve => setTimeout(resolve, 2200));
     const scope = hits.slice(start);
     assertAbsent(scope, [markerPath, markerQuery], name);
@@ -549,6 +554,9 @@ async function syntheticOutboundScenario(browser) {
       name: "social-wrapper",
       path: "social/" + encodeURIComponent(candidateFixture.id) + "/",
       markers: [candidateFixture.id, candidateFixture.name],
+      expectedLocation: new URL("candidato.html", BASE).toString(),
+      expectedTitle: "Entenda esta candidatura · Quem Votar?",
+      interpretation: "wrapper-navigated-to-candidate-and-telemetry-remained-sanitized",
     });
     await noTelemetryScenario(browser, {
       name: "unknown-route",
