@@ -179,7 +179,20 @@ def main() -> None:
     assert "python scripts/audit-site.py" in sync_workflow, "sync precisa auditar o snapshot candidato"
     assert "python -m unittest discover" in sync_workflow, "sync precisa testar antes de exportar snapshot"
     assert "contents: read" in sync_workflow, "sync deve operar com contents read-only"
-    assert "git push" not in sync_workflow and "git commit" not in sync_workflow, "sync não pode escrever diretamente em main"
+    # O invariante real é "nunca escreve em main", não "nunca commita/empurra
+    # nada": desde #186/#192 um job condicional do sync pode publicar o
+    # snapshot já auditado numa branch nova (o download do artifact pode não
+    # ser alcançável pelo agente que abre o PR de dados). Por isso a checagem
+    # é sobre o alvo do push e sobre exigir uma branch nova antes de commitar,
+    # não mais uma proibição literal das duas palavras.
+    push_lines = [line for line in sync_workflow.splitlines() if "git push" in line]
+    assert not any(re.search(r"\bmain\b", line) for line in push_lines), (
+        "sync não pode empurrar diretamente para main"
+    )
+    if "git commit" in sync_workflow or push_lines:
+        assert "checkout -b" in sync_workflow, (
+            "sync só pode commitar/empurrar depois de criar uma branch nova, nunca em main"
+        )
     assert "actions/upload-artifact@v4" in sync_workflow, "sync deve exportar snapshot candidato como artifact"
     assert "\n    paths:" not in quality_workflow, "Quality deve rodar em todo push para main"
     assert "diretamente para `main`" not in agents, "AGENTS ainda autoriza escrita direta em main"
