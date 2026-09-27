@@ -1,0 +1,604 @@
+[
+  {
+    "tse_id": "80002542401",
+    "ballot_name": "CALLEGARI",
+    "full_name": "WELLINGTON CALLEGARI",
+    "social_name": null,
+    "number": 277,
+    "office": "SENADOR",
+    "uf": "ES",
+    "party": "DC",
+    "party_name": "DEMOCRACIA CRISTÃ",
+    "coalition": "SENADO FORTE",
+    "coalition_composition": "DC / FEDERAÇÃO RENOVAÇÃO SOLIDÁRIA (25-PRD / 77-SOLIDARIEDADE)",
+    "registration_status": "not_available",
+    "totalization_status": null,
+    "occupation": "SERVIDOR PÚBLICO ESTADUAL",
+    "education": "SUPERIOR COMPLETO",
+    "photo_url": "https://realidadebrasil.com.br/media/photos/80002542401.jpg",
+    "photo_source": {
+      "institution": "TSE",
+      "dataset": "ES - Fotos de candidatos",
+      "official_archive_url": "https://cdn.tse.jus.br/estatistica/sead/eleicoes/eleicoes2026/fotos/foto_cand2026_ES_div.zip",
+      "transport": "cache público do pacote oficial TSE",
+      "mirror": "Realidade Brasil",
+      "mirror_base_url": "https://realidadebrasil.com.br/media/photos"
+    },
+    "assets": {
+      "total_declared_brl": null,
+      "count": 0,
+      "items": [],
+      "source": null
+    },
+    "social_links": [],
+    "tse_additional": {},
+    "previous_elections": [],
+    "current_mandate": null,
+    "institutional_history": null,
+    "source": {
+      "institution": "TSE",
+      "type": "fonte primária",
+      "dataset": "Candidatos - 2026",
+      "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+      "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+      "transport": {
+        "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+        "mirror_repository": "herminiotorres/dossie-cidadao",
+        "mirror_path": "docs/data/tse/candidatos/ES/senador.json",
+        "mirror_blob_sha": "e6b875ee2e04c0c6f0ecbea392dc804fd4406c2b",
+        "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/senador.json"
+      }
+    },
+    "institutional_evidence": [
+      {
+        "institution": "Assembleia Legislativa do Estado do Espírito Santo",
+        "legislature": "20ª Legislatura",
+        "type": "presença registrada no painel eletrônico de sessão oficial",
+        "reference_date": "2025-04-01",
+        "name_in_document": "Callegari",
+        "source": {
+          "institution": "ALES",
+          "document": "21ª Sessão Ordinária da 3ª Sessão Legislativa Ordinária da 20ª Legislatura",
+          "url": "https://www3.al.es.gov.br/Arquivo/Documents/SES/2469/sessao_2469_2025040215452461760135E90K.pdf?identificador=30003A005300"
+        },
+        "warning": "Snapshot histórico datado. Não prova, isoladamente, exercício de mandato em 2026."
+      }
+    ],
+    "topic_evidence": []
+  },
+  {
+    "tse_id": "80002553265",
+    "ballot_name": "EVAIR DE MELO",
+    "full_name": "EVAIR VIEIRA DE MELO",
+    "social_name": null,
+    "number": 100,
+    "office": "SENADOR",
+    "uf": "ES",
+    "party": "REPUBLICANOS",
+    "party_name": "REPUBLICANOS",
+    "coalition": "PAZ PRA VIVER UM NOVO TEMPO",
+    "coalition_composition": "REPUBLICANOS / PL / DEMOCRATA",
+    "registration_status": "not_available",
+    "totalization_status": null,
+    "occupation": "DEPUTADO",
+    "education": "SUPERIOR COMPLETO",
+    "photo_url": "https://realidadebrasil.com.br/media/photos/80002553265.jpg",
+    "photo_source": {
+      "institution": "TSE",
+      "dataset": "ES - Fotos de candidatos",
+      "official_archive_url": "https://cdn.tse.jus.br/estatistica/sead/eleicoes/eleicoes2026/fotos/foto_cand2026_ES_div.zip",
+      "transport": "cache público do pacote oficial TSE",
+      "mirror": "Realidade Brasil",
+      "mirror_base_url": "https://realidadebrasil.com.br/media/photos"
+    },
+    "assets": {
+      "total_declared_brl": null,
+      "count": 0,
+      "items": [],
+      "source": null
+    },
+    "social_links": [],
+    "tse_additional": {},
+    "previous_elections": [],
+    "current_mandate": null,
+    "institutional_history": null,
+    "source": {
+      "institution": "TSE",
+      "type": "fonte primária",
+      "dataset": "Candidatos - 2026",
+      "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+      "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+      "transport": {
+        "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+        "mirror_repository": "herminiotorres/dossie-cidadao",
+        "mirror_path": "docs/data/tse/candidatos/ES/senador.json",
+        "mirror_blob_sha": "e6b875ee2e04c0c6f0ecbea392dc804fd4406c2b",
+        "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/senador.json"
+      }
+    },
+    "topic_evidence": []
+  },
+  {
+    "tse_id": "80002550187",
+    "ballot_name": "FABIANO CONTARATO",
+    "full_name": "FABIANO CONTARATO",
+    "social_name": null,
+    "number": 133,
+    "office": "SENADOR",
+    "uf": "ES",
+    "party": "PT",
+    "party_name": "PARTIDO DOS TRABALHADORES",
+    "coalition": "FEDERAÇÃO",
+    "coalition_composition": "FEDERAÇÃO BRASIL DA ESPERANÇA - FE BRASIL (13-PT / 65-PC do B / 43-PV)",
+    "registration_status": "not_available",
+    "totalization_status": null,
+    "occupation": "SENADOR",
+    "education": "SUPERIOR COMPLETO",
+    "photo_url": "https://realidadebrasil.com.br/media/photos/80002550187.jpg",
+    "photo_source": {
+      "institution": "TSE",
+      "dataset": "ES - Fotos de candidatos",
+      "official_archive_url": "https://cdn.tse.jus.br/estatistica/sead/eleicoes/eleicoes2026/fotos/foto_cand2026_ES_div.zip",
+      "transport": "cache público do pacote oficial TSE",
+      "mirror": "Realidade Brasil",
+      "mirror_base_url": "https://realidadebrasil.com.br/media/photos"
+    },
+    "assets": {
+      "total_declared_brl": null,
+      "count": 0,
+      "items": [],
+      "source": null
+    },
+    "social_links": [],
+    "tse_additional": {},
+    "previous_elections": [],
+    "current_mandate": null,
+    "institutional_history": null,
+    "source": {
+      "institution": "TSE",
+      "type": "fonte primária",
+      "dataset": "Candidatos - 2026",
+      "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+      "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+      "transport": {
+        "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+        "mirror_repository": "herminiotorres/dossie-cidadao",
+        "mirror_path": "docs/data/tse/candidatos/ES/senador.json",
+        "mirror_blob_sha": "e6b875ee2e04c0c6f0ecbea392dc804fd4406c2b",
+        "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/senador.json"
+      }
+    },
+    "topic_evidence": []
+  },
+  {
+    "tse_id": "80002530022",
+    "ballot_name": "LEONARDO MONJARDIM",
+    "full_name": "LEONARDO PASSOS MONJARDIM",
+    "social_name": null,
+    "number": 300,
+    "office": "SENADOR",
+    "uf": "ES",
+    "party": "NOVO",
+    "party_name": "PARTIDO NOVO",
+    "coalition": "PARTIDO ISOLADO",
+    "coalition_composition": "NOVO",
+    "registration_status": "not_available",
+    "totalization_status": null,
+    "occupation": "VEREADOR",
+    "education": "SUPERIOR COMPLETO",
+    "photo_url": "https://realidadebrasil.com.br/media/photos/80002530022.jpg",
+    "photo_source": {
+      "institution": "TSE",
+      "dataset": "ES - Fotos de candidatos",
+      "official_archive_url": "https://cdn.tse.jus.br/estatistica/sead/eleicoes/eleicoes2026/fotos/foto_cand2026_ES_div.zip",
+      "transport": "cache público do pacote oficial TSE",
+      "mirror": "Realidade Brasil",
+      "mirror_base_url": "https://realidadebrasil.com.br/media/photos"
+    },
+    "assets": {
+      "total_declared_brl": null,
+      "count": 0,
+      "items": [],
+      "source": null
+    },
+    "social_links": [],
+    "tse_additional": {},
+    "previous_elections": [],
+    "current_mandate": null,
+    "institutional_history": null,
+    "source": {
+      "institution": "TSE",
+      "type": "fonte primária",
+      "dataset": "Candidatos - 2026",
+      "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+      "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+      "transport": {
+        "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+        "mirror_repository": "herminiotorres/dossie-cidadao",
+        "mirror_path": "docs/data/tse/candidatos/ES/senador.json",
+        "mirror_blob_sha": "e6b875ee2e04c0c6f0ecbea392dc804fd4406c2b",
+        "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/senador.json"
+      }
+    },
+    "topic_evidence": []
+  },
+  {
+    "tse_id": "80002553269",
+    "ballot_name": "MAGUINHA MALTA",
+    "full_name": "MAGDA SANTOS MALTA",
+    "social_name": null,
+    "number": 222,
+    "office": "SENADOR",
+    "uf": "ES",
+    "party": "PL",
+    "party_name": "PARTIDO LIBERAL",
+    "coalition": "PAZ PRA VIVER UM NOVO TEMPO",
+    "coalition_composition": "REPUBLICANOS / PL / DEMOCRATA",
+    "registration_status": "not_available",
+    "totalization_status": null,
+    "occupation": "PUBLICITÁRIO",
+    "education": "SUPERIOR COMPLETO",
+    "photo_url": "https://realidadebrasil.com.br/media/photos/80002553269.jpg",
+    "photo_source": {
+      "institution": "TSE",
+      "dataset": "ES - Fotos de candidatos",
+      "official_archive_url": "https://cdn.tse.jus.br/estatistica/sead/eleicoes/eleicoes2026/fotos/foto_cand2026_ES_div.zip",
+      "transport": "cache público do pacote oficial TSE",
+      "mirror": "Realidade Brasil",
+      "mirror_base_url": "https://realidadebrasil.com.br/media/photos"
+    },
+    "assets": {
+      "total_declared_brl": null,
+      "count": 0,
+      "items": [],
+      "source": null
+    },
+    "social_links": [],
+    "tse_additional": {},
+    "previous_elections": [],
+    "current_mandate": null,
+    "institutional_history": null,
+    "source": {
+      "institution": "TSE",
+      "type": "fonte primária",
+      "dataset": "Candidatos - 2026",
+      "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+      "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+      "transport": {
+        "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+        "mirror_repository": "herminiotorres/dossie-cidadao",
+        "mirror_path": "docs/data/tse/candidatos/ES/senador.json",
+        "mirror_blob_sha": "e6b875ee2e04c0c6f0ecbea392dc804fd4406c2b",
+        "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/senador.json"
+      }
+    },
+    "topic_evidence": []
+  },
+  {
+    "tse_id": "80002538202",
+    "ballot_name": "MARCOS DO VAL",
+    "full_name": "MARCOS RIBEIRO DO VAL",
+    "social_name": null,
+    "number": 700,
+    "office": "SENADOR",
+    "uf": "ES",
+    "party": "AVANTE",
+    "party_name": "AVANTE",
+    "coalition": "PARTIDO ISOLADO",
+    "coalition_composition": "AVANTE",
+    "registration_status": "not_available",
+    "totalization_status": null,
+    "occupation": "SENADOR",
+    "education": "ENSINO MÉDIO COMPLETO",
+    "photo_url": "https://realidadebrasil.com.br/media/photos/80002538202.jpg",
+    "photo_source": {
+      "institution": "TSE",
+      "dataset": "ES - Fotos de candidatos",
+      "official_archive_url": "https://cdn.tse.jus.br/estatistica/sead/eleicoes/eleicoes2026/fotos/foto_cand2026_ES_div.zip",
+      "transport": "cache público do pacote oficial TSE",
+      "mirror": "Realidade Brasil",
+      "mirror_base_url": "https://realidadebrasil.com.br/media/photos"
+    },
+    "assets": {
+      "total_declared_brl": null,
+      "count": 0,
+      "items": [],
+      "source": null
+    },
+    "social_links": [],
+    "tse_additional": {},
+    "previous_elections": [],
+    "current_mandate": null,
+    "institutional_history": null,
+    "source": {
+      "institution": "TSE",
+      "type": "fonte primária",
+      "dataset": "Candidatos - 2026",
+      "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+      "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+      "transport": {
+        "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+        "mirror_repository": "herminiotorres/dossie-cidadao",
+        "mirror_path": "docs/data/tse/candidatos/ES/senador.json",
+        "mirror_blob_sha": "e6b875ee2e04c0c6f0ecbea392dc804fd4406c2b",
+        "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/senador.json"
+      }
+    },
+    "topic_evidence": []
+  },
+  {
+    "tse_id": "80002549404",
+    "ballot_name": "PROFESSOR FABIAN",
+    "full_name": "CARLOS FABIAN DE CARVALHO",
+    "social_name": null,
+    "number": 500,
+    "office": "SENADOR",
+    "uf": "ES",
+    "party": "PSOL",
+    "party_name": "PARTIDO SOCIALISMO E LIBERDADE",
+    "coalition": "FEDERAÇÃO",
+    "coalition_composition": "FEDERAÇÃO PSOL REDE (50-PSOL / 18-REDE)",
+    "registration_status": "not_available",
+    "totalization_status": null,
+    "occupation": "PROFESSOR DE ENSINO FUNDAMENTAL",
+    "education": "SUPERIOR COMPLETO",
+    "photo_url": "https://realidadebrasil.com.br/media/photos/80002549404.jpg",
+    "photo_source": {
+      "institution": "TSE",
+      "dataset": "ES - Fotos de candidatos",
+      "official_archive_url": "https://cdn.tse.jus.br/estatistica/sead/eleicoes/eleicoes2026/fotos/foto_cand2026_ES_div.zip",
+      "transport": "cache público do pacote oficial TSE",
+      "mirror": "Realidade Brasil",
+      "mirror_base_url": "https://realidadebrasil.com.br/media/photos"
+    },
+    "assets": {
+      "total_declared_brl": null,
+      "count": 0,
+      "items": [],
+      "source": null
+    },
+    "social_links": [],
+    "tse_additional": {},
+    "previous_elections": [],
+    "current_mandate": null,
+    "institutional_history": null,
+    "source": {
+      "institution": "TSE",
+      "type": "fonte primária",
+      "dataset": "Candidatos - 2026",
+      "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+      "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+      "transport": {
+        "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+        "mirror_repository": "herminiotorres/dossie-cidadao",
+        "mirror_path": "docs/data/tse/candidatos/ES/senador.json",
+        "mirror_blob_sha": "e6b875ee2e04c0c6f0ecbea392dc804fd4406c2b",
+        "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/senador.json"
+      }
+    },
+    "topic_evidence": []
+  },
+  {
+    "tse_id": "80002551370",
+    "ballot_name": "RENATO CASAGRANDE",
+    "full_name": "JOSÉ RENATO CASAGRANDE",
+    "social_name": null,
+    "number": 400,
+    "office": "SENADOR",
+    "uf": "ES",
+    "party": "PSB",
+    "party_name": "PARTIDO SOCIALISTA BRASILEIRO",
+    "coalition": "AGORA É O FUTURO",
+    "coalition_composition": "PDT / MDB / PODE / AGIR / PSB / FEDERAÇÃO PSDB CIDADANIA (45-PSDB / 23-CIDADANIA) / FEDERAÇÃO UNIÃO PROGRESSISTA (44-UNIÃO / 11-PP)",
+    "registration_status": "not_available",
+    "totalization_status": null,
+    "occupation": "ENGENHEIRO",
+    "education": "SUPERIOR COMPLETO",
+    "photo_url": "https://realidadebrasil.com.br/media/photos/80002551370.jpg",
+    "photo_source": {
+      "institution": "TSE",
+      "dataset": "ES - Fotos de candidatos",
+      "official_archive_url": "https://cdn.tse.jus.br/estatistica/sead/eleicoes/eleicoes2026/fotos/foto_cand2026_ES_div.zip",
+      "transport": "cache público do pacote oficial TSE",
+      "mirror": "Realidade Brasil",
+      "mirror_base_url": "https://realidadebrasil.com.br/media/photos"
+    },
+    "assets": {
+      "total_declared_brl": null,
+      "count": 0,
+      "items": [],
+      "source": null
+    },
+    "social_links": [],
+    "tse_additional": {},
+    "previous_elections": [],
+    "current_mandate": null,
+    "institutional_history": null,
+    "source": {
+      "institution": "TSE",
+      "type": "fonte primária",
+      "dataset": "Candidatos - 2026",
+      "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+      "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+      "transport": {
+        "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+        "mirror_repository": "herminiotorres/dossie-cidadao",
+        "mirror_path": "docs/data/tse/candidatos/ES/senador.json",
+        "mirror_blob_sha": "e6b875ee2e04c0c6f0ecbea392dc804fd4406c2b",
+        "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/senador.json"
+      }
+    },
+    "topic_evidence": []
+  },
+  {
+    "tse_id": "80002552373",
+    "ballot_name": "RODNEY MIRANDA",
+    "full_name": "RODNEY ROCHA MIRANDA",
+    "social_name": null,
+    "number": 280,
+    "office": "SENADOR",
+    "uf": "ES",
+    "party": "PRTB",
+    "party_name": "PARTIDO RENOVADOR TRABALHISTA BRASILEIRO",
+    "coalition": "PARTIDO ISOLADO",
+    "coalition_composition": "PRTB",
+    "registration_status": "not_available",
+    "totalization_status": null,
+    "occupation": "ADVOGADO",
+    "education": "SUPERIOR COMPLETO",
+    "photo_url": "https://realidadebrasil.com.br/media/photos/80002552373.jpg",
+    "photo_source": {
+      "institution": "TSE",
+      "dataset": "ES - Fotos de candidatos",
+      "official_archive_url": "https://cdn.tse.jus.br/estatistica/sead/eleicoes/eleicoes2026/fotos/foto_cand2026_ES_div.zip",
+      "transport": "cache público do pacote oficial TSE",
+      "mirror": "Realidade Brasil",
+      "mirror_base_url": "https://realidadebrasil.com.br/media/photos"
+    },
+    "assets": {
+      "total_declared_brl": null,
+      "count": 0,
+      "items": [],
+      "source": null
+    },
+    "social_links": [],
+    "tse_additional": {},
+    "previous_elections": [],
+    "current_mandate": null,
+    "institutional_history": null,
+    "source": {
+      "institution": "TSE",
+      "type": "fonte primária",
+      "dataset": "Candidatos - 2026",
+      "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+      "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+      "transport": {
+        "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+        "mirror_repository": "herminiotorres/dossie-cidadao",
+        "mirror_path": "docs/data/tse/candidatos/ES/senador.json",
+        "mirror_blob_sha": "e6b875ee2e04c0c6f0ecbea392dc804fd4406c2b",
+        "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/senador.json"
+      }
+    },
+    "topic_evidence": []
+  },
+  {
+    "tse_id": "80002551368",
+    "ballot_name": "ROSE DE FREITAS",
+    "full_name": "ROSILDA DE FREITAS",
+    "social_name": null,
+    "number": 156,
+    "office": "SENADOR",
+    "uf": "ES",
+    "party": "MDB",
+    "party_name": "MOVIMENTO DEMOCRÁTICO BRASILEIRO",
+    "coalition": "AGORA É O FUTURO",
+    "coalition_composition": "PDT / MDB / PODE / AGIR / PSB / FEDERAÇÃO PSDB CIDADANIA (45-PSDB / 23-CIDADANIA) / FEDERAÇÃO UNIÃO PROGRESSISTA (44-UNIÃO / 11-PP)",
+    "registration_status": "not_available",
+    "totalization_status": null,
+    "occupation": "PRODUTOR AGROPECUÁRIO",
+    "education": "SUPERIOR INCOMPLETO",
+    "photo_url": "https://realidadebrasil.com.br/media/photos/80002551368.jpg",
+    "photo_source": {
+      "institution": "TSE",
+      "dataset": "ES - Fotos de candidatos",
+      "official_archive_url": "https://cdn.tse.jus.br/estatistica/sead/eleicoes/eleicoes2026/fotos/foto_cand2026_ES_div.zip",
+      "transport": "cache público do pacote oficial TSE",
+      "mirror": "Realidade Brasil",
+      "mirror_base_url": "https://realidadebrasil.com.br/media/photos"
+    },
+    "assets": {
+      "total_declared_brl": null,
+      "count": 0,
+      "items": [],
+      "source": null
+    },
+    "social_links": [],
+    "tse_additional": {},
+    "previous_elections": [],
+    "current_mandate": null,
+    "institutional_history": null,
+    "source": {
+      "institution": "TSE",
+      "type": "fonte primária",
+      "dataset": "Candidatos - 2026",
+      "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+      "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+      "transport": {
+        "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+        "mirror_repository": "herminiotorres/dossie-cidadao",
+        "mirror_path": "docs/data/tse/candidatos/ES/senador.json",
+        "mirror_blob_sha": "e6b875ee2e04c0c6f0ecbea392dc804fd4406c2b",
+        "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/senador.json"
+      }
+    },
+    "topic_evidence": []
+  },
+  {
+    "tse_id": "80002552692",
+    "ballot_name": "SERGIO MENEGUELLI",
+    "full_name": "SERGIO MENEGUELLI",
+    "social_name": null,
+    "number": 556,
+    "office": "SENADOR",
+    "uf": "ES",
+    "party": "PSD",
+    "party_name": "PARTIDO SOCIAL DEMOCRÁTICO",
+    "coalition": "PARTIDO ISOLADO",
+    "coalition_composition": "PSD",
+    "registration_status": "not_available",
+    "totalization_status": null,
+    "occupation": "APOSENTADO (EXCETO SERVIDOR PÚBLICO)",
+    "education": "SUPERIOR COMPLETO",
+    "photo_url": "https://realidadebrasil.com.br/media/photos/80002552692.jpg",
+    "photo_source": {
+      "institution": "TSE",
+      "dataset": "ES - Fotos de candidatos",
+      "official_archive_url": "https://cdn.tse.jus.br/estatistica/sead/eleicoes/eleicoes2026/fotos/foto_cand2026_ES_div.zip",
+      "transport": "cache público do pacote oficial TSE",
+      "mirror": "Realidade Brasil",
+      "mirror_base_url": "https://realidadebrasil.com.br/media/photos"
+    },
+    "assets": {
+      "total_declared_brl": null,
+      "count": 0,
+      "items": [],
+      "source": null
+    },
+    "social_links": [],
+    "tse_additional": {},
+    "previous_elections": [],
+    "current_mandate": null,
+    "institutional_history": null,
+    "source": {
+      "institution": "TSE",
+      "type": "fonte primária",
+      "dataset": "Candidatos - 2026",
+      "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+      "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+      "transport": {
+        "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+        "mirror_repository": "herminiotorres/dossie-cidadao",
+        "mirror_path": "docs/data/tse/candidatos/ES/senador.json",
+        "mirror_blob_sha": "e6b875ee2e04c0c6f0ecbea392dc804fd4406c2b",
+        "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/senador.json"
+      }
+    },
+    "institutional_evidence": [
+      {
+        "institution": "Assembleia Legislativa do Estado do Espírito Santo",
+        "legislature": "20ª Legislatura",
+        "type": "presença registrada no painel eletrônico de sessão oficial",
+        "reference_date": "2025-04-01",
+        "name_in_document": "Sérgio Meneguelli",
+        "source": {
+          "institution": "ALES",
+          "document": "21ª Sessão Ordinária da 3ª Sessão Legislativa Ordinária da 20ª Legislatura",
+          "url": "https://www3.al.es.gov.br/Arquivo/Documents/SES/2469/sessao_2469_2025040215452461760135E90K.pdf?identificador=30003A005300"
+        },
+        "warning": "Snapshot histórico datado. Não prova, isoladamente, exercício de mandato em 2026."
+      }
+    ],
+    "topic_evidence": []
+  }
+]
