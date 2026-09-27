@@ -34,7 +34,8 @@ jobs:
       - name: Validar sintaxe e testes antes da coleta
         run: |
           python -m py_compile scripts/sync-data.py scripts/audit-site.py scripts/coletor_evidencias.py scripts/evidence_coverage_report.py scripts/generate-social-previews.py
-          node --check app.js
+          if [ -f app.js ]; then node --check app.js; fi
+          find src/js -type f -name '*.js' -print0 | xargs -0 -n1 node --check
           python -m unittest discover -s tests -p 'test_*.py' -v
 
       - name: Sincronizar candidaturas ES e Câmara
