@@ -13,24 +13,35 @@
 .home-hero {
   position: relative;
   overflow: hidden;
+  background: linear-gradient(180deg, #f4fafd 0%, #fbfdff 58%, #fff 100%);
   padding: clamp(48px, 7vw, 104px) 0 clamp(40px, 5vw, 72px);
 }
 
+/*
+ * O croqui aprovado é uma ilustração raster editorial. O SVG técnico legado
+ * continua no template por compatibilidade estrutural, mas fica oculto aqui.
+ * No desktop a arte funciona como camada lateral; no mobile entra no fluxo
+ * antes da copy para receber um enquadramento próprio, sem virar wallpaper.
+ */
 .home-hero-art {
   position: absolute;
   z-index: 0;
-  right: -4%;
-  bottom: 4%;
-  width: min(720px, 64%);
-  opacity: 0.55;
+  top: clamp(18px, 3vw, 46px);
+  right: -5%;
+  bottom: auto;
+  width: min(760px, 62vw);
+  aspect-ratio: 755 / 340;
+  background: url("../../assets/home-croqui-capixaba.webp") center / contain no-repeat;
+  mix-blend-mode: multiply;
+  opacity: 0.98;
   pointer-events: none;
   user-select: none;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,.18) 16%, #000 39%, #000 100%);
+  mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,.18) 16%, #000 39%, #000 100%);
 }
 
 .home-hero-art svg {
-  display: block;
-  width: 100%;
-  height: auto;
+  display: none;
 }
 
 .home-hero-copy {
@@ -242,17 +253,25 @@
     align-items: start;
   }
 
-  /* No mobile a arte vai para o rodapé do hero, abaixo da busca: continua
-     ambientando sem competir com o título nem com o campo de texto. */
+  /* No mobile a arte ganha enquadramento editorial próprio antes da copy. */
   .home-hero {
-    padding-bottom: clamp(96px, 34vw, 160px);
+    padding-top: 0;
+    padding-bottom: clamp(48px, 8vw, 72px);
   }
 
   .home-hero-art {
-    right: -10%;
-    bottom: -2%;
-    width: 108%;
-    opacity: 0.4;
+    position: relative;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    width: 118vw;
+    max-width: none;
+    margin: 0 -9vw 8px;
+    aspect-ratio: 755 / 340;
+    background-position: center;
+    opacity: 1;
+    -webkit-mask-image: none;
+    mask-image: none;
   }
 
   .home-choices a {
@@ -262,7 +281,12 @@
 
 @media (max-width: 620px) {
   .home-hero {
-    padding-top: 32px;
+    padding-top: 0;
+  }
+
+  .home-hero-art {
+    width: 126vw;
+    margin: 0 -13vw 8px;
   }
 
   .home-hero-lead {
