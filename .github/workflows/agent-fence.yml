@@ -98,7 +98,8 @@ jobs:
 
       - name: 🧹 Validar sintaxe determinística
         run: |
-          node --check app.js
+          if [ -f app.js ]; then node --check app.js; fi
+          find src/js -type f -name '*.js' -print0 | xargs -0 -n1 node --check
           python -m py_compile scripts/sync-data.py scripts/audit-site.py scripts/coletor_evidencias.py
 
       - name: 🧪 Rodar auditoria nativa do projeto
