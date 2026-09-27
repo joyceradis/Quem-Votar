@@ -4,7 +4,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-APP_PATH = ROOT / "app.js"
+APP_PATH = ROOT / "tests" / "fixtures" / "legacy-v5-app.js"
 
 
 def run_profile(candidate, topics=None):
