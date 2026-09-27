@@ -87,7 +87,7 @@ function renderHero(candidate, kind, name, socialName, currentActivityText) {
         <p class="profile-now">${esc(currentActivityText)}</p>
         <div class="profile-actions">
           <button id="profileCompare" class="qv-btn qv-btn--primary" type="button" data-candidate-id="${esc(candidate.tse_id)}" aria-pressed="${selected}" aria-disabled="${limited}"${limited ? " disabled" : ""}>${label}</button>
-          <button id="profileShare" class="qv-btn" type="button">Compartilhar perfil</button>
+          <button id="profileShare" class="qv-btn" type="button">Compartilhar ficha</button>
         </div>
       </div>
     </section>`;
