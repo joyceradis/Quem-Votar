@@ -54,11 +54,13 @@ export function setupTextSize() {
 
   const refresh = () => {
     const large = document.documentElement.dataset.scale === "large";
+    const label = large ? "Voltar ao tamanho normal do texto" : "Aumentar tamanho do texto";
     button.textContent = large ? "A" : "A+";
-    button.setAttribute(
-      "aria-label",
-      large ? "Voltar ao tamanho normal do texto" : "Aumentar tamanho do texto"
-    );
+    button.setAttribute("aria-label", label);
+    // title é a dica visível pra quem usa mouse/toque (Codex, #198): tem
+    // que acompanhar o aria-label, senão fica desatualizada depois do
+    // primeiro clique ou de restaurar o estado salvo no localStorage.
+    button.setAttribute("title", label);
   };
 
   button.addEventListener("click", () => {

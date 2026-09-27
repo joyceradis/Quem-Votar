@@ -46,6 +46,24 @@ test.describe("casco compartilhado — /preview-shell/", () => {
     await expect(page.locator("html")).toHaveAttribute("data-scale", "large");
   });
 
+  // Achado do Codex no #198: title era estático no HTML e não acompanhava
+  // o toggle — depois de clicar, a dica continuava dizendo "aumentar"
+  // mesmo já estando no tamanho grande.
+  test("dica do botão A+ acompanha o estado, antes e depois do clique", async ({ page }) => {
+    await page.goto("preview-shell.html");
+    const button = page.locator("#textSizeButton");
+
+    await expect(button).toHaveAttribute("title", "Aumentar tamanho do texto");
+    await expect(button).toHaveAttribute("aria-label", "Aumentar tamanho do texto");
+
+    await button.click();
+    await expect(button).toHaveAttribute("title", "Voltar ao tamanho normal do texto");
+    await expect(button).toHaveAttribute("aria-label", "Voltar ao tamanho normal do texto");
+
+    await page.reload();
+    await expect(button).toHaveAttribute("title", "Voltar ao tamanho normal do texto");
+  });
+
   test("carrega sem erro de console nem requisição quebrada", async ({ page }) => {
     const errors = coletarErros(page);
 
