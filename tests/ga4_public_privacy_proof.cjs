@@ -446,6 +446,71 @@ async function dynamicCandidateScenario(browser) {
   }
 }
 
+async function homeSearchFormScenario(browser) {
+  const name = "home-search-form-sentinel";
+  const sentinel = "QVPRIVACY_FORM_SEARCH_60241";
+  const { context, hits } = await newProbeContext(browser);
+  const page = await context.newPage();
+  let error = null;
+  try {
+    await page.goto(BASE.toString(), { waitUntil: "domcontentloaded", timeout: 30000 });
+    await waitForQuiescence(hits);
+    await page.locator('form.qv-pill-search input[name="q"]').fill(sentinel);
+    await Promise.all([
+      page.waitForURL(url => url.pathname.endsWith("/Quem-Votar/candidatos.html"), { timeout: 15000 }),
+      page.locator("form.qv-pill-search").evaluate(form => form.requestSubmit()),
+    ]);
+    await waitForQuiescence(hits, { minHits: 2 });
+  } catch (caught) {
+    error = caught;
+  }
+  await finishContext(context, page, hits);
+
+  try {
+    if (error) throw error;
+    assertAbsent(hits, [sentinel], name);
+
+    const permittedLocations = new Set([
+      BASE.toString(),
+      new URL("candidatos.html", BASE).toString(),
+    ]);
+    const permittedTitles = new Set([
+      "Quem Votar? · Espírito Santo 2026",
+      "Candidaturas · Quem Votar?",
+    ]);
+    for (const hit of hits) {
+      const p = paramsFor(hit);
+      const dl = p.get("dl");
+      const dt = p.get("dt");
+      if (dl) {
+        const clean = new URL(dl);
+        assert.equal(clean.search, "", name + ":PAGE_LOCATION_QUERY");
+        assert.equal(clean.hash, "", name + ":PAGE_LOCATION_HASH");
+        assert.ok(permittedLocations.has(dl), name + ":UNEXPECTED_PAGE_LOCATION:" + dl);
+      }
+      if (dt) assert.ok(permittedTitles.has(dt), name + ":UNEXPECTED_PAGE_TITLE:" + dt);
+    }
+
+    results.push({
+      name,
+      status: "PASS",
+      collect_count: hits.length,
+      events: hits.map(eventName),
+      automatic_form_events: hits.filter(hit => /form/i.test(eventName(hit))).map(eventName),
+      hits: hits.map(safeHitSummary),
+    });
+  } catch (caught) {
+    results.push({
+      name,
+      status: "FAIL",
+      error: String(caught && (caught.message || caught)),
+      collect_count: hits.length,
+      events: hits.map(eventName),
+      hits: hits.map(safeHitSummary),
+    });
+  }
+}
+
 async function syntheticOutboundScenario(browser) {
   const name = "enhanced-measurement-outbound-sentinel";
   const markerPath = "QVPRIVACY_OUTBOUND_PATH_55123";
@@ -548,6 +613,7 @@ async function syntheticOutboundScenario(browser) {
     await reloadScenario(browser);
     await historyScenario(browser);
     await dynamicCandidateScenario(browser);
+    await homeSearchFormScenario(browser);
     await syntheticOutboundScenario(browser);
 
     await noTelemetryScenario(browser, {
