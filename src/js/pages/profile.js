@@ -164,6 +164,79 @@ function hasGap(candidate, field) {
   return (candidate.enrichment_gaps || []).includes(field);
 }
 
+// reference_date de institutional_evidence é uma data de calendário
+// ("2025-04-01"), não um instante — formatSnapshot() mostra hora:minuto e
+// sugeriria precisão que a fonte não tem.
+function formatReferenceDate(isoDate) {
+  if (!isoDate) return null;
+  try {
+    return new Intl.DateTimeFormat("pt-BR", { timeZone: "UTC" }).format(new Date(isoDate));
+  } catch {
+    return isoDate;
+  }
+}
+
+// institutional_evidence (S1, Authorization-Issue #2/#160): vínculo
+// institucional datado (hoje só ALES) com fonte, tipo e aviso metodológico —
+// nunca "faz hoje" (isso é current_mandate), sempre Histórico. O aviso do
+// próprio registro ("não prova isoladamente exercício de mandato em X") é
+// preservado literalmente, nunca resumido ou omitido.
+function renderInstitutionalEvidence(records) {
+  if (!records.length) return "";
+  return `<div class="institutional-evidence">
+      <h3>Vínculo institucional registrado</h3>
+      <div class="public-records">${records
+        .map(
+          (item) => `
+            <article>
+              <span>${esc(item.institution || "Instituição")}${item.legislature ? ` · ${esc(item.legislature)}` : ""}</span>
+              <strong>${esc(item.type || "Registro institucional documentado")}</strong>
+              <p>${esc(formatReferenceDate(item.reference_date) || "Data não disponível")}</p>
+              ${item.warning ? `<p class="evidence-warning">${esc(item.warning)}</p>` : ""}
+              ${item.source?.url ? `<a target="_blank" rel="noopener" href="${esc(item.source.url)}">${esc(item.source.document || item.source.institution || "Abrir fonte")}</a>` : ""}
+            </article>`
+        )
+        .join("")}</div>
+    </div>`;
+}
+
+// institutional_history (S1): trajetória partidária/legislativa e mandatos
+// externos já coletados da Câmara, hoje usados só como fonte (collectSources)
+// — aqui viram conteúdo legível, sempre em Histórico. Entradas sem
+// condition/status (mudança de filiação sem marco de mandato) são omitidas
+// por ruído, não por descarte de dado: o registro completo continua citável
+// via profile_url em Fontes.
+function renderInstitutionalTrack(history) {
+  if (!history) return "";
+  const track = (history.history || []).filter((item) => item.condition || item.status);
+  const external = history.external_mandates || [];
+  if (!track.length && !external.length) return "";
+
+  const trackList = track.length
+    ? `<ul class="institutional-track-list">${track
+        .map(
+          (item) => `
+            <li>Legislatura ${esc(item.legislature_id ?? "?")} · ${esc(item.party || "Partido não informado")} · ${esc([item.condition, item.status].filter(Boolean).join(" — "))}</li>`
+        )
+        .join("")}</ul>`
+    : "";
+
+  const externalList = external.length
+    ? `<ul class="institutional-track-list">${external
+        .map(
+          (item) => `
+            <li>${esc(item.office || "Cargo")}${item.start_year || item.end_year ? ` · ${esc([item.start_year, item.end_year].filter(Boolean).join("–"))}` : ""}${item.party ? ` · ${esc(item.party)}` : ""}</li>`
+        )
+        .join("")}</ul>`
+    : "";
+
+  return `<div class="institutional-track">
+      <h3>Trajetória institucional na Câmara</h3>
+      ${trackList}
+      ${external.length ? `<h4>Outros mandatos</h4>${externalList}` : ""}
+    </div>`;
+}
+
 // 04 — HISTÓRICO. Recebe também a atuação documentada, que nunca sobe para
 // PROPÕE/IMPACTO.
 function renderHistory(historyItems, actionEvidence, candidate) {
@@ -197,12 +270,15 @@ function renderHistory(historyItems, actionEvidence, candidate) {
       </div>`
     : "";
 
-  if (!electoral && !actions) {
+  const institutionalEvidence = renderInstitutionalEvidence(candidate.institutional_evidence || []);
+  const institutionalTrack = renderInstitutionalTrack(candidate.institutional_history);
+
+  if (!electoral && !actions && !institutionalEvidence && !institutionalTrack) {
     return hasGap(candidate, "previous_elections")
       ? `<p class="plain-empty">Histórico eleitoral: ${esc(NAO_DISPONIVEL)}.</p>`
       : `<p class="plain-empty">Histórico eleitoral e atuação pública documentada ainda não estão disponíveis nesta base.</p>`;
   }
-  return `${electoral}${actions}`;
+  return `${electoral}${actions}${institutionalTrack}${institutionalEvidence}`;
 }
 
 // 05 — DADOS ELEITORAIS: cadastro, bens declarados e redes informadas.
