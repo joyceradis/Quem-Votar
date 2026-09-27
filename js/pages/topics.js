@@ -49,9 +49,9 @@ async function initTopics() {
               </div>
               <p class="topic-status">
                 <strong>${count}</strong>
-                <span>candidatura${count === 1 ? "" : "s"} com fonte neste assunto</span>
+                <span>candidato${count === 1 ? "" : "s"} com fonte neste assunto</span>
               </p>
-              <a href="candidatos.html?tema=${encodeURIComponent(topic.id)}">Ver candidaturas</a>
+              <a href="candidatos.html?tema=${encodeURIComponent(topic.id)}">Ver candidatos</a>
             </article>`;
         })
         .join("")

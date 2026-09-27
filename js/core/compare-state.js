@@ -52,12 +52,12 @@ export function toggleCompare(id) {
   if (validCompareIds && !validCompareIds.includes(key)) return ids;
   if (index >= 0) {
     ids.splice(index, 1);
-    announceComparison("Candidatura removida. " + comparisonState(ids).message);
+    announceComparison("Candidato removido. " + comparisonState(ids).message);
   } else if (ids.length < 3) {
     ids.push(key);
-    announceComparison("Candidatura adicionada. " + comparisonState(ids).message);
+    announceComparison("Candidato adicionado. " + comparisonState(ids).message);
   } else {
-    announceComparison("Limite de 3 atingido. Remova uma candidatura para escolher outra.");
+    announceComparison("Limite de 3 atingido. Remova um candidato para escolher outro.");
   }
 
   setCompareIds(ids);

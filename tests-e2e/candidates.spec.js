@@ -83,7 +83,7 @@ test.describe("Listagem de candidaturas", () => {
     expect(federal).not.toBe(estadual);
 
     await page.locator('.office-button[data-kind="estadual"]').click();
-    await expect(page.locator("#resultCount")).toHaveText(`${estadual} candidaturas`);
+    await expect(page.locator("#resultCount")).toHaveText(`${estadual} candidatos`);
     expect(new URL(page.url()).searchParams.get("cargo")).toBe("estadual");
   });
 
@@ -100,12 +100,12 @@ test.describe("Listagem de candidaturas", () => {
     expect(Number(senador)).toBeGreaterThan(0);
 
     await page.locator('.office-button[data-kind="governador"]').click();
-    await expect(page.locator("#resultCount")).toHaveText(`${governador} candidaturas`);
+    await expect(page.locator("#resultCount")).toHaveText(`${governador} candidatos`);
     expect(new URL(page.url()).searchParams.get("cargo")).toBe("governador");
     await expect(page.locator(".qv-card-kicker").first()).toHaveText("GOVERNADOR");
 
     await page.locator('.office-button[data-kind="senador"]').click();
-    await expect(page.locator("#resultCount")).toHaveText(`${senador} candidaturas`);
+    await expect(page.locator("#resultCount")).toHaveText(`${senador} candidatos`);
     expect(new URL(page.url()).searchParams.get("cargo")).toBe("senador");
     await expect(page.locator(".qv-card-kicker").first()).toHaveText("SENADOR");
   });

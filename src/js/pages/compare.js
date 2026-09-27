@@ -114,7 +114,7 @@ async function initCompare() {
   // preservada em vez de ser silenciosamente esvaziada.
   if (!comparisonReady) {
     mount.textContent =
-      "Não foi possível carregar todas as candidaturas. Sua seleção foi preservada. Tente novamente.";
+      "Não foi possível carregar todos os candidatos. Sua seleção foi preservada. Tente novamente.";
     return;
   }
 
@@ -130,9 +130,9 @@ async function initCompare() {
   if (selected.length < 2) {
     mount.innerHTML = `
       <div class="compare-empty">
-        <h2>${selected.length ? "Escolha mais 1 candidatura." : "Ninguém selecionado."}</h2>
-        <p>Abra a lista e escolha de duas a três candidaturas para comparar.</p>
-        <a href="candidatos.html?cargo=federal">Escolher candidaturas</a>
+        <h2>${selected.length ? "Escolha mais 1 candidato." : "Ninguém selecionado."}</h2>
+        <p>Abra a lista e escolha de dois a três candidatos para comparar.</p>
+        <a href="candidatos.html?cargo=federal">Escolher candidatos</a>
       </div>`;
     return;
   }

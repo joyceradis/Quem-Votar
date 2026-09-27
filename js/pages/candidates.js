@@ -74,7 +74,7 @@ function candidateCard(candidate, kind, selectedIds) {
 
   return `
     <article class="qv-card" data-profile-url="${profileUrl}">
-      <a class="qv-card-photo-link" href="${profileUrl}" aria-label="Entender candidatura de ${esc(name)}">
+      <a class="qv-card-photo-link" href="${profileUrl}" aria-label="Entender o candidato ${esc(name)}">
         <div class="qv-card-photo">${photoMarkup(candidate)}</div>
       </a>
       <div class="qv-card-body">
@@ -269,7 +269,7 @@ async function initCandidates() {
     const visible = rows.slice(start, start + PAGE_SIZE);
     const selected = getCompareIds();
 
-    $("resultCount").textContent = `${rows.length} candidatura${rows.length === 1 ? "" : "s"}`;
+    $("resultCount").textContent = `${rows.length} candidato${rows.length === 1 ? "" : "s"}`;
     $("pageStatus").textContent = rows.length ? `Página ${page} de ${pages}` : "Nenhum resultado";
 
     // Ausência de resultado por tema nunca vira "não tem proposta".
@@ -360,7 +360,7 @@ async function initCandidates() {
   $("clearCompare").addEventListener("click", () => {
     setCompareIds([]);
     syncComparisonControls(updateCompareTray);
-    announceComparison("Seleção limpa. Escolha pelo menos 2 candidaturas.");
+    announceComparison("Seleção limpa. Escolha pelo menos 2 candidatos.");
     $("searchInput").focus();
   });
 
