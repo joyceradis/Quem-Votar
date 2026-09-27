@@ -35,10 +35,15 @@ extraStyles:
       <span>Buscar candidatura</span>
       <input id="searchInput" type="search" placeholder="Nome, número ou partido" autocomplete="off">
     </label>
-    <button id="filterToggle" class="filter-toggle" type="button" aria-expanded="false" aria-controls="secondaryFilters">Filtros<span id="activeFilterCount"></span></button>
+    {# Partido é critério de escolha para muita gente — fica junto da busca,
+       não escondido atrás de "Filtros" (feedback direto da mantenedora). #}
+    <label>
+      <span>Partido</span>
+      <select id="partyFilter"><option value="">Todos os partidos</option></select>
+    </label>
+    <button id="filterToggle" class="filter-toggle" type="button" aria-expanded="false" aria-controls="secondaryFilters">Mais filtros<span id="activeFilterCount"></span></button>
   </div>
   <div id="secondaryFilters" class="secondary-filters" hidden>
-    <label><span>Partido</span><select id="partyFilter"><option value="">Todos os partidos</option></select></label>
     <label><span>Assunto</span><select id="topicFilter"><option value="">Todos os assuntos</option></select></label>
     <label><span>Atuação pública</span><select id="institutionalFilter"><option value="">Todas</option><option value="1">Com atuação pública na base</option></select></label>
     <button id="clearFilters" class="clear-button" type="button">Limpar filtros</button>

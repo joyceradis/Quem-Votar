@@ -24,6 +24,21 @@ test.describe("Listagem de candidaturas", () => {
     await expect(page.locator("#pageStatus")).toHaveText(/^Página 1 de \d+$/);
   });
 
+  // Feedback direto da mantenedora: partido é critério de escolha para
+  // muita gente e não pode ficar escondido atrás de "Mais filtros".
+  test("filtro de Partido fica visível sem precisar abrir 'Mais filtros'", async ({ page }) => {
+    await expect(page.locator("#secondaryFilters")).toBeHidden();
+    await expect(page.locator("#partyFilter")).toBeVisible();
+
+    const opcoes = await page.locator("#partyFilter option").allTextContents();
+    expect(opcoes.length).toBeGreaterThan(1);
+
+    const antes = await page.locator("#resultCount").textContent();
+    await page.selectOption("#partyFilter", { index: 1 });
+    await expect(page.locator("#resultCount")).not.toHaveText(antes);
+    expect(new URL(page.url()).searchParams.get("partido")).toBeTruthy();
+  });
+
   test("busca filtra e grava os parâmetros de URL do contrato", async ({ page }) => {
     const antes = await page.locator("#resultCount").textContent();
     await page.fill("#searchInput", "maria");

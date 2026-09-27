@@ -81,7 +81,7 @@ function candidateCard(candidate, kind, selectedIds) {
         <p class="qv-card-kicker">${esc(officeLabel(kind).toUpperCase())}</p>
         <h3><a href="${profileUrl}">${esc(name)}</a></h3>
         <p class="qv-card-electoral">${esc(candidate.party || "Partido não informado")} · nº ${esc(candidate.number || "—")}</p>
-        <p class="qv-card-now">${esc(currentActivity(candidate, kind))}</p>
+        ${hasInstitutional(candidate) ? `<p class="qv-card-now">${esc(currentActivity(candidate, kind))}</p>` : ""}
         ${candidate.occupation ? `<p class="qv-card-occupation">${esc(candidate.occupation)}</p>` : ""}
         ${topicTags}
         ${proposalCount ? `<p class="qv-card-meta">${proposalCount} registro${proposalCount === 1 ? "" : "s"} temático${proposalCount === 1 ? "" : "s"} com fonte</p>` : ""}
@@ -206,9 +206,9 @@ async function initCandidates() {
   const activeFilterCount = $("activeFilterCount");
 
   function updateFilterDisclosure() {
-    const count = [$("partyFilter").value, $("topicFilter").value, $("institutionalFilter").value].filter(
-      Boolean
-    ).length;
+    // Partido ficou fora do disclosure (sempre visível); só conta pra
+    // "Mais filtros" quem realmente está escondido atrás do botão.
+    const count = [$("topicFilter").value, $("institutionalFilter").value].filter(Boolean).length;
     activeFilterCount.textContent = count ? `(${count})` : "";
     if (count && secondaryFilters.hidden) {
       secondaryFilters.hidden = false;
