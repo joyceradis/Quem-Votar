@@ -3,10 +3,9 @@
 import { $ } from "../core/dom.js";
 import { loadCore, applyGlobalMeta } from "../core/data.js";
 import { formatSnapshot } from "../core/format.js";
-import { setupNavigation, setupTextSize } from "../core/a11y.js";
+import { setupNavigation } from "../core/a11y.js";
 
 setupNavigation();
-setupTextSize();
 
 async function initAbout() {
   const { meta } = await loadCore();

@@ -1,7 +1,10 @@
-// Acessibilidade do casco — portado literalmente de app.js:152-218
-// (setupNavigation/setupTextSize), já coberto por
-// tests/test_accessibility_contract.py. Comportamento não muda: só passa a
-// viver em módulo próprio em vez de dentro do monólito app.js.
+// Acessibilidade do casco — drawer mobile (setupNavigation), portado
+// literalmente de app.js:152-218, já coberto por
+// tests/test_accessibility_contract.py. O botão de aumento de texto
+// (setupTextSize) foi removido por pedido direto da mantenedora
+// ("esse A+ eu não gosto" / "deixa sem"): o layout continua resiliente
+// ao zoom nativo do navegador/SO (AGENTS.md §6), só deixou de ter um
+// controle próprio no site.
 import { $ } from "./dom.js";
 
 export function setupNavigation() {
@@ -45,34 +48,3 @@ export function setupNavigation() {
   });
 }
 
-export function setupTextSize() {
-  const stored = localStorage.getItem("qv_text_scale");
-  if (stored === "large") document.documentElement.dataset.scale = "large";
-
-  const button = $("textSizeButton");
-  if (!button) return;
-
-  const refresh = () => {
-    const large = document.documentElement.dataset.scale === "large";
-    button.textContent = large ? "A" : "A+";
-    button.setAttribute(
-      "aria-label",
-      large ? "Voltar ao tamanho normal do texto" : "Aumentar tamanho do texto"
-    );
-  };
-
-  button.addEventListener("click", () => {
-    const large = document.documentElement.dataset.scale === "large";
-
-    if (large) {
-      delete document.documentElement.dataset.scale;
-      localStorage.removeItem("qv_text_scale");
-    } else {
-      document.documentElement.dataset.scale = "large";
-      localStorage.setItem("qv_text_scale", "large");
-    }
-    refresh();
-  });
-
-  refresh();
-}

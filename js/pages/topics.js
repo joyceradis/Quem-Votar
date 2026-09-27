@@ -5,11 +5,10 @@
 // nunca é usado para ordenar tema por relevância ou qualidade.
 import { $, esc } from "../core/dom.js";
 import { loadCore, applyGlobalMeta } from "../core/data.js";
-import { setupNavigation, setupTextSize } from "../core/a11y.js";
+import { setupNavigation } from "../core/a11y.js";
 import { loadTopics, setTopics, allTopics, topicEvidence } from "../core/evidence.js";
 
 setupNavigation();
-setupTextSize();
 
 async function initTopics() {
   const [core, topics] = await Promise.all([loadCore(), loadTopics()]);
@@ -49,9 +48,9 @@ async function initTopics() {
               </div>
               <p class="topic-status">
                 <strong>${count}</strong>
-                <span>candidatura${count === 1 ? "" : "s"} com fonte neste assunto</span>
+                <span>candidato${count === 1 ? "" : "s"} com fonte neste assunto</span>
               </p>
-              <a href="candidatos.html?tema=${encodeURIComponent(topic.id)}">Ver candidaturas</a>
+              <a href="candidatos.html?tema=${encodeURIComponent(topic.id)}">Ver candidatos</a>
             </article>`;
         })
         .join("")

@@ -37,15 +37,6 @@ test.describe("casco compartilhado — /preview-shell/", () => {
     await expect(page.locator("#menuButton")).toBeFocused();
   });
 
-  test("aumento de texto persiste entre recarregamentos", async ({ page }) => {
-    await page.goto("preview-shell.html");
-    await page.click("#textSizeButton");
-    await expect(page.locator("html")).toHaveAttribute("data-scale", "large");
-
-    await page.reload();
-    await expect(page.locator("html")).toHaveAttribute("data-scale", "large");
-  });
-
   test("carrega sem erro de console nem requisição quebrada", async ({ page }) => {
     const errors = coletarErros(page);
 

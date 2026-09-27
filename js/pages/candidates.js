@@ -7,7 +7,7 @@ import { $, esc, norm, params } from "../core/dom.js";
 import { loadCore, applyGlobalMeta, OFFICES, officeLabel } from "../core/data.js";
 import { formatSnapshot } from "../core/format.js";
 import { updateSearchParams } from "../core/url-state.js";
-import { setupNavigation, setupTextSize } from "../core/a11y.js";
+import { setupNavigation } from "../core/a11y.js";
 import {
   loadTopics,
   setTopics,
@@ -32,7 +32,6 @@ import {
 const PAGE_SIZE = 12;
 
 setupNavigation();
-setupTextSize();
 
 function photoMarkup(candidate) {
   const source =
@@ -74,14 +73,14 @@ function candidateCard(candidate, kind, selectedIds) {
 
   return `
     <article class="qv-card" data-profile-url="${profileUrl}">
-      <a class="qv-card-photo-link" href="${profileUrl}" aria-label="Entender candidatura de ${esc(name)}">
+      <a class="qv-card-photo-link" href="${profileUrl}" aria-label="Entender o candidato ${esc(name)}">
         <div class="qv-card-photo">${photoMarkup(candidate)}</div>
       </a>
       <div class="qv-card-body">
         <p class="qv-card-kicker">${esc(officeLabel(kind).toUpperCase())}</p>
         <h3><a href="${profileUrl}">${esc(name)}</a></h3>
         <p class="qv-card-electoral">${esc(candidate.party || "Partido não informado")} · nº ${esc(candidate.number || "—")}</p>
-        <p class="qv-card-now">${esc(currentActivity(candidate, kind))}</p>
+        ${candidate.current_mandate ? `<p class="qv-card-now">${esc(currentActivity(candidate, kind))}</p>` : ""}
         ${candidate.occupation ? `<p class="qv-card-occupation">${esc(candidate.occupation)}</p>` : ""}
         ${topicTags}
         ${proposalCount ? `<p class="qv-card-meta">${proposalCount} registro${proposalCount === 1 ? "" : "s"} temático${proposalCount === 1 ? "" : "s"} com fonte</p>` : ""}
@@ -206,9 +205,9 @@ async function initCandidates() {
   const activeFilterCount = $("activeFilterCount");
 
   function updateFilterDisclosure() {
-    const count = [$("partyFilter").value, $("topicFilter").value, $("institutionalFilter").value].filter(
-      Boolean
-    ).length;
+    // Partido ficou fora do disclosure (sempre visível); só conta pra
+    // "Mais filtros" quem realmente está escondido atrás do botão.
+    const count = [$("topicFilter").value, $("institutionalFilter").value].filter(Boolean).length;
     activeFilterCount.textContent = count ? `(${count})` : "";
     if (count && secondaryFilters.hidden) {
       secondaryFilters.hidden = false;
@@ -269,7 +268,7 @@ async function initCandidates() {
     const visible = rows.slice(start, start + PAGE_SIZE);
     const selected = getCompareIds();
 
-    $("resultCount").textContent = `${rows.length} candidatura${rows.length === 1 ? "" : "s"}`;
+    $("resultCount").textContent = `${rows.length} candidato${rows.length === 1 ? "" : "s"}`;
     $("pageStatus").textContent = rows.length ? `Página ${page} de ${pages}` : "Nenhum resultado";
 
     // Ausência de resultado por tema nunca vira "não tem proposta".
@@ -360,7 +359,7 @@ async function initCandidates() {
   $("clearCompare").addEventListener("click", () => {
     setCompareIds([]);
     syncComparisonControls(updateCompareTray);
-    announceComparison("Seleção limpa. Escolha pelo menos 2 candidaturas.");
+    announceComparison("Seleção limpa. Escolha pelo menos 2 candidatos.");
     $("searchInput").focus();
   });
 

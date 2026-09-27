@@ -18,7 +18,7 @@ import { $, esc, norm, params } from "../core/dom.js";
 import { loadCore, getJSON, DATA, applyGlobalMeta, officeLabel } from "../core/data.js";
 import { formatBRL, formatSnapshot } from "../core/format.js";
 import { buildUrl } from "../core/url-state.js";
-import { setupNavigation, setupTextSize } from "../core/a11y.js";
+import { setupNavigation } from "../core/a11y.js";
 import {
   loadTopics,
   setTopics,
@@ -39,7 +39,6 @@ import {
 } from "../core/compare-state.js";
 
 setupNavigation();
-setupTextSize();
 
 // A sentinela do TSE nunca é traduzida em conclusão jurídica (#91/PR #92).
 function registrationStatusLabel(value) {
@@ -75,7 +74,7 @@ function renderHero(candidate, kind, name, socialName, currentActivityText) {
   const label = selected ? "Remover da comparação" : limited ? "Limite de 3 atingido" : "Comparar";
 
   return `
-    <a class="back-link" href="candidatos.html?cargo=${kind}">Voltar para candidaturas</a>
+    <a class="back-link" href="candidatos.html?cargo=${kind}">Voltar para candidatos</a>
     <section class="profile-hero">
       <div class="profile-photo-wrap">${photoMarkup(candidate)}</div>
       <div class="profile-copy">
@@ -343,10 +342,10 @@ async function initProfile() {
   setTopics(topics);
   applyGlobalMeta(meta);
 
-  if (!id) return showMessage("Candidatura não informada.");
+  if (!id) return showMessage("Candidato não informado.");
 
   const candidate = all.find((item) => String(item.tse_id) === String(id));
-  if (!candidate) return showMessage("Candidatura não encontrada na base atual.");
+  if (!candidate) return showMessage("Candidato não encontrado na base atual.");
 
   const kind = candidate._kind || requested || "federal";
   const name = candidate.ballot_name || candidate.full_name || "Candidato";

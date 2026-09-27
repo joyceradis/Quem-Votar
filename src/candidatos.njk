@@ -1,8 +1,8 @@
 ---
 layout: base.njk
 permalink: candidatos.html
-title: "Candidaturas · Quem Votar? ES 2026"
-description: "Busque candidaturas a deputado federal e estadual no Espírito Santo por nome, número ou partido."
+title: "Candidatos · Quem Votar? ES 2026"
+description: "Busque candidatos a deputado federal e estadual no Espírito Santo por nome, número ou partido."
 bodyPage: candidates
 activeNav: candidatos
 pageScript: js/pages/candidates.js
@@ -12,8 +12,8 @@ extraStyles:
 ---
 <header class="qv-page-intro">
   <div>
-    <p class="qv-eyebrow">Candidaturas · Espírito Santo</p>
-    <h1>Procure uma candidatura.</h1>
+    <p class="qv-eyebrow">Espírito Santo · Eleições 2026</p>
+    <h1>Lista de candidatos, escolha o seu!</h1>
     <p>Digite nome, número ou partido. O resto aparece só se você quiser aprofundar.</p>
   </div>
   <p class="qv-page-snapshot">
@@ -32,13 +32,18 @@ extraStyles:
 <section class="search-panel" aria-label="Busca e filtros">
   <div class="primary-search">
     <label>
-      <span>Buscar candidatura</span>
+      <span>Buscar candidato</span>
       <input id="searchInput" type="search" placeholder="Nome, número ou partido" autocomplete="off">
     </label>
-    <button id="filterToggle" class="filter-toggle" type="button" aria-expanded="false" aria-controls="secondaryFilters">Filtros<span id="activeFilterCount"></span></button>
+    {# Partido é critério de escolha para muita gente — fica junto da busca,
+       não escondido atrás de "Filtros" (feedback direto da mantenedora). #}
+    <label>
+      <span>Partido</span>
+      <select id="partyFilter"><option value="">Todos os partidos</option></select>
+    </label>
+    <button id="filterToggle" class="filter-toggle" type="button" aria-expanded="false" aria-controls="secondaryFilters">Mais filtros<span id="activeFilterCount"></span></button>
   </div>
   <div id="secondaryFilters" class="secondary-filters" hidden>
-    <label><span>Partido</span><select id="partyFilter"><option value="">Todos os partidos</option></select></label>
     <label><span>Assunto</span><select id="topicFilter"><option value="">Todos os assuntos</option></select></label>
     <label><span>Atuação pública</span><select id="institutionalFilter"><option value="">Todas</option><option value="1">Com atuação pública na base</option></select></label>
     <button id="clearFilters" class="clear-button" type="button">Limpar filtros</button>
@@ -48,7 +53,7 @@ extraStyles:
 <div class="results-head" aria-live="polite" aria-atomic="true">
   <div>
     <strong id="resultCount">Carregando…</strong>
-    <span>Candidaturas encontradas</span>
+    <span>Candidatos encontrados</span>
   </div>
   <span id="pageStatus"></span>
 </div>

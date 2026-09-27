@@ -46,8 +46,16 @@
 
 .primary-search {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) minmax(150px, 230px) auto;
   gap: 10px;
+}
+
+.primary-search select {
+  min-height: 56px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: #fff;
 }
 
 .primary-search label,
@@ -89,7 +97,7 @@
 
 .secondary-filters {
   display: grid;
-  grid-template-columns: 1fr 1.1fr 1fr auto;
+  grid-template-columns: 1fr 1fr auto;
   gap: 10px;
   padding-top: 12px;
 }

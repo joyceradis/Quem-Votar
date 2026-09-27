@@ -24,6 +24,48 @@ test.describe("Listagem de candidaturas", () => {
     await expect(page.locator("#pageStatus")).toHaveText(/^Página 1 de \d+$/);
   });
 
+  // Achado do Codex no #198: um candidato com institutional_history mas
+  // sem current_mandate fazia hasInstitutional() liberar a linha 'agora',
+  // mas currentActivity() ainda retornava o texto de ausência — exatamente
+  // o texto repetitivo que esta mudança tentava tirar, só que rotulado
+  // como se fosse sobre o presente. Nenhum candidato real tem hoje esse
+  // formato, então simula via interceptação de rede.
+  test("card não mostra 'atuação atual' pra quem só tem histórico, sem mandato atual", async ({ page }) => {
+    await page.route("**/data/generated/candidates-federal.json**", async (route) => {
+      const response = await route.fetch();
+      const body = await response.json();
+      if (body.length) {
+        body[0] = {
+          ...body[0],
+          current_mandate: null,
+          institutional_history: { history: [{ year: 2020, office: "Vereador" }] },
+        };
+      }
+      await route.fulfill({ response, json: body });
+    });
+    await page.goto("candidatos.html");
+    await expect(page.locator("#resultCount")).not.toHaveText("Carregando…");
+
+    const primeiroCard = page.locator(".qv-card").first();
+    await expect(primeiroCard.locator(".qv-card-now")).toHaveCount(0);
+    await expect(primeiroCard).not.toContainText("Atuação atual ainda não confirmada");
+  });
+
+  // Feedback direto da mantenedora: partido é critério de escolha para
+  // muita gente e não pode ficar escondido atrás de "Mais filtros".
+  test("filtro de Partido fica visível sem precisar abrir 'Mais filtros'", async ({ page }) => {
+    await expect(page.locator("#secondaryFilters")).toBeHidden();
+    await expect(page.locator("#partyFilter")).toBeVisible();
+
+    const opcoes = await page.locator("#partyFilter option").allTextContents();
+    expect(opcoes.length).toBeGreaterThan(1);
+
+    const antes = await page.locator("#resultCount").textContent();
+    await page.selectOption("#partyFilter", { index: 1 });
+    await expect(page.locator("#resultCount")).not.toHaveText(antes);
+    expect(new URL(page.url()).searchParams.get("partido")).toBeTruthy();
+  });
+
   test("busca filtra e grava os parâmetros de URL do contrato", async ({ page }) => {
     const antes = await page.locator("#resultCount").textContent();
     await page.fill("#searchInput", "maria");
@@ -41,7 +83,7 @@ test.describe("Listagem de candidaturas", () => {
     expect(federal).not.toBe(estadual);
 
     await page.locator('.office-button[data-kind="estadual"]').click();
-    await expect(page.locator("#resultCount")).toHaveText(`${estadual} candidaturas`);
+    await expect(page.locator("#resultCount")).toHaveText(`${estadual} candidatos`);
     expect(new URL(page.url()).searchParams.get("cargo")).toBe("estadual");
   });
 
@@ -58,12 +100,12 @@ test.describe("Listagem de candidaturas", () => {
     expect(Number(senador)).toBeGreaterThan(0);
 
     await page.locator('.office-button[data-kind="governador"]').click();
-    await expect(page.locator("#resultCount")).toHaveText(`${governador} candidaturas`);
+    await expect(page.locator("#resultCount")).toHaveText(`${governador} candidatos`);
     expect(new URL(page.url()).searchParams.get("cargo")).toBe("governador");
     await expect(page.locator(".qv-card-kicker").first()).toHaveText("GOVERNADOR");
 
     await page.locator('.office-button[data-kind="senador"]').click();
-    await expect(page.locator("#resultCount")).toHaveText(`${senador} candidaturas`);
+    await expect(page.locator("#resultCount")).toHaveText(`${senador} candidatos`);
     expect(new URL(page.url()).searchParams.get("cargo")).toBe("senador");
     await expect(page.locator(".qv-card-kicker").first()).toHaveText("SENADOR");
   });

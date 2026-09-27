@@ -1,6 +1,6 @@
 /*
  * Botões — formaliza os dois padrões já usados em produção
- * (.nav-toggle/.text-size em pílula outline, .hero-search button em pílula
+ * (.nav-toggle em pílula outline, .hero-search button em pílula
  * sólida) numa nomenclatura reutilizável para a Fase 2/3.
  */
 .qv-btn {
