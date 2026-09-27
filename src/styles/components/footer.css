@@ -13,30 +13,28 @@
   color: rgba(255, 255, 255, 0.72);
 }
 
+/*
+ * A mesma arte territorial do hero reaparece no rodapé em outra materialidade:
+ * quase monocromática, escurecida e fundida ao navy, como uma sombra gravada
+ * no próprio fundo. O SVG técnico legado permanece no partial só por
+ * compatibilidade estrutural e fica oculto por CSS.
+ */
 .qv-fat-footer-illustration {
   position: absolute;
-  right: -24px;
-  bottom: -24px;
-  width: min(620px, 66vw);
-  opacity: 0.28;
+  right: -32px;
+  bottom: -20px;
+  width: min(760px, 68vw);
+  aspect-ratio: 755 / 340;
+  background: url("../../assets/home-croqui-capixaba.webp") center / contain no-repeat;
+  filter: grayscale(1) contrast(1.35) brightness(0.78);
+  mix-blend-mode: multiply;
+  opacity: 0.38;
   pointer-events: none;
+  user-select: none;
 }
 
 .qv-fat-footer-illustration svg {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-/*
- * O SVG é inlinado (ver filtro svgInline em .eleventy.js) justamente para
- * poder ser recolorido aqui: sobre o fundo escuro, o traço azul-marinho
- * original desapareceria. CSS vence atributo de apresentação, então isto
- * reescreve o stroke de todas as formas — inclusive a cruz rosa, que numa
- * marca d'água deve recuar junto com o resto em vez de chamar atenção.
- */
-.qv-fat-footer-illustration svg * {
-  stroke: #fff;
+  display: none;
 }
 
 .qv-fat-footer-grid {
@@ -131,13 +129,11 @@
   }
 
   .qv-fat-footer-illustration {
-    /* No celular a marca d'água precisa ser vista: mais larga, trazida para
-       dentro da tela e um pouco mais forte que no desktop, já que aqui ela
-       fica atrás de menos texto. */
-    width: 92vw;
-    right: -8px;
+    /* Mesmo croqui, reenquadrado como relevo tonal no fechamento da página. */
+    width: 132vw;
+    right: -38vw;
     bottom: -16px;
-    opacity: 0.3;
+    opacity: 0.48;
   }
 }
 
