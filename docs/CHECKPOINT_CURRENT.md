@@ -68,11 +68,13 @@ Handoffs completos com evidência (runs, digests, hashes) estão nos comentário
 
 Universo atual:
 
-- **547 candidaturas**;
+- **563 candidaturas**;
 - **137** para Deputado Federal;
 - **410** para Deputado Estadual;
+- **5** para Governador;
+- **11** para Senador;
 - **7** vínculos atuais com mandato federal na Câmara preservados;
-- **26** evidências institucionais ALES 2025 vinculadas;
+- **28** evidências institucionais ALES 2025 vinculadas;
 - **22** evidências temáticas canônicas em `data/reference/topic-evidence.json`.
 
 `SQ_CANDIDATO` permanece a chave eleitoral canônica.
