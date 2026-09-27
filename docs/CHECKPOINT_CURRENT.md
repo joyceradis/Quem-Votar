@@ -444,7 +444,7 @@ Objetivo: impedir que snapshot público e documentação canônica avancem em es
 
 Antes de merge de mudança pública:
 
-1. `node --check app.js` verde;
+1. sintaxe dos módulos JavaScript da V6 verde (`find src/js -type f -name '*.js' ... node --check`);
 2. `scripts/audit-site.py` verde;
 3. suíte determinística de testes verde;
 4. Quality verde;
