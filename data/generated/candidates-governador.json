@@ -1,0 +1,287 @@
+[
+  {
+    "tse_id": "80002541012",
+    "ballot_name": "BRENO BARCELOS",
+    "full_name": "BRENO AUGUSTO FAGUNDES BARCELOS",
+    "social_name": null,
+    "number": 14,
+    "office": "GOVERNADOR",
+    "uf": "ES",
+    "party": "MISSÃO",
+    "party_name": "PARTIDO MISSÃO",
+    "coalition": "PARTIDO ISOLADO",
+    "coalition_composition": "MISSÃO",
+    "registration_status": "not_available",
+    "totalization_status": null,
+    "occupation": "ENGENHEIRO",
+    "education": "SUPERIOR COMPLETO",
+    "photo_url": "https://realidadebrasil.com.br/media/photos/80002541012.jpg",
+    "photo_source": {
+      "institution": "TSE",
+      "dataset": "ES - Fotos de candidatos",
+      "official_archive_url": "https://cdn.tse.jus.br/estatistica/sead/eleicoes/eleicoes2026/fotos/foto_cand2026_ES_div.zip",
+      "transport": "cache público do pacote oficial TSE",
+      "mirror": "Realidade Brasil",
+      "mirror_base_url": "https://realidadebrasil.com.br/media/photos"
+    },
+    "assets": {
+      "total_declared_brl": null,
+      "count": 0,
+      "items": [],
+      "source": null
+    },
+    "social_links": [],
+    "tse_additional": {},
+    "previous_elections": [],
+    "current_mandate": null,
+    "institutional_history": null,
+    "source": {
+      "institution": "TSE",
+      "type": "fonte primária",
+      "dataset": "Candidatos - 2026",
+      "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+      "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+      "transport": {
+        "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+        "mirror_repository": "herminiotorres/dossie-cidadao",
+        "mirror_path": "docs/data/tse/candidatos/ES/governador.json",
+        "mirror_blob_sha": "f40aaa162593f39c27c50edcb6b3c0bbbb07cc66",
+        "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/governador.json"
+      }
+    },
+    "enrichment_gaps": [
+      "assets",
+      "social_links",
+      "previous_elections"
+    ],
+    "topic_evidence": []
+  },
+  {
+    "tse_id": "80002551833",
+    "ballot_name": "HELDER SALOMÃO",
+    "full_name": "HELDER IGNACIO SALOMAO",
+    "social_name": null,
+    "number": 13,
+    "office": "GOVERNADOR",
+    "uf": "ES",
+    "party": "PT",
+    "party_name": "PARTIDO DOS TRABALHADORES",
+    "coalition": "FEDERAÇÃO",
+    "coalition_composition": "FEDERAÇÃO BRASIL DA ESPERANÇA - FE BRASIL (13-PT / 65-PC do B / 43-PV)",
+    "registration_status": "not_available",
+    "totalization_status": null,
+    "occupation": "PROFESSOR DE ENSINO MÉDIO",
+    "education": "SUPERIOR COMPLETO",
+    "photo_url": "https://realidadebrasil.com.br/media/photos/80002551833.jpg",
+    "photo_source": {
+      "institution": "TSE",
+      "dataset": "ES - Fotos de candidatos",
+      "official_archive_url": "https://cdn.tse.jus.br/estatistica/sead/eleicoes/eleicoes2026/fotos/foto_cand2026_ES_div.zip",
+      "transport": "cache público do pacote oficial TSE",
+      "mirror": "Realidade Brasil",
+      "mirror_base_url": "https://realidadebrasil.com.br/media/photos"
+    },
+    "assets": {
+      "total_declared_brl": null,
+      "count": 0,
+      "items": [],
+      "source": null
+    },
+    "social_links": [],
+    "tse_additional": {},
+    "previous_elections": [],
+    "current_mandate": null,
+    "institutional_history": null,
+    "source": {
+      "institution": "TSE",
+      "type": "fonte primária",
+      "dataset": "Candidatos - 2026",
+      "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+      "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+      "transport": {
+        "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+        "mirror_repository": "herminiotorres/dossie-cidadao",
+        "mirror_path": "docs/data/tse/candidatos/ES/governador.json",
+        "mirror_blob_sha": "f40aaa162593f39c27c50edcb6b3c0bbbb07cc66",
+        "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/governador.json"
+      }
+    },
+    "enrichment_gaps": [
+      "assets",
+      "social_links",
+      "previous_elections"
+    ],
+    "topic_evidence": []
+  },
+  {
+    "tse_id": "80002552682",
+    "ballot_name": "LORENZO PAZOLINI",
+    "full_name": "LORENZO SILVA DE PAZOLINI",
+    "social_name": null,
+    "number": 10,
+    "office": "GOVERNADOR",
+    "uf": "ES",
+    "party": "REPUBLICANOS",
+    "party_name": "REPUBLICANOS",
+    "coalition": "PAZ PRA VIVER UM NOVO TEMPO",
+    "coalition_composition": "REPUBLICANOS / PL / DEMOCRATA",
+    "registration_status": "not_available",
+    "totalization_status": null,
+    "occupation": "SERVIDOR PÚBLICO ESTADUAL",
+    "education": "SUPERIOR COMPLETO",
+    "photo_url": "https://realidadebrasil.com.br/media/photos/80002552682.jpg",
+    "photo_source": {
+      "institution": "TSE",
+      "dataset": "ES - Fotos de candidatos",
+      "official_archive_url": "https://cdn.tse.jus.br/estatistica/sead/eleicoes/eleicoes2026/fotos/foto_cand2026_ES_div.zip",
+      "transport": "cache público do pacote oficial TSE",
+      "mirror": "Realidade Brasil",
+      "mirror_base_url": "https://realidadebrasil.com.br/media/photos"
+    },
+    "assets": {
+      "total_declared_brl": null,
+      "count": 0,
+      "items": [],
+      "source": null
+    },
+    "social_links": [],
+    "tse_additional": {},
+    "previous_elections": [],
+    "current_mandate": null,
+    "institutional_history": null,
+    "source": {
+      "institution": "TSE",
+      "type": "fonte primária",
+      "dataset": "Candidatos - 2026",
+      "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+      "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+      "transport": {
+        "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+        "mirror_repository": "herminiotorres/dossie-cidadao",
+        "mirror_path": "docs/data/tse/candidatos/ES/governador.json",
+        "mirror_blob_sha": "f40aaa162593f39c27c50edcb6b3c0bbbb07cc66",
+        "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/governador.json"
+      }
+    },
+    "enrichment_gaps": [
+      "assets",
+      "social_links",
+      "previous_elections"
+    ],
+    "topic_evidence": []
+  },
+  {
+    "tse_id": "80002550832",
+    "ballot_name": "RAFAEL DEMUNER",
+    "full_name": "RAFAEL KETLEY DEMUNER",
+    "social_name": null,
+    "number": 80,
+    "office": "GOVERNADOR",
+    "uf": "ES",
+    "party": "UP",
+    "party_name": "UNIDADE POPULAR",
+    "coalition": "PARTIDO ISOLADO",
+    "coalition_composition": "UP",
+    "registration_status": "not_available",
+    "totalization_status": null,
+    "occupation": "SERVIDOR PÚBLICO FEDERAL",
+    "education": "SUPERIOR COMPLETO",
+    "photo_url": "https://realidadebrasil.com.br/media/photos/80002550832.jpg",
+    "photo_source": {
+      "institution": "TSE",
+      "dataset": "ES - Fotos de candidatos",
+      "official_archive_url": "https://cdn.tse.jus.br/estatistica/sead/eleicoes/eleicoes2026/fotos/foto_cand2026_ES_div.zip",
+      "transport": "cache público do pacote oficial TSE",
+      "mirror": "Realidade Brasil",
+      "mirror_base_url": "https://realidadebrasil.com.br/media/photos"
+    },
+    "assets": {
+      "total_declared_brl": null,
+      "count": 0,
+      "items": [],
+      "source": null
+    },
+    "social_links": [],
+    "tse_additional": {},
+    "previous_elections": [],
+    "current_mandate": null,
+    "institutional_history": null,
+    "source": {
+      "institution": "TSE",
+      "type": "fonte primária",
+      "dataset": "Candidatos - 2026",
+      "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+      "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+      "transport": {
+        "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+        "mirror_repository": "herminiotorres/dossie-cidadao",
+        "mirror_path": "docs/data/tse/candidatos/ES/governador.json",
+        "mirror_blob_sha": "f40aaa162593f39c27c50edcb6b3c0bbbb07cc66",
+        "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/governador.json"
+      }
+    },
+    "enrichment_gaps": [
+      "assets",
+      "social_links",
+      "previous_elections"
+    ],
+    "topic_evidence": []
+  },
+  {
+    "tse_id": "80002552172",
+    "ballot_name": "RICARDO FERRAÇO",
+    "full_name": "RICARDO DE REZENDE FERRAÇO",
+    "social_name": null,
+    "number": 15,
+    "office": "GOVERNADOR",
+    "uf": "ES",
+    "party": "MDB",
+    "party_name": "MOVIMENTO DEMOCRÁTICO BRASILEIRO",
+    "coalition": "AGORA É O FUTURO",
+    "coalition_composition": "PODE / MDB / AGIR / PSB / PDT / FEDERAÇÃO PSDB CIDADANIA (45-PSDB / 23-CIDADANIA) / FEDERAÇÃO UNIÃO PROGRESSISTA (44-UNIÃO / 11-PP)",
+    "registration_status": "not_available",
+    "totalization_status": null,
+    "occupation": "GOVERNADOR",
+    "education": "SUPERIOR INCOMPLETO",
+    "photo_url": "https://realidadebrasil.com.br/media/photos/80002552172.jpg",
+    "photo_source": {
+      "institution": "TSE",
+      "dataset": "ES - Fotos de candidatos",
+      "official_archive_url": "https://cdn.tse.jus.br/estatistica/sead/eleicoes/eleicoes2026/fotos/foto_cand2026_ES_div.zip",
+      "transport": "cache público do pacote oficial TSE",
+      "mirror": "Realidade Brasil",
+      "mirror_base_url": "https://realidadebrasil.com.br/media/photos"
+    },
+    "assets": {
+      "total_declared_brl": null,
+      "count": 0,
+      "items": [],
+      "source": null
+    },
+    "social_links": [],
+    "tse_additional": {},
+    "previous_elections": [],
+    "current_mandate": null,
+    "institutional_history": null,
+    "source": {
+      "institution": "TSE",
+      "type": "fonte primária",
+      "dataset": "Candidatos - 2026",
+      "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+      "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+      "transport": {
+        "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+        "mirror_repository": "herminiotorres/dossie-cidadao",
+        "mirror_path": "docs/data/tse/candidatos/ES/governador.json",
+        "mirror_blob_sha": "f40aaa162593f39c27c50edcb6b3c0bbbb07cc66",
+        "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/governador.json"
+      }
+    },
+    "enrichment_gaps": [
+      "assets",
+      "social_links",
+      "previous_elections"
+    ],
+    "topic_evidence": []
+  }
+]
