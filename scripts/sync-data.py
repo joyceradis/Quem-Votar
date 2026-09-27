@@ -458,13 +458,23 @@ def _fill_enrichment_field(candidates, previous, bootstrap, field, previous_enri
     (restore ou bootstrap) para este campo. Quem fica de fora não deve ser
     tratado como "zero verificado" pelo chamador — isso é ausência virando
     zero, proibido pelo AGENTS.md §2/§5.
+
+    Um candidato que no estado anterior já estava marcado em
+    `enrichment_gaps` para este campo NUNCA conta como restaurado: o valor
+    que ele carrega ali é só o placeholder zero/vazio do início desta
+    função, nunca uma fonte real. Tratar `field in old` como cobertura sem
+    checar isso reintroduziria o mesmo bug do #193/#194 um ciclo depois —
+    achado do control-plane (GPT) em #186, confirmado: o snapshot já
+    publicado é o primeiro pós-fix e está correto; o risco era só o
+    próximo sync promover a lacuna a "zero verificado" silenciosamente.
     """
     restored_ids = set()
     if previous_enrichment_valid:
         for candidate in candidates:
             cid = str(candidate.get("tse_id"))
             old = previous.get(cid) or {}
-            if field in old:
+            previously_gapped = field in (old.get("enrichment_gaps") or [])
+            if field in old and not previously_gapped:
                 candidate[field] = old.get(field)
                 restored_ids.add(cid)
 

@@ -107,6 +107,74 @@ class EnrichmentGapNotZeroTests(unittest.TestCase):
         self.assertEqual(covered, set())
         self.assertEqual(set(gaps), {"1", "2"})
 
+    def test_two_cycle_regression_gap_stays_a_gap_when_no_source_appears(self):
+        """Achado do control-plane em #186 (P1, reproduzido contra o código
+        publicado no #196): um candidato marcado como gap no ciclo anterior
+        NUNCA pode ser tratado como restaurado só porque a chave existe no
+        estado anterior — isso apagaria o enrichment_gaps e o zero/vazio
+        passaria a parecer verificado.
+        """
+        candidates = [_candidate("80001")]
+        previous = {
+            "80001": {
+                "assets": {"total_declared_brl": None, "count": 0, "items": [], "source": None},
+                "enrichment_gaps": ["assets"],
+            }
+        }
+        covered = fill_field(candidates, previous, {}, "assets", previous_enrichment_valid=True)
+        gaps = mark_gap(candidates, covered, "assets")
+
+        self.assertEqual(covered, set(), "candidato previamente marcado como gap não pode ser 'restaurado'")
+        self.assertEqual(gaps, ["80001"])
+        self.assertIn("assets", candidates[0]["enrichment_gaps"], "a lacuna precisa sobreviver ao segundo ciclo")
+
+    def test_two_cycle_regression_gap_closes_once_a_source_appears(self):
+        """Variante exigida pelo control-plane: se uma fonte passar a
+        cobrir o candidato no segundo ciclo (aqui, o bootstrap), a lacuna
+        fecha e o valor novo é aplicado — mesmo que o ciclo anterior
+        tivesse marcado enrichment_gaps para esse campo."""
+        candidates = [_candidate("80001")]
+        previous = {
+            "80001": {
+                "assets": {"total_declared_brl": None, "count": 0, "items": [], "source": None},
+                "enrichment_gaps": ["assets"],
+            }
+        }
+        bootstrap = {
+            "80001": {"assets": {"total_declared_brl": "500.00", "count": 1, "items": [{"x": 1}], "source": {}}}
+        }
+        covered = fill_field(candidates, previous, bootstrap, "assets", previous_enrichment_valid=True)
+        gaps = mark_gap(candidates, covered, "assets")
+
+        self.assertEqual(covered, {"80001"})
+        self.assertEqual(gaps, [])
+        self.assertNotIn("enrichment_gaps", candidates[0], "lacuna fechada não deve deixar marca residual")
+        self.assertEqual(candidates[0]["assets"]["count"], 1, "valor novo do bootstrap foi aplicado")
+
+    def test_two_cycle_regression_symmetric_for_social_links_and_previous_elections(self):
+        """O mesmo bug valia para os 3 campos que compartilham a lógica —
+        cobre os outros dois que o candidate_assets acima não exercita."""
+        for field, old_value, new_value in (
+            ("social_links", [], ["https://x.com/a"]),
+            ("previous_elections", [], [{"year": 2022}]),
+        ):
+            with self.subTest(field=field):
+                candidates = [{"tse_id": "80002", field: old_value}]
+                previous = {"80002": {field: old_value, "enrichment_gaps": [field]}}
+
+                covered = fill_field(candidates, previous, {}, field, previous_enrichment_valid=True)
+                gaps = mark_gap(candidates, covered, field)
+                self.assertEqual(covered, set())
+                self.assertEqual(gaps, ["80002"])
+
+                candidates2 = [{"tse_id": "80002", field: old_value}]
+                bootstrap = {"80002": {field: new_value}}
+                covered2 = fill_field(candidates2, previous, bootstrap, field, previous_enrichment_valid=True)
+                gaps2 = mark_gap(candidates2, covered2, field)
+                self.assertEqual(covered2, {"80002"})
+                self.assertEqual(gaps2, [])
+                self.assertEqual(candidates2[0][field], new_value)
+
 
 if __name__ == "__main__":
     unittest.main()
