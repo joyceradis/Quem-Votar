@@ -71,10 +71,6 @@
   font-family: var(--font-sans);
 }
 
-html[data-scale="large"] {
-  --base-font: 19px;
-}
-
 @media (prefers-reduced-motion: reduce) {
   :root {
     --motion-fast: 0ms;

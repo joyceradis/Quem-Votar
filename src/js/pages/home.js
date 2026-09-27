@@ -4,10 +4,9 @@
 import { $, esc } from "../core/dom.js";
 import { loadCore, applyGlobalMeta } from "../core/data.js";
 import { loadTopics, setTopics, allTopics, candidateTopicIds } from "../core/evidence.js";
-import { setupNavigation, setupTextSize } from "../core/a11y.js";
+import { setupNavigation } from "../core/a11y.js";
 
 setupNavigation();
-setupTextSize();
 
 async function initHome() {
   const [{ meta, all }, topics] = await Promise.all([loadCore(), loadTopics()]);

@@ -7,7 +7,7 @@ import { $, esc, norm, params } from "../core/dom.js";
 import { loadCore, applyGlobalMeta, OFFICES, officeLabel } from "../core/data.js";
 import { formatSnapshot } from "../core/format.js";
 import { updateSearchParams } from "../core/url-state.js";
-import { setupNavigation, setupTextSize } from "../core/a11y.js";
+import { setupNavigation } from "../core/a11y.js";
 import {
   loadTopics,
   setTopics,
@@ -32,7 +32,6 @@ import {
 const PAGE_SIZE = 12;
 
 setupNavigation();
-setupTextSize();
 
 function photoMarkup(candidate) {
   const source =

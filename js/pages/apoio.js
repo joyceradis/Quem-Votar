@@ -6,10 +6,9 @@
 // eleitoral, e nenhum tracker é carregado.
 import { $ } from "../core/dom.js";
 import { loadCore, applyGlobalMeta } from "../core/data.js";
-import { setupNavigation, setupTextSize } from "../core/a11y.js";
+import { setupNavigation } from "../core/a11y.js";
 
 setupNavigation();
-setupTextSize();
 
 // Só a data do rodapé compartilhado. Nenhum dado de candidatura é lido,
 // exibido ou alterado por esta página (AGENTS.md §9).

@@ -18,7 +18,7 @@ import { $, esc, norm, params } from "../core/dom.js";
 import { loadCore, getJSON, DATA, applyGlobalMeta, officeLabel } from "../core/data.js";
 import { formatBRL, formatSnapshot } from "../core/format.js";
 import { buildUrl } from "../core/url-state.js";
-import { setupNavigation, setupTextSize } from "../core/a11y.js";
+import { setupNavigation } from "../core/a11y.js";
 import {
   loadTopics,
   setTopics,
@@ -39,7 +39,6 @@ import {
 } from "../core/compare-state.js";
 
 setupNavigation();
-setupTextSize();
 
 // A sentinela do TSE nunca é traduzida em conclusão jurídica (#91/PR #92).
 function registrationStatusLabel(value) {

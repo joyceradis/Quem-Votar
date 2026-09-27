@@ -9,7 +9,7 @@ import { $, esc, params } from "../core/dom.js";
 import { loadCore, applyGlobalMeta, officeLabel } from "../core/data.js";
 import { formatBRL, formatSnapshot } from "../core/format.js";
 import { updateSearchParams } from "../core/url-state.js";
-import { setupNavigation, setupTextSize } from "../core/a11y.js";
+import { setupNavigation } from "../core/a11y.js";
 import {
   loadTopics,
   setTopics,
@@ -22,7 +22,6 @@ import {
 import { normalizeCompareIds, getCompareIds, setCompareIds } from "../core/compare-state.js";
 
 setupNavigation();
-setupTextSize();
 
 function photoMarkup(candidate) {
   const source =

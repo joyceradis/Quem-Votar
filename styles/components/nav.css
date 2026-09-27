@@ -60,7 +60,6 @@
   gap: 8px;
 }
 
-.text-size,
 .nav-toggle,
 .drawer-close {
   min-height: var(--tap-min);
@@ -89,7 +88,6 @@
   line-height: 1;
 }
 
-.text-size:hover,
 .drawer-close:hover {
   background: var(--blue-soft);
 }
@@ -181,7 +179,6 @@
     max-height: 48px;
   }
 
-  .text-size,
   .nav-toggle {
     min-width: var(--tap-min);
     padding: 0 11px;

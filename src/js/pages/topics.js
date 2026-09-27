@@ -5,11 +5,10 @@
 // nunca é usado para ordenar tema por relevância ou qualidade.
 import { $, esc } from "../core/dom.js";
 import { loadCore, applyGlobalMeta } from "../core/data.js";
-import { setupNavigation, setupTextSize } from "../core/a11y.js";
+import { setupNavigation } from "../core/a11y.js";
 import { loadTopics, setTopics, allTopics, topicEvidence } from "../core/evidence.js";
 
 setupNavigation();
-setupTextSize();
 
 async function initTopics() {
   const [core, topics] = await Promise.all([loadCore(), loadTopics()]);
