@@ -26,8 +26,7 @@ class CandidateProfileUIContractTest(unittest.TestCase):
         block = self.profile.split("function renderProposes(prospective)", 1)[1].split("function renderImpact", 1)[0]
         for token in (
             "prospective.length", "item.statement || item.quote_or_summary",
-            "evidenceTypeLabel(item.evidence_type)", "item.source_publisher",
-            "item.published_at", "Abrir fonte",
+            "evidenceMetaLine(item)", "sourceLink(item)",
             "Ainda não há proposta ou declaração documentada nesta base.",
             "Ausência de registro não significa ausência de proposta.",
         ):
@@ -72,10 +71,18 @@ class CandidateProfileUIContractTest(unittest.TestCase):
         )[0]
         for token in (
             "actionEvidence.length", "Atuação pública documentada",
-            "item.statement || item.quote_or_summary", "item.source_publisher",
-            "item.published_at", "Abrir fonte",
+            "item.statement || item.quote_or_summary",
+            "evidenceMetaLine(item)", "sourceLink(item)",
         ):
             self.assertIn(token, history)
+        meta = self.profile.split("function evidenceMetaLine(item)", 1)[1].split("function sourceLink", 1)[0]
+        self.assertIn("evidenceTypeLabel(item.evidence_type)", meta)
+        self.assertIn("item.source_publisher", meta)
+        self.assertIn("item.published_at", meta)
+
+        link = self.profile.split("function sourceLink(item)", 1)[1].split("function renderHero", 1)[0]
+        self.assertIn("Abrir fonte", link)
+
         sources = self.profile.split("function collectSources", 1)[1].split("function showMessage", 1)[0]
         self.assertIn("...thematicEvidence", sources)
         self.assertIn("evidenceTypeLabel(item.evidence_type)", sources)
