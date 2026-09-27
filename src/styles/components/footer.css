@@ -15,10 +15,10 @@
 
 .qv-fat-footer-illustration {
   position: absolute;
-  right: -60px;
-  bottom: -40px;
-  width: min(560px, 60vw);
-  opacity: 0.15;
+  right: -24px;
+  bottom: -24px;
+  width: min(620px, 66vw);
+  opacity: 0.28;
   pointer-events: none;
 }
 
@@ -131,7 +131,13 @@
   }
 
   .qv-fat-footer-illustration {
-    width: 70vw;
+    /* No celular a marca d'água precisa ser vista: mais larga, trazida para
+       dentro da tela e um pouco mais forte que no desktop, já que aqui ela
+       fica atrás de menos texto. */
+    width: 92vw;
+    right: -8px;
+    bottom: -16px;
+    opacity: 0.3;
   }
 }
 
