@@ -14,9 +14,9 @@
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(255, 255, 255, 0.86);
-  border-bottom: 1px solid rgba(17, 59, 86, 0.08);
-  backdrop-filter: blur(18px) saturate(150%);
+  background: linear-gradient(180deg, rgba(237, 247, 252, 0.97) 0%, rgba(247, 251, 253, 0.93) 100%);
+  border-bottom: 1px solid rgba(17, 59, 86, 0.06);
+  backdrop-filter: blur(18px) saturate(140%);
 }
 
 .brand {
@@ -171,12 +171,14 @@
 
 @media (max-width: 620px) {
   .site-header {
-    height: 64px;
+    height: 70px;
     padding-inline: 14px;
+    background: linear-gradient(180deg, #eef7fc 0%, #f7fbfd 100%);
   }
 
   .brand img {
-    width: 176px;
+    width: 206px;
+    max-height: 48px;
   }
 
   .text-size,
@@ -185,11 +187,34 @@
     padding: 0 11px;
   }
 
+  /* No celular o ícone basta; o aria-label mantém o nome acessível. */
+  .nav-toggle {
+    width: var(--tap-min);
+    padding: 0;
+    justify-content: center;
+    font-size: 0;
+  }
+
+  .nav-toggle::before {
+    font-size: 1rem;
+  }
+
   .drawer {
     padding-inline: 24px;
   }
 
   .drawer::before {
     left: 24px;
+  }
+}
+
+
+@media (max-width: 360px) {
+  .brand img {
+    width: 190px;
+  }
+
+  .header-actions {
+    gap: 6px;
   }
 }
