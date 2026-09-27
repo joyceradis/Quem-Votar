@@ -537,7 +537,7 @@ jobs:
             fi
           done
 
-          # Codex (#201, P1 — privacidade, e follow-up): curation-batch.json
+          # Codex (#201, P1 — privacidade, e 2 follow-ups): curation-batch.json
           # carrega raw_excerpt, o trecho bruto raspado da página-fonte
           # (proposição, site oficial etc.), usado tanto pela revisão
           # humana (escrever support_text) quanto pela própria promote()
@@ -546,12 +546,22 @@ jobs:
           # (1ª tentativa) quebrava exatamente o motivo deste job existir:
           # sem o trecho, ninguém revisando só esta branch consegue redigir
           # um support_text válido. A correção certa é sanitizar padrões de
-          # dado pessoal (e-mail, telefone, CPF) mantendo o resto do texto
-          # institucional intacto — até aqui isso só existia num artifact
-          # efêmero (7 dias, acesso restrito); publicar numa branch git o
-          # torna permanente no histórico de um repositório público, e uma
-          # página-fonte pode conter esses padrões incidentalmente fora do
-          # trecho relevante (AGENTS.md §5).
+          # dado pessoal mantendo o resto do texto institucional intacto —
+          # até aqui isso só existia num artifact efêmero (7 dias, acesso
+          # restrito); publicar numa branch git o torna permanente no
+          # histórico de um repositório público, e uma página-fonte pode
+          # conter esses padrões incidentalmente fora do trecho relevante.
+          #
+          # Cobertura ampliada (2º follow-up do Codex) pra bater com as
+          # categorias citadas literalmente no AGENTS.md §5: CPF, título
+          # eleitoral, e-mail pessoal, endereço (CEP como âncora detectável),
+          # telefone, data completa de nascimento. "Endereço" completo (rua +
+          # número, sem CEP) e "identificador técnico" genérico continuam
+          # sem regex confiável — tentar cobri-los por padrão geraria falsos
+          # positivos que destruiriam texto institucional legítimo (datas de
+          # proposição, números de lei). Isso é limite documentado, não
+          # promessa de cobertura total de PII — nenhum filtro baseado em
+          # regex é exaustivo contra dado pessoal em texto livre.
           if [[ -f "$DEST/curation-batch.json" ]]; then
             python3 - "$DEST/curation-batch.json" <<'PY'
           import json
@@ -562,10 +572,31 @@ jobs:
           EMAIL_RE = re.compile(r"[\w.+-]+@[\w-]+\.[\w.-]+")
           CPF_RE = re.compile(r"\b\d{3}\.\d{3}\.\d{3}-\d{2}\b")
           PHONE_RE = re.compile(r"\(?\b\d{2}\)?[\s.-]?9?\d{4}[\s.-]?\d{4}\b")
+          CEP_RE = re.compile(r"\b\d{5}-\d{3}\b")
+          # Título eleitoral só é redigido com a palavra-chave por perto —
+          # sem isso, qualquer sequência solta de 12 dígitos (protocolo,
+          # número de proposição concatenado etc.) viraria falso positivo
+          # e destruiria texto institucional legítimo.
+          TITULO_ELEITORAL_RE = re.compile(
+              r"(?:t[íi]tulo eleitoral|t[íi]tulo de eleitor)\s*[:\-]?\s*"
+              r"(\d{4}[\s.-]?\d{4}[\s.-]?\d{4})",
+              re.IGNORECASE,
+          )
+          BIRTH_DATE_RE = re.compile(
+              r"(?:data de nascimento|nascid[oa] em|nascimento)\s*[:\-]?\s*"
+              r"(\d{1,2}[/.-]\d{1,2}[/.-]\d{2,4})",
+              re.IGNORECASE,
+          )
 
           def sanitize(text):
               text = EMAIL_RE.sub("[e-mail removido]", text)
               text = CPF_RE.sub("[CPF removido]", text)
+              text = CEP_RE.sub("[CEP removido]", text)
+              text = TITULO_ELEITORAL_RE.sub("[título eleitoral removido]", text)
+              text = BIRTH_DATE_RE.sub(
+                  lambda m: m.group(0).replace(m.group(1), "[data de nascimento removida]"),
+                  text,
+              )
               text = PHONE_RE.sub("[telefone removido]", text)
               return text
 
