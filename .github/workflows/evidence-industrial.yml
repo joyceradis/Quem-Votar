@@ -467,3 +467,63 @@ jobs:
               )
           print("wartime_worker_ok: silent success")
           PY
+
+  publicar-lote-curadoria:
+    name: Publicar lote de curadoria para revisão humana
+    needs: [window-gate, industrial]
+    if: ${{ needs.window-gate.outputs.stop != 'true' && needs.industrial.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Baixar artifact do worker desta execução
+        uses: actions/download-artifact@v4
+        with:
+          name: evidence-worker-${{ github.run_id }}
+          path: ${{ runner.temp }}/evidence-worker
+
+      # Authorization-Issue: #35 — só torna o lote de curadoria (já
+      # produzido pelo worker artifact-only) alcançável por git fetch, já
+      # que o download do artifact via API/Azure Blob não é alcançável de
+      # todo executor. Nenhuma escrita canônica: os arquivos aqui são os
+      # mesmos que já estariam no artifact-only de sempre, só publicados
+      # numa branch nova em vez de presos atrás de um download específico.
+      # Revisão semântica e promoção continuam exigindo decisão humana
+      # explícita (draft_id, evidence_type, verification_status,
+      # support_text, attribution_basis, reviewed_at, reviewer), como já
+      # documentado em data/staging/README.md.
+      - name: Publicar lote em branch não-canônica
+        shell: bash
+        run: |
+          set -euo pipefail
+          BRANCH="data/evidence-batch-${GITHUB_RUN_ID}"
+          SRC="${RUNNER_TEMP}/evidence-worker"
+          DEST="data/staging/live-batches"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+
+          mkdir -p "$DEST"
+          for f in curation-batch.json curation-batch-metrics.json evidence-coverage-ledger.json RUN_METADATA.txt; do
+            if [[ -f "$SRC/$f" ]]; then
+              cp "$SRC/$f" "$DEST/$f"
+            fi
+          done
+
+          if [[ -z "$(git status --porcelain)" ]]; then
+            echo "Nada para publicar (nenhum arquivo do lote encontrado no artifact)."
+            exit 0
+          fi
+
+          git add "$DEST"
+          git commit \
+            -m "chore(evidência): publicar lote de curadoria do run ${GITHUB_RUN_ID}" \
+            -m "Não-canônico. Artifact-only, sem escrita em topic-evidence.json. Apenas torna o lote já produzido pelo worker (#35) alcançável por git fetch, sem depender de download de artifact via Azure Blob. Revisão semântica e promoção continuam exigindo decisão humana explícita." \
+            -m "Authorization-Issue: #35"
+          git push -u origin "$BRANCH"
+          echo "Lote publicado em $BRANCH"
