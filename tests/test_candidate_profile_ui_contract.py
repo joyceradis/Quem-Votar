@@ -66,7 +66,7 @@ class CandidateProfileUIContractTest(unittest.TestCase):
             self.assertNotIn(forbidden, lowered)
 
     def test_documented_action_moves_to_history_and_all_sources_are_preserved(self):
-        history = self.profile.split("function renderHistory(historyItems, actionEvidence)", 1)[1].split(
+        history = self.profile.split("function renderHistory(historyItems, actionEvidence, candidate)", 1)[1].split(
             "function renderElectoralData", 1
         )[0]
         for token in (

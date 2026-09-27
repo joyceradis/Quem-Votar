@@ -155,9 +155,18 @@ function renderImpact(prospective, impactTopics) {
     <p class="impact-note"><strong>Áreas relacionadas às propostas e declarações documentadas nesta ficha.</strong> Essas áreas vêm da taxonomia pública do tema e não são previsão de benefício, prejuízo ou efeito individual.</p>`;
 }
 
+// Ausência de fonte (16 candidatos de Governador/Senador cujo enriquecimento
+// ainda não foi integrado, ver meta.json not_available_for) não pode
+// aparecer como "não possui" (AGENTS.md §2/§5) — mesmo texto e mesmo critério
+// já usados por compare.js para os campos assets/social_links/previous_elections.
+const NAO_DISPONIVEL = "Ainda não disponível na fonte atual";
+function hasGap(candidate, field) {
+  return (candidate.enrichment_gaps || []).includes(field);
+}
+
 // 04 — HISTÓRICO. Recebe também a atuação documentada, que nunca sobe para
 // PROPÕE/IMPACTO.
-function renderHistory(historyItems, actionEvidence) {
+function renderHistory(historyItems, actionEvidence, candidate) {
   const electoral = historyItems.length
     ? `<div class="timeline-list">${historyItems
         .map(
@@ -189,7 +198,9 @@ function renderHistory(historyItems, actionEvidence) {
     : "";
 
   if (!electoral && !actions) {
-    return `<p class="plain-empty">Histórico eleitoral e atuação pública documentada ainda não estão disponíveis nesta base.</p>`;
+    return hasGap(candidate, "previous_elections")
+      ? `<p class="plain-empty">Histórico eleitoral: ${esc(NAO_DISPONIVEL)}.</p>`
+      : `<p class="plain-empty">Histórico eleitoral e atuação pública documentada ainda não estão disponíveis nesta base.</p>`;
   }
   return `${electoral}${actions}`;
 }
@@ -249,7 +260,9 @@ function renderElectoralData(candidate, assets) {
           .join("")}</ul>
         ${assets?.source?.official_candidate_url ? `<a class="declared-assets-source" target="_blank" rel="noopener" href="${esc(assets.source.official_candidate_url)}">Abrir declaração de bens</a>` : ""}
       </div>`
-    : "";
+    : hasGap(candidate, "assets")
+      ? `<p class="plain-empty">Bens declarados ao TSE: ${esc(NAO_DISPONIVEL)}.</p>`
+      : "";
 
   const social = candidate.social_links || [];
   const socialBlock = social.length
@@ -262,7 +275,9 @@ function renderElectoralData(candidate, assets) {
           .map((url) => `<li><a target="_blank" rel="noopener" href="${esc(url)}">${esc(url)}</a></li>`)
           .join("")}</ul>
       </div>`
-    : "";
+    : hasGap(candidate, "social_links")
+      ? `<p class="plain-empty">Redes sociais informadas ao TSE: ${esc(NAO_DISPONIVEL)}.</p>`
+      : "";
 
   return `${factsBlock}${assetsBlock}${socialBlock}`;
 }
@@ -419,7 +434,7 @@ async function initProfile() {
 
     <section class="answer-section secondary-answer" id="historico">
       <p class="section-number">04</p>
-      <div><h2>Histórico</h2>${renderHistory(candidate.previous_elections || [], actionEvidence)}</div>
+      <div><h2>Histórico</h2>${renderHistory(candidate.previous_elections || [], actionEvidence, candidate)}</div>
     </section>
 
     <section class="answer-section secondary-answer" id="dados-eleitorais">
