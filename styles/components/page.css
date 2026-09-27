@@ -45,10 +45,15 @@
   font-size: 0.68rem;
 }
 
+/* Antes era azul forte, chamando mais atenção que o resto da linha de
+   proveniência — feedback direto da mantenedora ("por que tá azul?").
+   Continua sendo link (sublinhado, nunca só cor), só não compete mais
+   visualmente. */
 .qv-page-snapshot a {
-  color: var(--blue-strong);
+  color: inherit;
   font-weight: 700;
-  text-decoration: none;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .qv-visually-hidden {
