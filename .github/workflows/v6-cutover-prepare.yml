@@ -1,6 +1,9 @@
 name: Prepare V6 cutover now
 
 on:
+  pull_request:
+    branches:
+      - main
   push:
     branches:
       - release/v6-now-2026-09-26
