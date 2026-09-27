@@ -471,7 +471,15 @@ jobs:
   publicar-lote-curadoria:
     name: Publicar lote de curadoria para revisão humana
     needs: [window-gate, industrial]
-    if: ${{ needs.window-gate.outputs.stop != 'true' && needs.industrial.result == 'success' }}
+    # Codex (#201, P1): o job industrial faz upload do artifact ANTES do
+    # passo final que falha em incidente acionável (cruise-status.json) —
+    # esse passo final falhando marca o job inteiro como failure mesmo com
+    # o artifact (e o lote de curadoria) já publicado e válido. Gatear por
+    # needs.industrial.result == 'success' perdia o lote exatamente nos
+    # ciclos com incidente, que são os que mais precisam de handoff. Roda
+    # sempre que a janela não foi parada, e valida a existência do artifact
+    # pelo próprio download, não pelo resultado agregado do job anterior.
+    if: ${{ always() && needs.window-gate.outputs.stop != 'true' && needs.industrial.result != 'skipped' && needs.industrial.result != 'cancelled' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -481,6 +489,8 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Baixar artifact do worker desta execução
+        id: download
+        continue-on-error: true
         uses: actions/download-artifact@v4
         with:
           name: evidence-worker-${{ github.run_id }}
@@ -497,10 +507,15 @@ jobs:
       # support_text, attribution_basis, reviewed_at, reviewer), como já
       # documentado em data/staging/README.md.
       - name: Publicar lote em branch não-canônica
+        if: steps.download.outcome == 'success'
         shell: bash
         run: |
           set -euo pipefail
-          BRANCH="data/evidence-batch-${GITHUB_RUN_ID}"
+          # Codex (#201, P2): um re-run mantém GITHUB_RUN_ID mas incrementa
+          # GITHUB_RUN_ATTEMPT; sem o attempt no nome, um re-run após
+          # publicação bem-sucedida tentaria empurrar pra uma branch que já
+          # existe e falharia (push sem --force de propósito).
+          BRANCH="data/evidence-batch-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
           SRC="${RUNNER_TEMP}/evidence-worker"
           DEST="data/staging/live-batches"
 
