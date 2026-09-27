@@ -67,7 +67,9 @@ jobs:
         run: |
           set -euo pipefail
 
-          git rm -q app.js styles.css
+          mkdir -p tests/fixtures
+          git mv app.js tests/fixtures/legacy-v5-app.js
+          git mv styles.css tests/fixtures/legacy-v5-styles.css
           rm -rf styles js
 
           for rota in index candidatos candidato comparar temas sobre apoio; do
@@ -77,6 +79,77 @@ jobs:
           cp -r _site/js js
 
           python scripts/generate-social-previews.py
+
+          # The Python VM/unit tests predate the V6 module split. Preserve their
+          # exact V5 fixture privately under tests/ while public behavior is
+          # validated by the V6 Playwright suite and audit-site against js/styles.
+          python - <<'PY'
+          from pathlib import Path
+
+          replacements = {
+              "tests/test_candidate_profile_behavior.py": [
+                  ('APP_PATH = ROOT / "app.js"', 'APP_PATH = ROOT / "tests" / "fixtures" / "legacy-v5-app.js"'),
+              ],
+              "tests/test_comparison_funnel.py": [
+                  ('fs.readFileSync("app.js", "utf8")', 'fs.readFileSync("tests/fixtures/legacy-v5-app.js", "utf8")'),
+              ],
+              "tests/test_candidate_profile_data_contract.py": [
+                  ('ROOT / "app.js"', 'ROOT / "tests" / "fixtures" / "legacy-v5-app.js"'),
+                  ('ROOT / "styles.css"', 'ROOT / "tests" / "fixtures" / "legacy-v5-styles.css"'),
+              ],
+              "tests/test_candidate_profile_ui_contract.py": [
+                  ('ROOT / "app.js"', 'ROOT / "tests" / "fixtures" / "legacy-v5-app.js"'),
+                  ('ROOT / "styles.css"', 'ROOT / "tests" / "fixtures" / "legacy-v5-styles.css"'),
+              ],
+          }
+          for path, pairs in replacements.items():
+              p = Path(path)
+              text = p.read_text(encoding="utf-8")
+              for old, new in pairs:
+                  if old not in text:
+                      raise SystemExit(f"expected legacy-test reference missing in {path}: {old}")
+                  text = text.replace(old, new)
+              p.write_text(text, encoding="utf-8")
+
+          # Accessibility static checks should follow the V6 sources, not the
+          # frozen compatibility fixture.
+          p = Path("tests/test_accessibility_contract.py")
+          text = p.read_text(encoding="utf-8")
+          text = text.replace(
+              'app = (ROOT / "app.js").read_text(encoding="utf-8")',
+              'app = (ROOT / "js" / "core" / "a11y.js").read_text(encoding="utf-8")',
+          )
+          text = text.replace(
+              'css = (ROOT / "styles.css").read_text(encoding="utf-8")',
+              'css = (ROOT / "styles" / "tokens.css").read_text(encoding="utf-8")',
+          )
+          text = text.replace(
+              'assert \'drawer.setAttribute("inert","")\' in app',
+              'assert \'drawer.setAttribute("inert", "")\' in app',
+          )
+          text = text.replace(
+              'assert \'if(wasOpen)menuButton?.focus()\' in app',
+              'assert \'if (wasOpen) menuButton?.focus()\' in app',
+          )
+          text = text.replace(
+              're.search(r"--muted:(#[0-9a-fA-F]{6});", css)',
+              're.search(r"--muted:\\s*(#[0-9a-fA-F]{6});", css)',
+          )
+          p.write_text(text, encoding="utf-8")
+
+          # The spectrum firewall must inspect the actual V6 public JavaScript.
+          p = Path("tests/test_candidate_political_spectrum.py")
+          text = p.read_text(encoding="utf-8")
+          old = '''        public_text = "\\n".join(
+            (ROOT / path).read_text(encoding="utf-8")
+            for path in ("index.html", "app.js")
+        )'''
+          new = '''        public_files = [ROOT / "index.html", *sorted((ROOT / "js").rglob("*.js"))]
+        public_text = "\\n".join(path.read_text(encoding="utf-8") for path in public_files)'''
+          if old not in text:
+              raise SystemExit("spectrum firewall legacy public-text block not found")
+          p.write_text(text.replace(old, new), encoding="utf-8")
+          PY
 
           python - <<'PY'
           from pathlib import Path
@@ -296,8 +369,14 @@ jobs:
               "scripts/cutover-v6.sh",
               ".github/workflows/quality.yml",
               ".github/workflows/v6-cutover-prepare.yml",
+              "tests/test_accessibility_contract.py",
+              "tests/test_candidate_political_spectrum.py",
+              "tests/test_candidate_profile_data_contract.py",
+              "tests/test_candidate_profile_ui_contract.py",
+              "tests/test_candidate_profile_behavior.py",
+              "tests/test_comparison_funnel.py",
           }
-          prefixes = ("styles/", "js/", "social/")
+          prefixes = ("styles/", "js/", "social/", "tests/fixtures/")
 
           unexpected = [
               p for p in changed
