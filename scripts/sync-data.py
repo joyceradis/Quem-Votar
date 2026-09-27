@@ -446,6 +446,56 @@ def _apply_bootstrap_field(candidates, bootstrap, field):
     return applied
 
 
+def _fill_enrichment_field(candidates, previous, bootstrap, field, previous_enrichment_valid):
+    """Restaura `field` do estado anterior e completa com o bootstrap
+    apenas quem não foi restaurado (#193: um bootstrap capturado antes de
+    um cargo entrar em escopo — hoje governador/senador — não cobre
+    candidaturas novas; aplicar bootstrap incondicionalmente sobre todos
+    reescreveria com dado mais velho quem já tinha sido restaurado do
+    estado anterior mais recente).
+
+    Retorna o conjunto de `tse_id` efetivamente cobertos por alguma fonte
+    (restore ou bootstrap) para este campo. Quem fica de fora não deve ser
+    tratado como "zero verificado" pelo chamador — isso é ausência virando
+    zero, proibido pelo AGENTS.md §2/§5.
+    """
+    restored_ids = set()
+    if previous_enrichment_valid:
+        for candidate in candidates:
+            cid = str(candidate.get("tse_id"))
+            old = previous.get(cid) or {}
+            if field in old:
+                candidate[field] = old.get(field)
+                restored_ids.add(cid)
+
+    remaining = [c for c in candidates if str(c.get("tse_id")) not in restored_ids]
+    bootstrap_ids = set()
+    if remaining and bootstrap:
+        for candidate in remaining:
+            cid = str(candidate.get("tse_id"))
+            item = bootstrap.get(cid)
+            if item is not None and field in item:
+                candidate[field] = item.get(field)
+                bootstrap_ids.add(cid)
+
+    return restored_ids | bootstrap_ids
+
+
+def _mark_enrichment_gap(candidates, covered_ids, field):
+    """Registra em `enrichment_gaps` os candidatos que ficaram sem nenhuma
+    fonte (ao vivo, estado anterior ou bootstrap) para `field`. O valor
+    vazio/zero que o campo já carrega (posto pelo default no início do
+    enriquecimento) permanece — não inventamos outro formato só para estes
+    — mas fica explicitamente marcado como não verificado, em vez de
+    indistinguível de um "zero" confirmado pelo TSE.
+    """
+    gap_ids = [str(c.get("tse_id")) for c in candidates if str(c.get("tse_id")) not in covered_ids]
+    for candidate in candidates:
+        if str(candidate.get("tse_id")) in gap_ids:
+            candidate.setdefault("enrichment_gaps", []).append(field)
+    return gap_ids
+
+
 def _require_known_candidate_rows(rows, by_id, dataset, candidate_field="SQ_CANDIDATO"):
     matched = sum(
         1 for row in rows
@@ -617,21 +667,19 @@ def enrich_tse_open_data(groups):
                 },
             }
     else:
-        restored = (
-            _restore_field_from_previous(candidates, previous, "assets")
-            if previous_enrichment_valid
-            else 0
+        covered = _fill_enrichment_field(
+            candidates, previous, bootstrap, "assets", previous_enrichment_valid
         )
-        if restored:
+        gaps = _mark_enrichment_gap(candidates, covered, "assets")
+        if covered:
             source_meta["candidate_assets"] = _stale_source_meta(
                 previous_meta,
                 "candidate_assets",
                 source_meta["candidate_assets"],
             )
+            if gaps:
+                source_meta["candidate_assets"]["not_available_for"] = len(gaps)
         else:
-            applied = _apply_bootstrap_field(candidates, bootstrap, "assets")
-            if applied != len(candidates):
-                raise RuntimeError("Bens TSE indisponíveis e bootstrap incompleto")
             source_meta["candidate_assets"] = {
                 **(bootstrap_meta or {}),
                 "dataset": "Bens de candidatos - 2026",
@@ -653,21 +701,19 @@ def enrich_tse_open_data(groups):
         for candidate_id, urls in grouped.items():
             by_id[candidate_id]["social_links"] = _normalize_social_links(urls)
     else:
-        restored = (
-            _restore_field_from_previous(candidates, previous, "social_links")
-            if previous_enrichment_valid
-            else 0
+        covered = _fill_enrichment_field(
+            candidates, previous, bootstrap, "social_links", previous_enrichment_valid
         )
-        if restored:
+        gaps = _mark_enrichment_gap(candidates, covered, "social_links")
+        if covered:
             source_meta["candidate_social"] = _stale_source_meta(
                 previous_meta,
                 "candidate_social",
                 source_meta["candidate_social"],
             )
+            if gaps:
+                source_meta["candidate_social"]["not_available_for"] = len(gaps)
         else:
-            applied = _apply_bootstrap_field(candidates, bootstrap, "social_links")
-            if applied != len(candidates):
-                raise RuntimeError("Redes sociais TSE indisponíveis e bootstrap incompleto")
             source_meta["candidate_social"] = {
                 **(bootstrap_meta or {}),
                 "dataset": "Redes sociais de candidatos - 2026",
@@ -753,21 +799,19 @@ def enrich_tse_open_data(groups):
                 records.append(record)
             by_id[candidate_id]["previous_elections"] = records
     else:
-        restored = (
-            _restore_field_from_previous(candidates, previous, "previous_elections")
-            if previous_enrichment_valid
-            else 0
+        covered = _fill_enrichment_field(
+            candidates, previous, bootstrap, "previous_elections", previous_enrichment_valid
         )
-        if restored:
+        gaps = _mark_enrichment_gap(candidates, covered, "previous_elections")
+        if covered:
             source_meta["candidate_history"] = _stale_source_meta(
                 previous_meta,
                 "candidate_history",
                 source_meta["candidate_history"],
             )
+            if gaps:
+                source_meta["candidate_history"]["not_available_for"] = len(gaps)
         else:
-            applied = _apply_bootstrap_field(candidates, bootstrap, "previous_elections")
-            if applied != len(candidates):
-                raise RuntimeError("Histórico TSE indisponível e bootstrap incompleto")
             source_meta["candidate_history"] = {
                 **(bootstrap_meta or {}),
                 "dataset": "Histórico de candidaturas",
