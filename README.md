@@ -1,256 +1,200 @@
 # Quem Votar? — Espírito Santo 2026
 
-Plataforma cívica open source para consulta factual e rastreável de candidaturas a Deputado Federal e Deputado Estadual no Espírito Santo.
+**Produto cívico para consultar candidaturas com dados públicos, fontes rastreáveis e regras explícitas para lidar com incerteza.**
 
-**Licença do software original:** GNU AGPL v3.0 only (`AGPL-3.0-only`). Dados e materiais provenientes de fontes externas permanecem sujeitos aos termos de suas fontes.
+O projeto organiza cadastro eleitoral, histórico institucional e evidências documentadas em uma interface de busca, ficha e comparação. A proposta é facilitar a leitura de informação pública sem transformar cobertura documental em ranking, afinidade ou recomendação de voto.
 
-**Produção:** https://joyceradis.github.io/Quem-Votar/
+[**Abrir produto**](https://joyceradis.github.io/Quem-Votar/) · [Metodologia](METODOLOGIA.md) · [Auditoria](AUDITORIA.md) · [Documentação técnica](docs/README.md) · [Licença](LICENSE)
 
-**Baseline visual:** produção **V6.0.0** no ar.
-A reconstrução em `src/` foi promovida para a superfície pública em 26/09/2026,
-preservando as URLs e os contratos editoriais/dados. [`VERSION`](VERSION) = `6.0.0`.
-Ver [`docs/REBUILD_V6.md`](docs/REBUILD_V6.md).
+> Versão pública atual: **V6.0.0**. O recorte visível em produção cobre candidaturas a Deputado Federal e Deputado Estadual no Espírito Santo. A arquitetura de dados foi desenhada para comportar outros cargos sem criar fluxos específicos por candidatura.
 
-[Produção](https://joyceradis.github.io/Quem-Votar/) · [Como funciona](sobre.html) · [Metodologia](METODOLOGIA.md) · [Apoiar o projeto](apoio.html) · [GitHub Sponsors](https://github.com/sponsors/joyceradis) · [Licença](LICENSE)
+---
 
-## Onde acompanhar o projeto
+## O produto
 
-Cada documento tem uma função diferente:
+O Quem Votar? foi construído para responder perguntas práticas sem esconder a origem da informação:
 
-- **README:** explica o produto e o estado estável atual.
-- **Roadmap:** mostra a direção macro e a ordem das próximas frentes.
-- **Issues:** concentram tarefas concretas, bugs, decisões e critérios de pronto.
-- **Checkpoint:** registra o estado técnico datado da branch canônica.
+- encontrar uma candidatura por nome, número ou partido;
+- consultar dados eleitorais e institucionais em uma ficha única;
+- navegar por assuntos somente quando existe evidência documentada;
+- comparar até três candidaturas lado a lado, sem produzir vencedor;
+- acessar a fonte usada para sustentar cada camada factual;
+- distinguir ausência de dado de ausência de proposta, atuação ou posição.
 
-O trabalho executável deve ser acompanhado nas [Issues do repositório](https://github.com/joyceradis/Quem-Votar/issues). O README não replica uma lista de Issues ativas porque esse estado muda com frequência.
+A interface é mobile-first e mantém busca, comparação, estados vazios, navegação por teclado e compartilhamento direto por URL.
 
-### Entrada canônica para agentes e contribuidores
+---
 
-Antes de alterar o projeto:
+## O que este repositório demonstra
 
-1. leia `AGENTS.md` e `docs/GOVERNANCE.md`;
-2. pesquise a Issue/PR ativa da lane antes de criar trabalho novo;
-3. consulte `docs/ROADMAP_V1.md` quando precisar entender dependências macro;
-4. consulte `docs/CHECKPOINT_CURRENT.md` apenas como snapshot técnico datado, nunca como substituto do estado atual;
-5. trabalhe na Issue de responsabilidade mais específica aplicável.
+| Área | Implementação |
+| --- | --- |
+| **Data engineering** | pipeline em Python para ingestão, normalização, proveniência e geração de snapshots eleitorais |
+| **Modelagem de domínio** | `SQ_CANDIDATO` como identidade canônica, contratos por cargo e separação entre cadastro, evidência e apresentação |
+| **Frontend** | Eleventy no build; HTML, CSS e JavaScript puros na entrega pública |
+| **Qualidade** | testes Python, Playwright em desktop/mobile, verificação de build e CI no GitHub Actions |
+| **Integridade de dados** | comportamento fail-closed, preservação de estado validado e proibição de editar snapshot gerado para “fazer a UI passar” |
+| **Acessibilidade** | teclado, foco visível, alvos de toque, aumento de texto e suporte a `prefers-reduced-motion` |
+| **Entrega** | branches/PRs rastreáveis, artifacts de sync, deploy por GitHub Pages e checagem de paridade entre fonte e superfície publicada |
 
-Uma Issue executável deve ter **uma responsabilidade principal**. Tracking Issues coordenam dependências, mas não substituem os critérios de pronto das Issues-filhas.
+**Portfolio signal:** civic-tech · data pipelines · domain modeling · provenance · testing · accessibility · CI/CD · product engineering
 
-Não criar pipeline, script ou modelo específico por candidatura. O processamento é orientado por dados e usa `SQ_CANDIDATO` como identidade canônica.
+---
 
-## Recorte atual
+## Arquitetura
 
-A versão pública cobre:
+```text
+FONTES PÚBLICAS
+TSE · Câmara · ALES · outras fontes documentadas
+        ↓
+INGESTÃO / NORMALIZAÇÃO
+scripts/sync-data.py
+        ↓
+SNAPSHOT FACTUAL
+data/generated/
+        ↓
+EVIDÊNCIA CURADA
+data/reference/topic-evidence.json
+        ↓
+CAMADA DE PRODUTO
+busca · ficha · assuntos · comparação
+        ↓
+BUILD V6
+Eleventy
+        ↓
+HTML / CSS / JS
+GitHub Pages
+```
 
-- Deputado Federal;
-- Deputado Estadual;
-- Espírito Santo;
-- Eleições Gerais de 2026.
+A chave eleitoral usada para vínculo entre camadas é **`SQ_CANDIDATO`**. O sistema evita criar lógica específica por nome de candidatura.
 
-Outros cargos ainda não aparecem na interface pública.
+Quando um transporte intermediário é necessário por limitação de acesso a uma fonte, **origem e transporte permanecem separados na proveniência**.
 
-## Snapshot eleitoral
+---
 
-A interface não publica contagens como números permanentes no código. Ela lê a data e os totais do snapshot em:
+## Regras de integridade
 
-`data/generated/meta.json`
+Algumas regras são tratadas como contrato de engenharia, não como detalhe de interface:
 
-O site mostra:
+```text
+dado ausente            ≠ fato negativo
+ocupação declarada      ≠ atividade atual confirmada
+registro histórico      ≠ situação atual
+proposta                ≠ entrega
+quantidade de registros ≠ importância política
+fonte secundária        ≠ fonte primária
+falha de API            ≠ autorização para publicar vazio
+```
 
-- data e hora do snapshot;
-- total federal;
-- total estadual;
-- link para a fonte primária do TSE.
+Snapshots automáticos são gerados e auditados antes da integração. Falhas transitórias não podem apagar silenciosamente informação previamente validada.
 
-A data é exibida no fuso `America/Sao_Paulo`.
+O produto não implementa score, ranking, previsão eleitoral, “melhor candidato” ou recomendação de voto.
 
-## Experiência pública V6.0.0
+---
 
-### Home
+## Proveniência e evidência
 
-- cargo e busca aparecem no primeiro fluxo;
-- identidade visual capixaba em azul, branco e rosa;
-- elemento vetorial regional leve no hero;
-- contagens e snapshot ligados à fonte TSE;
-- três caminhos principais: nome, assunto ou comparação;
-- assuntos só aparecem quando existe evidência temática documentada.
+A arquitetura separa quatro coisas que frequentemente são misturadas em produtos de dados:
 
-### Candidaturas
+1. **cadastro factual** — dados eleitorais e declaratórios;
+2. **histórico institucional** — vínculos e atuação documentados;
+3. **evidência temática** — proposta, declaração ou atuação com fonte individualizada;
+4. **interface** — apresentação do que já foi normalizado e validado.
 
-- 12 resultados por página;
-- busca dominante;
-- filtros secundários sob demanda;
-- filtro por partido;
-- filtro por tema documentado;
-- registro institucional integrado quando disponível;
-- seleção de até 3 candidaturas para comparação;
-- cartões com hierarquia editorial e tags temáticas somente quando existe `topic_evidence`.
+A ausência de evidência temática permanece uma lacuna de cobertura. Ela não é convertida automaticamente em “não possui proposta” ou “não se posicionou”.
 
-As tags não são inferidas a partir de partido, profissão, ocupação, religião ou associação.
+Documentos centrais:
 
-### Temas
+- [Metodologia](METODOLOGIA.md)
+- [Governança de dados e produto](docs/GOVERNANCE.md)
+- [Modelo de dados](docs/DATA_MODEL.md)
+- [Evidência temática](docs/TOPIC_EVIDENCE.md)
+- [Mapa do site](docs/SITE_MAP.md)
 
-`Saúde`, `Educação`, `Segurança`, `Economia` e os demais temas representam **propostas, declarações ou atuação documentada** da candidatura.
+---
 
-A taxonomia pública fica em:
+## Desenvolvimento assistido por IA
 
-`data/reference/policy-topics.json`
+Ferramentas de IA são usadas no projeto como apoio de engenharia — por exemplo em implementação, revisão, investigação de falhas e automação.
 
-Profissão/ocupação declarada ao TSE é apenas metadado da ficha e não associa uma candidatura a um tema.
+Elas **não são tratadas como fonte factual nem como autoridade editorial**.
 
-### Ficha individual
+Direção de produto, metodologia, modelo de dados, regras de proveniência, critérios editoriais, decisões de publicação e aceite final permanecem sob responsabilidade da mantenedora. Mudanças materiais passam por branch, diff, testes e revisão rastreável no GitHub.
 
-Leitura em camadas:
+Essa separação é intencional: automação pode acelerar o trabalho sem substituir responsabilidade sobre o resultado.
 
-- Identidade;
-- O que a pessoa faz hoje;
-- O que diz que vai fazer;
-- Onde isso pode mexer na vida real, de forma descritiva;
-- Histórico e dados eleitorais;
-- Fontes e limitações;
-- compartilhamento direto da ficha por URL.
+---
 
-### Comparação
+## Stack
 
-Até 3 candidaturas lado a lado, com os mesmos campos factuais/documentais.
+```text
+DATA / PIPELINE   Python · JSON · normalização determinística
+FRONTEND          Eleventy · JavaScript · HTML · CSS
+TESTES            unittest · Playwright
+CI / DELIVERY     GitHub Actions · GitHub Pages
+QUALIDADE         build verification · snapshot audit · provenance checks
+ARQUITETURA       source-first · fail-closed · issue/PR-driven delivery
+```
 
-O funil de comparação está consolidado com seleção de até 3 pessoas, feedback acessível, foco preservado nos fluxos cobertos, normalização de URLs inválidas/duplicadas, sincronização entre abas e validação em desktop/mobile/teclado.
+Nenhum framework JavaScript é enviado ao navegador pela camada V6; Eleventy é usado no build e a saída publicada permanece estática.
 
-Não existe score, ranking, vencedor, previsão eleitoral ou recomendação de voto.
+---
 
-### Compartilhamento social
+## Rodando localmente
 
-Cada candidatura possui uma entrada estática em `/social/<SQ_CANDIDATO>/index.html` para metadados Open Graph. Essas páginas não duplicam a ficha: o corpo é vazio e o fluxo direciona para a URL canônica da candidatura.
+Requisitos: Node.js compatível com o projeto e Python 3.
 
-### Camadas factuais integradas
+```bash
+npm ci
+npm start
+```
 
-Além do cadastro eleitoral básico, o snapshot público preserva, quando disponíveis e com proveniência identificada:
+Build e verificação:
 
-- bens declarados;
-- redes sociais declaradas ao TSE;
-- histórico eleitoral;
-- vínculo institucional atual/histórico.
+```bash
+npm run build
+npm run verify
+npm run test:e2e
+python -m unittest discover -s tests -p 'test_*.py'
+```
 
-Ausência de uma dessas camadas continua sendo ausência de dado, não conclusão sobre a candidatura.
+O pipeline eleitoral possui dependências e fontes externas próprias; consulte a documentação antes de executar sincronizações ou alterar `data/generated/`.
 
-## Evidências temáticas
+---
 
-Fonte canônica:
+## Estrutura do repositório
 
-`data/reference/topic-evidence.json`
+```text
+src/                  fonte da interface V6
+styles/               CSS publicado
+js/                   JavaScript publicado
+data/generated/       snapshots eleitorais gerados
+data/reference/       taxonomias e evidência curada
+scripts/              sync, auditoria e geração
+tests/                testes de dados e contratos
+tests-e2e/            testes de interface com Playwright
+docs/                 arquitetura, produto, operação e auditoria
+.github/workflows/    CI e automações
+```
 
-Fluxo de integração:
+Para contribuir ou operar a base, comece por [AGENTS.md](AGENTS.md) e [docs/GOVERNANCE.md](docs/GOVERNANCE.md). O estado executável do trabalho vive nas Issues e PRs; o README descreve o produto e a arquitetura estável.
 
-`fonte permitida → staging → validação → revisão semântica → promoção explícita → sync → interface`
+---
 
-A infraestrutura de coleta fica em `scripts/coletor_evidencias.py`.
+## Autoria e desenvolvimento
 
-Regras centrais:
+**Quem Votar?** é idealizado e mantido por **Dra. Joyce Radis**.
 
-- `SQ_CANDIDATO` é a chave eleitoral canônica;
-- perfis sociais declarados ao TSE são sementes de descoberta, não evidências por si só;
-- conteúdo coletado entra primeiro em `data/staging/`;
-- PDF textual pode ser extraído sem OCR automático;
-- `topic_id` e `evidence_type` não são inferidos durante a coleta;
-- promoção para a fonte canônica exige validação explícita;
-- ausência de evidência continua sendo ausência de dado.
+O projeto combina definição de produto, metodologia de dados, desenho editorial, engenharia de software e desenvolvimento assistido por ferramentas de IA. A autoria não é atribuída à ferramenta: decisões, contratos, critérios de aceite e responsabilidade sobre o que é publicado permanecem humanos.
 
-## Fontes e proveniência
+---
 
-### TSE
+## Licença e independência
 
-Fonte eleitoral primária e origem das fotografias eleitorais utilizadas na plataforma.
+O software original é distribuído sob **GNU AGPL v3.0 only (`AGPL-3.0-only`)**. Dados, documentos, fotografias e outros materiais provenientes de terceiros permanecem sujeitos aos direitos e termos das respectivas fontes.
 
-### Câmara dos Deputados
+A licença do software não concede direito de uso do nome, identidade visual ou sinais distintivos do **Quem Votar?**, nem autorização para sugerir endosso institucional, político ou comercial.
 
-Dados institucionais federais vinculados de forma conservadora.
+O projeto é gratuito para consulta. Apoio financeiro não altera fontes, metodologia, ordem, critérios de evidência ou apresentação de candidaturas.
 
-### ALES
-
-Evidências documentais estaduais datadas. Evidência histórica não é promovida automaticamente a situação atual.
-
-Quando uma imagem ou dado usa transporte intermediário por limitação operacional, origem e transporte devem permanecer registrados separadamente.
-
-## Regra de integridade
-
-**Uma lacuna permanece lacuna até existir fonte identificável, vínculo justificável e tratamento documentado.**
-
-## Manutenção deste README
-
-O README deve representar **estado estável**, não o backlog em tempo real.
-
-Atualize este arquivo quando ocorrer pelo menos uma destas mudanças:
-
-1. mudança de versão/baseline público;
-2. alteração do recorte eleitoral suportado;
-3. nova funcionalidade pública consolidada;
-4. mudança de fonte canônica ou fluxo de dados relevante;
-5. fechamento de uma frente que torne alguma descrição deste arquivo incorreta.
-
-Não é necessário atualizar o README a cada commit, PR ou comentário de Issue.
-
-Distribuição de responsabilidade documental:
-
-- **README:** estado estável e visão do produto;
-- **`VERSION`:** versão canônica;
-- **`docs/CHECKPOINT_CURRENT.md`:** estado técnico datado;
-- **`docs/ROADMAP_V1.md`:** prioridades macro;
-- **Issues:** execução diária e decisões específicas.
-
-Antes de fechar uma Issue que altere versão, escopo, experiência pública ou arquitetura de dados, verificar se README e checkpoint ainda descrevem corretamente a `main`.
-
-## Governança
-
-Leia antes de alterar:
-
-- `AGENTS.md`
-- `docs/GOVERNANCE.md`
-- `docs/DELIVERY_GOVERNANCE.md`
-- `docs/PRODUCT_NORTH_STAR.md`
-- `docs/TOPIC_EVIDENCE.md`
-- `docs/CHECKPOINT_CURRENT.md`
-- `docs/FILTERS.md`
-- `docs/DATA_MODEL.md`
-- `docs/SITE_MAP.md`
-- `docs/RUNTIME_PROOF.md`
-- `METODOLOGIA.md`
-- `AUDITORIA.md`
-
-
-## Licenciamento
-
-O software original deste repositório é distribuído sob a **GNU Affero General Public License v3.0 only (AGPL-3.0-only)**. Consulte [LICENSE](LICENSE).
-
-A licença do software não transforma automaticamente dados, documentos, fotografias ou outros materiais de terceiros em conteúdo AGPL. Esses materiais permanecem sujeitos aos direitos, termos e condições das respectivas fontes.
-
-A identidade visual e o nome do projeto não devem ser interpretados como autorização para sugerir endosso institucional, político ou comercial por parte do projeto ou de sua mantenedora.
-
-
-### Software Licensing and Trademark Use
-
-The AGPL-3.0-only license applies to the original software identified in this repository. It does not grant authorization to use the “Quem Votar?” name, logos, trademarks or other distinctive signs, nor to imply endorsement, association or partnership with the project or its maintainer.
-
-Third-party data, documents, photographs and other materials remain subject to the licenses, rights and terms of their respective sources.
-
-Detailed rules for visual assets and trademark usage may be documented separately in a future `TRADEMARK_POLICY.md`.
-
-
-## Apoie o projeto
-
-O **Quem Votar?** é gratuito para quem consulta e open source. Contribuições ajudam a custear manutenção, dados, documentação e infraestrutura sem conceder qualquer influência sobre o conteúdo eleitoral.
-
-### GitHub Sponsors
-
-O perfil **GitHub Sponsors** da mantenedora está ativo e público. O repositório usa `.github/FUNDING.yml` para exibir o botão nativo **Sponsor**.
-
-[Apoiar via GitHub Sponsors](https://github.com/sponsors/joyceradis)
-
-### PIX
-
-Chave PIX (e-mail):
-
-`contato@drajoyceradis.com`
-
-Apoio financeiro não altera fontes, metodologia, temas, ordem, classificação ou apresentação de candidaturas.
-
-Mais detalhes: [apoio e transparência](apoio.html) · [arquitetura de sustentabilidade](docs/SUSTAINABILITY.md).
+[Apoiar o projeto](apoio.html) · [GitHub Sponsors](https://github.com/sponsors/joyceradis)
