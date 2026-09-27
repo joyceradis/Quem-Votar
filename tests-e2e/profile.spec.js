@@ -16,6 +16,14 @@ const governadorPath = path.join(__dirname, "..", "data", "generated", "candidat
 const governadores = fs.existsSync(governadorPath) ? JSON.parse(fs.readFileSync(governadorPath, "utf8")) : [];
 const comGap = governadores.find((c) => (c.enrichment_gaps || []).length >= 3);
 
+const senadorPath = path.join(__dirname, "..", "data", "generated", "candidates-senador.json");
+const senadores = fs.existsSync(senadorPath) ? JSON.parse(fs.readFileSync(senadorPath, "utf8")) : [];
+const comEvidenciaInstitucionalSemMandato = senadores.find(
+  (c) => (c.institutional_evidence || []).length > 0 && !c.current_mandate
+);
+
+const comHistoricoCamara = federais.find((c) => c.institutional_history);
+
 const fichaUrl = (c) => `candidato.html?id=${c.tse_id}&cargo=federal`;
 
 test.describe("Ficha do candidato", () => {
@@ -105,6 +113,38 @@ test.describe("Ficha do candidato", () => {
     const dados = page.locator("#dados-eleitorais");
     await expect(historico).toContainText("Ainda não disponível na fonte atual");
     await expect(dados).toContainText("Ainda não disponível na fonte atual");
+  });
+
+  // S1 (Authorization-Issue #2/#160): institutional_evidence (vínculo ALES
+  // datado) é dado canônico que a ficha ignorava. Precisa aparecer em
+  // Histórico com fonte e aviso — e NUNCA em "O que essa pessoa faz hoje?",
+  // que só pode vir de current_mandate. Caso real: candidato de Senador com
+  // institutional_evidence e sem current_mandate.
+  test("institutional_evidence aparece em Histórico com fonte e aviso, nunca em 'faz hoje'", async ({ page }) => {
+    if (!comEvidenciaInstitucionalSemMandato) test.skip();
+    const c = comEvidenciaInstitucionalSemMandato;
+    await page.goto(`candidato.html?id=${c.tse_id}&cargo=senador`);
+
+    const record = c.institutional_evidence[0];
+    const hoje = page.locator("#faz-hoje");
+    const historico = page.locator("#historico");
+
+    await expect(hoje).toContainText("Não encontramos atuação pública atual confirmada nesta base");
+    await expect(hoje).not.toContainText(record.institution);
+
+    await expect(historico).toContainText(record.institution);
+    await expect(historico).toContainText(record.type);
+    if (record.warning) {
+      await expect(historico).toContainText(record.warning);
+    }
+  });
+
+  // S1: institutional_history (trajetória partidária/legislaturas da
+  // Câmara) também vira conteúdo em Histórico, não só fonte de link.
+  test("institutional_history aparece como trajetória em Histórico", async ({ page }) => {
+    if (!comHistoricoCamara) test.skip();
+    await page.goto(fichaUrl(comHistoricoCamara));
+    await expect(page.locator("#historico")).toContainText("Trajetória institucional na Câmara");
   });
 
   test("IMPACTO não afirma benefício nem prejuízo", async ({ page }) => {

@@ -257,6 +257,38 @@
   font-size: 1.05rem;
 }
 
+/* Vínculo institucional (institutional_evidence) e trajetória na Câmara
+ * (institutional_history) — S1, Authorization-Issue #2/#160. Reaproveita
+ * .public-records article para o vínculo (mesmo layout de atuação
+ * documentada); só o aviso metodológico precisa de destaque próprio. */
+.institutional-evidence h3,
+.institutional-track h3 {
+  margin: 28px 0 10px;
+  font-size: 1.05rem;
+}
+
+.institutional-track h4 {
+  margin: 18px 0 6px;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.evidence-warning {
+  color: var(--pink-strong);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.institutional-track-list {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
 /* Impacto — áreas relacionadas, sem afirmação causal. */
 .impact-list article h3 {
   margin: 0 0 10px;
