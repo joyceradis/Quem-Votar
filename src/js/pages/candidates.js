@@ -263,7 +263,7 @@ async function initCandidates() {
     const visible = rows.slice(start, start + PAGE_SIZE);
     const selected = getCompareIds();
 
-    $("resultCount").textContent = `${rows.length} pessoa${rows.length === 1 ? "" : "s"}`;
+    $("resultCount").textContent = `${rows.length} candidatura${rows.length === 1 ? "" : "s"}`;
     $("pageStatus").textContent = rows.length ? `Página ${page} de ${pages}` : "Nenhum resultado";
 
     // Ausência de resultado por tema nunca vira "não tem proposta".
