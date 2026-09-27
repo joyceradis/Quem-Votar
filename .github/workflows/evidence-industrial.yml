@@ -66,6 +66,8 @@ jobs:
     if: ${{ needs.window-gate.outputs.stop != 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 300
+    outputs:
+      artifact_id: ${{ steps.upload.outputs.artifact-id }}
 
     steps:
       - name: Checkout read-only
@@ -441,6 +443,7 @@ jobs:
           key: evidence-industrial-v2-quality-${{ github.run_id }}
 
       - name: Upload industrial evidence artifact
+        id: upload
         uses: actions/upload-artifact@v4
         with:
           name: evidence-worker-${{ github.run_id }}
@@ -476,10 +479,17 @@ jobs:
     # esse passo final falhando marca o job inteiro como failure mesmo com
     # o artifact (e o lote de curadoria) já publicado e válido. Gatear por
     # needs.industrial.result == 'success' perdia o lote exatamente nos
-    # ciclos com incidente, que são os que mais precisam de handoff. Roda
-    # sempre que a janela não foi parada, e valida a existência do artifact
-    # pelo próprio download, não pelo resultado agregado do job anterior.
-    if: ${{ always() && needs.window-gate.outputs.stop != 'true' && needs.industrial.result != 'skipped' && needs.industrial.result != 'cancelled' }}
+    # ciclos com incidente, que são os que mais precisam de handoff.
+    #
+    # Codex (#201, P2 no follow-up): usar continue-on-error no download e
+    # inferir sucesso pelo outcome do próprio passo mascarava uma falha
+    # real de download (artifact devia existir, mas a chamada falhou) como
+    # green silencioso — sem branch publicada e sem erro visível. Corrigido
+    # usando um output explícito do job industrial (artifact_id, setado só
+    # se o upload de fato aconteceu) para decidir se este job deve rodar; o
+    # download deixa de ter continue-on-error, então uma falha nele agora é
+    # sempre um erro real do job, nunca um "sucesso" silencioso.
+    if: ${{ always() && needs.window-gate.outputs.stop != 'true' && needs.industrial.outputs.artifact_id != '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -489,8 +499,6 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Baixar artifact do worker desta execução
-        id: download
-        continue-on-error: true
         uses: actions/download-artifact@v4
         with:
           name: evidence-worker-${{ github.run_id }}
@@ -507,7 +515,6 @@ jobs:
       # support_text, attribution_basis, reviewed_at, reviewer), como já
       # documentado em data/staging/README.md.
       - name: Publicar lote em branch não-canônica
-        if: steps.download.outcome == 'success'
         shell: bash
         run: |
           set -euo pipefail
