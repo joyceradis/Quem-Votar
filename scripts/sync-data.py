@@ -60,9 +60,40 @@ MIRROR_REPO = "herminiotorres/dossie-cidadao"
 MIRROR_PATH_BASE = "docs/data/tse/candidatos/ES"
 MIRROR_API = f"https://api.github.com/repos/{MIRROR_REPO}"
 
-MIRROR_FILES = {
-    "federal": ("deputado-federal.json", "DEPUTADO FEDERAL"),
-    "estadual": ("deputado-estadual.json", "DEPUTADO ESTADUAL"),
+# Registry de cargos (#161/#186). Antes o pipeline era preso a dois cargos por
+# hardcode; agora a camada de cargo é declarativa, para os quatro cargos de 2026
+# entrarem sem proliferar condicional. `family` distingue executivo/legislativo
+# sem amarrar regra específica; `supports_runoff` prepara a arquitetura para o
+# 2º turno (Governador) sem implementá-lo aqui — resultado/turno é outra frente.
+OFFICE_REGISTRY = {
+    "federal": {
+        "mirror_file": "deputado-federal.json",
+        "tse_label": "DEPUTADO FEDERAL",
+        "family": "legislative",
+        "supports_runoff": False,
+        "output": "candidates-federal.json",
+    },
+    "estadual": {
+        "mirror_file": "deputado-estadual.json",
+        "tse_label": "DEPUTADO ESTADUAL",
+        "family": "legislative",
+        "supports_runoff": False,
+        "output": "candidates-estadual.json",
+    },
+    "governador": {
+        "mirror_file": "governador.json",
+        "tse_label": "GOVERNADOR",
+        "family": "executive",
+        "supports_runoff": True,
+        "output": "candidates-governador.json",
+    },
+    "senador": {
+        "mirror_file": "senador.json",
+        "tse_label": "SENADOR",
+        "family": "legislative",
+        "supports_runoff": False,
+        "output": "candidates-senador.json",
+    },
 }
 
 
@@ -325,8 +356,8 @@ def _normalize_history_records(records):
 
 def _previous_candidate_map():
     rows = []
-    rows.extend(read_existing_json("candidates-federal.json", []))
-    rows.extend(read_existing_json("candidates-estadual.json", []))
+    for cfg in OFFICE_REGISTRY.values():
+        rows.extend(read_existing_json(cfg["output"], []))
     return {
         str(row.get("tse_id")): row
         for row in rows
@@ -871,9 +902,11 @@ def normalize_candidate(row, office, mirror_info):
 
 
 def load_mirror():
-    result = {"federal": [], "estadual": []}
+    result = {kind: [] for kind in OFFICE_REGISTRY}
     mirror_meta = {}
-    for kind, (filename, office) in MIRROR_FILES.items():
+    for kind, cfg in OFFICE_REGISTRY.items():
+        filename = cfg["mirror_file"]
+        office = cfg["tse_label"]
         rows, info = mirror_snapshot(filename)
         mirror_meta[kind] = info
         normalized = [
@@ -1259,23 +1292,28 @@ def write_json(name, value):
 def main():
     candidates, mirror_meta = load_mirror()
 
+    # Todos os cargos configurados no registry; a ordem segue o registry.
+    groups = [candidates[kind] for kind in OFFICE_REGISTRY]
     federal = candidates["federal"]
-    estadual = candidates["estadual"]
 
-    tse_enrichment_sources, tse_enrichment_counts = enrich_tse_open_data([federal, estadual])
+    tse_enrichment_sources, tse_enrichment_counts = enrich_tse_open_data(groups)
 
+    # Câmara dos Deputados é enriquecimento exclusivo de deputado federal.
     chamber_url, chamber_rows = enrich_federal(federal)
 
-    ales_links = enrich_ales_reference([federal, estadual])
-    topic_evidence_count = enrich_topic_evidence([federal, estadual])
+    # ALES e evidência temática valem por trajetória/vínculo nominal, não pelo
+    # cargo disputado: um candidato a governador que passou pela ALES mantém o
+    # vínculo. Por isso rodam sobre todos os grupos.
+    ales_links = enrich_ales_reference(groups)
+    topic_evidence_count = enrich_topic_evidence(groups)
 
     key = lambda c: norm(c.get("ballot_name") or c.get("full_name"))
-    federal.sort(key=key)
-    estadual.sort(key=key)
+    for kind in OFFICE_REGISTRY:
+        candidates[kind].sort(key=key)
 
     collected = datetime.now(timezone.utc).isoformat()
-    write_json("candidates-federal.json", federal)
-    write_json("candidates-estadual.json", estadual)
+    for kind, cfg in OFFICE_REGISTRY.items():
+        write_json(cfg["output"], candidates[kind])
     write_json("federal-chamber.json", chamber_rows)
     write_json(
         "meta.json",
@@ -1284,14 +1322,22 @@ def main():
             "uf": UF,
             "election_year": YEAR,
             "counts": {
-                "federal": len(federal),
-                "estadual": len(estadual),
+                # Contagens derivadas do registry (nada escrito à mão).
+                **{kind: len(candidates[kind]) for kind in OFFICE_REGISTRY},
                 "federal_current_mandates_linked": sum(
                     1 for c in federal if c.get("current_mandate")
                 ),
                 "ales_2025_evidence_linked": ales_links,
                 "topic_evidence": topic_evidence_count,
                 **tse_enrichment_counts,
+            },
+            "offices": {
+                kind: {
+                    "family": cfg["family"],
+                    "supports_runoff": cfg["supports_runoff"],
+                    "count": len(candidates[kind]),
+                }
+                for kind, cfg in OFFICE_REGISTRY.items()
             },
             "sources": {
                 "primary_tse_dataset": TSE_DATASET,
