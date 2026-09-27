@@ -537,6 +537,39 @@ jobs:
             fi
           done
 
+          # Codex (#201, P1 — privacidade): curation-batch.json carrega
+          # raw_excerpt, o trecho bruto raspado da página-fonte (proposição,
+          # site oficial etc.). Até aqui isso só existia num artifact
+          # efêmero (7 dias, acesso restrito ao Actions); publicar numa
+          # branch git o torna permanente no histórico de um repositório
+          # público. Uma página-fonte pode conter, incidentalmente, e-mail/
+          # telefone/endereço pessoal fora do trecho relevante — dado que o
+          # AGENTS.md §5 proíbe publicar sem necessidade pública explícita.
+          # Todos os outros campos (candidate_id, source_url, source_title,
+          # attribution_basis_hint — string templada, nunca texto raspado
+          # — etc.) são estruturados/atribuídos pelo próprio pipeline e não
+          # carregam texto de terceiros, então seguem intactos: quem revisar
+          # o lote ainda decide com candidato/fonte/tipo à vista, só sem o
+          # trecho bruto ficando permanente aqui — a revisão semântica real
+          # (support_text) continua abrindo o source_url original.
+          if [[ -f "$DEST/curation-batch.json" ]]; then
+            python3 - "$DEST/curation-batch.json" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          path = Path(sys.argv[1])
+          payload = json.loads(path.read_text(encoding="utf-8"))
+          redacted = 0
+          for item in payload.get("items") or []:
+              if isinstance(item, dict) and item.get("raw_excerpt"):
+                  item["raw_excerpt"] = None
+                  redacted += 1
+          path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+          print(f"raw_excerpt redacted in {redacted} item(s)")
+          PY
+          fi
+
           if [[ -z "$(git status --porcelain)" ]]; then
             echo "Nada para publicar (nenhum arquivo do lote encontrado no artifact)."
             exit 0
