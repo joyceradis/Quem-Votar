@@ -419,7 +419,20 @@ def main() -> None:
     )
 
     linked_federal = sum(bool(x.get("current_mandate")) for x in federal)
-    linked_ales = sum(len(x.get("institutional_evidence") or []) for x in rows)
+    # ALES é vínculo por trajetória/nome, não por cargo disputado: o sync soma
+    # institutional_evidence nos 4 cargos (um ex-deputado estadual candidato a
+    # governador/senador mantém o vínculo). O universo de validação aqui tem
+    # que ser o mesmo, incluindo governador/senador quando os snapshots já
+    # existem — senão a contagem diverge assim que esses cargos entram.
+    ales_universe = list(rows)
+    for kind, fname in (
+        ("governador", "candidates-governador.json"),
+        ("senador", "candidates-senador.json"),
+    ):
+        path = DATA / fname
+        if path.exists():
+            ales_universe.extend(json.loads(read(path)))
+    linked_ales = sum(len(x.get("institutional_evidence") or []) for x in ales_universe)
     assert linked_federal == meta["counts"].get("federal_current_mandates_linked"), "cobertura Câmara divergente"
     assert linked_ales == meta["counts"].get("ales_2025_evidence_linked"), "cobertura ALES divergente"
 
