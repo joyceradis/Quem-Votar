@@ -16,6 +16,8 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     timeout-minutes: 25
+    outputs:
+      changed: ${{ steps.package.outputs.changed }}
     env:
       # Keep Python bytecode outside the checkout; do not weaken the fail-closed guard.
       PYTHONPYCACHEPREFIX: /tmp/quem-votar-pycache
@@ -127,3 +129,107 @@ jobs:
           path: ${{ runner.temp }}/sync-data-candidate
           if-no-files-found: error
           retention-days: 7
+
+  # Motivação (#186): o download do artifact acima depende do host de blob
+  # do Actions, que a rede do agente que opera esta lane não alcança. Este
+  # job usa a rede do próprio runner (sem essa restrição) para publicar o
+  # snapshot já auditado numa branch, de onde o agente abre o PR de dados
+  # pela API do GitHub. Não escreve em main; é só o transporte do artifact
+  # para um lugar que a lane consegue ler.
+  publicar-branch-dados:
+    name: Publicar branch com snapshot auditado
+    needs: sync
+    if: needs.sync.outputs.changed == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Baixar snapshot já auditado
+        uses: actions/download-artifact@v4
+        with:
+          name: sync-data-candidate-${{ github.run_id }}
+          path: ${{ runner.temp }}/sync-data-candidate
+
+      - name: Publicar branch com snapshot e checkpoint acoplado
+        shell: bash
+        run: |
+          set -euo pipefail
+          BRANCH="data/sync-${GITHUB_RUN_ID}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          rm -rf data/generated social
+          cp -R "${RUNNER_TEMP}/sync-data-candidate/data-generated" data/generated
+          cp -R "${RUNNER_TEMP}/sync-data-candidate/social" social
+
+          # Acopla docs/CHECKPOINT_CURRENT.md no mesmo commit (AGENTS.md §7:
+          # PR que toca data/generated/* precisa atualizar o checkpoint).
+          # Reescreve só o bloco factual "Snapshot eleitoral público" a
+          # partir do meta.json gerado; nenhuma outra seção é tocada.
+          python3 - <<'PY'
+          import json
+          import re
+          from pathlib import Path
+
+          meta = json.loads(Path("data/generated/meta.json").read_text())
+          counts = meta["counts"]
+          offices = meta.get("offices") or {}
+          labels = {
+              "federal": "Deputado Federal",
+              "estadual": "Deputado Estadual",
+              "governador": "Governador",
+              "senador": "Senador",
+          }
+          order = ["federal", "estadual", "governador", "senador"]
+          present = [k for k in order if k in offices]
+          total = sum(counts.get(k, 0) for k in present)
+
+          lines = [f"- **{total} candidaturas**;"]
+          for kind in present:
+              lines.append(f"- **{counts[kind]}** para {labels[kind]};")
+          lines.append(
+              f"- **{counts.get('federal_current_mandates_linked', 0)}** "
+              "vínculos atuais com mandato federal na Câmara preservados;"
+          )
+          lines.append(
+              f"- **{counts.get('ales_2025_evidence_linked', 0)}** "
+              "evidências institucionais ALES 2025 vinculadas;"
+          )
+          lines.append(
+              f"- **{counts.get('topic_evidence', 0)}** evidências temáticas "
+              "canônicas em `data/reference/topic-evidence.json`."
+          )
+          block = (
+              "## Snapshot eleitoral público\n\nUniverso atual:\n\n"
+              + "\n".join(lines)
+              + "\n\n`SQ_CANDIDATO` permanece a chave eleitoral canônica.\n\n"
+              "Nenhuma contagem acima deve ser tratada como avaliação de "
+              "candidatura ou completude política."
+          )
+
+          path = Path("docs/CHECKPOINT_CURRENT.md")
+          text = path.read_text()
+          pattern = re.compile(
+              r"## Snapshot eleitoral público\n.*?Nenhuma contagem acima deve "
+              r"ser tratada como avaliação de candidatura ou completude política\.",
+              re.DOTALL,
+          )
+          new_text, n = pattern.subn(block, text)
+          assert n == 1, "bloco 'Snapshot eleitoral público' não encontrado/único"
+          path.write_text(new_text)
+          PY
+
+          git add data/generated social docs/CHECKPOINT_CURRENT.md
+          git commit -m "data(sync): snapshot eleitoral ES — run ${GITHUB_RUN_ID}
+
+          Snapshot gerado e auditado por sync-data.yml (job sync, run
+          ${GITHUB_RUN_ID}); docs/CHECKPOINT_CURRENT.md acoplado no mesmo
+          commit conforme AGENTS.md §7. O PR aberto a partir desta branch
+          traz o Authorization-Issue no corpo.
+
+          Authorization-Issue: #186"
+          git push -u origin "$BRANCH"
