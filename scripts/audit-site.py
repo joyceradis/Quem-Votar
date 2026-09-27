@@ -93,6 +93,44 @@ def og_meta(html_text: str) -> dict[str, str]:
     return dict(OG_META_RE.findall(html_text))
 
 
+CANONICAL_BRANCHES = ("main", "master")
+
+
+def check_sync_never_writes_to_main(sync_workflow: str) -> None:
+    """Garante que o pipeline de sync nunca escreve diretamente na branch
+    canônica, mesmo quando publica um snapshot já auditado numa branch de
+    dados efêmera (#186/#192: o download do artifact do sync pode não ser
+    alcançável por quem abre o PR de dados, então um job condicional do
+    próprio workflow publica o snapshot numa branch nova).
+
+    Permitido: commitar/empurrar depois de comprovadamente criar uma branch
+    nova (`checkout -b`), desde que o push nunca referencie `main`/`master`
+    (nome direto, refspec `HEAD:main`, `refs/heads/main` etc.) e nunca use
+    force-push.
+
+    Proibido, em qualquer forma: push/commit direto em `main`/`master`,
+    com ou sem force, inclusive via refspec ou alias.
+    """
+    lines = sync_workflow.splitlines()
+    push_lines = [line for line in lines if re.search(r"\bgit push\b", line)]
+    commit_lines = [line for line in lines if re.search(r"\bgit commit\b", line)]
+
+    for line in push_lines:
+        lowered = line.lower()
+        for target in CANONICAL_BRANCHES:
+            if re.search(rf"\b{target}\b", lowered):
+                raise AssertionError(
+                    f"sync não pode empurrar diretamente para {target}: {line.strip()}"
+                )
+        if re.search(r"--force\b|(?<!\S)-f\b", line):
+            raise AssertionError(f"sync não pode usar force-push: {line.strip()}")
+
+    if (commit_lines or push_lines) and "checkout -b" not in sync_workflow:
+        raise AssertionError(
+            "sync só pode commitar/empurrar depois de criar uma branch nova, nunca em main"
+        )
+
+
 def main() -> None:
     versions = set()
     for name, marker in REQUIRED_PAGES.items():
@@ -179,20 +217,7 @@ def main() -> None:
     assert "python scripts/audit-site.py" in sync_workflow, "sync precisa auditar o snapshot candidato"
     assert "python -m unittest discover" in sync_workflow, "sync precisa testar antes de exportar snapshot"
     assert "contents: read" in sync_workflow, "sync deve operar com contents read-only"
-    # O invariante real é "nunca escreve em main", não "nunca commita/empurra
-    # nada": desde #186/#192 um job condicional do sync pode publicar o
-    # snapshot já auditado numa branch nova (o download do artifact pode não
-    # ser alcançável pelo agente que abre o PR de dados). Por isso a checagem
-    # é sobre o alvo do push e sobre exigir uma branch nova antes de commitar,
-    # não mais uma proibição literal das duas palavras.
-    push_lines = [line for line in sync_workflow.splitlines() if "git push" in line]
-    assert not any(re.search(r"\bmain\b", line) for line in push_lines), (
-        "sync não pode empurrar diretamente para main"
-    )
-    if "git commit" in sync_workflow or push_lines:
-        assert "checkout -b" in sync_workflow, (
-            "sync só pode commitar/empurrar depois de criar uma branch nova, nunca em main"
-        )
+    check_sync_never_writes_to_main(sync_workflow)
     assert "actions/upload-artifact@v4" in sync_workflow, "sync deve exportar snapshot candidato como artifact"
     assert "\n    paths:" not in quality_workflow, "Quality deve rodar em todo push para main"
     assert "diretamente para `main`" not in agents, "AGENTS ainda autoriza escrita direta em main"
