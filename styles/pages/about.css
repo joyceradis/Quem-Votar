@@ -1,0 +1,58 @@
+/* Como funciona — portado de styles.css:39. */
+.qv-page-intro--single {
+  grid-template-columns: 1fr;
+}
+
+.about-list {
+  border-top: 1px solid var(--line);
+}
+
+.about-list article {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 32px;
+  padding: 26px 0;
+  border-bottom: 1px solid var(--line);
+  scroll-margin-top: 100px;
+}
+
+.about-list h2 {
+  margin: 0;
+  font-size: 1.15rem;
+  letter-spacing: -0.015em;
+}
+
+.about-list p {
+  max-width: 62ch;
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+.about-list a {
+  display: inline-block;
+  margin-top: 8px;
+  color: var(--blue-strong);
+  font-weight: 700;
+}
+
+.technical-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-top: 36px;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.technical-links a {
+  color: var(--blue-strong);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+@media (max-width: 620px) {
+  .about-list article {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}

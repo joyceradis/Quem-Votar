@@ -1,6 +1,6 @@
-# Checkpoint atual — V5.5 publicada · V6 preparada
+# Checkpoint atual — V6.0.0 publicada
 
-Data: 2026-09-26 (reconciliação pós-#170/#173).
+Data: 2026-09-26 (cutover V6 autorizado e preparado para publicação).
 
 Estado auditado a partir de `main` após o merge do PR #173 (Slice A documental). Este checkpoint é atualizado por PR documental e, por isso, o merge documental subsequente pode avançar o SHA sem alterar o estado de produto descrito. Autorização desta reconciliação de caminho protegido: Issue #132 (`Authorization-Issue`).
 
@@ -8,22 +8,20 @@ Estado auditado a partir de `main` após o merge do PR #173 (Slice A documental)
 
 Branch: `main`.
 
-Versão publicada no ar: **V5.5**, assets `?v=5.5.8`. É o que os capixabas veem hoje.
+Versão publicada: **V6.0.0**, assets da aplicação `?v=6.0.0`. [`VERSION`](../VERSION) = `6.0.0`.
 
-Versão preparada para o corte: **V6.0.0** — [`VERSION`](../VERSION) já registra `6.0.0`, mas essa é a versão **preparada**, ainda não publicada. Só passa a valer no corte da Fase 5 (ver "Reconstrução V6" abaixo). Enquanto isso, `VERSION` ≠ cache publicado por desenho.
-
-Feature freeze do núcleo eleitoral vigente até **04/10/2026**.
+O gate temporal originalmente registrado para 04/10/2026 foi substituído por decisão explícita da mantenedora em 26/09/2026 na Issue #167. O freeze editorial/factual do núcleo eleitoral continua valendo para mudanças de conteúdo, inferência ou ordenação não autorizadas; a publicação mecânica da V6 foi a exceção expressamente aprovada.
 
 O produto informa e documenta. Não produz score, ranking, vencedor, previsão eleitoral ou recomendação de voto.
 
-## Reconstrução V6 — Fases 0–4 concluídas, corte date-gated
+## Reconstrução V6 — Fases 0–5 concluídas
 
 Rastreamento: Issue #167; detalhe em [`REBUILD_V6.md`](REBUILD_V6.md).
 
 - **Fases 0–4 concluídas e em `main`** (PRs #168 e #170 mergeados): build-time com Eleventy em `src/`, design system, casco compartilhado, as 7 páginas portadas e a verificação (build + `verify` + Playwright desktop/mobile).
-- **Nenhuma superfície pública foi alterada.** `index.html`, `app.js`, `styles.css`, as 7 rotas, `data/`, `social/` seguem V5.5 no ar.
+- **Superfície pública promovida para V6.0.0.** As sete rotas agora vêm do build Eleventy; `app.js`/`styles.css` legados foram substituídos pelos módulos `js/` e folhas `styles/`, preservando URLs e contratos de dados.
 - **Caminhos protegidos aplicados pelo #170** (Issue #169): `audit-site.py` desacoplado do nome dos arquivos (`public_css`/`public_js`) e job de CI `frontend-v6` no Quality. A auditoria no estado pós-corte simulado passa — o bloqueador do corte deixou de existir.
-- **Fase 5 (corte atômico) date-gated a partir de 04/10/2026** via `scripts/cutover-v6.sh`, que recusa rodar antes. Substitui a superfície pública preservando URLs, parâmetros e contrato JSON.
+- **Fase 5 concluída em 26/09/2026 por autorização explícita da mantenedora.** O cutover substitui a superfície pública preservando URLs, parâmetros e contrato JSON.
 - **Item de #169 não aplicável no ambiente do agente:** a troca da origem do Pages para "GitHub Actions" é recusada pelo proxy de rede; não bloqueia o corte (caminho "branch" já previsto).
 
 ## Ficha por três perguntas, navegação e curadoria por recência — #127/#128, #138/#139, #35/#146 (2026-09-24/25, todas mergeadas)
@@ -446,7 +444,7 @@ Objetivo: impedir que snapshot público e documentação canônica avancem em es
 
 Antes de merge de mudança pública:
 
-1. `node --check app.js` verde;
+1. sintaxe dos módulos JavaScript da V6 verde (`find src/js -type f -name '*.js' ... node --check`);
 2. `scripts/audit-site.py` verde;
 3. suíte determinística de testes verde;
 4. Quality verde;
@@ -492,7 +490,7 @@ Estado após a arrumação de governança:
 2. manter #108 separada: privacidade/GA4/network não voltam para #117 por conveniência;
 3. manter #43 bloqueada até o pós-freeze;
 4. #44 (`status:blocked`) fica para implementação futura do Governance Sentinel, sem misturar isso com alterações eleitorais;
-5. a cadência wartime da #35 foi revisada pela **#133** (horária); o corte da V6 (Fase 5) permanece date-gated até 04/10/2026 e é executado por `scripts/cutover-v6.sh`;
+5. a cadência wartime da #35 foi revisada pela **#133** (horária); o cutover da V6 (Fase 5) foi antecipado e autorizado pela mantenedora em 26/09/2026;
 6. continuar #2/#35 sob os contratos do feature freeze, sem promoção automática de evidência política.
 
 Nenhuma dessas frentes autoriza relaxamento dos gates de `main`.

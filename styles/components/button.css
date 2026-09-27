@@ -1,0 +1,57 @@
+/*
+ * Botões — formaliza os dois padrões já usados em produção
+ * (.nav-toggle/.text-size em pílula outline, .hero-search button em pílula
+ * sólida) numa nomenclatura reutilizável para a Fase 2/3.
+ */
+.qv-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: var(--tap-min);
+  padding: 0 18px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--line-strong);
+  background: #fff;
+  color: var(--blue-dark);
+  font-weight: 800;
+  text-decoration: none;
+  transition: background var(--motion-fast) ease, border-color var(--motion-fast) ease,
+    color var(--motion-fast) ease;
+}
+
+.qv-btn:hover {
+  background: var(--blue-soft);
+}
+
+.qv-btn--primary {
+  border-color: var(--blue-strong);
+  background: var(--blue-strong);
+  color: #fff;
+  box-shadow: 0 7px 18px rgba(22, 121, 182, 0.18);
+}
+
+.qv-btn--primary:hover {
+  background: #0e679d;
+}
+
+.qv-btn--ghost {
+  border-color: transparent;
+  background: transparent;
+  color: var(--blue-strong);
+}
+
+.qv-btn--ghost:hover {
+  background: var(--blue-soft);
+}
+
+.qv-btn--selected {
+  background: var(--pink-soft);
+  border-color: rgba(179, 60, 114, 0.3);
+  color: var(--pink-strong);
+}
+
+.qv-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}

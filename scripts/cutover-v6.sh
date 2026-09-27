@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Corte atômico da V6 (Fase 5) — executar só a partir de 2026-10-04, fim do
-# feature freeze do núcleo eleitoral.
+# Corte atômico da V6 (Fase 5). O gate temporal original de 2026-10-04
+# foi substituído por autorização explícita da mantenedora em 2026-09-26 (#167).
 #
 # Substitui a superfície pública pelos arquivos gerados, preservando as URLs
 # (mesmo link, mesmos parâmetros, mesmo contrato JSON). Não roda sozinho em
@@ -9,10 +9,9 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-hoje=$(date -u +%Y-%m-%d)
-if [[ "$hoje" < "2026-10-04" ]]; then
-  echo "Bloqueado: o freeze do núcleo eleitoral vai até 2026-10-04 (hoje: $hoje)." >&2
-  exit 1
+if [[ ! -f app.js || ! -f styles.css ]]; then
+  echo "V6 já está cortada nesta árvore; nada a fazer."
+  exit 0
 fi
 
 echo "==> 1/6 build"

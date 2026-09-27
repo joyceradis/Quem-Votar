@@ -1,0 +1,88 @@
+/* Comparação — portado de styles.css:38. Grade de campos iguais para todas
+   as colunas: nenhuma coluna recebe destaque, cor ou ordem de "vencedor". */
+.comparison-wrap {
+  overflow: auto;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.comparison-grid {
+  display: grid;
+  grid-template-columns: 190px repeat(var(--compare-cols, 3), minmax(220px, 1fr));
+  min-width: max-content;
+}
+
+.comparison-grid > div {
+  padding: 16px;
+  border-bottom: 1px solid var(--line);
+  border-right: 1px solid var(--line);
+}
+
+.row-label {
+  background: #f5fbff;
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+.compare-person img,
+.compare-person .profile-fallback {
+  width: 104px;
+  height: 124px;
+  object-fit: cover;
+  border-radius: 20px;
+  background: linear-gradient(145deg, var(--blue-soft), var(--pink-soft));
+}
+
+.compare-person .profile-fallback {
+  display: grid;
+  place-items: center;
+  padding: 8px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.68rem;
+}
+
+.compare-person h2 {
+  margin: 10px 0 3px;
+  font-size: 1.05rem;
+  letter-spacing: -0.02em;
+}
+
+.compare-person span,
+.compare-value {
+  font-size: 0.82rem;
+}
+
+.compare-person a {
+  display: inline-block;
+  margin-top: 7px;
+  color: var(--blue-strong);
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+.comparison-note {
+  max-width: 68ch;
+  margin-top: 16px;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.compare-empty {
+  padding: 36px 0;
+  border-top: 1px solid var(--line);
+}
+
+.compare-empty h2 {
+  margin: 0 0 8px;
+}
+
+.compare-empty p {
+  color: var(--muted);
+}
+
+.compare-empty a {
+  color: var(--blue-strong);
+  font-weight: 700;
+}
