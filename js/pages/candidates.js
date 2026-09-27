@@ -81,7 +81,7 @@ function candidateCard(candidate, kind, selectedIds) {
         <p class="qv-card-kicker">${esc(officeLabel(kind).toUpperCase())}</p>
         <h3><a href="${profileUrl}">${esc(name)}</a></h3>
         <p class="qv-card-electoral">${esc(candidate.party || "Partido não informado")} · nº ${esc(candidate.number || "—")}</p>
-        ${hasInstitutional(candidate) ? `<p class="qv-card-now">${esc(currentActivity(candidate, kind))}</p>` : ""}
+        ${candidate.current_mandate ? `<p class="qv-card-now">${esc(currentActivity(candidate, kind))}</p>` : ""}
         ${candidate.occupation ? `<p class="qv-card-occupation">${esc(candidate.occupation)}</p>` : ""}
         ${topicTags}
         ${proposalCount ? `<p class="qv-card-meta">${proposalCount} registro${proposalCount === 1 ? "" : "s"} temático${proposalCount === 1 ? "" : "s"} com fonte</p>` : ""}

@@ -24,6 +24,33 @@ test.describe("Listagem de candidaturas", () => {
     await expect(page.locator("#pageStatus")).toHaveText(/^Página 1 de \d+$/);
   });
 
+  // Achado do Codex no #198: um candidato com institutional_history mas
+  // sem current_mandate fazia hasInstitutional() liberar a linha 'agora',
+  // mas currentActivity() ainda retornava o texto de ausência — exatamente
+  // o texto repetitivo que esta mudança tentava tirar, só que rotulado
+  // como se fosse sobre o presente. Nenhum candidato real tem hoje esse
+  // formato, então simula via interceptação de rede.
+  test("card não mostra 'atuação atual' pra quem só tem histórico, sem mandato atual", async ({ page }) => {
+    await page.route("**/data/generated/candidates-federal.json**", async (route) => {
+      const response = await route.fetch();
+      const body = await response.json();
+      if (body.length) {
+        body[0] = {
+          ...body[0],
+          current_mandate: null,
+          institutional_history: { history: [{ year: 2020, office: "Vereador" }] },
+        };
+      }
+      await route.fulfill({ response, json: body });
+    });
+    await page.goto("candidatos.html");
+    await expect(page.locator("#resultCount")).not.toHaveText("Carregando…");
+
+    const primeiroCard = page.locator(".qv-card").first();
+    await expect(primeiroCard.locator(".qv-card-now")).toHaveCount(0);
+    await expect(primeiroCard).not.toContainText("Atuação atual ainda não confirmada");
+  });
+
   // Feedback direto da mantenedora: partido é critério de escolha para
   // muita gente e não pode ficar escondido atrás de "Mais filtros".
   test("filtro de Partido fica visível sem precisar abrir 'Mais filtros'", async ({ page }) => {
