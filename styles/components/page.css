@@ -33,13 +33,16 @@
   color: var(--ink-soft);
 }
 
+/* Menor e discreta de propósito (feedback direto da mantenedora): é
+   proveniência, precisa ficar perto da contagem/título (AGENTS.md §6),
+   mas não pode competir visualmente com o H1 da página. */
 .qv-page-snapshot {
   display: grid;
-  gap: 4px;
+  gap: 3px;
   margin: 0;
   text-align: right;
   color: var(--muted);
-  font-size: 0.8rem;
+  font-size: 0.68rem;
 }
 
 .qv-page-snapshot a {
