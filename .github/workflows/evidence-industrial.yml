@@ -537,36 +537,50 @@ jobs:
             fi
           done
 
-          # Codex (#201, P1 — privacidade): curation-batch.json carrega
-          # raw_excerpt, o trecho bruto raspado da página-fonte (proposição,
-          # site oficial etc.). Até aqui isso só existia num artifact
-          # efêmero (7 dias, acesso restrito ao Actions); publicar numa
-          # branch git o torna permanente no histórico de um repositório
-          # público. Uma página-fonte pode conter, incidentalmente, e-mail/
-          # telefone/endereço pessoal fora do trecho relevante — dado que o
-          # AGENTS.md §5 proíbe publicar sem necessidade pública explícita.
-          # Todos os outros campos (candidate_id, source_url, source_title,
-          # attribution_basis_hint — string templada, nunca texto raspado
-          # — etc.) são estruturados/atribuídos pelo próprio pipeline e não
-          # carregam texto de terceiros, então seguem intactos: quem revisar
-          # o lote ainda decide com candidato/fonte/tipo à vista, só sem o
-          # trecho bruto ficando permanente aqui — a revisão semântica real
-          # (support_text) continua abrindo o source_url original.
+          # Codex (#201, P1 — privacidade, e follow-up): curation-batch.json
+          # carrega raw_excerpt, o trecho bruto raspado da página-fonte
+          # (proposição, site oficial etc.), usado tanto pela revisão
+          # humana (escrever support_text) quanto pela própria promote()
+          # em coletor_evidencias.py, que exige support_text como substring
+          # literal do raw_excerpt do rascunho original. Zerar o campo
+          # (1ª tentativa) quebrava exatamente o motivo deste job existir:
+          # sem o trecho, ninguém revisando só esta branch consegue redigir
+          # um support_text válido. A correção certa é sanitizar padrões de
+          # dado pessoal (e-mail, telefone, CPF) mantendo o resto do texto
+          # institucional intacto — até aqui isso só existia num artifact
+          # efêmero (7 dias, acesso restrito); publicar numa branch git o
+          # torna permanente no histórico de um repositório público, e uma
+          # página-fonte pode conter esses padrões incidentalmente fora do
+          # trecho relevante (AGENTS.md §5).
           if [[ -f "$DEST/curation-batch.json" ]]; then
             python3 - "$DEST/curation-batch.json" <<'PY'
           import json
+          import re
           import sys
           from pathlib import Path
 
+          EMAIL_RE = re.compile(r"[\w.+-]+@[\w-]+\.[\w.-]+")
+          CPF_RE = re.compile(r"\b\d{3}\.\d{3}\.\d{3}-\d{2}\b")
+          PHONE_RE = re.compile(r"\(?\b\d{2}\)?[\s.-]?9?\d{4}[\s.-]?\d{4}\b")
+
+          def sanitize(text):
+              text = EMAIL_RE.sub("[e-mail removido]", text)
+              text = CPF_RE.sub("[CPF removido]", text)
+              text = PHONE_RE.sub("[telefone removido]", text)
+              return text
+
           path = Path(sys.argv[1])
           payload = json.loads(path.read_text(encoding="utf-8"))
-          redacted = 0
+          sanitized = 0
           for item in payload.get("items") or []:
-              if isinstance(item, dict) and item.get("raw_excerpt"):
-                  item["raw_excerpt"] = None
-                  redacted += 1
+              excerpt = item.get("raw_excerpt") if isinstance(item, dict) else None
+              if excerpt:
+                  clean = sanitize(excerpt)
+                  if clean != excerpt:
+                      sanitized += 1
+                  item["raw_excerpt"] = clean
           path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-          print(f"raw_excerpt redacted in {redacted} item(s)")
+          print(f"raw_excerpt sanitized in {sanitized} item(s)")
           PY
           fi
 
