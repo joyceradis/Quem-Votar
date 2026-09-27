@@ -110,6 +110,15 @@ test.describe("Listagem de candidaturas", () => {
     await expect(page.locator(".qv-card-kicker").first()).toHaveText("SENADOR");
   });
 
+  // Governador/Senador com enrichment_gaps (fonte TSE ainda não integrada
+  // neste ciclo) não pode ficar com o card em branco onde antes aparecia
+  // "X bens declarados" etc. — silêncio pareceria "não possui" (AGENTS.md §2/§5).
+  test("card de candidato sem fonte de enriquecimento avisa a lacuna, não fica em branco", async ({ page }) => {
+    await page.locator('.office-button[data-kind="governador"]').click();
+    await expect(page.locator(".qv-card").first()).toBeVisible();
+    await expect(page.locator(".qv-card-meta", { hasText: "ainda não disponíve" }).first()).toBeVisible();
+  });
+
   test("comparação respeita o teto de 3 e monta o link canônico", async ({ page }) => {
     const botoes = page.locator("[data-compare-id]");
     await botoes.nth(0).click();

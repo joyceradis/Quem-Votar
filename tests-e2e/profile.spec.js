@@ -12,6 +12,10 @@ const federais = JSON.parse(
 const comEvidencia = federais.find((c) => (c.topic_evidence || []).length > 1) || federais[0];
 const semEvidencia = federais.find((c) => (c.topic_evidence || []).length === 0);
 
+const governadorPath = path.join(__dirname, "..", "data", "generated", "candidates-governador.json");
+const governadores = fs.existsSync(governadorPath) ? JSON.parse(fs.readFileSync(governadorPath, "utf8")) : [];
+const comGap = governadores.find((c) => (c.enrichment_gaps || []).length >= 3);
+
 const fichaUrl = (c) => `candidato.html?id=${c.tse_id}&cargo=federal`;
 
 test.describe("Ficha do candidato", () => {
@@ -87,6 +91,20 @@ test.describe("Ficha do candidato", () => {
     );
     // nunca um zero ou um traço no lugar da explicação
     await expect(page.locator("#vai-fazer .promise-list")).toHaveCount(0);
+  });
+
+  // Governador/Senador com enrichment_gaps (fonte TSE ainda não integrada
+  // neste ciclo, ver meta.json not_available_for) não pode aparecer como
+  // "não possui" bens/redes/histórico na ficha — mesmo caso real usado por
+  // tests-e2e/pages.spec.js para o comparador.
+  test("Histórico e Dados eleitorais avisam lacuna de fonte, nunca 'não possui'", async ({ page }) => {
+    if (!comGap) test.skip();
+    await page.goto(fichaUrl({ ...comGap, tse_id: comGap.tse_id }).replace("cargo=federal", "cargo=governador"));
+
+    const historico = page.locator("#historico");
+    const dados = page.locator("#dados-eleitorais");
+    await expect(historico).toContainText("Ainda não disponível na fonte atual");
+    await expect(dados).toContainText("Ainda não disponível na fonte atual");
   });
 
   test("IMPACTO não afirma benefício nem prejuízo", async ({ page }) => {

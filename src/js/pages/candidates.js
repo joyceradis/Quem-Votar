@@ -41,6 +41,25 @@ function photoMarkup(candidate) {
   return `<img src="${esc(source)}" alt="Foto de ${esc(name)}" loading="lazy" data-photo>`;
 }
 
+// Ausência de fonte (16 candidatos de Governador/Senador cujo enriquecimento
+// ainda não foi integrado, ver meta.json not_available_for) não pode
+// aparecer como "não possui" (AGENTS.md §2/§5) — mesmo critério já usado por
+// compare.js/profile.js para os campos assets/social_links/previous_elections.
+const ENRICHMENT_GAP_LABELS = {
+  assets: "bens",
+  social_links: "redes",
+  previous_elections: "histórico eleitoral",
+};
+function enrichmentGapLabel(candidate) {
+  const labels = (candidate.enrichment_gaps || [])
+    .map((field) => ENRICHMENT_GAP_LABELS[field])
+    .filter(Boolean);
+  if (!labels.length) return null;
+  const joined =
+    labels.length > 1 ? `${labels.slice(0, -1).join(", ")} e ${labels[labels.length - 1]}` : labels[0];
+  return `${joined} ainda não ${labels.length > 1 ? "disponíveis" : "disponível"} na fonte atual`;
+}
+
 function candidateCard(candidate, kind, selectedIds) {
   const name = candidate.ballot_name || candidate.full_name || "Nome não disponível";
   const selected = selectedIds.includes(String(candidate.tse_id));
@@ -84,7 +103,7 @@ function candidateCard(candidate, kind, selectedIds) {
         ${candidate.occupation ? `<p class="qv-card-occupation">${esc(candidate.occupation)}</p>` : ""}
         ${topicTags}
         ${proposalCount ? `<p class="qv-card-meta">${proposalCount} registro${proposalCount === 1 ? "" : "s"} temático${proposalCount === 1 ? "" : "s"} com fonte</p>` : ""}
-        ${density.length ? `<p class="qv-card-meta">${density.join(" · ")}</p>` : ""}
+        ${density.length ? `<p class="qv-card-meta">${density.join(" · ")}</p>` : enrichmentGapLabel(candidate) ? `<p class="qv-card-meta">${enrichmentGapLabel(candidate)}</p>` : ""}
       </div>
       <div class="qv-card-actions">
         <a class="qv-card-link" href="${profileUrl}">Entender</a>
