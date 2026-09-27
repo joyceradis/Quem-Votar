@@ -1,0 +1,58 @@
+name: GA4 public privacy proof
+
+on:
+  push:
+    branches:
+      - audit/ga4-public-proof-20260927
+
+permissions:
+  contents: read
+
+jobs:
+  privacy-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      QV_BASE_URL: https://joyceradis.github.io/Quem-Votar/
+      QV_EXPECTED_MAIN_SHA: 5297054377699bd851367190ce59d7be604d58b5
+      QV_PROOF_OUT: ga4-public-proof.json
+
+    steps:
+      - name: Checkout disposable audit branch
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install project dependencies
+        run: npm ci
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Syntax-check privacy harness
+        run: node --check tests/ga4_public_privacy_proof.cjs
+
+      - name: Run GA4 proof against published GitHub Pages
+        run: node tests/ga4_public_privacy_proof.cjs
+
+      - name: Publish proof summary
+        if: always()
+        run: |
+          if [ -f ga4-public-proof.json ]; then
+            cat ga4-public-proof.json >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "proof artifact missing" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload proof artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ga4-public-privacy-proof
+          path: ga4-public-proof.json
+          if-no-files-found: error
+          retention-days: 14
