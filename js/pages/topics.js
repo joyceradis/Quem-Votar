@@ -1,7 +1,7 @@
 // Assuntos — portado de initTopics (app.js:646-677).
 //
 // A contagem por tema é de *candidaturas com evidência*, não de evidências:
-// o número diz "quantas pessoas têm registro com fonte neste assunto", e
+// o número diz "quantas candidaturas têm registro com fonte neste assunto", e
 // nunca é usado para ordenar tema por relevância ou qualidade.
 import { $, esc } from "../core/dom.js";
 import { loadCore, applyGlobalMeta } from "../core/data.js";
@@ -49,9 +49,9 @@ async function initTopics() {
               </div>
               <p class="topic-status">
                 <strong>${count}</strong>
-                <span>pessoa${count === 1 ? "" : "s"} com fonte neste assunto</span>
+                <span>candidatura${count === 1 ? "" : "s"} com fonte neste assunto</span>
               </p>
-              <a href="candidatos.html?tema=${encodeURIComponent(topic.id)}">Ver pessoas</a>
+              <a href="candidatos.html?tema=${encodeURIComponent(topic.id)}">Ver candidaturas</a>
             </article>`;
         })
         .join("")

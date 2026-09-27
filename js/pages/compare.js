@@ -121,9 +121,9 @@ async function initCompare() {
   if (selected.length < 2) {
     mount.innerHTML = `
       <div class="compare-empty">
-        <h2>${selected.length ? "Escolha mais 1 pessoa." : "Ninguém selecionado."}</h2>
-        <p>Abra a lista e escolha de duas a três pessoas para comparar.</p>
-        <a href="candidatos.html?cargo=federal">Escolher pessoas</a>
+        <h2>${selected.length ? "Escolha mais 1 candidatura." : "Ninguém selecionado."}</h2>
+        <p>Abra a lista e escolha de duas a três candidaturas para comparar.</p>
+        <a href="candidatos.html?cargo=federal">Escolher candidaturas</a>
       </div>`;
     return;
   }
@@ -144,7 +144,7 @@ async function initCompare() {
                 ${photoMarkup(candidate)}
                 <h2>${esc(candidate.ballot_name || candidate.full_name)}</h2>
                 <span>${esc(candidate.party || "—")} · Nº ${esc(candidate.number || "—")}</span>
-                <a href="candidato.html?id=${encodeURIComponent(candidate.tse_id)}&cargo=${candidate._kind}">Abrir perfil</a>
+                <a href="candidato.html?id=${encodeURIComponent(candidate.tse_id)}&cargo=${candidate._kind}">Abrir ficha</a>
               </div>`
           )
           .join("")}

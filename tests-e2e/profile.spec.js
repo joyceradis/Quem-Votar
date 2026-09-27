@@ -127,9 +127,9 @@ test.describe("Ficha do candidato", () => {
 
   test("id inexistente e id ausente falham de forma explícita", async ({ page }) => {
     await page.goto("candidato.html?id=000000000&cargo=federal");
-    await expect(page.locator("#profileMount")).toHaveText("Pessoa não encontrada na base atual.");
+    await expect(page.locator("#profileMount")).toHaveText("Candidatura não encontrada na base atual.");
 
     await page.goto("candidato.html");
-    await expect(page.locator("#profileMount")).toHaveText("Pessoa não informada.");
+    await expect(page.locator("#profileMount")).toHaveText("Candidatura não informada.");
   });
 });

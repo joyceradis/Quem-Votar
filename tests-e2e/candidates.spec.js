@@ -41,7 +41,7 @@ test.describe("Listagem de candidaturas", () => {
     expect(federal).not.toBe(estadual);
 
     await page.locator('.office-button[data-kind="estadual"]').click();
-    await expect(page.locator("#resultCount")).toHaveText(`${estadual} pessoas`);
+    await expect(page.locator("#resultCount")).toHaveText(`${estadual} candidaturas`);
     expect(new URL(page.url()).searchParams.get("cargo")).toBe("estadual");
   });
 
