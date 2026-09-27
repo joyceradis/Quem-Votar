@@ -144,7 +144,7 @@ async function initCompare() {
                 ${photoMarkup(candidate)}
                 <h2>${esc(candidate.ballot_name || candidate.full_name)}</h2>
                 <span>${esc(candidate.party || "—")} · Nº ${esc(candidate.number || "—")}</span>
-                <a href="candidato.html?id=${encodeURIComponent(candidate.tse_id)}&cargo=${candidate._kind}">Abrir perfil</a>
+                <a href="candidato.html?id=${encodeURIComponent(candidate.tse_id)}&cargo=${candidate._kind}">Abrir ficha</a>
               </div>`
           )
           .join("")}
