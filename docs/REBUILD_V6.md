@@ -5,10 +5,10 @@ Rastreamento: [Issue #167](https://github.com/joyceradis/Quem-Votar/issues/167).
 Autorização: decisão direta de @joyceradis (mantenedora), registrada na Issue
 #167, conforme `AGENTS.md` §8.
 
-## Estado atual (reconciliado em 2026-09-26, cutover autorizado)
+## Estado publicado — V6
 
 - **Fases 0–4 concluídas e em `main`.** PRs #168 e #170 mergeados.
-- **Fase 5 autorizada e executada em 26/09/2026:** a mantenedora substituiu explicitamente o gate temporal anterior de 04/10 na Issue #167.
+- **Fase 5 concluída:** o PR #180 promoveu a V6 em `ca389ff170b80f18eeb631a7c61b73882abe5fde`, em 27/09/2026 (UTC). O site serve à decisão de voto antes do pleito; 04/10 não é trava de publicação.
 - **`VERSION` = `6.0.0` é a versão publicada.** A superfície pública usa a saída Eleventy, com módulos `js/` e folhas `styles/` versionados em `?v=6.0.0`.
 - **Caminhos protegidos já aplicados** (não mais "patch pendente"): a
   auditoria desacoplada (`public_css`/`public_js`) e o job de CI
@@ -35,9 +35,7 @@ o problema — o problema é manutenibilidade.
 1. Build-time apenas: **Eleventy (11ty)**. A saída publicada continua
    HTML/CSS/JS puro, compatível com GitHub Pages; nenhum framework roda no
    navegador.
-2. Janela de corte: o plano original previa produção imutável até 04/10/2026.
-   Em 26/09/2026, a mantenedora antecipou explicitamente o cutover na Issue #167,
-   preservando os mesmos gates técnicos/editoriais e o merge atômico.
+2. Disponibilidade: o produto deve ser utilizável durante o período anterior à eleição. A V6 já foi publicada pelo PR #180; ajustes seguem os gates técnicos/editoriais aplicáveis.
 
 ## Fases
 
@@ -48,8 +46,8 @@ o problema — o problema é manutenibilidade.
 | 2 | Casco compartilhado (partials nav/rodapé, módulos `core/*`) | Não |
 | 3 | Página por página (Home → Candidatos → Ficha → Comparar → Temas → Como funciona → Apoiar), uma PR por página | Não |
 | 4 | Verificação completa (testes, `audit-site.py`, `runtime-proof`, capturas de tela) | Não |
-| 5 | Corte atômico em `main`, antecipado por decisão da mantenedora em 26/09/2026 | **Sim — concluído** |
-| 6 | Higiene de pipeline/CI (trilha paralela) | Não (decisões de cadência aguardam sinal explícito da mantenedora) |
+| 5 | Corte atômico em `main`, entregue no PR #180 | **Sim — concluído** |
+| 6 | Higiene de pipeline/CI (trilha paralela) | Concluída para este release; worker em cadência horária |
 
 ## O que não muda
 
@@ -61,7 +59,9 @@ a ordem normativa da ficha (IDENTIDADE→HOJE→PROPÕE→IMPACTO→HISTÓRICO�
 ELEITORAIS→FONTES). Esta é uma reconstrução de manutenibilidade e visual, não
 uma reinterpretação de dado.
 
-## Estado atual
+## Histórico de implementação — fases e decisões intermediárias
+
+As seções abaixo preservam o percurso da reconstrução. Referências a decisões pendentes, bloqueadores, fontes alternativas, contagens de testes e produção V5 descrevem o momento de cada etapa; não são uma fila de execução atual. A direção consolidada usa Bricolage Grotesque + Inter e `v6-penha-sketch.svg`. A auditoria foi adaptada no #170 e o corte foi entregue no #180. Para trabalho atual, consulte a #167 e suas decisões posteriores.
 
 **Fase 0 concluída.** `package.json`/`.eleventy.js` funcionando.
 
@@ -230,7 +230,7 @@ versionados:
   CODEOWNERS) — wiring em CI fica para a Fase 4 (verificação completa
   antes do corte), junto com o `runtime-proof` já existente.
 
-## ⚠ Bloqueador conhecido da Fase 5: `audit-site.py` está acoplado ao formato
+## Achado histórico da Fase 5 — resolvido no #170: acoplamento de `audit-site.py`
 
 Achado durante a Fase 3, antes de virar problema no corte. Várias asserções de
 `scripts/audit-site.py` não verificam **comportamento**, e sim o **texto
