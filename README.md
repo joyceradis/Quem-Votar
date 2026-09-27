@@ -1,221 +1,54 @@
 # Quem Votar? — Espírito Santo 2026
 
-Plataforma cívica open source para consulta factual e rastreável de candidaturas a Deputado Federal e Deputado Estadual no Espírito Santo.
+Consulte candidaturas, leia propostas e compare informações com fontes para decidir seu voto. O projeto existe para ser útil **antes da eleição, inclusive agora**.
 
-**Licença do software original:** GNU AGPL v3.0 only (`AGPL-3.0-only`). Dados e materiais provenientes de fontes externas permanecem sujeitos aos termos de suas fontes.
+**[Acesse o site](https://joyceradis.github.io/Quem-Votar/)** · [Como funciona](https://joyceradis.github.io/Quem-Votar/sobre.html) · [Metodologia](METODOLOGIA.md) · [Apoiar](https://joyceradis.github.io/Quem-Votar/apoio.html)
 
-**Produção:** https://joyceradis.github.io/Quem-Votar/
+## O que está disponível
 
-**Baseline visual:** produção **V6.0.0** no ar.
-A reconstrução em `src/` foi promovida para a superfície pública em 26/09/2026,
-preservando as URLs e os contratos editoriais/dados. [`VERSION`](VERSION) = `6.0.0`.
-Ver [`docs/REBUILD_V6.md`](docs/REBUILD_V6.md).
+A **V6 está publicada** no link oficial. A versão do software está em [VERSION](VERSION).
 
-[Produção](https://joyceradis.github.io/Quem-Votar/) · [Como funciona](sobre.html) · [Metodologia](METODOLOGIA.md) · [Apoiar o projeto](apoio.html) · [GitHub Sponsors](https://github.com/sponsors/joyceradis) · [Licença](LICENSE)
+O recorte público documentado cobre **Deputado Federal e Deputado Estadual do Espírito Santo nas eleições de 2026**. Expansões de cargo só passam a integrar este recorte quando estiverem disponíveis e verificadas na interface pública.
 
-## Onde acompanhar o projeto
+Você pode:
 
-Cada documento tem uma função diferente:
+- buscar por nome ou número e filtrar por cargo, partido e assunto documentado;
+- consultar a ficha com atuação atual confirmada, propostas/declarações, histórico e fontes;
+- comparar até três candidaturas lado a lado;
+- compartilhar fichas por URL;
+- consultar bens, redes sociais e registros institucionais quando disponíveis.
 
-- **README:** explica o produto e o estado estável atual.
-- **Roadmap:** mostra a direção macro e a ordem das próximas frentes.
-- **Issues:** concentram tarefas concretas, bugs, decisões e critérios de pronto.
-- **Checkpoint:** registra o estado técnico datado da branch canônica.
+A Home oferece caminhos por candidatura, assunto e comparação. Na ficha, a leitura principal segue **HOJE → PROPÕE → IMPACTO**, com histórico, dados eleitorais e fontes em profundidade.
 
-O trabalho executável deve ser acompanhado nas [Issues do repositório](https://github.com/joyceradis/Quem-Votar/issues). O README não replica uma lista de Issues ativas porque esse estado muda com frequência.
+## Como tratamos a informação
 
-### Entrada canônica para agentes e contribuidores
+- Nenhum ranking, nota, vencedor ou recomendação de voto.
+- Ocupação declarada ao TSE é dado secundário; não comprova atuação atual nem gera associação temática.
+- Atuação histórica não vira promessa. PROPÕE e IMPACTO usam evidência prospectiva elegível.
+- Uma lacuna permanece lacuna até existir fonte identificável e vínculo justificável.
+- As afirmações preservam fonte, data e tipo de evidência.
+- A identidade eleitoral usa `SQ_CANDIDATO`; vínculos entre bases são conservadores.
 
-Antes de alterar o projeto:
+**Fontes principais:** TSE, Câmara dos Deputados e Assembleia Legislativa do Espírito Santo (ALES). Fontes declaratórias e secundárias são identificadas como tais. Evidência datada não é promovida automaticamente a situação atual.
 
-1. leia `AGENTS.md` e `docs/GOVERNANCE.md`;
-2. pesquise a Issue/PR ativa da lane antes de criar trabalho novo;
-3. consulte `docs/ROADMAP_V1.md` quando precisar entender dependências macro;
-4. consulte `docs/CHECKPOINT_CURRENT.md` apenas como snapshot técnico datado, nunca como substituto do estado atual;
-5. trabalhe na Issue de responsabilidade mais específica aplicável.
+Data e contagens são lidas de [data/generated/meta.json](data/generated/meta.json), com exibição no fuso `America/Sao_Paulo`. A evidência temática curada vive em [data/reference/topic-evidence.json](data/reference/topic-evidence.json), e a taxonomia em [data/reference/policy-topics.json](data/reference/policy-topics.json).
 
-Uma Issue executável deve ter **uma responsabilidade principal**. Tracking Issues coordenam dependências, mas não substituem os critérios de pronto das Issues-filhas.
+A coleta passa por staging, validação e revisão antes da promoção explícita à base canônica. Consulte [TOPIC_EVIDENCE](docs/TOPIC_EVIDENCE.md) para o contrato completo.
 
-Não criar pipeline, script ou modelo específico por candidatura. O processamento é orientado por dados e usa `SQ_CANDIDATO` como identidade canônica.
+## Documentação e contribuição
 
-## Recorte atual
+| Preciso entender… | Onde consultar |
+|---|---|
+| O produto e suas fontes | Este README e [Metodologia](METODOLOGIA.md) |
+| Onde fica cada documento | [Índice da documentação](docs/README.md) |
+| Regras para alterar o projeto | [AGENTS.md](AGENTS.md) e [Governança](docs/GOVERNANCE.md) |
+| Trabalho em andamento e decisões recentes | [Issues](https://github.com/joyceradis/Quem-Votar/issues) e [PRs](https://github.com/joyceradis/Quem-Votar/pulls), incluindo seus comentários posteriores |
+| Arquitetura e histórico da V6 | [REBUILD_V6](docs/REBUILD_V6.md) |
+| Como contribuir | [CONTRIBUTING](.github/CONTRIBUTING.md) |
 
-A versão pública cobre:
+Antes de iniciar trabalho, confira a unidade existente, seu responsável e as decisões posteriores ao texto inicial. Um checkpoint datado é histórico; não substitui o estado atual do código, da publicação ou da issue.
 
-- Deputado Federal;
-- Deputado Estadual;
-- Espírito Santo;
-- Eleições Gerais de 2026.
-
-Outros cargos ainda não aparecem na interface pública.
-
-## Snapshot eleitoral
-
-A interface não publica contagens como números permanentes no código. Ela lê a data e os totais do snapshot em:
-
-`data/generated/meta.json`
-
-O site mostra:
-
-- data e hora do snapshot;
-- total federal;
-- total estadual;
-- link para a fonte primária do TSE.
-
-A data é exibida no fuso `America/Sao_Paulo`.
-
-## Experiência pública V6.0.0
-
-### Home
-
-- cargo e busca aparecem no primeiro fluxo;
-- identidade visual capixaba em azul, branco e rosa;
-- elemento vetorial regional leve no hero;
-- contagens e snapshot ligados à fonte TSE;
-- três caminhos principais: nome, assunto ou comparação;
-- assuntos só aparecem quando existe evidência temática documentada.
-
-### Candidaturas
-
-- 12 resultados por página;
-- busca dominante;
-- filtros secundários sob demanda;
-- filtro por partido;
-- filtro por tema documentado;
-- registro institucional integrado quando disponível;
-- seleção de até 3 candidaturas para comparação;
-- cartões com hierarquia editorial e tags temáticas somente quando existe `topic_evidence`.
-
-As tags não são inferidas a partir de partido, profissão, ocupação, religião ou associação.
-
-### Temas
-
-`Saúde`, `Educação`, `Segurança`, `Economia` e os demais temas representam **propostas, declarações ou atuação documentada** da candidatura.
-
-A taxonomia pública fica em:
-
-`data/reference/policy-topics.json`
-
-Profissão/ocupação declarada ao TSE é apenas metadado da ficha e não associa uma candidatura a um tema.
-
-### Ficha individual
-
-Leitura em camadas:
-
-- Identidade;
-- O que a pessoa faz hoje;
-- O que diz que vai fazer;
-- Onde isso pode mexer na vida real, de forma descritiva;
-- Histórico e dados eleitorais;
-- Fontes e limitações;
-- compartilhamento direto da ficha por URL.
-
-### Comparação
-
-Até 3 candidaturas lado a lado, com os mesmos campos factuais/documentais.
-
-O funil de comparação está consolidado com seleção de até 3 pessoas, feedback acessível, foco preservado nos fluxos cobertos, normalização de URLs inválidas/duplicadas, sincronização entre abas e validação em desktop/mobile/teclado.
-
-Não existe score, ranking, vencedor, previsão eleitoral ou recomendação de voto.
-
-### Compartilhamento social
-
-Cada candidatura possui uma entrada estática em `/social/<SQ_CANDIDATO>/index.html` para metadados Open Graph. Essas páginas não duplicam a ficha: o corpo é vazio e o fluxo direciona para a URL canônica da candidatura.
-
-### Camadas factuais integradas
-
-Além do cadastro eleitoral básico, o snapshot público preserva, quando disponíveis e com proveniência identificada:
-
-- bens declarados;
-- redes sociais declaradas ao TSE;
-- histórico eleitoral;
-- vínculo institucional atual/histórico.
-
-Ausência de uma dessas camadas continua sendo ausência de dado, não conclusão sobre a candidatura.
-
-## Evidências temáticas
-
-Fonte canônica:
-
-`data/reference/topic-evidence.json`
-
-Fluxo de integração:
-
-`fonte permitida → staging → validação → revisão semântica → promoção explícita → sync → interface`
-
-A infraestrutura de coleta fica em `scripts/coletor_evidencias.py`.
-
-Regras centrais:
-
-- `SQ_CANDIDATO` é a chave eleitoral canônica;
-- perfis sociais declarados ao TSE são sementes de descoberta, não evidências por si só;
-- conteúdo coletado entra primeiro em `data/staging/`;
-- PDF textual pode ser extraído sem OCR automático;
-- `topic_id` e `evidence_type` não são inferidos durante a coleta;
-- promoção para a fonte canônica exige validação explícita;
-- ausência de evidência continua sendo ausência de dado.
-
-## Fontes e proveniência
-
-### TSE
-
-Fonte eleitoral primária e origem das fotografias eleitorais utilizadas na plataforma.
-
-### Câmara dos Deputados
-
-Dados institucionais federais vinculados de forma conservadora.
-
-### ALES
-
-Evidências documentais estaduais datadas. Evidência histórica não é promovida automaticamente a situação atual.
-
-Quando uma imagem ou dado usa transporte intermediário por limitação operacional, origem e transporte devem permanecer registrados separadamente.
-
-## Regra de integridade
-
-**Uma lacuna permanece lacuna até existir fonte identificável, vínculo justificável e tratamento documentado.**
-
-## Manutenção deste README
-
-O README deve representar **estado estável**, não o backlog em tempo real.
-
-Atualize este arquivo quando ocorrer pelo menos uma destas mudanças:
-
-1. mudança de versão/baseline público;
-2. alteração do recorte eleitoral suportado;
-3. nova funcionalidade pública consolidada;
-4. mudança de fonte canônica ou fluxo de dados relevante;
-5. fechamento de uma frente que torne alguma descrição deste arquivo incorreta.
-
-Não é necessário atualizar o README a cada commit, PR ou comentário de Issue.
-
-Distribuição de responsabilidade documental:
-
-- **README:** estado estável e visão do produto;
-- **`VERSION`:** versão canônica;
-- **`docs/CHECKPOINT_CURRENT.md`:** estado técnico datado;
-- **`docs/ROADMAP_V1.md`:** prioridades macro;
-- **Issues:** execução diária e decisões específicas.
-
-Antes de fechar uma Issue que altere versão, escopo, experiência pública ou arquitetura de dados, verificar se README e checkpoint ainda descrevem corretamente a `main`.
-
-## Governança
-
-Leia antes de alterar:
-
-- `AGENTS.md`
-- `docs/GOVERNANCE.md`
-- `docs/DELIVERY_GOVERNANCE.md`
-- `docs/PRODUCT_NORTH_STAR.md`
-- `docs/TOPIC_EVIDENCE.md`
-- `docs/CHECKPOINT_CURRENT.md`
-- `docs/FILTERS.md`
-- `docs/DATA_MODEL.md`
-- `docs/SITE_MAP.md`
-- `docs/RUNTIME_PROOF.md`
-- `METODOLOGIA.md`
-- `AUDITORIA.md`
-
+Este README apresenta o produto estável. A fila de execução permanece nas issues e PRs; contagens e estados transitórios não são duplicados aqui.
 
 ## Licenciamento
 
