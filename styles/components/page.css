@@ -45,13 +45,21 @@
   font-size: 0.68rem;
 }
 
-/* Antes era azul forte, chamando mais atenção que o resto da linha de
-   proveniência — feedback direto da mantenedora ("por que tá azul?").
-   Continua sendo link (sublinhado, nunca só cor), só não compete mais
-   visualmente. */
+/* Antes era azul forte com sublinhado permanente — feedback direto da
+   mantenedora ("por que tá azul?" / "tira o sublinhado"). Sem cor nem
+   sublinhado em repouso, o peso da fonte (já herdado, 700) é o único
+   sinal visual constante; o sublinhado aparece em foco/hover (mesmo
+   padrão do rodapé, .qv-fat-footer a), pra continuar identificável como
+   link sem "só cor" (AGENTS.md §6) no momento em que importa: ao
+   interagir. */
 .qv-page-snapshot a {
   color: inherit;
   font-weight: 700;
+  text-decoration: none;
+}
+
+.qv-page-snapshot a:hover,
+.qv-page-snapshot a:focus-visible {
   text-decoration: underline;
   text-underline-offset: 2px;
 }
