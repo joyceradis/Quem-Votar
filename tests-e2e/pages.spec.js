@@ -11,6 +11,9 @@ const federais = JSON.parse(
 );
 const doisIds = federais.slice(0, 2).map((c) => c.tse_id);
 
+const governadorPath = path.join(__dirname, "..", "data", "generated", "candidates-governador.json");
+const governadores = fs.existsSync(governadorPath) ? JSON.parse(fs.readFileSync(governadorPath, "utf8")) : [];
+
 const TODAS = [
   ["index.html", "home"],
   ["candidatos.html", "candidates"],
@@ -76,6 +79,26 @@ test.describe("Comparar", () => {
   test("ids inválidos são descartados sem quebrar a página", async ({ page }) => {
     await page.goto("comparar.html?ids=000,111,222");
     await expect(page.locator(".compare-empty")).toBeVisible();
+  });
+
+  // #193: candidatura sem fonte para bens/redes/histórico (enrichment_gaps)
+  // não pode aparecer como "nenhum"/"zero" — isso seria ausência virando
+  // zero, proibido pelo AGENTS.md §2/§5. Usa Governador porque, neste
+  // ciclo, as rotas TSE de enriquecimento retornaram 403 e nenhum bootstrap
+  // cobre esse cargo ainda: é o caso real, não um mock.
+  test("candidatura sem fonte de enriquecimento mostra 'não disponível', nunca zero", async ({ page }) => {
+    const comGap = governadores.filter((c) => (c.enrichment_gaps || []).length >= 3);
+    if (comGap.length < 2) test.skip();
+
+    const ids = comGap.slice(0, 2).map((c) => c.tse_id);
+    await page.goto(`comparar.html?ids=${ids.join(",")}`);
+    await expect(page.locator(".comparison-grid")).toBeVisible();
+
+    const grid = page.locator(".comparison-grid");
+    await expect(grid).toContainText("Ainda não disponível na fonte atual");
+    await expect(grid).not.toContainText("Nenhum bem declarado");
+    await expect(grid).not.toContainText("Nenhuma rede social informada");
+    await expect(grid).not.toContainText("Nenhuma eleição anterior documentada");
   });
 });
 

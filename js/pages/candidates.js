@@ -4,7 +4,7 @@
 // de comportamento: o sync de URL usa core/url-state.js (antes reimplementado
 // aqui) e o cartão virou função própria.
 import { $, esc, norm, params } from "../core/dom.js";
-import { loadCore, applyGlobalMeta } from "../core/data.js";
+import { loadCore, applyGlobalMeta, OFFICES, officeLabel } from "../core/data.js";
 import { formatSnapshot } from "../core/format.js";
 import { updateSearchParams } from "../core/url-state.js";
 import { setupNavigation, setupTextSize } from "../core/a11y.js";
@@ -78,7 +78,7 @@ function candidateCard(candidate, kind, selectedIds) {
         <div class="qv-card-photo">${photoMarkup(candidate)}</div>
       </a>
       <div class="qv-card-body">
-        <p class="qv-card-kicker">${kind === "federal" ? "DEPUTADO FEDERAL" : "DEPUTADO ESTADUAL"}</p>
+        <p class="qv-card-kicker">${esc(officeLabel(kind).toUpperCase())}</p>
         <h3><a href="${profileUrl}">${esc(name)}</a></h3>
         <p class="qv-card-electoral">${esc(candidate.party || "Partido não informado")} · nº ${esc(candidate.number || "—")}</p>
         <p class="qv-card-now">${esc(currentActivity(candidate, kind))}</p>
@@ -151,19 +151,25 @@ function updateCompareTray() {
 }
 
 async function initCandidates() {
-  const [{ federal, estadual, meta }, topics] = await Promise.all([loadCore(), loadTopics()]);
+  const [{ federal, estadual, governador, senador, meta }, topics] = await Promise.all([
+    loadCore(),
+    loadTopics(),
+  ]);
   setTopics(topics);
   applyGlobalMeta(meta);
 
-  const datasets = { federal, estadual };
+  const datasets = { federal, estadual, governador, senador };
+  const validKinds = OFFICES.map((office) => office.kind);
   const url = params();
-  let kind = url.get("cargo") === "estadual" ? "estadual" : "federal";
+  let kind = validKinds.includes(url.get("cargo")) ? url.get("cargo") : "federal";
   let page = Math.max(1, Number(url.get("page")) || 1);
 
   $("searchInput").value = url.get("q") || "";
   $("institutionalFilter").value = url.get("institucional") === "1" ? "1" : "";
-  $("federalCount").textContent = federal.length;
-  $("estadualCount").textContent = estadual.length;
+  OFFICES.forEach(({ kind: officeKind }) => {
+    const mount = $(`${officeKind}Count`);
+    if (mount) mount.textContent = datasets[officeKind].length;
+  });
   $("listUpdate").textContent = `Atualizado em ${formatSnapshot(meta?.collected_at)}`;
 
   // O valor vindo da URL vale só na primeira montagem. Depois disso quem
