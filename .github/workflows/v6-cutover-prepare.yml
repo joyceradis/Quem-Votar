@@ -6,7 +6,7 @@ on:
       - main
   push:
     branches:
-      - release/v6-now-2026-09-26
+      - release/v6-now-final
     paths:
       - ".github/workflows/v6-cutover-prepare.yml"
 
@@ -26,7 +26,7 @@ jobs:
       - name: Checkout release branch
         uses: actions/checkout@v4
         with:
-          ref: release/v6-now-2026-09-26
+          ref: release/v6-now-final
           fetch-depth: 0
 
       - name: Node
@@ -400,4 +400,4 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -m "release: cut over V6 to public surface"
-          git push origin HEAD:release/v6-now-2026-09-26
+          git push origin HEAD:release/v6-now-final
