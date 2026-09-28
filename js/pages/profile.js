@@ -284,6 +284,46 @@ function renderHistory(historyItems, actionEvidence, candidate) {
   return `${electoral}${actions}${institutionalTrack}${institutionalEvidence}`;
 }
 
+// Vice (Governador) e suplentes (Senador) — #186 item 4. É fato do próprio
+// cadastro do titular (quem vota nele elege a chapa inteira), não avaliação:
+// entra como linha a mais em "Dados eleitorais do TSE", nunca em comparação
+// ou destaque próprio. Ambiguidade na fonte (AGENTS.md §3) é dita como tal —
+// as duas versões lado a lado, sem escolher uma.
+const RUNNING_MATE_LABELS = {
+  "VICE-GOVERNADOR": "Vice",
+  "1º SUPLENTE": "1º suplente",
+  "2º SUPLENTE": "2º suplente",
+};
+
+function runningMateFacts(candidate) {
+  const slots = candidate.running_mate
+    ? [candidate.running_mate]
+    : candidate.substitutes
+      ? Object.values(candidate.substitutes)
+      : [];
+
+  return slots.map((slot) => {
+    const label = RUNNING_MATE_LABELS[slot?.role] || slot?.role || "Chapa";
+    if (slot?.status === "linked") {
+      return {
+        label,
+        value: [slot.ballot_name, slot.party].filter(Boolean).join(" · ") || slot.full_name,
+      };
+    }
+    if (slot?.status === "ambiguous_source") {
+      const names = (slot.candidates || [])
+        .map((c) => [c.ballot_name, c.party].filter(Boolean).join(" · "))
+        .filter(Boolean);
+      return {
+        label,
+        value: "Mais de um registro do TSE para este número de urna nesta função",
+        note: `Nenhum foi escolhido — ambos ficam documentados${names.length ? `: ${names.join("; ")}` : ""}.`,
+      };
+    }
+    return { label, value: NAO_DISPONIVEL };
+  });
+}
+
 // 05 — DADOS ELEITORAIS: cadastro, bens declarados e redes informadas.
 function renderElectoralData(candidate, assets) {
   const organization =
@@ -311,6 +351,7 @@ function renderElectoralData(candidate, assets) {
     },
     { label: "Situação da candidatura", value: registrationStatusLabel(candidate.registration_status) },
     { label: "Situação de totalização", value: candidate.totalization_status },
+    ...runningMateFacts(candidate),
   ].filter((item) => item.value);
 
   const factsBlock = facts.length

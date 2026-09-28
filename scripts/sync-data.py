@@ -96,6 +96,39 @@ OFFICE_REGISTRY = {
     },
 }
 
+# Vice (Governador) e suplentes (Senador) — #186 item 4. A legislação
+# eleitoral não permite votar separadamente neles: quem vota no titular
+# elege a chapa inteira. Por isso não entram como cargo navegável à parte
+# (não aparecem no filtro de cargo, busca ou comparação próprios); ficam
+# anexados ao registro do titular como fato sobre a própria candidatura.
+# Vínculo por NR_CANDIDATO (número de urna) — o mesmo mecanismo do voto
+# real — nunca por nome ou ordem de listagem. Fonte é o mesmo espelho TSE
+# já usado no OFFICE_REGISTRY, apenas outros arquivos do mesmo diretório.
+RUNNING_MATE_REGISTRY = {
+    "governador": [
+        {
+            "slot": "vice",
+            "field": "running_mate",
+            "mirror_file": "vice-governador.json",
+            "tse_label": "VICE-GOVERNADOR",
+        },
+    ],
+    "senador": [
+        {
+            "slot": "primeiro_suplente",
+            "field": "substitutes",
+            "mirror_file": "1-suplente.json",
+            "tse_label": "1º SUPLENTE",
+        },
+        {
+            "slot": "segundo_suplente",
+            "field": "substitutes",
+            "mirror_file": "2-suplente.json",
+            "tse_label": "2º SUPLENTE",
+        },
+    ],
+}
+
 
 def request_json(url: str, timeout: int = 20):
     req = urllib.request.Request(
@@ -978,6 +1011,97 @@ def load_mirror():
     return result, mirror_meta
 
 
+def normalize_running_mate(row, tse_label, mirror_info):
+    return {
+        "tse_id": clean(row.get("SQ_CANDIDATO")),
+        "ballot_name": clean(row.get("NM_URNA_CANDIDATO")),
+        "full_name": clean(row.get("NM_CANDIDATO")),
+        "social_name": clean(row.get("NM_SOCIAL_CANDIDATO")),
+        "party": clean(row.get("SG_PARTIDO")),
+        "party_name": clean(row.get("NM_PARTIDO")),
+        "role": tse_label,
+        "registration_status": normalize_registration_status(
+            row.get("DS_SITUACAO_CANDIDATURA")
+        ),
+        "source": {
+            "institution": "TSE",
+            "type": "fonte primária",
+            "dataset": "Candidatos - 2026",
+            "url": TSE_DATASET,
+            "official_portal": DIVULGACAND,
+            "transport": {
+                "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+                "mirror_repository": mirror_info.get("repository"),
+                "mirror_path": mirror_info.get("path"),
+                "mirror_blob_sha": mirror_info.get("blob_sha"),
+                "mirror_url": mirror_info.get("html_url"),
+            },
+        },
+    }
+
+
+def _resolve_running_mate_matches(matches, tse_label):
+    # Ambiguidade na fonte nunca vira escolha editorial (AGENTS.md §3): mais
+    # de um registro TSE para o mesmo número de urna fica documentado como
+    # tal, com os dois registros preservados, nunca resolvido por inferência.
+    if not matches:
+        return {"status": "not_available", "role": tse_label}
+    if len(matches) > 1:
+        return {
+            "status": "ambiguous_source",
+            "role": tse_label,
+            "note": (
+                "O espelho TSE tem mais de um registro para este número de "
+                "urna nesta função; nenhum foi escolhido por inferência."
+            ),
+            "candidates": matches,
+        }
+    return {"status": "linked", **matches[0]}
+
+
+def attach_running_mates(candidates):
+    """Anexa vice (Governador) e suplentes (Senador) ao titular — #186 item
+    4. Não são cargos navegáveis à parte: quem vota no titular elege a chapa
+    inteira, então o vínculo vive como campo do próprio registro titular,
+    nunca como card ou comparação própria. Liga por NR_CANDIDATO exato —
+    mesmo mecanismo do voto real.
+    """
+    mirror_meta = {}
+    for kind, slots in RUNNING_MATE_REGISTRY.items():
+        roster = candidates.get(kind, [])
+        if not roster:
+            continue
+        for slot_cfg in slots:
+            tse_label = slot_cfg["tse_label"]
+            rows, info = mirror_snapshot(slot_cfg["mirror_file"])
+            mirror_meta[slot_cfg["slot"]] = info
+            grouped = defaultdict(list)
+            for row in rows:
+                if clean(row.get("SG_UF")) != UF or clean(row.get("DS_CARGO")) != tse_label:
+                    continue
+                ballot = clean(row.get("NR_CANDIDATO"))
+                if ballot is None:
+                    continue
+                grouped[ballot].append(normalize_running_mate(row, tse_label, info))
+            if not grouped:
+                raise RuntimeError(f"Nenhum registro {tse_label} no espelho")
+
+            field = slot_cfg["field"]
+            multi_slot = len(slots) > 1
+            for candidate in roster:
+                ballot = (
+                    clean(str(candidate.get("number")))
+                    if candidate.get("number") is not None
+                    else None
+                )
+                resolved = _resolve_running_mate_matches(grouped.get(ballot, []), tse_label)
+                if multi_slot:
+                    candidate.setdefault(field, {})[slot_cfg["slot"]] = resolved
+                else:
+                    candidate[field] = resolved
+    return mirror_meta
+
+
 def read_existing_json(name, default):
     path = OUT / name
     if not path.exists():
@@ -1349,6 +1473,7 @@ def write_json(name, value):
 
 def main():
     candidates, mirror_meta = load_mirror()
+    running_mate_meta = attach_running_mates(candidates)
 
     # Todos os cargos configurados no registry; a ordem segue o registry.
     groups = [candidates[kind] for kind in OFFICE_REGISTRY]
@@ -1370,6 +1495,21 @@ def main():
     for kind in OFFICE_REGISTRY:
         candidates[kind].sort(key=key)
 
+    # Contagens de vínculo vice/suplente (#186 item 4) — status vive dentro do
+    # próprio registro do titular, então é preciso varrer os dois campos
+    # (running_mate é objeto único; substitutes é dict de slots) em vez de
+    # somar um registry só.
+    running_mate_status_counts = {"linked": 0, "ambiguous_source": 0, "not_available": 0}
+    for governador in candidates.get("governador", []):
+        running_mate = governador.get("running_mate")
+        if running_mate:
+            status = running_mate["status"]
+            running_mate_status_counts[status] = running_mate_status_counts.get(status, 0) + 1
+    for senador in candidates.get("senador", []):
+        for substitute in senador.get("substitutes", {}).values():
+            status = substitute["status"]
+            running_mate_status_counts[status] = running_mate_status_counts.get(status, 0) + 1
+
     collected = datetime.now(timezone.utc).isoformat()
     for kind, cfg in OFFICE_REGISTRY.items():
         write_json(cfg["output"], candidates[kind])
@@ -1389,6 +1529,9 @@ def main():
                 "ales_2025_evidence_linked": ales_links,
                 "topic_evidence": topic_evidence_count,
                 **tse_enrichment_counts,
+                "running_mates_linked": running_mate_status_counts["linked"],
+                "running_mates_ambiguous_source": running_mate_status_counts["ambiguous_source"],
+                "running_mates_not_available": running_mate_status_counts["not_available"],
             },
             "offices": {
                 kind: {
@@ -1409,6 +1552,7 @@ def main():
                 "primary_tse_photo_zip_es": TSE_PHOTO_ZIP,
                 "photo_transport_mirror": PHOTO_MIRROR_BASE,
                 "operational_mirror": mirror_meta,
+                "operational_mirror_running_mates": running_mate_meta,
                 "camara_federal": chamber_url,
                 "ales": ALES,
             },
@@ -1441,6 +1585,16 @@ def main():
                     "Não inferido automaticamente; a composição da ALES requer validação "
                     "institucional datada."
                 ),
+                "running_mates": (
+                    "Vice (Governador) e suplentes (Senador) são anexados ao registro do "
+                    "titular por correspondência exata de número de urna (NR_CANDIDATO) — "
+                    "nunca por nome ou ordem de listagem — porque a legislação eleitoral não "
+                    "permite votar neles separadamente: o voto no titular elege a chapa "
+                    "inteira. Quando o espelho TSE não traz registro correspondente, o campo "
+                    "fica 'not_available'; quando traz mais de um registro conflitante para o "
+                    "mesmo número de urna, ambos ficam preservados como 'ambiguous_source', "
+                    "sem escolha por inferência (AGENTS.md §3)."
+                ),
             },
             "normalizer_version": "4.0.0",
         },
@@ -1454,7 +1608,10 @@ def main():
         f"{topic_evidence_count} evidências temáticas curadas; "
         f"{tse_enrichment_counts['asset_records']} bens; "
         f"{tse_enrichment_counts['social_links']} redes declaradas; "
-        f"{tse_enrichment_counts['previous_election_records']} registros históricos TSE."
+        f"{tse_enrichment_counts['previous_election_records']} registros históricos TSE; "
+        f"{running_mate_status_counts['linked']} vices/suplentes vinculados; "
+        f"{running_mate_status_counts['ambiguous_source']} com fonte ambígua; "
+        f"{running_mate_status_counts['not_available']} indisponíveis."
     )
 
 

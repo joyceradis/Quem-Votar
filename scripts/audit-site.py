@@ -304,6 +304,14 @@ def main() -> None:
     assert all(ids), "registro sem SQ_CANDIDATO"
     assert len(ids) == len(set(ids)), "SQ_CANDIDATO duplicado"
 
+    # Vice (Governador) e suplentes (Senador) não são cargo à parte — quem
+    # vota no titular elege a chapa inteira (#186 item 4) — então não devem
+    # aparecer em deputado federal/estadual, onde não existe essa relação.
+    assert all("running_mate" not in x and "substitutes" not in x for x in rows), (
+        "vice/suplente não deve aparecer em deputado federal/estadual"
+    )
+    RUNNING_MATE_STATUSES = {"linked", "ambiguous_source", "not_available"}
+
     # Cargos majoritários (#161): validados com o mesmo rigor quando seus
     # snapshots existem, sem excluí-los da validação obrigatória e sem quebrar
     # o contrato dos deputados (nem os stubs sociais, que hoje cobrem só eles).
@@ -323,6 +331,26 @@ def main() -> None:
         gids = [str(x.get("tse_id") or "") for x in group]
         assert all(gids), f"{kind}: registro sem SQ_CANDIDATO"
         all_ids.extend(gids)
+
+        # Anexo de vice/suplente: tolerante enquanto o CI não gerou o campo
+        # (mesmo espírito do "if not path.exists(): continue" acima); quando
+        # presente, vocabulário de status e transparência da ambiguidade da
+        # fonte (AGENTS.md §3 — "ambiguidade não gera vínculo") são
+        # obrigatórios, nunca escolhidos por inferência.
+        field = "running_mate" if kind == "governador" else "substitutes"
+        for x in group:
+            value = x.get(field)
+            if value is None:
+                continue
+            slots = [value] if kind == "governador" else list(value.values())
+            for slot in slots:
+                assert slot.get("status") in RUNNING_MATE_STATUSES, f"{kind}.{field}: status inválido"
+                if slot["status"] == "linked":
+                    assert slot.get("tse_id") and slot.get("role"), f"{kind}.{field}: linked sem identificação"
+                elif slot["status"] == "ambiguous_source":
+                    assert len(slot.get("candidates") or []) >= 2, (
+                        f"{kind}.{field}: ambiguous_source deve preservar os registros conflitantes"
+                    )
     assert len(all_ids) == len(set(all_ids)), "SQ_CANDIDATO duplicado entre cargos"
 
     social_root = ROOT / "social"
