@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "updated_at": "2026-09-21",
+  "updated_at": "2026-09-28",
   "semantics": "Evidências temáticas curadas por SQ_CANDIDATO. A ausência de entrada não significa ausência de proposta ou posição.",
   "entries": [
     {
@@ -308,6 +308,34 @@
       "source_publisher": "Câmara dos Deputados",
       "published_at": "2026-07-08",
       "captured_at": "2026-09-21T14:11:44+00:00",
+      "scope": "federal",
+      "verification_status": "verified"
+    },
+    {
+      "candidate_id": "80002541009",
+      "topic_id": "seguranca",
+      "evidence_type": "atuação",
+      "statement": "Apresentou, em 20/05/2026, o PL 2522/2026, que propõe incluir a doação voluntária de sangue como modalidade de remição de pena.",
+      "quote_or_summary": "",
+      "source_url": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2626454",
+      "source_title": "PL 2522/2026 — Altera a Lei nº 7.210, de 11 de julho de 1984 (Lei de Execução Penal), para incluir a doação voluntária de sangue como modalidade de remição de pena.",
+      "source_publisher": "Câmara dos Deputados",
+      "published_at": "2026-05-20",
+      "captured_at": "2026-09-28T01:44:01+00:00",
+      "scope": "federal",
+      "verification_status": "verified"
+    },
+    {
+      "candidate_id": "80002549700",
+      "topic_id": "seguranca",
+      "evidence_type": "atuação",
+      "statement": "Consta entre os autores da PEC 8/2026, apresentada em 11/05/2026, que propõe permitir excepcionalmente a redução da maioridade penal nos casos definidos no texto, incluindo crimes hediondos e crueldade extrema contra pessoas e animais.",
+      "quote_or_summary": "",
+      "source_url": "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2623400",
+      "source_title": "PEC 8/2026 — Altera o art. 228 da Constituição Federal para admitir, em caráter excepcional, a redução da maioridade penal em casos de crimes hediondos e de crueldade extrema contra pessoas e animais.",
+      "source_publisher": "Câmara dos Deputados",
+      "published_at": "2026-05-11",
+      "captured_at": "2026-09-28T01:44:01+00:00",
       "scope": "federal",
       "verification_status": "verified"
     }
