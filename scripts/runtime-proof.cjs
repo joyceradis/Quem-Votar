@@ -303,8 +303,18 @@ async function loadProfileFixtures(page) {
       !candidate.current_mandate &&
       !(candidate.institutional_evidence || []).length
     );
+    // "Outros" (código TSE 956) é genérico: não descreve nada, então precisa
+    // de fixture própria para provar que HOJE cai no vazio honesto em vez de
+    // exibir um rótulo sem informação (ela continua íntegra em Dados eleitorais).
+    const genericOccupationOnly = all.find(candidate =>
+      candidate.occupation &&
+      candidate.occupation.trim().toUpperCase() === "OUTROS" &&
+      !candidate.current_mandate &&
+      !(candidate.institutional_evidence || []).length
+    );
     const currentMandate = all.find(candidate => candidate.current_mandate && candidate.occupation);
     if (!occupationOnly) throw new Error("fixture:OCCUPATION_WITHOUT_CURRENT_MANDATE_NOT_FOUND");
+    if (!genericOccupationOnly) throw new Error("fixture:GENERIC_OCCUPATION_WITHOUT_CURRENT_MANDATE_NOT_FOUND");
     if (!currentMandate) throw new Error("fixture:CURRENT_MANDATE_NOT_FOUND");
     const pick = candidate => ({
       id: String(candidate.tse_id),
@@ -314,7 +324,11 @@ async function loadProfileFixtures(page) {
         ? candidate.kind === "federal" ? "Deputado federal em exercício" : "Mandato atual confirmado"
         : null
     });
-    return { occupationOnly: pick(occupationOnly), currentMandate: pick(currentMandate) };
+    return {
+      occupationOnly: pick(occupationOnly),
+      genericOccupationOnly: pick(genericOccupationOnly),
+      currentMandate: pick(currentMandate)
+    };
   });
 }
 
@@ -514,13 +528,17 @@ async function runUi(browser) {
     suite.profile_desktop_screenshot = await screenshot(page, "profile-desktop-1366x900.png");
   });
 
-  await runScenario(browser, suite, "profile-occupation-is-not-current-activity", async ({ page }) => {
+  await runScenario(browser, suite, "profile-occupation-is-self-declared-fact-without-mandate", async ({ page }) => {
     const { occupationOnly } = await loadProfileFixtures(page);
     await openProfile(page, occupationOnly);
     const electoral = page.locator("#dados-eleitorais");
     assert.match(await electoral.innerText(), /Ocupação declarada/i);
     assert.ok((await electoral.innerText()).includes(occupationOnly.occupation));
-    assert.ok(!(await page.locator("#faz-hoje").innerText()).includes(occupationOnly.occupation));
+    const today = page.locator("#faz-hoje");
+    const todayText = await today.innerText();
+    assert.ok(todayText.includes(occupationOnly.occupation), "profile:OCCUPATION_MISSING_FROM_TODAY");
+    assert.match(todayText, /Autodeclarado no registro de candidatura ao TSE/i, "profile:OCCUPATION_MISSING_SELF_DECLARED_CAVEAT");
+    assert.ok(!todayText.includes("Sem atuação pública atual confirmada nesta base"), "profile:TODAY_STILL_SHOWS_EMPTY_STATE");
   });
 
   await runScenario(browser, suite, "profile-current-mandate-is-current-activity", async ({ page }) => {
@@ -529,6 +547,18 @@ async function runUi(browser) {
     const current = await page.locator("#faz-hoje").innerText();
     assert.ok(current.includes(currentMandate.expectedActivity));
     assert.ok(!current.includes(currentMandate.occupation));
+  });
+
+  await runScenario(browser, suite, "profile-generic-occupation-is-not-shown-as-today-fact", async ({ page }) => {
+    const { genericOccupationOnly } = await loadProfileFixtures(page);
+    await openProfile(page, genericOccupationOnly);
+    const electoral = page.locator("#dados-eleitorais");
+    const electoralText = await electoral.innerText();
+    assert.match(electoralText, /Ocupação declarada/i);
+    assert.ok(electoralText.includes(genericOccupationOnly.occupation), "profile:GENERIC_OCCUPATION_MISSING_FROM_ELECTORAL_DATA");
+    const todayText = await page.locator("#faz-hoje").innerText();
+    assert.ok(!todayText.includes(genericOccupationOnly.occupation), "profile:GENERIC_OCCUPATION_SHOWN_AS_TODAY_FACT");
+    assert.match(todayText, /Sem atuação pública atual confirmada nesta base/i, "profile:GENERIC_OCCUPATION_DOES_NOT_FALL_BACK_TO_EMPTY_STATE");
   });
 
   await runScenario(browser, suite, "profile-web-share", async ({ context, page }) => {

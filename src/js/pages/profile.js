@@ -9,7 +9,10 @@
 // Regras editoriais que este arquivo não pode afrouxar (AGENTS.md §2/§5):
 // - PROPÕE aceita só evidence_type proposta|declaração; atuação documentada
 //   vai para HISTÓRICO, nunca para PROPÕE ou IMPACTO;
-// - ocupação declarada ao TSE é metadado, nunca "o que faz hoje";
+// - ocupação declarada ao TSE nunca vira atuação institucional verificada
+//   (mandato em exercício continua o único sinal de "faz hoje" confirmado);
+//   sem mandato, ela aparece em HOJE como fato autodeclarado e fonteado,
+//   nunca como "não há dados" quando o dado existe;
 // - ausência de evidência é dita como ausência de registro, nunca como
 //   ausência de proposta ou posição;
 // - IMPACTO descreve áreas relacionadas ao tema, sem afirmar benefício,
@@ -92,13 +95,34 @@ function renderHero(candidate, kind, name, socialName, currentActivityText) {
     </section>`;
 }
 
-// 01 — HOJE. Só mandato em exercício conta como "faz hoje"; ocupação
-// declarada ao TSE não entra aqui (ela aparece em Dados eleitorais).
-function renderToday(institutional, currentActivityText) {
+// "Outros" é o código genérico do TSE para ocupação (nº 956): não descreve
+// nada, então exibi-lo como fato de HOJE seria pior que a ausência honesta.
+const GENERIC_OCCUPATIONS = new Set(["OUTROS", "OUTRO"]);
+
+function isUsableOccupation(occupation) {
+  return Boolean(occupation) && !GENERIC_OCCUPATIONS.has(norm(occupation));
+}
+
+// 01 — HOJE. Mandato em exercício é o único sinal de atuação institucional
+// verificada e, quando existe, é o que aparece aqui. Sem mandato confirmado,
+// mostramos a ocupação que a própria candidatura declarou ao TSE — como fato
+// autodeclarado e fonteado, não como atuação verificada — em vez de dizer
+// "sem dados" quando o dado existe (AGENTS.md §4: fonte, tipo e ausência
+// tratados de forma explícita). Ocupações genéricas (ex.: "Outros") não
+// contam como dado utilizável, pois não descrevem o que a pessoa faz.
+function renderToday(institutional, currentActivityText, occupation, occupationSourceUrl) {
   if (!institutional) {
-    return `<div class="plain-empty">
-      <strong>Sem atuação pública atual confirmada nesta base.</strong>
-      <p>Isso não significa ausência de atuação.</p>
+    if (!isUsableOccupation(occupation)) {
+      return `<div class="plain-empty">
+        <strong>Sem atuação pública atual confirmada nesta base.</strong>
+        <p>Isso não significa ausência de atuação.</p>
+      </div>`;
+    }
+    return `<div class="plain-fact">
+      <span>Hoje</span>
+      <strong>${esc(occupation)}</strong>
+      <small>Autodeclarado no registro de candidatura ao TSE; sem confirmação de atuação institucional nesta base.</small>
+      ${occupationSourceUrl ? `<a target="_blank" rel="noopener" href="${esc(occupationSourceUrl)}">Abrir fonte</a>` : ""}
     </div>`;
   }
   const detail = [institutional.party, institutional.status].filter(Boolean).join(" · ");
@@ -545,7 +569,7 @@ async function initProfile() {
 
     <section class="answer-section" id="faz-hoje">
       <p class="section-number">01</p>
-      <div><h2>O que essa pessoa faz hoje?</h2>${renderToday(institutional, currentActivityText)}</div>
+      <div><h2>O que essa pessoa faz hoje?</h2>${renderToday(institutional, currentActivityText, candidate.occupation, candidate.source?.official_portal)}</div>
     </section>
 
     <section class="answer-section" id="vai-fazer">

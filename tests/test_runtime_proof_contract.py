@@ -68,8 +68,9 @@ class RuntimeProofContractTests(unittest.TestCase):
         self.assertIn("cross-tab-storage-sync", script)
         self.assertIn("mobile-390x844", script)
         self.assertIn("profile-three-questions-anchors-keyboard", script)
-        self.assertIn("profile-occupation-is-not-current-activity", script)
+        self.assertIn("profile-occupation-is-self-declared-fact-without-mandate", script)
         self.assertIn("profile-current-mandate-is-current-activity", script)
+        self.assertIn("profile-generic-occupation-is-not-shown-as-today-fact", script)
         self.assertIn("profile-web-share", script)
         self.assertIn("profile-clipboard-fallback", script)
         self.assertIn("profile-mobile-390x844", script)
@@ -87,7 +88,7 @@ class RuntimeProofContractTests(unittest.TestCase):
 
         profile = script[
             script.index('"profile-three-questions-anchors-keyboard"'):
-            script.index('"profile-occupation-is-not-current-activity"')
+            script.index('"profile-occupation-is-self-declared-fact-without-mandate"')
         ]
         self.assertIn("waitForViewportIntersection(page", profile)
         self.assertIn("profile:ANCHOR_NOT_VISIBLE_", profile)
@@ -100,15 +101,38 @@ class RuntimeProofContractTests(unittest.TestCase):
         self.assertIn("profile:MOBILE_SHARE_NOT_VISIBLE", mobile)
         self.assertNotIn("scrollIntoView", mobile)
 
-    def test_occupation_label_check_is_case_insensitive_but_semantic_exclusion_remains(self):
+    def test_occupation_is_shown_in_today_as_self_declared_fact_without_mandate(self):
+        # Ocupação sem mandato em exercício aparece em #faz-hoje como fato
+        # autodeclarado e fonteado (nunca como atuação institucional
+        # verificada) em vez de "sem dados", e continua também aparecendo em
+        # Dados eleitorais — as duas seções não são mutuamente exclusivas.
         script = (ROOT / "scripts/runtime-proof.cjs").read_text(encoding="utf-8")
         scenario = script[
-            script.index('"profile-occupation-is-not-current-activity"'):
+            script.index('"profile-occupation-is-self-declared-fact-without-mandate"'):
             script.index('"profile-current-mandate-is-current-activity"')
         ]
         self.assertIn("/Ocupação declarada/i", scenario)
-        self.assertIn('page.locator("#faz-hoje").innerText()', scenario)
+        self.assertIn('page.locator("#faz-hoje")', scenario)
         self.assertIn("occupationOnly.occupation", scenario)
+        self.assertIn("Autodeclarado no registro de candidatura ao TSE", scenario)
+        self.assertIn("Sem atuação pública atual confirmada nesta base", scenario)
+
+    def test_generic_occupation_falls_back_to_empty_state_but_stays_in_electoral_data(self):
+        # "Outros" (código TSE 956) não descreve nada: precisa continuar em
+        # Dados eleitorais sem filtro (comportamento congelado e pré-existente),
+        # mas não pode ser exibida em #faz-hoje como se fosse um fato utilizável —
+        # o vazio honesto é a resposta certa, não "sem dados" nem "Outros".
+        script = (ROOT / "scripts/runtime-proof.cjs").read_text(encoding="utf-8")
+        scenario = script[
+            script.index('"profile-generic-occupation-is-not-shown-as-today-fact"'):
+            script.index('"profile-web-share"')
+        ]
+        self.assertIn("/Ocupação declarada/i", scenario)
+        self.assertIn("genericOccupationOnly.occupation", scenario)
+        self.assertIn("profile:GENERIC_OCCUPATION_MISSING_FROM_ELECTORAL_DATA", scenario)
+        self.assertIn("profile:GENERIC_OCCUPATION_SHOWN_AS_TODAY_FACT", scenario)
+        self.assertIn("Sem atuação pública atual confirmada nesta base", scenario)
+        self.assertIn('!todayText.includes(genericOccupationOnly.occupation)', scenario)
 
     def test_changed_surface_has_no_remote_runtime_or_environment_lane(self):
         paths = [
