@@ -49,6 +49,58 @@
         "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/senador.json"
       }
     },
+    "substitutes": {
+      "primeiro_suplente": {
+        "status": "linked",
+        "tse_id": "80002542400",
+        "ballot_name": "BRUNO LOURENÇO",
+        "full_name": "BRUNO LOURENCO DE SOUZA",
+        "social_name": null,
+        "party": "PRD",
+        "party_name": "PARTIDO RENOVACAO DEMOCRATICA",
+        "role": "1º SUPLENTE",
+        "registration_status": "not_available",
+        "source": {
+          "institution": "TSE",
+          "type": "fonte primária",
+          "dataset": "Candidatos - 2026",
+          "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+          "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+          "transport": {
+            "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+            "mirror_repository": "herminiotorres/dossie-cidadao",
+            "mirror_path": "docs/data/tse/candidatos/ES/1-suplente.json",
+            "mirror_blob_sha": "40992bfe015002733581568b2521a11aca575de3",
+            "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/1-suplente.json"
+          }
+        }
+      },
+      "segundo_suplente": {
+        "status": "linked",
+        "tse_id": "80002542402",
+        "ballot_name": "PRISCILA RAMOS",
+        "full_name": "PRISCILA DE SOUZA RAMOS",
+        "social_name": null,
+        "party": "SOLIDARIEDADE",
+        "party_name": "SOLIDARIEDADE",
+        "role": "2º SUPLENTE",
+        "registration_status": "not_available",
+        "source": {
+          "institution": "TSE",
+          "type": "fonte primária",
+          "dataset": "Candidatos - 2026",
+          "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+          "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+          "transport": {
+            "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+            "mirror_repository": "herminiotorres/dossie-cidadao",
+            "mirror_path": "docs/data/tse/candidatos/ES/2-suplente.json",
+            "mirror_blob_sha": "0a730ea826ddc937e086f24435eac2ed0cffd9c0",
+            "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/2-suplente.json"
+          }
+        }
+      }
+    },
     "enrichment_gaps": [
       "assets",
       "social_links",
@@ -121,6 +173,58 @@
         "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/senador.json"
       }
     },
+    "substitutes": {
+      "primeiro_suplente": {
+        "status": "linked",
+        "tse_id": "80002553268",
+        "ballot_name": "DANT NICCHIO",
+        "full_name": "DANT NICCHIO SATHLER",
+        "social_name": null,
+        "party": "PL",
+        "party_name": "PARTIDO LIBERAL",
+        "role": "1º SUPLENTE",
+        "registration_status": "not_available",
+        "source": {
+          "institution": "TSE",
+          "type": "fonte primária",
+          "dataset": "Candidatos - 2026",
+          "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+          "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+          "transport": {
+            "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+            "mirror_repository": "herminiotorres/dossie-cidadao",
+            "mirror_path": "docs/data/tse/candidatos/ES/1-suplente.json",
+            "mirror_blob_sha": "40992bfe015002733581568b2521a11aca575de3",
+            "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/1-suplente.json"
+          }
+        }
+      },
+      "segundo_suplente": {
+        "status": "linked",
+        "tse_id": "80002553264",
+        "ballot_name": "LUIZ EMANUEL",
+        "full_name": "LUIZ EMANUEL ZOUAIN DA ROCHA",
+        "social_name": null,
+        "party": "REPUBLICANOS",
+        "party_name": "REPUBLICANOS",
+        "role": "2º SUPLENTE",
+        "registration_status": "not_available",
+        "source": {
+          "institution": "TSE",
+          "type": "fonte primária",
+          "dataset": "Candidatos - 2026",
+          "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+          "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+          "transport": {
+            "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+            "mirror_repository": "herminiotorres/dossie-cidadao",
+            "mirror_path": "docs/data/tse/candidatos/ES/2-suplente.json",
+            "mirror_blob_sha": "0a730ea826ddc937e086f24435eac2ed0cffd9c0",
+            "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/2-suplente.json"
+          }
+        }
+      }
+    },
     "enrichment_gaps": [
       "assets",
       "social_links",
@@ -176,6 +280,58 @@
         "mirror_path": "docs/data/tse/candidatos/ES/senador.json",
         "mirror_blob_sha": "e6b875ee2e04c0c6f0ecbea392dc804fd4406c2b",
         "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/senador.json"
+      }
+    },
+    "substitutes": {
+      "primeiro_suplente": {
+        "status": "linked",
+        "tse_id": "80002550188",
+        "ballot_name": "EVANI GARI",
+        "full_name": "EVANI DOS SANTOS REIS",
+        "social_name": null,
+        "party": "PT",
+        "party_name": "PARTIDO DOS TRABALHADORES",
+        "role": "1º SUPLENTE",
+        "registration_status": "not_available",
+        "source": {
+          "institution": "TSE",
+          "type": "fonte primária",
+          "dataset": "Candidatos - 2026",
+          "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+          "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+          "transport": {
+            "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+            "mirror_repository": "herminiotorres/dossie-cidadao",
+            "mirror_path": "docs/data/tse/candidatos/ES/1-suplente.json",
+            "mirror_blob_sha": "40992bfe015002733581568b2521a11aca575de3",
+            "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/1-suplente.json"
+          }
+        }
+      },
+      "segundo_suplente": {
+        "status": "linked",
+        "tse_id": "80002550189",
+        "ballot_name": "NEIO LÚCIO",
+        "full_name": "NEIO LÚCIO FRAGA PEREIRA",
+        "social_name": null,
+        "party": "PCDOB",
+        "party_name": "PARTIDO COMUNISTA DO BRASIL",
+        "role": "2º SUPLENTE",
+        "registration_status": "not_available",
+        "source": {
+          "institution": "TSE",
+          "type": "fonte primária",
+          "dataset": "Candidatos - 2026",
+          "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+          "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+          "transport": {
+            "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+            "mirror_repository": "herminiotorres/dossie-cidadao",
+            "mirror_path": "docs/data/tse/candidatos/ES/2-suplente.json",
+            "mirror_blob_sha": "0a730ea826ddc937e086f24435eac2ed0cffd9c0",
+            "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/2-suplente.json"
+          }
+        }
       }
     },
     "enrichment_gaps": [
@@ -235,6 +391,58 @@
         "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/senador.json"
       }
     },
+    "substitutes": {
+      "primeiro_suplente": {
+        "status": "linked",
+        "tse_id": "80002530023",
+        "ballot_name": "KÍTIA PERCIANO",
+        "full_name": "KÍTIA COIMBRA PERCIANO",
+        "social_name": null,
+        "party": "NOVO",
+        "party_name": "PARTIDO NOVO",
+        "role": "1º SUPLENTE",
+        "registration_status": "not_available",
+        "source": {
+          "institution": "TSE",
+          "type": "fonte primária",
+          "dataset": "Candidatos - 2026",
+          "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+          "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+          "transport": {
+            "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+            "mirror_repository": "herminiotorres/dossie-cidadao",
+            "mirror_path": "docs/data/tse/candidatos/ES/1-suplente.json",
+            "mirror_blob_sha": "40992bfe015002733581568b2521a11aca575de3",
+            "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/1-suplente.json"
+          }
+        }
+      },
+      "segundo_suplente": {
+        "status": "linked",
+        "tse_id": "80002530024",
+        "ballot_name": "DR. VINÍCIUS FREGONAZZI",
+        "full_name": "VINÍCIUS FREGONAZZI TAVARES",
+        "social_name": null,
+        "party": "NOVO",
+        "party_name": "PARTIDO NOVO",
+        "role": "2º SUPLENTE",
+        "registration_status": "not_available",
+        "source": {
+          "institution": "TSE",
+          "type": "fonte primária",
+          "dataset": "Candidatos - 2026",
+          "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+          "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+          "transport": {
+            "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+            "mirror_repository": "herminiotorres/dossie-cidadao",
+            "mirror_path": "docs/data/tse/candidatos/ES/2-suplente.json",
+            "mirror_blob_sha": "0a730ea826ddc937e086f24435eac2ed0cffd9c0",
+            "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/2-suplente.json"
+          }
+        }
+      }
+    },
     "enrichment_gaps": [
       "assets",
       "social_links",
@@ -290,6 +498,58 @@
         "mirror_path": "docs/data/tse/candidatos/ES/senador.json",
         "mirror_blob_sha": "e6b875ee2e04c0c6f0ecbea392dc804fd4406c2b",
         "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/senador.json"
+      }
+    },
+    "substitutes": {
+      "primeiro_suplente": {
+        "status": "linked",
+        "tse_id": "80002553266",
+        "ballot_name": "CABO CASSOTTO",
+        "full_name": "DIEGO CASSOTTO GOULART",
+        "social_name": null,
+        "party": "PL",
+        "party_name": "PARTIDO LIBERAL",
+        "role": "1º SUPLENTE",
+        "registration_status": "not_available",
+        "source": {
+          "institution": "TSE",
+          "type": "fonte primária",
+          "dataset": "Candidatos - 2026",
+          "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+          "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+          "transport": {
+            "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+            "mirror_repository": "herminiotorres/dossie-cidadao",
+            "mirror_path": "docs/data/tse/candidatos/ES/1-suplente.json",
+            "mirror_blob_sha": "40992bfe015002733581568b2521a11aca575de3",
+            "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/1-suplente.json"
+          }
+        }
+      },
+      "segundo_suplente": {
+        "status": "linked",
+        "tse_id": "80002553267",
+        "ballot_name": "NERLEO CAUS",
+        "full_name": "NERLEO CAUS DE SOUZA",
+        "social_name": null,
+        "party": "PL",
+        "party_name": "PARTIDO LIBERAL",
+        "role": "2º SUPLENTE",
+        "registration_status": "not_available",
+        "source": {
+          "institution": "TSE",
+          "type": "fonte primária",
+          "dataset": "Candidatos - 2026",
+          "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+          "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+          "transport": {
+            "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+            "mirror_repository": "herminiotorres/dossie-cidadao",
+            "mirror_path": "docs/data/tse/candidatos/ES/2-suplente.json",
+            "mirror_blob_sha": "0a730ea826ddc937e086f24435eac2ed0cffd9c0",
+            "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/2-suplente.json"
+          }
+        }
       }
     },
     "enrichment_gaps": [
@@ -349,6 +609,58 @@
         "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/senador.json"
       }
     },
+    "substitutes": {
+      "primeiro_suplente": {
+        "status": "linked",
+        "tse_id": "80002538201",
+        "ballot_name": "SILVIA SUASSUNA",
+        "full_name": "SILVIA LIGIA SUASSUNA DE VASCONCELOS",
+        "social_name": null,
+        "party": "AVANTE",
+        "party_name": "AVANTE",
+        "role": "1º SUPLENTE",
+        "registration_status": "not_available",
+        "source": {
+          "institution": "TSE",
+          "type": "fonte primária",
+          "dataset": "Candidatos - 2026",
+          "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+          "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+          "transport": {
+            "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+            "mirror_repository": "herminiotorres/dossie-cidadao",
+            "mirror_path": "docs/data/tse/candidatos/ES/1-suplente.json",
+            "mirror_blob_sha": "40992bfe015002733581568b2521a11aca575de3",
+            "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/1-suplente.json"
+          }
+        }
+      },
+      "segundo_suplente": {
+        "status": "linked",
+        "tse_id": "80002538200",
+        "ballot_name": "SARGENTO GOES",
+        "full_name": "NILTON FERREIRA GOES",
+        "social_name": null,
+        "party": "AVANTE",
+        "party_name": "AVANTE",
+        "role": "2º SUPLENTE",
+        "registration_status": "not_available",
+        "source": {
+          "institution": "TSE",
+          "type": "fonte primária",
+          "dataset": "Candidatos - 2026",
+          "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+          "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+          "transport": {
+            "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+            "mirror_repository": "herminiotorres/dossie-cidadao",
+            "mirror_path": "docs/data/tse/candidatos/ES/2-suplente.json",
+            "mirror_blob_sha": "0a730ea826ddc937e086f24435eac2ed0cffd9c0",
+            "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/2-suplente.json"
+          }
+        }
+      }
+    },
     "enrichment_gaps": [
       "assets",
       "social_links",
@@ -404,6 +716,58 @@
         "mirror_path": "docs/data/tse/candidatos/ES/senador.json",
         "mirror_blob_sha": "e6b875ee2e04c0c6f0ecbea392dc804fd4406c2b",
         "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/senador.json"
+      }
+    },
+    "substitutes": {
+      "primeiro_suplente": {
+        "status": "linked",
+        "tse_id": "80002549406",
+        "ballot_name": "TONI CABANO",
+        "full_name": "ANTONIO ELIAS MIRANDA GOMES",
+        "social_name": null,
+        "party": "PSOL",
+        "party_name": "PARTIDO SOCIALISMO E LIBERDADE",
+        "role": "1º SUPLENTE",
+        "registration_status": "not_available",
+        "source": {
+          "institution": "TSE",
+          "type": "fonte primária",
+          "dataset": "Candidatos - 2026",
+          "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+          "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+          "transport": {
+            "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+            "mirror_repository": "herminiotorres/dossie-cidadao",
+            "mirror_path": "docs/data/tse/candidatos/ES/1-suplente.json",
+            "mirror_blob_sha": "40992bfe015002733581568b2521a11aca575de3",
+            "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/1-suplente.json"
+          }
+        }
+      },
+      "segundo_suplente": {
+        "status": "linked",
+        "tse_id": "80002549405",
+        "ballot_name": "WILSON JR",
+        "full_name": "WILSON JESUS LUCAS JUNIOR",
+        "social_name": null,
+        "party": "PSOL",
+        "party_name": "PARTIDO SOCIALISMO E LIBERDADE",
+        "role": "2º SUPLENTE",
+        "registration_status": "not_available",
+        "source": {
+          "institution": "TSE",
+          "type": "fonte primária",
+          "dataset": "Candidatos - 2026",
+          "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+          "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+          "transport": {
+            "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+            "mirror_repository": "herminiotorres/dossie-cidadao",
+            "mirror_path": "docs/data/tse/candidatos/ES/2-suplente.json",
+            "mirror_blob_sha": "0a730ea826ddc937e086f24435eac2ed0cffd9c0",
+            "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/2-suplente.json"
+          }
+        }
       }
     },
     "enrichment_gaps": [
@@ -463,6 +827,58 @@
         "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/senador.json"
       }
     },
+    "substitutes": {
+      "primeiro_suplente": {
+        "status": "linked",
+        "tse_id": "80002551367",
+        "ballot_name": "MARCELO COELHO",
+        "full_name": "MARCELO DE SOUZA COELHO",
+        "social_name": null,
+        "party": "PP",
+        "party_name": "PROGRESSISTAS",
+        "role": "1º SUPLENTE",
+        "registration_status": "not_available",
+        "source": {
+          "institution": "TSE",
+          "type": "fonte primária",
+          "dataset": "Candidatos - 2026",
+          "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+          "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+          "transport": {
+            "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+            "mirror_repository": "herminiotorres/dossie-cidadao",
+            "mirror_path": "docs/data/tse/candidatos/ES/1-suplente.json",
+            "mirror_blob_sha": "40992bfe015002733581568b2521a11aca575de3",
+            "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/1-suplente.json"
+          }
+        }
+      },
+      "segundo_suplente": {
+        "status": "linked",
+        "tse_id": "80002551371",
+        "ballot_name": "PASTOR MARCELO",
+        "full_name": "MARCELO HENRIQUE FERREIRA",
+        "social_name": null,
+        "party": "PDT",
+        "party_name": "PARTIDO DEMOCRÁTICO TRABALHISTA",
+        "role": "2º SUPLENTE",
+        "registration_status": "not_available",
+        "source": {
+          "institution": "TSE",
+          "type": "fonte primária",
+          "dataset": "Candidatos - 2026",
+          "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+          "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+          "transport": {
+            "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+            "mirror_repository": "herminiotorres/dossie-cidadao",
+            "mirror_path": "docs/data/tse/candidatos/ES/2-suplente.json",
+            "mirror_blob_sha": "0a730ea826ddc937e086f24435eac2ed0cffd9c0",
+            "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/2-suplente.json"
+          }
+        }
+      }
+    },
     "enrichment_gaps": [
       "assets",
       "social_links",
@@ -518,6 +934,58 @@
         "mirror_path": "docs/data/tse/candidatos/ES/senador.json",
         "mirror_blob_sha": "e6b875ee2e04c0c6f0ecbea392dc804fd4406c2b",
         "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/senador.json"
+      }
+    },
+    "substitutes": {
+      "primeiro_suplente": {
+        "status": "linked",
+        "tse_id": "80002552374",
+        "ballot_name": "PATRICIA NEITZL",
+        "full_name": "PATRICIA NEITZL DA SILVA",
+        "social_name": null,
+        "party": "PRTB",
+        "party_name": "PARTIDO RENOVADOR TRABALHISTA BRASILEIRO",
+        "role": "1º SUPLENTE",
+        "registration_status": "not_available",
+        "source": {
+          "institution": "TSE",
+          "type": "fonte primária",
+          "dataset": "Candidatos - 2026",
+          "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+          "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+          "transport": {
+            "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+            "mirror_repository": "herminiotorres/dossie-cidadao",
+            "mirror_path": "docs/data/tse/candidatos/ES/1-suplente.json",
+            "mirror_blob_sha": "40992bfe015002733581568b2521a11aca575de3",
+            "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/1-suplente.json"
+          }
+        }
+      },
+      "segundo_suplente": {
+        "status": "linked",
+        "tse_id": "80002552375",
+        "ballot_name": "RODRIGO RODRIGUES",
+        "full_name": "RODRIGO RODRIGUES FERREIRA",
+        "social_name": null,
+        "party": "PRTB",
+        "party_name": "PARTIDO RENOVADOR TRABALHISTA BRASILEIRO",
+        "role": "2º SUPLENTE",
+        "registration_status": "not_available",
+        "source": {
+          "institution": "TSE",
+          "type": "fonte primária",
+          "dataset": "Candidatos - 2026",
+          "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+          "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+          "transport": {
+            "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+            "mirror_repository": "herminiotorres/dossie-cidadao",
+            "mirror_path": "docs/data/tse/candidatos/ES/2-suplente.json",
+            "mirror_blob_sha": "0a730ea826ddc937e086f24435eac2ed0cffd9c0",
+            "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/2-suplente.json"
+          }
+        }
       }
     },
     "enrichment_gaps": [
@@ -577,6 +1045,88 @@
         "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/senador.json"
       }
     },
+    "substitutes": {
+      "primeiro_suplente": {
+        "status": "ambiguous_source",
+        "role": "1º SUPLENTE",
+        "note": "O espelho TSE tem mais de um registro para este número de urna nesta função; nenhum foi escolhido por inferência.",
+        "candidates": [
+          {
+            "tse_id": "80002551369",
+            "ballot_name": "ERICO",
+            "full_name": "ERICO PATRICIO ORLETTI",
+            "social_name": null,
+            "party": "MDB",
+            "party_name": "MOVIMENTO DEMOCRÁTICO BRASILEIRO",
+            "role": "1º SUPLENTE",
+            "registration_status": "not_available",
+            "source": {
+              "institution": "TSE",
+              "type": "fonte primária",
+              "dataset": "Candidatos - 2026",
+              "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+              "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+              "transport": {
+                "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+                "mirror_repository": "herminiotorres/dossie-cidadao",
+                "mirror_path": "docs/data/tse/candidatos/ES/1-suplente.json",
+                "mirror_blob_sha": "40992bfe015002733581568b2521a11aca575de3",
+                "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/1-suplente.json"
+              }
+            }
+          },
+          {
+            "tse_id": "80002554066",
+            "ballot_name": "MARCUS VICENTE",
+            "full_name": "MARCUS ANTONIO VICENTE",
+            "social_name": null,
+            "party": "PP",
+            "party_name": "PROGRESSISTAS",
+            "role": "1º SUPLENTE",
+            "registration_status": "not_available",
+            "source": {
+              "institution": "TSE",
+              "type": "fonte primária",
+              "dataset": "Candidatos - 2026",
+              "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+              "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+              "transport": {
+                "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+                "mirror_repository": "herminiotorres/dossie-cidadao",
+                "mirror_path": "docs/data/tse/candidatos/ES/1-suplente.json",
+                "mirror_blob_sha": "40992bfe015002733581568b2521a11aca575de3",
+                "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/1-suplente.json"
+              }
+            }
+          }
+        ]
+      },
+      "segundo_suplente": {
+        "status": "linked",
+        "tse_id": "80002551372",
+        "ballot_name": "NUBIA",
+        "full_name": "NUBIA ROCHA DOS PASSOS",
+        "social_name": null,
+        "party": "MDB",
+        "party_name": "MOVIMENTO DEMOCRÁTICO BRASILEIRO",
+        "role": "2º SUPLENTE",
+        "registration_status": "not_available",
+        "source": {
+          "institution": "TSE",
+          "type": "fonte primária",
+          "dataset": "Candidatos - 2026",
+          "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+          "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+          "transport": {
+            "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+            "mirror_repository": "herminiotorres/dossie-cidadao",
+            "mirror_path": "docs/data/tse/candidatos/ES/2-suplente.json",
+            "mirror_blob_sha": "0a730ea826ddc937e086f24435eac2ed0cffd9c0",
+            "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/2-suplente.json"
+          }
+        }
+      }
+    },
     "enrichment_gaps": [
       "assets",
       "social_links",
@@ -632,6 +1182,58 @@
         "mirror_path": "docs/data/tse/candidatos/ES/senador.json",
         "mirror_blob_sha": "e6b875ee2e04c0c6f0ecbea392dc804fd4406c2b",
         "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/senador.json"
+      }
+    },
+    "substitutes": {
+      "primeiro_suplente": {
+        "status": "linked",
+        "tse_id": "80002552691",
+        "ballot_name": "DR PAGOTTO",
+        "full_name": "PEDRO JOSE PAGOTTO",
+        "social_name": null,
+        "party": "PSD",
+        "party_name": "PARTIDO SOCIAL DEMOCRÁTICO",
+        "role": "1º SUPLENTE",
+        "registration_status": "not_available",
+        "source": {
+          "institution": "TSE",
+          "type": "fonte primária",
+          "dataset": "Candidatos - 2026",
+          "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+          "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+          "transport": {
+            "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+            "mirror_repository": "herminiotorres/dossie-cidadao",
+            "mirror_path": "docs/data/tse/candidatos/ES/1-suplente.json",
+            "mirror_blob_sha": "40992bfe015002733581568b2521a11aca575de3",
+            "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/1-suplente.json"
+          }
+        }
+      },
+      "segundo_suplente": {
+        "status": "linked",
+        "tse_id": "80002552690",
+        "ballot_name": "DR ROGERIO RESENDE",
+        "full_name": "ROGÉRIO DA SILVA RESENDE",
+        "social_name": null,
+        "party": "PSD",
+        "party_name": "PARTIDO SOCIAL DEMOCRÁTICO",
+        "role": "2º SUPLENTE",
+        "registration_status": "not_available",
+        "source": {
+          "institution": "TSE",
+          "type": "fonte primária",
+          "dataset": "Candidatos - 2026",
+          "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+          "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+          "transport": {
+            "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+            "mirror_repository": "herminiotorres/dossie-cidadao",
+            "mirror_path": "docs/data/tse/candidatos/ES/2-suplente.json",
+            "mirror_blob_sha": "0a730ea826ddc937e086f24435eac2ed0cffd9c0",
+            "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/2-suplente.json"
+          }
+        }
       }
     },
     "enrichment_gaps": [

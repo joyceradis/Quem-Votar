@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-09-27T13:42:29.104976+00:00",
+  "collected_at": "2026-09-28T23:19:05.002769+00:00",
   "uf": "ES",
   "election_year": 2026,
   "counts": {
@@ -16,7 +16,10 @@
     "social_links": 1253,
     "candidates_with_previous_elections": 376,
     "previous_election_records": 1138,
-    "candidates_with_registration_status": 563
+    "candidates_with_registration_status": 563,
+    "running_mates_linked": 26,
+    "running_mates_ambiguous_source": 1,
+    "running_mates_not_available": 0
   },
   "offices": {
     "federal": {
@@ -164,6 +167,35 @@
         "raw_url": "https://raw.githubusercontent.com/herminiotorres/dossie-cidadao/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/senador.json"
       }
     },
+    "operational_mirror_running_mates": {
+      "vice": {
+        "repository": "herminiotorres/dossie-cidadao",
+        "path": "docs/data/tse/candidatos/ES/vice-governador.json",
+        "commit_sha": "1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2",
+        "blob_sha": "97822c9d1e6b42cfd8d2e91e1d5ff61cd088f0a4",
+        "content_sha256": "4c116cbf561ab910f554fda39229acd5155796cca20efb6141db518a649021f9",
+        "html_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/vice-governador.json",
+        "raw_url": "https://raw.githubusercontent.com/herminiotorres/dossie-cidadao/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/vice-governador.json"
+      },
+      "primeiro_suplente": {
+        "repository": "herminiotorres/dossie-cidadao",
+        "path": "docs/data/tse/candidatos/ES/1-suplente.json",
+        "commit_sha": "1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2",
+        "blob_sha": "40992bfe015002733581568b2521a11aca575de3",
+        "content_sha256": "95568e8414b37418d5325ab99d4ecc01beb51904aa59fb734606149a5533293c",
+        "html_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/1-suplente.json",
+        "raw_url": "https://raw.githubusercontent.com/herminiotorres/dossie-cidadao/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/1-suplente.json"
+      },
+      "segundo_suplente": {
+        "repository": "herminiotorres/dossie-cidadao",
+        "path": "docs/data/tse/candidatos/ES/2-suplente.json",
+        "commit_sha": "1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2",
+        "blob_sha": "0a730ea826ddc937e086f24435eac2ed0cffd9c0",
+        "content_sha256": "cb8e4df465c39ed98dc19fecc3611d9d846321bea1fee4eebc82c183007a02e0",
+        "html_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/2-suplente.json",
+        "raw_url": "https://raw.githubusercontent.com/herminiotorres/dossie-cidadao/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/2-suplente.json"
+      }
+    },
     "camara_federal": "https://dadosabertos.camara.leg.br/api/v2/deputados?siglaUf=ES&ordem=ASC&ordenarPor=nome&itens=100",
     "ales": "https://www.al.es.gov.br/"
   },
@@ -172,7 +204,8 @@
     "assets": "A fonte factual primária é o TSE. Quando o arquivo oficial bem_candidato_2026 não pode ser transportado pelo runner, o sync pode usar o bootstrap versionado de contingência, com transporte, freshness e hashes registrados em sources.tse_enrichment; ausência de registros não é interpretada como ausência de patrimônio.",
     "photos": "A fonte primária é o pacote ES - Fotos de candidatos do TSE. Como o CDN oficial bloqueia o runner, a UI usa temporariamente um cache público por SQ_CANDIDATO; falhas de imagem caem para placeholder.",
     "electoral_history": "A fonte factual primária é o TSE e o histórico permanece separado do histórico institucional da Câmara. Se o recurso oficial não puder ser transportado pelo runner, o sync pode usar o bootstrap versionado de contingência, com provenance e freshness explícitas.",
-    "state_current_mandate": "Não inferido automaticamente; a composição da ALES requer validação institucional datada."
+    "state_current_mandate": "Não inferido automaticamente; a composição da ALES requer validação institucional datada.",
+    "running_mates": "Vice (Governador) e suplentes (Senador) são anexados ao registro do titular por correspondência exata de número de urna (NR_CANDIDATO) — nunca por nome ou ordem de listagem — porque a legislação eleitoral não permite votar neles separadamente: o voto no titular elege a chapa inteira. Quando o espelho TSE não traz registro correspondente, o campo fica 'not_available'; quando traz mais de um registro conflitante para o mesmo número de urna, ambos ficam preservados como 'ambiguous_source', sem escolha por inferência (AGENTS.md §3)."
   },
   "normalizer_version": "4.0.0"
 }
