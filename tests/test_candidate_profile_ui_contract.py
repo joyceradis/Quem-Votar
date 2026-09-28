@@ -27,8 +27,8 @@ class CandidateProfileUIContractTest(unittest.TestCase):
         for token in (
             "prospective.length", "item.statement || item.quote_or_summary",
             "evidenceMetaLine(item)", "sourceLink(item)",
-            "Ainda não há proposta ou declaração documentada nesta base.",
-            "Ausência de registro não significa ausência de proposta.",
+            "Nenhuma proposta ou declaração documentada nesta base ainda.",
+            "Sem registro não é o mesmo que sem proposta.",
         ):
             self.assertIn(token, block)
         self.assertNotIn("candidate.occupation", block)
@@ -57,8 +57,8 @@ class CandidateProfileUIContractTest(unittest.TestCase):
             "prospective.length", "impactTopics.length", "topic.life_areas",
             "Áreas relacionadas às propostas e declarações documentadas nesta ficha.",
             "não são previsão de benefício, prejuízo ou efeito individual",
-            "Há proposta ou declaração documentada, mas o tema ainda não permite relacionar impactos práticos sem fazer inferências.",
-            "Ainda não há proposta ou declaração documentada suficiente para relacionar impactos práticos.",
+            "Há proposta documentada, mas o tema ainda não está mapeado a áreas de impacto.",
+            "Sem proposta documentada (item 02), não há como mapear impacto sem inferir.",
         ):
             self.assertIn(token, block)
         lowered = block.lower()
