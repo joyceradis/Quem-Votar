@@ -410,6 +410,15 @@
   line-height: 1.35;
 }
 
+.electoral-data-item dd small {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
 .declared-assets-total {
   margin: 10px 0 0;
   color: var(--ink);

@@ -302,7 +302,13 @@ function renderElectoralData(candidate, assets) {
     },
     { label: "Federação / composição", value: organization },
     { label: "Escolaridade", value: candidate.education },
-    { label: "Ocupação declarada", value: candidate.occupation },
+    {
+      label: "Ocupação declarada",
+      value: candidate.occupation,
+      note: candidate.occupation
+        ? "Autodeclarada no registro de candidatura ao TSE; não confirma atuação atual."
+        : null,
+    },
     { label: "Situação da candidatura", value: registrationStatusLabel(candidate.registration_status) },
     { label: "Situação de totalização", value: candidate.totalization_status },
   ].filter((item) => item.value);
@@ -316,7 +322,7 @@ function renderElectoralData(candidate, assets) {
         <dl class="electoral-data-grid">${facts
           .map(
             (item) =>
-              `<div class="electoral-data-item"><dt>${esc(item.label)}</dt><dd>${esc(item.value)}</dd></div>`
+              `<div class="electoral-data-item"><dt>${esc(item.label)}</dt><dd>${esc(item.value)}${item.note ? `<small>${esc(item.note)}</small>` : ""}</dd></div>`
           )
           .join("")}</dl>
       </div>`
