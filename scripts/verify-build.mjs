@@ -82,6 +82,61 @@ for (const f of arquivos.filter((f) => f.endsWith(".html"))) {
   }
 }
 
+
+// 5. Pós-cutover V6: a saída recém-gerada deve ser idêntica à superfície
+// pública versionada. Isso evita drift entre `src/` e o que o Pages realmente
+// publica (ex.: uma correção visual aplicada em src/styles sem regenerar
+// styles/). Só roda no diretório padrão `_site`; verificações contra um
+// diretório alternativo continuam podendo ser usadas isoladamente.
+if (root === path.resolve("_site")) {
+  const repoRoot = path.resolve(".");
+  const rotasEspelhadas = [
+    "index.html",
+    "candidatos.html",
+    "candidato.html",
+    "comparar.html",
+    "temas.html",
+    "sobre.html",
+    "apoio.html",
+  ];
+
+  const publicFiles = [];
+  for (const dir of ["styles", "js"]) {
+    const abs = path.join(repoRoot, dir);
+    if (fs.existsSync(abs)) {
+      publicFiles.push(
+        ...walk(abs).map((f) => path.relative(repoRoot, f).split(path.sep).join("/")),
+      );
+    }
+  }
+
+  const builtFiles = arquivos
+    .map(rel)
+    .filter((p) => p.startsWith("styles/") || p.startsWith("js/"));
+
+  const espelhados = new Set([...rotasEspelhadas, ...publicFiles, ...builtFiles]);
+
+  for (const p of espelhados) {
+    const gerado = path.join(root, p);
+    const publicado = path.join(repoRoot, p);
+
+    if (!fs.existsSync(gerado)) {
+      erros.push(`paridade pública: arquivo existe no repositório mas não no build: ${p}`);
+      continue;
+    }
+    if (!fs.existsSync(publicado)) {
+      erros.push(`paridade pública: arquivo existe no build mas não na superfície versionada: ${p}`);
+      continue;
+    }
+
+    const a = fs.readFileSync(gerado);
+    const b = fs.readFileSync(publicado);
+    if (!a.equals(b)) {
+      erros.push(`paridade pública: build e superfície versionada divergem: ${p}`);
+    }
+  }
+}
+
 if (erros.length) {
   console.error(`verify-build: ${erros.length} problema(s)`);
   for (const e of [...new Set(erros)]) console.error(`  - ${e}`);
