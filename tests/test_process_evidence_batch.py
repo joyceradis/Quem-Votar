@@ -4,6 +4,7 @@ from __future__ import annotations
 import importlib.util
 import sys
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 SCRIPTS = Path(__file__).resolve().parents[1] / "scripts"
@@ -51,6 +52,29 @@ def html_fetch(body_text: str, counter: list[int]):
 
 
 class ReliableBatchTests(unittest.TestCase):
+    def test_section_upgrade_is_once_only_and_preserves_quarantine(self):
+        item = source()
+        item.update(attribution_trust="official_author_bulk", institutional_snapshot={
+            "siglaTipo": "EMR", "urlInteiroTeor": "https://www.camara.leg.br/documento"})
+        sid = batch.make_source_id(item)
+        previous = {"status": "failed", "attempts": 3,
+                    "last_error": "conteúdo institucional API insuficiente para revisão"}
+        kwargs = dict(source_payload={"sources": [item]}, candidates={"123": candidate()},
+                      existing_drafts=[], workers=1)
+        # Even if a failed transport repeats the OLD error verbatim, no loop.
+        with patch.object(batch, 'attempt_source', return_value=(None, 1, previous['last_error'])) as attempt:
+            state, _, _, metrics = batch.run_batch(**kwargs, state_payload={"sources": {sid: previous}})
+            self.assertEqual(metrics['queued'], 1)
+            self.assertEqual(state['sources'][sid]['attempts'], 4)
+            self.assertTrue(state['sources'][sid]['chamber_section_recovery_v1'])
+            _, _, _, again = batch.run_batch(**kwargs, state_payload=state)
+            self.assertEqual(again['queued'], 0)
+            self.assertEqual(attempt.call_count, 1)
+            for status in ('quarantined', 'rejected', 'collected'):
+                _, _, _, metrics = batch.run_batch(**kwargs, state_payload={
+                    'sources': {sid: dict(previous, status=status)}})
+                self.assertEqual(metrics['queued'], 0)
+
     def test_resume_skips_already_collected_source(self):
         counter = [0]
         payload = {"sources": [source()]}
