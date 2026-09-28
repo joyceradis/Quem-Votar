@@ -26,6 +26,19 @@ const comHistoricoCamara = federais.find((c) => c.institutional_history);
 
 const fichaUrl = (c) => `candidato.html?id=${c.tse_id}&cargo=federal`;
 
+// Mesma regra de "ocupação utilizável" de src/js/pages/profile.js
+// (GENERIC_OCCUPATIONS/isUsableOccupation) — replicada aqui só para decidir
+// a expectativa do teste, nunca para gerar o dado.
+const OCUPACOES_GENERICAS = new Set(["OUTROS", "OUTRO"]);
+const normalizaOcupacao = (value) =>
+  String(value || "")
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-zA-Z0-9 ]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toUpperCase();
+
 test.describe("Ficha do candidato", () => {
   test("ordem normativa HOJE → PROPÕE → IMPACTO → HISTÓRICO → DADOS → FONTES", async ({ page }) => {
     await page.goto(fichaUrl(comEvidencia));
@@ -119,7 +132,11 @@ test.describe("Ficha do candidato", () => {
   // datado) é dado canônico que a ficha ignorava. Precisa aparecer em
   // Histórico com fonte e aviso — e NUNCA em "O que essa pessoa faz hoje?",
   // que só pode vir de current_mandate. Caso real: candidato de Senador com
-  // institutional_evidence e sem current_mandate.
+  // institutional_evidence e sem current_mandate. A ocupação autodeclarada ao
+  // TSE é um dado diferente: pode legitimamente aparecer em "faz hoje" como
+  // fato autodeclarado (nunca como atuação institucional confirmada), e isso
+  // não é o mesmo que institutional_evidence vazar para lá — as duas coisas
+  // são testadas separadamente aqui.
   test("institutional_evidence aparece em Histórico com fonte e aviso, nunca em 'faz hoje'", async ({ page }) => {
     if (!comEvidenciaInstitucionalSemMandato) test.skip();
     const c = comEvidenciaInstitucionalSemMandato;
@@ -129,8 +146,19 @@ test.describe("Ficha do candidato", () => {
     const hoje = page.locator("#faz-hoje");
     const historico = page.locator("#historico");
 
-    await expect(hoje).toContainText("Sem atuação pública atual confirmada nesta base");
+    const ocupacaoUtilizavel =
+      Boolean(c.occupation) && !OCUPACOES_GENERICAS.has(normalizaOcupacao(c.occupation));
+    if (ocupacaoUtilizavel) {
+      // Sem current_mandate, mas com ocupação utilizável: aparece como fato
+      // autodeclarado, nunca como confirmação de atuação institucional.
+      await expect(hoje).toContainText(c.occupation);
+      await expect(hoje).toContainText("Autodeclarado no registro de candidatura ao TSE");
+    } else {
+      await expect(hoje).toContainText("Sem atuação pública atual confirmada nesta base");
+    }
+    // institutional_evidence nunca vaza para "faz hoje", com ou sem ocupação.
     await expect(hoje).not.toContainText(record.institution);
+    await expect(hoje).not.toContainText(record.type);
 
     await expect(historico).toContainText(record.institution);
     await expect(historico).toContainText(record.type);
