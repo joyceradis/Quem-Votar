@@ -87,6 +87,30 @@ class CandidateProfileUIContractTest(unittest.TestCase):
         self.assertIn("...thematicEvidence", sources)
         self.assertIn("evidenceTypeLabel(item.evidence_type)", sources)
 
+    def test_running_mate_facts_join_electoral_data_without_ranking_or_choosing_a_source(self):
+        block = self.profile.split("function runningMateFacts(candidate)", 1)[1].split(
+            "function renderElectoralData", 1
+        )[0]
+        for token in (
+            "candidate.running_mate", "candidate.substitutes",
+            'slot?.status === "linked"', 'slot?.status === "ambiguous_source"',
+            "NAO_DISPONIVEL",
+            "Nenhum foi escolhido — ambos ficam documentados",
+        ):
+            self.assertIn(token, block)
+        lowered = block.lower()
+        for forbidden in ("melhor", "pior", "recomenda", "ranking", "score"):
+            self.assertNotIn(forbidden, lowered)
+
+        electoral = self.profile.split("function renderElectoralData(candidate, assets)", 1)[1].split(
+            "function renderSources", 1
+        )[0]
+        self.assertIn("...runningMateFacts(candidate)", electoral)
+        self.assertIn(
+            '<dd>${esc(item.value)}${item.note ? `<small>${esc(item.note)}</small>` : ""}</dd>',
+            electoral,
+        )
+
     def test_mobile_profile_controls_remain_large_and_single_column(self):
         css = self.styles
         for token in (

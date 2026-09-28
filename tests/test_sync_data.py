@@ -72,5 +72,112 @@ class SyncGovernanceTests(unittest.TestCase):
             sync.normalize_registration_status(" DEFERIDO "),
         )
 
+
+class RunningMateTests(unittest.TestCase):
+    """#186 item 4 — vice (Governador) e suplentes (Senador) vivem como campo
+    do titular, ligados por NR_CANDIDATO exato. Ambiguidade na fonte nunca
+    vira escolha editorial (AGENTS.md §3): estes testes cobrem os três
+    desfechos possíveis (linked/ambiguous_source/not_available) sem depender
+    da rede, mockando mirror_snapshot como o teste de mirror_snapshot em si
+    já cobre a plumbing HTTP separadamente.
+    """
+
+    def _mirror(self, rows, repository="herminiotorres/dossie-cidadao"):
+        return rows, {"repository": repository, "path": "x", "blob_sha": "b", "html_url": "u"}
+
+    def test_governador_vice_clean_link(self) -> None:
+        candidates = {
+            "governador": [{"number": "12", "tse_id": "1"}],
+            "senador": [],
+        }
+        vice_row = {
+            "SG_UF": "ES",
+            "DS_CARGO": "VICE-GOVERNADOR",
+            "NR_CANDIDATO": "12",
+            "SQ_CANDIDATO": "999",
+            "NM_URNA_CANDIDATO": "FULANO VICE",
+        }
+        with patch.object(sync, "mirror_snapshot", return_value=self._mirror([vice_row])):
+            sync.attach_running_mates(candidates)
+        running_mate = candidates["governador"][0]["running_mate"]
+        self.assertEqual("linked", running_mate["status"])
+        self.assertEqual("999", running_mate["tse_id"])
+        self.assertEqual("VICE-GOVERNADOR", running_mate["role"])
+
+    def test_senador_suplente_not_available_when_no_ballot_match(self) -> None:
+        candidates = {
+            "governador": [],
+            "senador": [{"number": "77", "tse_id": "2"}],
+        }
+
+        def fake_mirror(filename):
+            tse_label = "1º SUPLENTE" if filename == "1-suplente.json" else "2º SUPLENTE"
+            other_ballot_row = {
+                "SG_UF": "ES",
+                "DS_CARGO": tse_label,
+                "NR_CANDIDATO": "99",
+                "SQ_CANDIDATO": "111",
+            }
+            return self._mirror([other_ballot_row])
+
+        with patch.object(sync, "mirror_snapshot", side_effect=fake_mirror):
+            sync.attach_running_mates(candidates)
+        substitutes = candidates["senador"][0]["substitutes"]
+        self.assertEqual("not_available", substitutes["primeiro_suplente"]["status"])
+        self.assertEqual("not_available", substitutes["segundo_suplente"]["status"])
+
+    def test_senador_suplente_ambiguous_source_preserves_both_records(self) -> None:
+        # Caso real observado na chapa 156 (ROSE DE FREITAS): dois registros
+        # de 1º suplente no mesmo número de urna, ambos "#NE", sem campo que
+        # desempate — o pipeline nunca escolhe um, documenta os dois.
+        candidates = {
+            "governador": [],
+            "senador": [{"number": "156", "tse_id": "3"}],
+        }
+        conflicting_rows = [
+            {
+                "SG_UF": "ES",
+                "DS_CARGO": "1º SUPLENTE",
+                "NR_CANDIDATO": "156",
+                "SQ_CANDIDATO": "201",
+                "DS_SITUACAO_CANDIDATURA": "#NE",
+            },
+            {
+                "SG_UF": "ES",
+                "DS_CARGO": "1º SUPLENTE",
+                "NR_CANDIDATO": "156",
+                "SQ_CANDIDATO": "202",
+                "DS_SITUACAO_CANDIDATURA": "#NE",
+            },
+        ]
+        second_suplente_row = {
+            "SG_UF": "ES",
+            "DS_CARGO": "2º SUPLENTE",
+            "NR_CANDIDATO": "156",
+            "SQ_CANDIDATO": "203",
+        }
+
+        def fake_mirror(filename):
+            if filename == "1-suplente.json":
+                return self._mirror(conflicting_rows)
+            return self._mirror([second_suplente_row])
+
+        with patch.object(sync, "mirror_snapshot", side_effect=fake_mirror):
+            sync.attach_running_mates(candidates)
+        substitutes = candidates["senador"][0]["substitutes"]
+        primeiro = substitutes["primeiro_suplente"]
+        self.assertEqual("ambiguous_source", primeiro["status"])
+        self.assertEqual(2, len(primeiro["candidates"]))
+        self.assertEqual({"201", "202"}, {c["tse_id"] for c in primeiro["candidates"]})
+        self.assertEqual("linked", substitutes["segundo_suplente"]["status"])
+
+    def test_running_mate_absent_for_offices_without_roster(self) -> None:
+        # federal/estadual não passam por RUNNING_MATE_REGISTRY (chave nem
+        # existe no dict), então attach_running_mates não deve tocá-los.
+        candidates = {"governador": [], "senador": []}
+        mirror_meta = sync.attach_running_mates(candidates)
+        self.assertEqual({}, mirror_meta)
+
+
 if __name__ == '__main__':
     unittest.main()
