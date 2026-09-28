@@ -183,6 +183,14 @@
   color: var(--muted);
 }
 
+.plain-fact a {
+  color: var(--blue-strong);
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-decoration: none;
+  width: fit-content;
+}
+
 .plain-empty {
   max-width: 62ch;
   margin: 0;
