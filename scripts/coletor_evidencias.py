@@ -918,6 +918,8 @@ def collect_institutional_snapshot(
             document_pages=recovered["pages"],
             fiche_sha256=recovered["fiche_sha256"],
             parent_context_only=recovered["parent_context_only"],
+            document_section_number=recovered["section_number"],
+            document_section_identity_basis=recovered["section_identity_basis"],
             collection_notes=clean(f"{notes} Trecho individualizado do inteiro teor oficial; "
                                   "ficha, projeto-pai, seção e autoria conferidos. "
                                   "Páginas por ordem física do PDF. Ementa original preservada; "

@@ -78,15 +78,30 @@ def recover(item, fetcher, max_pages=80):
         raise RuntimeError('seção do acessório ausente ou ambígua no PDF')
     start = starts[0]
     blocks = []
+    section_number = None
+    section_marker = re.compile(r'EMENDA\s+N[ºo°]|SUBSTITUTIVO A[OÓ]')
     ending = re.compile(r'Deputado\s+' + re.escape(author) + r'\s+Relator\b', re.I)
     for end in range(start, len(pages)):
         text = clean(pages[end])
-        if end > start and re.search(r'(?:EMENDA\s+N[ºo°]|SUBSTITUTIVO A[OÓ])', text[:450]):
-            raise RuntimeError('nova seção antes da assinatura do acessório')
+        body_start = 0
         if end == start:
             marker = re.search(r'EMENDA\s+N[ºo°]' if kind == 'EMR' else r'SUBSTITUTIVO A[OÓ]', text)
             text = text[marker.start():]
+            body_start = marker.end() - marker.start()
+            if kind == 'EMR':
+                explicit_number = re.match(r'\s*(\d+)\b', text[body_start:])
+                if explicit_number:
+                    section_number = explicit_number.group(1)
+                    if int(section_number) != int(number):
+                        raise RuntimeError('número da emenda no PDF diverge da ficha')
         signature = ending.search(text)
+        # A page is not a section boundary. Never borrow another accessory's
+        # signature, including a later heading on this same physical page.
+        next_section = section_marker.search(text, body_start)
+        if next_section and (signature is None or next_section.start() < signature.end()):
+            raise RuntimeError('nova seção antes da assinatura do acessório')
+        if next_section and section_number is None:
+            raise RuntimeError('seção sem número ambígua na mesma página')
         blocks.append(text[:signature.end()] if signature else text)
         if signature:
             break
@@ -99,4 +114,7 @@ def recover(item, fetcher, max_pages=80):
                 document_sha256=hashlib.sha256(raw).hexdigest(),
                 fiche_sha256=hashlib.sha256(fiche).hexdigest(),
                 pages=list(range(start + 1, end + 2)), page_count=len(pages),
+                section_number=section_number,
+                section_identity_basis=('fiche_parent_number_and_signature' if section_number
+                                        else 'fiche_unique_parent_and_signature'),
                 parent_context_only=f'{parent_kind} {parent_number}/{year}')

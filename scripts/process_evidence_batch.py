@@ -195,6 +195,9 @@ def run_batch(
         snapshot_transport_upgrade = (
             isinstance(item.get("institutional_snapshot"), dict)
             and previous_status == "failed"
+            # A network error from section recovery is not a migration to
+            # an API/bulk snapshot. Do not reopen its consumed extra attempt.
+            and not entry.get("chamber_section_recovery_v1")
             and (
                 "HTTP 429" in previous_error
                 or re.search(r"HTTP 5\\d\\d", previous_error)

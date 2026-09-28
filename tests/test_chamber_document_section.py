@@ -38,6 +38,35 @@ class ChamberSectionTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, 'ambígua'):
             self.run_recovery([self.text, self.text])
 
+    def test_explicit_emenda_number_must_match_fiche(self):
+        with self.assertRaisesRegex(RuntimeError, 'número'):
+            self.run_recovery([self.text.replace('EMENDA Nº 1', 'EMENDA Nº 2')])
+
+    def test_unsigned_section_cannot_borrow_signature_on_same_page(self):
+        text = self.text.split('Deputado')[0] + ' EMENDA Nº 2 Outro texto. Deputado Nome Oficial Relator'
+        with self.assertRaisesRegex(RuntimeError, 'nova seção'):
+            self.run_recovery([text])
+
+    def test_unsigned_section_cannot_borrow_late_signature_on_next_page(self):
+        continuation = 'Continuação do texto. ' * 30
+        continuation += 'EMENDA Nº 2 Outro texto. Deputado Nome Oficial Relator'
+        with self.assertRaisesRegex(RuntimeError, 'nova seção'):
+            self.run_recovery([self.text.split('Deputado')[0], continuation])
+
+    def test_signed_section_does_not_absorb_next_section_on_same_page(self):
+        result = self.run_recovery([self.text + ' EMENDA Nº 2 Outro texto. Deputado Nome Oficial Relator'])
+        self.assertNotIn('EMENDA Nº 2', result['text'])
+
+    def test_unnumbered_emenda_records_fiche_anchor_without_inventing_number(self):
+        result = self.run_recovery([self.text.replace('EMENDA Nº 1', 'EMENDA Nº')])
+        self.assertIsNone(result['section_number'])
+        self.assertEqual(result['section_identity_basis'], 'fiche_unique_parent_and_signature')
+
+    def test_unnumbered_emenda_with_second_section_on_same_page_is_ambiguous(self):
+        text = self.text.replace('EMENDA Nº 1', 'EMENDA Nº')
+        with self.assertRaisesRegex(RuntimeError, 'ambígua'):
+            self.run_recovery([text + ' EMENDA Nº Outra emenda. Deputado Nome Oficial Relator'])
+
     def test_missing_parent_rejected(self):
         with self.assertRaisesRegex(RuntimeError, 'ausente'):
             self.run_recovery([self.text.replace('816', '817')])
