@@ -95,7 +95,7 @@ test.describe("Ficha do candidato", () => {
     await expect(page.locator("#vai-fazer")).toBeVisible();
 
     await expect(page.locator("#vai-fazer")).toContainText(
-      "Ausência de registro não significa ausência de proposta."
+      "Sem registro não é o mesmo que sem proposta."
     );
     // nunca um zero ou um traço no lugar da explicação
     await expect(page.locator("#vai-fazer .promise-list")).toHaveCount(0);
@@ -129,7 +129,7 @@ test.describe("Ficha do candidato", () => {
     const hoje = page.locator("#faz-hoje");
     const historico = page.locator("#historico");
 
-    await expect(hoje).toContainText("Não encontramos atuação pública atual confirmada nesta base");
+    await expect(hoje).toContainText("Sem atuação pública atual confirmada nesta base");
     await expect(hoje).not.toContainText(record.institution);
 
     await expect(historico).toContainText(record.institution);

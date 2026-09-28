@@ -191,13 +191,17 @@
 
 .plain-empty strong {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
   color: var(--ink);
   font-size: 1.05rem;
+  line-height: 1.35;
 }
 
 .plain-empty p {
   margin: 0;
+  color: var(--muted);
+  font-size: 0.86rem;
+  line-height: 1.45;
 }
 
 /* Propostas, atuação documentada e registros */

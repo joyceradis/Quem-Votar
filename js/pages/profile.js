@@ -96,7 +96,10 @@ function renderHero(candidate, kind, name, socialName, currentActivityText) {
 // declarada ao TSE não entra aqui (ela aparece em Dados eleitorais).
 function renderToday(institutional, currentActivityText) {
   if (!institutional) {
-    return `<p class="plain-empty">Não encontramos atuação pública atual confirmada nesta base. Isso não significa que ela não exista.</p>`;
+    return `<div class="plain-empty">
+      <strong>Sem atuação pública atual confirmada nesta base.</strong>
+      <p>Isso não significa ausência de atuação.</p>
+    </div>`;
   }
   const detail = [institutional.party, institutional.status].filter(Boolean).join(" · ");
   return `
@@ -112,8 +115,8 @@ function renderProposes(prospective) {
   if (!prospective.length) {
     return `
       <div class="plain-empty">
-        <strong>Ainda não há proposta ou declaração documentada nesta base.</strong>
-        <p>Ausência de registro não significa ausência de proposta.</p>
+        <strong>Nenhuma proposta ou declaração documentada nesta base ainda.</strong>
+        <p>Sem registro não é o mesmo que sem proposta.</p>
       </div>`;
   }
   return `<div class="promise-list">${prospective
@@ -134,10 +137,10 @@ function renderProposes(prospective) {
 // benefício, prejuízo ou efeito individual.
 function renderImpact(prospective, impactTopics) {
   if (!prospective.length) {
-    return `<div class="plain-empty"><strong>Ainda não há proposta ou declaração documentada suficiente para relacionar impactos práticos.</strong></div>`;
+    return `<div class="plain-empty"><strong>Ainda não há registros suficientes nesta ficha para relacionar áreas da vida pública.</strong></div>`;
   }
   if (!impactTopics.length) {
-    return `<div class="plain-empty"><strong>Há proposta ou declaração documentada, mas o tema ainda não permite relacionar impactos práticos sem fazer inferências.</strong></div>`;
+    return `<div class="plain-empty"><strong>Há proposta ou declaração registrada, mas ainda não há áreas relacionadas nesta base.</strong></div>`;
   }
   return `
     <div class="impact-list">${impactTopics
@@ -276,7 +279,7 @@ function renderHistory(historyItems, actionEvidence, candidate) {
   if (!electoral && !actions && !institutionalEvidence && !institutionalTrack) {
     return hasGap(candidate, "previous_elections")
       ? `<p class="plain-empty">Histórico eleitoral: ${esc(NAO_DISPONIVEL)}.</p>`
-      : `<p class="plain-empty">Histórico eleitoral e atuação pública documentada ainda não estão disponíveis nesta base.</p>`;
+      : `<p class="plain-empty">Sem histórico eleitoral ou atuação pública documentada nesta base ainda.</p>`;
   }
   return `${electoral}${actions}${institutionalTrack}${institutionalEvidence}`;
 }
