@@ -484,6 +484,16 @@ A justificativa precisa ser revisada antes do merge.
 
 A camada de sustentabilidade permanece isolada e não pode modificar `topic-evidence.json`, ordenação, busca, comparação ou tratamento de candidaturas.
 
+## #2 — integração dos 2 primeiros registros reconfirmados do lote-#56 (2026-09-28)
+
+**Status: integrado nesta passagem.** Origem: revisão técnica registrada no comentário `5860703765` da Issue #2, que confirmou 2 dos 100 itens do lote-#56 como reconfirmados (`V`) e aprovados para promoção, distintos dos demais 98 (21 pendentes de revisão substantiva, os demais rejeitados por erro de captura/procedimento/rota errada, e 1 item — Alexandre Xambinho — em quarentena por decisão prévia, preservada sem alteração).
+
+- `data/reference/topic-evidence.json`: 2 entradas novas, `evidence_type: "atuação"`, tópico `seguranca`, fonte primária Câmara dos Deputados (fichas de tramitação do PL 2522/2026 e da PEC 8/2026), `verification_status: "verified"`; total de entradas 22 → 24;
+- `data/generated/candidates-federal.json` e `data/generated/meta.json` (`counts.topic_evidence`) regenerados a partir do canônico via `enrich_topic_evidence` (mesma função usada por `scripts/sync-data.py`), sem tocar nos demais candidatos/contagens; `data/generated/candidates-estadual.json` não muda porque nenhum dos dois candidatos é estadual;
+- `tests/test_wartime_curation_reconciliation.py` ajustado para não hardcodar mais o total de 22 entradas canônicas (agora `>= 22`), preservando intactos todos os invariantes específicos do lote wartime-154 (as 22 URLs elegíveis continuam presentes, a URL removida `idProposicao=2605709` continua ausente, o dry-run histórico do wartime-154 não muda);
+- quarentena de Alexandre Xambinho (`2cea3b522948d161a1be` em `wartime-curation-decisions.json`, fingerprint do rascunho lote-#56 `9f84ecf4d16f00976a75`) não foi tocada; os 21 itens `S` (pendentes) do lote-#56 não herdam esta aprovação e seguem em curadoria separada;
+- suíte completa (`pytest tests/`) verde, exceto `test_muted_text_token_meets_wcag_aa_on_light_brand_surfaces`, confirmado pré-existente em `main` (não relacionado a esta mudança, fora de escopo — pertence à reconstrução V6 do frontend, não iniciada nesta passagem).
+
 ## Próximo passo seguro
 
 Estado após a arrumação de governança:
