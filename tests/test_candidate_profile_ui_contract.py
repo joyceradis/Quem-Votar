@@ -57,8 +57,8 @@ class CandidateProfileUIContractTest(unittest.TestCase):
             "prospective.length", "impactTopics.length", "topic.life_areas",
             "Áreas relacionadas às propostas e declarações documentadas nesta ficha.",
             "não são previsão de benefício, prejuízo ou efeito individual",
-            "Há proposta documentada, mas o tema ainda não está mapeado a áreas de impacto.",
-            "Sem proposta documentada (item 02), não há como mapear impacto sem inferir.",
+            "Há proposta ou declaração registrada, mas ainda não há áreas relacionadas nesta base.",
+            "Ainda não há registros suficientes nesta ficha para relacionar áreas da vida pública.",
         ):
             self.assertIn(token, block)
         lowered = block.lower()

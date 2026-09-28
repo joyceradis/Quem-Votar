@@ -98,7 +98,7 @@ function renderToday(institutional, currentActivityText) {
   if (!institutional) {
     return `<div class="plain-empty">
       <strong>Sem atuação pública atual confirmada nesta base.</strong>
-      <p>Pode ser que a fonte oficial ainda não tenha sido atualizada — não que ela não exista.</p>
+      <p>Isso não significa ausência de atuação.</p>
     </div>`;
   }
   const detail = [institutional.party, institutional.status].filter(Boolean).join(" · ");
@@ -137,10 +137,10 @@ function renderProposes(prospective) {
 // benefício, prejuízo ou efeito individual.
 function renderImpact(prospective, impactTopics) {
   if (!prospective.length) {
-    return `<div class="plain-empty"><strong>Sem proposta documentada (item 02), não há como mapear impacto sem inferir.</strong></div>`;
+    return `<div class="plain-empty"><strong>Ainda não há registros suficientes nesta ficha para relacionar áreas da vida pública.</strong></div>`;
   }
   if (!impactTopics.length) {
-    return `<div class="plain-empty"><strong>Há proposta documentada, mas o tema ainda não está mapeado a áreas de impacto.</strong></div>`;
+    return `<div class="plain-empty"><strong>Há proposta ou declaração registrada, mas ainda não há áreas relacionadas nesta base.</strong></div>`;
   }
   return `
     <div class="impact-list">${impactTopics
