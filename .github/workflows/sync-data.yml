@@ -206,10 +206,24 @@ jobs:
               f"- **{counts.get('topic_evidence', 0)}** evidências temáticas "
               "canônicas em `data/reference/topic-evidence.json`."
           )
+          # A Cerca exige o checkpoint no mesmo PR quando data/generated muda.
+          # Se só mudarem valores (não as contagens acima), o bloco ficaria
+          # idêntico e o PR de dados falharia por falta de diff no checkpoint.
+          # O carimbo da coleta muda a cada snapshot e mantém o acoplamento.
+          collected_at = str(meta.get("collected_at") or "")
+          stamp = (
+              "Última coleta do snapshot: "
+              + collected_at[:16].replace("T", " ")
+              + " UTC.\n\n"
+              if collected_at
+              else ""
+          )
           block = (
               "## Snapshot eleitoral público\n\nUniverso atual:\n\n"
               + "\n".join(lines)
-              + "\n\n`SQ_CANDIDATO` permanece a chave eleitoral canônica.\n\n"
+              + "\n\n"
+              + stamp
+              + "`SQ_CANDIDATO` permanece a chave eleitoral canônica.\n\n"
               "Nenhuma contagem acima deve ser tratada como avaliação de "
               "candidatura ou completude política."
           )
