@@ -6,15 +6,18 @@
  * 1. A ilustração deixa de morar numa coluna fixa ao lado do texto e passa a
  *    ser uma camada de fundo que sangra para fora da seção. Não há mais
  *    "divisão fixa" entre copy e imagem.
- * 2. O ritmo da página alterna claro/escuro (hero claro → respostas em navy →
- *    assuntos claro → rodapé navy), em vez de branco do topo ao fim.
+ * 2. A navegação começa pela busca e oferece caminhos editoriais simples,
+ *    sem repetir na Home as perguntas internas da ficha.
  */
 
 .home-hero {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(180deg, #f4fafd 0%, #fbfdff 58%, #fff 100%);
-  padding: clamp(48px, 7vw, 104px) 0 clamp(40px, 5vw, 72px);
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse at 88% 18%, rgba(238, 143, 189, 0.18), transparent 32%),
+    linear-gradient(112deg, #edf8ff 0%, #f8fcff 51%, #fff 100%);
+  padding: clamp(54px, 8vw, 112px) 0 clamp(52px, 7vw, 92px);
 }
 
 /*
@@ -26,16 +29,16 @@
 .home-hero-art {
   position: absolute;
   z-index: 0;
-  top: clamp(18px, 3vw, 46px);
-  right: -5%;
-  bottom: auto;
-  width: min(760px, 62vw);
+  top: 50%;
+  right: -3%;
+  width: min(780px, 60vw);
   aspect-ratio: 755 / 340;
   background: url("../../assets/home-croqui-capixaba.webp") center / contain no-repeat;
   mix-blend-mode: multiply;
-  opacity: 0.98;
+  opacity: 0.78;
   pointer-events: none;
   user-select: none;
+  transform: translateY(-50%);
   -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,.18) 16%, #000 39%, #000 100%);
   mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,.18) 16%, #000 39%, #000 100%);
 }
@@ -49,96 +52,92 @@
   z-index: 1;
   max-width: var(--max);
   margin: 0 auto;
-  padding-inline: max(20px, calc((100vw - var(--max)) / 2));
+  padding: clamp(12px, 1.5vw, 22px) max(20px, calc((100vw - var(--max)) / 2));
+}
+
+.home-hero-copy > .qv-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.home-hero-copy > .qv-eyebrow::before {
+  width: 32px;
+  height: 2px;
+  background: var(--pink-strong);
+  content: "";
 }
 
 .home-hero h1 {
   margin: 0;
-  max-width: 17ch;
-  font-size: clamp(2.6rem, 6.2vw, 4.6rem);
-  line-height: 0.98;
-  letter-spacing: -0.035em;
+  max-width: 13ch;
+  color: var(--blue-dark);
+  font-size: clamp(3.25rem, 7.4vw, 6.4rem);
+  line-height: 0.92;
+  letter-spacing: -0.055em;
+}
+
+.home-hero h1::after {
+  display: block;
+  width: clamp(56px, 8vw, 96px);
+  height: 7px;
+  margin-top: clamp(18px, 2.4vw, 28px);
+  border-radius: var(--radius-pill);
+  background: var(--pink);
+  content: "";
 }
 
 .home-hero-lead {
-  max-width: 54ch;
-  margin: 20px 0 32px;
+  max-width: 50ch;
+  margin: 22px 0 28px;
   color: var(--ink-soft);
-  font-size: clamp(1rem, 1.5vw, 1.12rem);
+  font-size: clamp(1rem, 1.5vw, 1.18rem);
   line-height: 1.55;
 }
 
+.home-hero .qv-pill-search {
+  width: min(100%, 880px);
+  border-color: rgba(17, 59, 86, 0.16);
+  border-radius: var(--radius-md);
+  box-shadow: 0 22px 60px rgba(17, 59, 86, 0.16);
+}
+
+.home-hero .qv-pill-search:focus-within {
+  border-color: var(--blue-strong);
+  box-shadow: 0 0 0 3px rgba(21, 116, 175, 0.14), 0 22px 60px rgba(17, 59, 86, 0.14);
+}
+
+.home-hero .qv-pill-search label {
+  min-height: 74px;
+  justify-content: center;
+  padding-inline: 18px;
+}
+
+.home-hero .qv-pill-search input,
+.home-hero .qv-pill-search select {
+  font-size: 0.96rem;
+}
+
+.home-hero .qv-pill-search button {
+  min-height: 74px;
+  font-size: 0.96rem;
+}
+
 .home-snapshot {
-  margin: 16px 0 0;
+  margin: 20px 0 0;
   color: var(--muted);
   font-size: 0.82rem;
 }
 
 .home-snapshot b {
   color: var(--ink);
+  font-variant-numeric: tabular-nums;
 }
 
 .home-snapshot a {
   color: var(--blue-strong);
   font-weight: 700;
-}
-
-/* Seção escura: contraste real no meio da página, não só no rodapé. */
-.home-answers {
-  background: var(--blue-dark);
-  color: rgba(255, 255, 255, 0.78);
-}
-
-.home-answers-inner {
-  max-width: var(--max);
-  margin: 0 auto;
-  padding: clamp(56px, 7vw, 96px) max(20px, calc((100vw - var(--max)) / 2));
-}
-
-.home-answers h2 {
-  margin: 0 0 clamp(28px, 4vw, 48px);
-  max-width: 14ch;
-  color: #fff;
-  font-size: clamp(2.2rem, 5vw, 3.8rem);
-  line-height: 1;
-  letter-spacing: -0.035em;
-}
-
-.home-answer-list {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: clamp(24px, 3vw, 44px);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  counter-reset: none;
-}
-
-.home-answer-list li {
-  padding-top: 18px;
-  border-top: 2px solid rgba(255, 255, 255, 0.22);
-}
-
-.home-answer-list span {
-  display: block;
-  margin-bottom: 10px;
-  color: var(--pink);
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-}
-
-.home-answer-list h3 {
-  margin: 0 0 8px;
-  color: #fff;
-  font-size: 1.28rem;
-  line-height: 1.15;
-}
-
-.home-answer-list p {
-  margin: 0;
-  font-size: 0.92rem;
-  line-height: 1.55;
 }
 
 /* Assuntos */
@@ -207,75 +206,156 @@
   font-size: 0.78rem;
 }
 
-/* Três caminhos */
+/* Caminhos de entrada: editoriais, diretos e fáceis de tocar. */
 .home-choices {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
   max-width: var(--max);
   margin: 0 auto;
-  padding: 0 max(20px, calc((100vw - var(--max)) / 2)) clamp(56px, 7vw, 96px);
+  padding: clamp(56px, 7vw, 84px) max(20px, calc((100vw - var(--max)) / 2))
+    clamp(64px, 8vw, 104px);
 }
 
-.home-choices a {
-  display: grid;
-  gap: 6px;
-  align-content: start;
-  padding: 28px 24px 28px 0;
-  border-top: 1px solid var(--line);
-  text-decoration: none;
+.home-choices-head {
+  margin-bottom: clamp(24px, 3vw, 36px);
 }
 
-.home-choices strong {
-  font-family: var(--font-display);
-  font-size: 1.12rem;
-  letter-spacing: -0.02em;
+.home-choices-head h2 {
+  margin: 0;
   color: var(--blue-dark);
+  font-size: clamp(2rem, 4.4vw, 3.4rem);
+  line-height: 1;
+  letter-spacing: -0.035em;
 }
 
-.home-choices span {
-  color: var(--muted);
-  font-size: 0.88rem;
+.home-choice-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(12px, 1.8vw, 22px);
 }
 
-.home-choices a:hover strong,
-.home-choices a:focus-visible strong {
+.home-choice-list a {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-content: space-between;
+  align-items: end;
+  justify-content: space-between;
+  gap: 28px 16px;
+  min-height: 184px;
+  padding: clamp(20px, 2.4vw, 30px);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: linear-gradient(145deg, #fff 58%, var(--blue-soft));
+  box-shadow: var(--shadow-soft);
+  color: var(--ink);
+  text-decoration: none;
+  transition:
+    border-color var(--motion-fast) ease,
+    box-shadow var(--motion-fast) ease,
+    transform var(--motion-fast) ease;
+}
+
+.home-choice-list a::before {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: var(--pink);
+  content: "";
+}
+
+.home-choice-list a:hover,
+.home-choice-list a:focus-visible {
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow);
+  transform: translateY(-3px);
+}
+
+.home-choice-list a:focus-visible {
+  outline: 2px solid var(--blue-strong);
+  outline-offset: -2px;
+}
+
+.home-choice-copy {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
+.home-choice-list strong {
+  color: var(--blue-dark);
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 2vw, 1.55rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.home-choice-list a:hover strong,
+.home-choice-list a:focus-visible strong {
   color: var(--pink-strong);
 }
 
+.home-choice-copy > span {
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.home-choice-arrow {
+  flex: none;
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: #fff;
+  color: var(--blue-strong);
+  font-size: 1.3rem;
+  transition:
+    border-color var(--motion-fast) ease,
+    background-color var(--motion-fast) ease,
+    transform var(--motion-fast) ease;
+}
+
+.home-choice-list a:hover .home-choice-arrow,
+.home-choice-list a:focus-visible .home-choice-arrow {
+  border-color: var(--blue-strong);
+  background: var(--blue-strong);
+  color: #fff;
+  transform: translateX(3px);
+}
+
 @media (max-width: 920px) {
-  .home-answer-list,
-  .home-choices {
-    grid-template-columns: 1fr;
-  }
-
-  .home-section-head {
-    grid-template-columns: 1fr;
-    align-items: start;
-  }
-
-  /* No mobile a arte ganha enquadramento editorial próprio antes da copy. */
   .home-hero {
-    padding-top: 0;
-    padding-bottom: clamp(48px, 8vw, 72px);
+    padding-block: 36px 56px;
   }
 
   .home-hero-art {
-    position: relative;
-    top: auto;
-    right: auto;
-    bottom: auto;
-    width: 118vw;
-    max-width: none;
-    margin: 0 -9vw 8px;
-    aspect-ratio: 755 / 340;
-    background-position: center;
-    opacity: 1;
-    -webkit-mask-image: none;
-    mask-image: none;
+    right: -16%;
+    width: 76vw;
+    opacity: 0.34;
   }
 
-  .home-choices a {
-    padding-right: 0;
+  .home-hero-copy {
+    padding-inline: max(20px, calc((100vw - var(--max)) / 2));
+  }
+
+  .home-hero h1 {
+    max-width: 11ch;
+    font-size: clamp(3.2rem, 10vw, 5.2rem);
+  }
+
+  .home-hero-lead {
+    max-width: 46ch;
+  }
+
+  .home-choice-list {
+    grid-template-columns: 1fr;
+  }
+
+  .home-choice-list a {
+    min-height: 132px;
+    padding: 22px;
   }
 }
 
@@ -285,11 +365,65 @@
   }
 
   .home-hero-art {
+    position: relative;
+    top: auto;
+    right: auto;
     width: 126vw;
-    margin: 0 -13vw 8px;
+    margin: 0 -13vw 4px;
+    aspect-ratio: 755 / 280;
+    background-position: center;
+    opacity: 0.85;
+    transform: none;
+    -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 62%, transparent 100%);
   }
 
+  .home-hero-copy {
+    padding-inline: 20px;
+  }
+
+  .home-hero-copy > .qv-eyebrow {
+    margin-bottom: 14px;
+  }
+
+  .home-hero h1 {
+    max-width: 10ch;
+    font-size: clamp(3rem, 13vw, 4.1rem);
+  }
+
+  .home-choices {
+    padding-top: 34px;
+  }
+
+  .home-section-head {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+}
+
+@media (max-width: 420px) {
   .home-hero-lead {
-    margin-bottom: 26px;
+    margin-top: 18px;
+    font-size: 1rem;
+  }
+
+  .home-hero .qv-pill-search label {
+    min-height: 68px;
+  }
+
+  .home-hero .qv-pill-search button {
+    min-height: 56px;
+  }
+
+  .home-choice-list a {
+    min-height: 120px;
+    padding: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-choice-list a,
+  .home-choice-arrow {
+    transition: none;
   }
 }
