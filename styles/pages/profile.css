@@ -581,3 +581,200 @@
     white-space: normal;
   }
 }
+
+/* ---- Acabamento profissional (ficha) ---------------------------------- */
+
+/* Foto ausente: monograma tipográfico neutro. O texto "Imagem não disponível"
+   segue no DOM para leitores de tela; só as iniciais são desenhadas. */
+.profile-photo.profile-fallback {
+  position: relative;
+  overflow: hidden;
+  font-size: 0;
+  color: transparent;
+  background: linear-gradient(160deg, #e3f1fa 0%, #d3e6f3 100%);
+}
+
+.profile-photo.profile-fallback::before {
+  content: attr(data-initials);
+  color: var(--blue-dark);
+  font-family: var(--font-display, inherit);
+  font-size: 3.6rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  opacity: 0.55;
+}
+
+/* Fatos de identificação no topo */
+.hero-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 14px 28px;
+  margin: 22px 0 0;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+
+.hero-facts dt {
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hero-facts dd {
+  margin: 3px 0 0;
+  color: var(--ink);
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+/* Resumo de cobertura documental: números em texto, sem cor de qualidade */
+.profile-coverage {
+  margin-top: 22px;
+}
+
+.profile-coverage dl {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: #fff;
+}
+
+.profile-coverage dl > div {
+  padding: 16px 18px;
+  border-right: 1px solid var(--line);
+}
+
+.profile-coverage dl > div:last-child {
+  border-right: 0;
+}
+
+.profile-coverage dt {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.profile-coverage dd {
+  display: grid;
+  gap: 2px;
+  margin: 6px 0 0;
+}
+
+.profile-coverage dd strong {
+  color: var(--blue-dark);
+  font-size: 1.7rem;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.profile-coverage dd span {
+  color: var(--muted);
+  font-size: 0.72rem;
+  line-height: 1.3;
+}
+
+.profile-coverage > p {
+  margin: 10px 2px 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+/* Índice das seções fica visível durante a leitura */
+.profile-jump {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: saturate(1.4) blur(8px);
+}
+
+.profile-jump a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-min);
+  padding-block: 0;
+  border-bottom: 2px solid transparent;
+}
+
+.profile-jump a[aria-current="true"] {
+  color: var(--blue-dark);
+  border-bottom-color: var(--blue-dark);
+}
+
+.answer-section {
+  scroll-margin-top: 64px;
+}
+
+/* Seções sem registro ocupam menos espaço que as preenchidas */
+.answer-section:has(> div > .plain-empty:only-child) {
+  padding-block: clamp(24px, 3vw, 34px);
+}
+
+/* Fontes: rótulo sempre legível, sem colar no botão */
+.source-item > div {
+  min-width: 0;
+}
+
+.source-item strong {
+  overflow-wrap: anywhere;
+}
+
+.source-item a {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-min);
+}
+
+@media (max-width: 920px) {
+  .profile-coverage dl {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .profile-coverage dl > div:nth-child(3) {
+    border-right: 0;
+  }
+
+  .profile-coverage dl > div:nth-child(n + 4) {
+    border-top: 1px solid var(--line);
+  }
+}
+
+@media (max-width: 620px) {
+  .profile-photo.profile-fallback::before {
+    font-size: 2.6rem;
+  }
+
+  .profile-coverage dl {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .profile-coverage dl > div {
+    border-right: 1px solid var(--line);
+  }
+
+  .profile-coverage dl > div:nth-child(even) {
+    border-right: 0;
+  }
+
+  .profile-coverage dl > div:nth-child(n + 3) {
+    border-top: 1px solid var(--line);
+  }
+
+  .profile-coverage dl > div:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    border-right: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .profile-jump {
+    backdrop-filter: none;
+  }
+}

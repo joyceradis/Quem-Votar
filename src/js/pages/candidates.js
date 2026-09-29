@@ -5,7 +5,7 @@
 // aqui) e o cartão virou função própria.
 import { $, esc, norm, params } from "../core/dom.js";
 import { loadCore, applyGlobalMeta, OFFICES, officeLabel } from "../core/data.js";
-import { formatSnapshot } from "../core/format.js";
+import { formatSnapshot, initials } from "../core/format.js";
 import { updateSearchParams } from "../core/url-state.js";
 import { setupNavigation } from "../core/a11y.js";
 import {
@@ -33,11 +33,22 @@ const PAGE_SIZE = 12;
 
 setupNavigation();
 
+// Monograma neutro no lugar da foto ausente. O texto "Imagem não disponível"
+// continua no DOM (leitor de tela) e as iniciais são desenhadas por CSS.
+// "Outros" é o código genérico do TSE (nº 956) e não descreve ocupação.
+function usableOccupation(value) {
+  return Boolean(value) && !/^OUTROS?$/i.test(String(value).trim());
+}
+
+function fallbackMarkup(name) {
+  return `<div class="photo-fallback" data-initials="${esc(initials(name))}">Imagem não disponível</div>`;
+}
+
 function photoMarkup(candidate) {
   const source =
     candidate.photo_url || candidate.photoUrl || candidate.foto_url || candidate.photo?.url || "";
   const name = candidate.ballot_name || candidate.full_name || "candidato";
-  if (!source) return `<div class="photo-fallback">Imagem não disponível</div>`;
+  if (!source) return fallbackMarkup(name);
   return `<img src="${esc(source)}" alt="Foto de ${esc(name)}" loading="lazy" data-photo>`;
 }
 
@@ -100,7 +111,7 @@ function candidateCard(candidate, kind, selectedIds) {
         <h3><a href="${profileUrl}">${esc(name)}</a></h3>
         <p class="qv-card-electoral">${esc(candidate.party || "Partido não informado")} · nº ${esc(candidate.number || "—")}</p>
         ${candidate.current_mandate ? `<p class="qv-card-now">${esc(currentActivity(candidate, kind))}</p>` : ""}
-        ${candidate.occupation ? `<p class="qv-card-occupation">${esc(candidate.occupation)}</p>` : ""}
+        ${usableOccupation(candidate.occupation) ? `<p class="qv-card-occupation">${esc(candidate.occupation)}</p>` : ""}
         ${topicTags}
         ${proposalCount ? `<p class="qv-card-meta">${proposalCount} registro${proposalCount === 1 ? "" : "s"} temático${proposalCount === 1 ? "" : "s"} com fonte</p>` : ""}
         ${density.length ? `<p class="qv-card-meta">${density.join(" · ")}</p>` : enrichmentGapLabel(candidate) ? `<p class="qv-card-meta">${enrichmentGapLabel(candidate)}</p>` : ""}
@@ -322,7 +333,7 @@ async function initCandidates() {
       .querySelectorAll("img[data-photo]")
       .forEach((img) => {
         img.addEventListener("error", () => {
-          img.outerHTML = '<div class="photo-fallback">Imagem não disponível</div>';
+          img.outerHTML = fallbackMarkup(img.alt.replace(/^Foto de /, ""));
         });
       });
 

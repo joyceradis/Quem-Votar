@@ -19,7 +19,7 @@
 //   prejuízo ou efeito individual.
 import { $, esc, norm, params } from "../core/dom.js";
 import { loadCore, getJSON, DATA, applyGlobalMeta, officeLabel } from "../core/data.js";
-import { formatBRL, formatSnapshot } from "../core/format.js";
+import { formatBRL, formatSnapshot, formatDateBR, initials, socialLabel } from "../core/format.js";
 import { buildUrl } from "../core/url-state.js";
 import { setupNavigation } from "../core/a11y.js";
 import {
@@ -50,16 +50,21 @@ function registrationStatusLabel(value) {
   return value;
 }
 
+// Monograma neutro; o texto segue no DOM para leitores de tela.
+function fallbackMarkup(name) {
+  return `<div class="profile-photo profile-fallback" data-initials="${esc(initials(name))}">Imagem não disponível</div>`;
+}
+
 function photoMarkup(candidate) {
   const source =
     candidate.photo_url || candidate.photoUrl || candidate.foto_url || candidate.photo?.url || "";
   const name = candidate.ballot_name || candidate.full_name || "candidato";
-  if (!source) return `<div class="profile-photo profile-fallback">Imagem não disponível</div>`;
+  if (!source) return fallbackMarkup(name);
   return `<img class="profile-photo" src="${esc(source)}" alt="Foto de ${esc(name)}" loading="eager" data-photo>`;
 }
 
 function evidenceMetaLine(item) {
-  return [evidenceTypeLabel(item.evidence_type), item.source_publisher, item.published_at]
+  return [evidenceTypeLabel(item.evidence_type), item.source_publisher, formatDateBR(item.published_at)]
     .filter(Boolean)
     .join(" · ");
 }
@@ -68,6 +73,54 @@ function sourceLink(item) {
   return item.source_url
     ? `<a target="_blank" rel="noopener" href="${esc(item.source_url)}">Abrir fonte</a>`
     : "";
+}
+
+// Fatos do cadastro do TSE já exibidos mais abaixo; aqui só aproximam o que
+// identifica a candidatura logo no topo. Sem ordenação nem destaque.
+function renderHeroFacts(candidate) {
+  const organization =
+    candidate.coalition && norm(candidate.coalition) !== "PARTIDO ISOLADO"
+      ? candidate.coalition_composition || candidate.coalition
+      : null;
+  const facts = [
+    ["Partido", candidate.party_name || candidate.party],
+    ["Federação / coligação", organization],
+    ["Escolaridade", candidate.education],
+  ].filter(([, value]) => value);
+  if (!facts.length) return "";
+  return `<dl class="hero-facts">${facts
+    .map(([label, value]) => `<div><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`)
+    .join("")}</dl>`;
+}
+
+// Cobertura documental da ficha (AGENTS.md §2: indicadores de cobertura são
+// permitidos). Contagens factuais; lacuna de fonte é dita como "não
+// disponível", nunca como zero.
+function renderCoverage(candidate, prospective, actionEvidence, assets) {
+  const count = (n) => String(n);
+  const items = [
+    ["Propostas e declarações", count(prospective.length), prospective.length ? "com fonte e data" : "nenhuma documentada ainda"],
+    ["Atuação documentada", count(actionEvidence.length + (candidate.institutional_evidence || []).length), "registros oficiais"],
+    hasGap(candidate, "previous_elections")
+      ? ["Eleições anteriores", "—", NAO_DISPONIVEL.toLowerCase()]
+      : ["Eleições anteriores", count((candidate.previous_elections || []).length), "no histórico do TSE"],
+    hasGap(candidate, "assets")
+      ? ["Bens declarados", "—", NAO_DISPONIVEL.toLowerCase()]
+      : ["Bens declarados", count(assets?.count || (assets?.items || []).length || 0), "ao TSE"],
+    hasGap(candidate, "social_links")
+      ? ["Redes informadas", "—", NAO_DISPONIVEL.toLowerCase()]
+      : ["Redes informadas", count((candidate.social_links || []).length), "ao TSE"],
+  ];
+  return `<section class="profile-coverage" aria-label="O que há documentado nesta ficha">
+      <h2 class="qv-visually-hidden">O que há documentado nesta ficha</h2>
+      <dl>${items
+        .map(
+          ([label, value, note]) =>
+            `<div><dt>${esc(label)}</dt><dd><strong>${esc(value)}</strong><span>${esc(note)}</span></dd></div>`
+        )
+        .join("")}</dl>
+      <p>Contagem do que existe na base, sem peso ou avaliação. Sem registro não significa ausência de proposta ou atuação.</p>
+    </section>`;
 }
 
 function renderHero(candidate, kind, name, socialName, currentActivityText) {
@@ -87,6 +140,7 @@ function renderHero(candidate, kind, name, socialName, currentActivityText) {
         ${socialName ? `<p class="social-name">Nome social: ${esc(socialName)}</p>` : ""}
         <p class="identity-line"><strong>${esc(candidate.party || "Partido não informado")}</strong> <span>nº ${esc(candidate.number || "—")}</span></p>
         <p class="profile-now">${esc(currentActivityText)}</p>
+        ${renderHeroFacts(candidate)}
         <div class="profile-actions">
           <button id="profileCompare" class="qv-btn qv-btn--primary" type="button" data-candidate-id="${esc(candidate.tse_id)}" aria-pressed="${selected}" aria-disabled="${limited}"${limited ? " disabled" : ""}>${label}</button>
           <button id="profileShare" class="qv-btn" type="button">Compartilhar ficha</button>
@@ -422,7 +476,7 @@ function renderElectoralData(candidate, assets) {
           <span>${social.length} link${social.length === 1 ? "" : "s"}</span>
         </div>
         <ul class="declared-social-list">${social
-          .map((url) => `<li><a target="_blank" rel="noopener" href="${esc(url)}">${esc(url)}</a></li>`)
+          .map((url) => `<li><a target="_blank" rel="noopener" href="${esc(url)}" title="${esc(url)}">${esc(socialLabel(url))}</a></li>`)
           .join("")}</ul>
       </div>`
     : hasGap(candidate, "social_links")
@@ -447,7 +501,7 @@ function renderSources(sources) {
 }
 
 function collectSources(candidate, meta, chamberRow, assets, institutionalHistory, thematicEvidence) {
-  return [
+  const list = [
     candidate.source?.official_portal
       ? {
           name: "TSE · cadastro eleitoral",
@@ -482,11 +536,21 @@ function collectSources(candidate, meta, chamberRow, assets, institutionalHistor
     ...thematicEvidence
       .filter((item) => item.source_url)
       .map((item) => ({
-        name: topicById(item.topic_id)?.label || evidenceTypeLabel(item.evidence_type),
-        detail: item.source_publisher || item.published_at || "",
+        name: [evidenceTypeLabel(item.evidence_type), topicById(item.topic_id)?.label]
+          .filter(Boolean)
+          .join(" · "),
+        detail: [item.source_publisher, formatDateBR(item.published_at)].filter(Boolean).join(" · "),
         url: item.source_url,
       })),
   ].filter(Boolean);
+  // Mesma URL + mesmo rótulo não é outra fonte.
+  const seen = new Set();
+  return list.filter((item) => {
+    const key = `${item.url}|${item.name}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 
 function showMessage(text) {
@@ -557,6 +621,7 @@ async function initProfile() {
   mount.className = "";
   mount.innerHTML = `
     ${renderHero(candidate, kind, name, socialName, currentActivityText)}
+    ${renderCoverage(candidate, prospective, actionEvidence, assets)}
 
     <nav class="profile-jump" aria-label="Ir para uma pergunta">
       <a href="#faz-hoje">Hoje</a>
@@ -599,7 +664,7 @@ async function initProfile() {
 
   mount.querySelectorAll("img[data-photo]").forEach((img) => {
     img.addEventListener("error", () => {
-      img.outerHTML = '<div class="profile-photo profile-fallback">Imagem não disponível</div>';
+      img.outerHTML = fallbackMarkup(img.alt.replace(/^Foto de /, ""));
     });
   });
 
@@ -627,6 +692,30 @@ async function initProfile() {
   });
 
   setupComparisonSync();
+  highlightCurrentSection(mount);
+}
+
+// Destaca no índice a seção em leitura. Só apoio de navegação: o foco e os
+// hrefs continuam funcionando sem JS de observação.
+function highlightCurrentSection(mount) {
+  if (!("IntersectionObserver" in window)) return;
+  const links = new Map(
+    [...mount.querySelectorAll(".profile-jump a")].map((a) => [a.getAttribute("href").slice(1), a])
+  );
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        links.forEach((a) => a.removeAttribute("aria-current"));
+        links.get(entry.target.id)?.setAttribute("aria-current", "true");
+      });
+    },
+    { rootMargin: "-25% 0px -65% 0px" }
+  );
+  links.forEach((_, id) => {
+    const section = document.getElementById(id);
+    if (section) observer.observe(section);
+  });
 }
 
 initProfile();

@@ -1,24 +1,30 @@
 /* Comparação — portado de styles.css:38. Grade de campos iguais para todas
    as colunas: nenhuma coluna recebe destaque, cor ou ordem de "vencedor". */
 .comparison-wrap {
-  overflow: auto;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
 }
 
 .comparison-grid {
   display: grid;
-  grid-template-columns: 190px repeat(var(--compare-cols, 3), minmax(220px, 1fr));
-  min-width: max-content;
+  grid-template-columns: 170px repeat(var(--compare-cols, 3), minmax(230px, 1fr));
+  min-width: calc(170px + var(--compare-cols, 3) * 230px);
 }
 
 .comparison-grid > div {
+  min-width: 0;
+  overflow-wrap: anywhere;
   padding: 16px;
   border-bottom: 1px solid var(--line);
   border-right: 1px solid var(--line);
 }
 
 .row-label {
+  position: sticky;
+  left: 0;
+  z-index: 1;
   background: #f5fbff;
   color: var(--muted);
   font-size: 0.7rem;
@@ -37,10 +43,28 @@
 .compare-person .profile-fallback {
   display: grid;
   place-items: center;
-  padding: 8px;
-  text-align: center;
+  font-size: 0;
+  color: transparent;
+  background: linear-gradient(160deg, #e3f1fa 0%, #d3e6f3 100%);
+}
+
+.compare-person .profile-fallback::before {
+  content: attr(data-initials);
+  color: var(--blue-dark);
+  font-size: 1.9rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  opacity: 0.55;
+}
+
+.compare-person .compare-office {
+  display: block;
+  margin-bottom: 2px;
   color: var(--muted);
   font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .compare-person h2 {

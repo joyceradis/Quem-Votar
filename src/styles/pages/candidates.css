@@ -351,3 +351,20 @@
   }
 }
 
+
+/* Foto ausente na lista: monograma neutro (texto acessível mantido no DOM) */
+.qv-card-photo .photo-fallback {
+  position: relative;
+  font-size: 0;
+  color: transparent;
+  background: linear-gradient(160deg, #e3f1fa 0%, #d3e6f3 100%);
+}
+
+.qv-card-photo .photo-fallback::before {
+  content: attr(data-initials);
+  color: var(--blue-dark);
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  opacity: 0.55;
+}
