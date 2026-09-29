@@ -110,6 +110,55 @@ class ChamberRecoveryPreparationTests(unittest.TestCase):
                 source_ids=[source_id],
             )
 
+    def test_restores_only_selected_sources_from_verified_failed_baseline(self):
+        target = chamber_source(2494683)
+        target_id = batch.make_source_id(target)
+        unrelated_id = "unrelated-source-id"
+        unrelated = {"status": "failed", "attempts": 3, "last_error": "unrelated"}
+        current = {
+            target_id: {
+                **failed_state(target),
+                "status": "collected",
+                "attempts": 103,
+                "reprocess_count": 100,
+                "last_error": "",
+                "chamber_section_recovery_v1": True,
+            },
+            unrelated_id: dict(unrelated),
+        }
+        baseline = {
+            target_id: failed_state(target),
+            unrelated_id: {"status": "failed", "attempts": 9},
+        }
+
+        restored, previous = recovery.restore_selected_baseline_states(
+            current_states=current,
+            baseline_states=baseline,
+            source_ids=[target_id],
+        )
+
+        self.assertEqual(failed_state(target), restored[target_id])
+        self.assertEqual(unrelated, restored[unrelated_id])
+        self.assertEqual(100, previous[target_id]["reprocess_count"])
+
+    def test_refuses_to_restore_unrelated_current_states(self):
+        target = chamber_source(2494683)
+        target_id = batch.make_source_id(target)
+        current = {
+            target_id: {
+                **failed_state(target),
+                "status": "quarantined",
+            },
+        }
+        baseline = {target_id: failed_state(target)}
+
+        with self.assertRaisesRegex(ValueError, "não pode ser restaurado"):
+            recovery.restore_selected_baseline_states(
+                current_states=current,
+                baseline_states=baseline,
+                source_ids=[target_id],
+            )
+
 
 if __name__ == "__main__":
     unittest.main()

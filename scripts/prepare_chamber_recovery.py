@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import sys
@@ -40,6 +41,36 @@ def read_run_metadata(path: Path) -> dict[str, str]:
             continue
         key, value = line.split("=", 1)
         metadata[key] = value
+    return metadata
+
+
+def verify_artifact(
+    artifact_dir: Path,
+    *,
+    expected_repository: str,
+    expected_run_id: str,
+    required_files: tuple[str, ...],
+) -> dict[str, str]:
+    metadata = read_run_metadata(artifact_dir / "RUN_METADATA.txt")
+    if (
+        metadata.get("repository") != expected_repository
+        or metadata.get("run_id") != expected_run_id
+        or not re.fullmatch(r"[0-9a-f]{40}", metadata.get("commit", ""))
+    ):
+        raise ValueError("Proveniência do artifact não corresponde ao run/repositório.")
+
+    checksums: dict[str, str] = {}
+    for line in (artifact_dir / "SHA256SUMS.txt").read_text(encoding="utf-8").splitlines():
+        digest, separator, filename = line.partition("  ")
+        if separator:
+            checksums[filename] = digest
+    for filename in required_files:
+        path = artifact_dir / filename
+        expected = checksums.get(filename)
+        if not path.is_file() or not expected:
+            raise ValueError(f"Artifact sem arquivo/checksum obrigatório: {filename}")
+        if hashlib.sha256(path.read_bytes()).hexdigest() != expected:
+            raise ValueError(f"Checksum inválido no artifact: {filename}")
     return metadata
 
 
@@ -131,12 +162,60 @@ def build_recovery_payload(
     return selected
 
 
+def restore_selected_baseline_states(
+    *,
+    current_states: dict[str, Any],
+    baseline_states: dict[str, Any],
+    source_ids: list[str],
+) -> tuple[dict[str, Any], dict[str, dict[str, Any]]]:
+    if not isinstance(current_states, dict) or not isinstance(baseline_states, dict):
+        raise ValueError("Current/baseline processing state deve conter mapa de fontes.")
+    restored = {source_id: dict(row) for source_id, row in current_states.items()}
+    previous: dict[str, dict[str, Any]] = {}
+    for source_id in source_ids:
+        current = current_states.get(source_id)
+        baseline = baseline_states.get(source_id)
+        if not isinstance(current, dict) or not isinstance(baseline, dict):
+            raise ValueError(f"Estado atual/baseline ausente: {source_id}")
+        if (
+            baseline.get("status") != "failed"
+            or int(baseline.get("attempts", 0) or 0) < 3
+            or int(baseline.get("reprocess_count", 0) or 0) != 0
+            or baseline.get("last_error") != EXPECTED_ERROR
+            or baseline.get("chamber_section_recovery_v1")
+        ):
+            raise ValueError(f"Estado baseline não é uma falha elegível: {source_id}")
+        if (
+            current.get("candidate_id") != baseline.get("candidate_id")
+            or current.get("source_url") != baseline.get("source_url")
+        ):
+            raise ValueError(f"Identidade no estado atual diverge do baseline: {source_id}")
+
+        is_unmigrated = (
+            current.get("status") == "failed"
+            and int(current.get("reprocess_count", 0) or 0) == 0
+            and current.get("last_error") == EXPECTED_ERROR
+            and not current.get("chamber_section_recovery_v1")
+        )
+        is_prior_migration = (
+            current.get("status") == "collected"
+            and current.get("chamber_section_recovery_v1") is True
+        )
+        if not (is_unmigrated or is_prior_migration):
+            raise ValueError(f"Estado atual não pode ser restaurado seletivamente: {source_id}")
+        previous[source_id] = dict(current)
+        restored[source_id] = dict(baseline)
+    return restored, previous
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--artifact-dir", type=Path, required=True)
+    parser.add_argument("--baseline-artifact-dir", type=Path, required=True)
     parser.add_argument("--state", type=Path, required=True)
     parser.add_argument("--source-ids", required=True)
     parser.add_argument("--expected-run-id", required=True)
+    parser.add_argument("--expected-baseline-run-id", required=True)
     parser.add_argument("--expected-repository", required=True)
     parser.add_argument("--output-sources", type=Path, required=True)
     parser.add_argument("--output-audit", type=Path, required=True)
@@ -144,27 +223,45 @@ def main() -> int:
 
     try:
         source_ids = parse_source_ids(args.source_ids)
-        metadata = read_run_metadata(args.artifact_dir / "RUN_METADATA.txt")
-        if (
-            metadata.get("repository") != args.expected_repository
-            or metadata.get("run_id") != args.expected_run_id
-            or not re.fullmatch(r"[0-9a-f]{40}", metadata.get("commit", ""))
-        ):
-            raise ValueError("Proveniência do artifact histórico não corresponde ao run/repositório.")
+        metadata = verify_artifact(
+            args.artifact_dir,
+            expected_repository=args.expected_repository,
+            expected_run_id=args.expected_run_id,
+            required_files=("topic-evidence-sources.json",),
+        )
+        baseline_metadata = verify_artifact(
+            args.baseline_artifact_dir,
+            expected_repository=args.expected_repository,
+            expected_run_id=args.expected_baseline_run_id,
+            required_files=("processing-state.json",),
+        )
 
         historical = json.loads(
             (args.artifact_dir / "topic-evidence-sources.json").read_text(encoding="utf-8")
         )
-        state = json.loads(args.state.read_text(encoding="utf-8"))
+        current_state = json.loads(args.state.read_text(encoding="utf-8"))
+        baseline_state = json.loads(
+            (args.baseline_artifact_dir / "processing-state.json").read_text(encoding="utf-8")
+        )
+        restored_states, previous_states = restore_selected_baseline_states(
+            current_states=current_state.get("sources", {}),
+            baseline_states=baseline_state.get("sources", {}),
+            source_ids=source_ids,
+        )
         selected = build_recovery_payload(
             sources=historical.get("sources", []),
-            states=state.get("sources", {}),
+            states=baseline_state.get("sources", {}),
             source_ids=source_ids,
         )
     except (OSError, ValueError, TypeError, json.JSONDecodeError) as exc:
         print(f"Recovery source validation failed: {exc}", file=sys.stderr)
         return 1
 
+    current_state["sources"] = restored_states
+    args.state.write_text(
+        json.dumps(current_state, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
     args.output_sources.parent.mkdir(parents=True, exist_ok=True)
     args.output_audit.parent.mkdir(parents=True, exist_ok=True)
     args.output_sources.write_text(
@@ -185,8 +282,27 @@ def main() -> int:
             {
                 "source_run_id": args.expected_run_id,
                 "source_commit": metadata["commit"],
+                "baseline_state_run_id": args.expected_baseline_run_id,
+                "baseline_state_commit": baseline_metadata["commit"],
                 "source_ids": source_ids,
                 "selected_sources": len(selected),
+                "baseline_attempts": {
+                    source_id: int(
+                        baseline_state["sources"][source_id].get("attempts", 0) or 0
+                    )
+                    for source_id in source_ids
+                },
+                "previous_state": {
+                    source_id: {
+                        "status": previous_states[source_id].get("status"),
+                        "attempts": previous_states[source_id].get("attempts"),
+                        "reprocess_count": previous_states[source_id].get("reprocess_count"),
+                        "chamber_section_recovery_v1": previous_states[source_id].get(
+                            "chamber_section_recovery_v1", False
+                        ),
+                    }
+                    for source_id in source_ids
+                },
             },
             ensure_ascii=False,
             indent=2,
