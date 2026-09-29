@@ -5,6 +5,8 @@
 import { $ } from "./dom.js";
 
 let validCompareIds = null;
+let memoryCompareIds = [];
+let storageWritable = true;
 
 export function setValidCompareIds(ids) {
   validCompareIds = ids;
@@ -22,15 +24,25 @@ export function normalizeCompareIds(ids, validIds = null) {
 }
 
 export function getCompareIds() {
-  try {
-    return normalizeCompareIds(JSON.parse(localStorage.getItem("qv_compare") || "[]"), validCompareIds);
-  } catch {
-    return [];
+  if (storageWritable) {
+    try {
+      memoryCompareIds = normalizeCompareIds(JSON.parse(localStorage.getItem("qv_compare") || "[]"));
+    } catch {
+      // A consulta continua com a seleção desta página se o storage falhar.
+    }
   }
+  return normalizeCompareIds(memoryCompareIds, validCompareIds);
 }
 
 export function setCompareIds(ids) {
-  localStorage.setItem("qv_compare", JSON.stringify(normalizeCompareIds(ids, validCompareIds)));
+  memoryCompareIds = normalizeCompareIds(ids, validCompareIds);
+  try {
+    localStorage.setItem("qv_compare", JSON.stringify(memoryCompareIds));
+    storageWritable = true;
+  } catch {
+    // Não reler uma seleção antiga depois de uma escrita recusada.
+    storageWritable = false;
+  }
 }
 
 export function comparisonState(ids) {
