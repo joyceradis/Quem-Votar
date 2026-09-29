@@ -8,7 +8,7 @@
   display: grid;
   /* 1ª coluna dimensionada para caber "Deputado Estadual" na Inter, que tem
      métrica mais larga que a pilha de fontes de sistema usada antes. */
-  grid-template-columns: 215px minmax(280px, 1fr) auto;
+  grid-template-columns: minmax(200px, 0.75fr) minmax(0, 1.6fr) auto;
   max-width: 850px;
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
@@ -18,7 +18,9 @@
 }
 
 .qv-pill-search label {
+  min-width: 0;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 2px;
   padding: 10px 15px;
   border-right: 1px solid var(--line);
@@ -34,7 +36,7 @@
 
 .qv-pill-search input,
 .qv-pill-search select {
-  min-height: 38px;
+  min-height: var(--tap-min);
   width: 100%;
   border: 0;
   outline: 0;
@@ -56,6 +58,7 @@
   font-weight: 900;
   padding: 0 24px;
   transition: background var(--motion-fast) ease;
+  min-height: var(--tap-min);
 }
 
 .qv-pill-search button:hover {

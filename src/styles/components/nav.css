@@ -15,7 +15,7 @@
   top: 0;
   z-index: 50;
   background: linear-gradient(180deg, rgba(237, 247, 252, 0.97) 0%, rgba(247, 251, 253, 0.93) 100%);
-  border-bottom: 1px solid rgba(17, 59, 86, 0.06);
+  border-bottom: 1px solid var(--line);
   backdrop-filter: blur(18px) saturate(140%);
 }
 
@@ -33,13 +33,16 @@
 .desktop-nav {
   display: none;
   align-items: center;
-  gap: 22px;
+  gap: 26px;
 }
 
 .desktop-nav a {
   color: var(--ink-soft);
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-min);
   font-size: 0.84rem;
-  font-weight: 850;
+  font-weight: 700;
   text-decoration: none;
 }
 
@@ -104,14 +107,18 @@
   z-index: 80;
   padding: 96px 32px 32px;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  overflow-y: auto;
   align-content: start;
   transform: translateX(105%);
   transition: transform var(--motion-base) var(--motion-ease);
   background: linear-gradient(180deg, #fff 0%, #f7fbfe 58%, #fff4fa 100%);
-  box-shadow: -30px 0 80px rgba(17, 59, 86, 0.16);
+  visibility: hidden;
 }
 
 .drawer.open {
+  visibility: visible;
+  box-shadow: -30px 0 80px rgba(17, 59, 86, 0.16);
   transform: none;
 }
 
@@ -128,9 +135,11 @@
 .drawer a {
   padding: 19px 0;
   border-bottom: 1px solid var(--line);
-  font-size: 1.25rem;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
   font-weight: 800;
   text-decoration: none;
+  overflow-wrap: anywhere;
 }
 
 .drawer a:hover {
