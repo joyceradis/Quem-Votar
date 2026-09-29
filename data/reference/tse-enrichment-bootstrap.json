@@ -11,10 +11,114 @@
     "observed_source_sync_at": [
       "16/09/2026 às 16:35"
     ],
-    "aggregate_sha256": "b9ae34bfa3fbc5dccf623c1352e4118a441001cbee3bf6bb9763a707719891e1",
-    "candidate_count": 547
+    "aggregate_sha256": "10203ddfda2339fdfeff98f093db364b25fb39663f37d40776a88ed2dde35ea0",
+    "candidate_count": 559
   },
   "entries": [
+    {
+      "candidate_id": "80002530022",
+      "transport_url": "https://meuvoto.org.br/candidato/80002530022.html",
+      "transport_sha256": "5bf31e6f2bac4fcc574d1a47222ddb52f65a9b1a690ff6e976b4d36aaba9c479",
+      "source_sync_at": "16/09/2026 às 16:35",
+      "official_candidate_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/20322002026/80002530022/2026/ES",
+      "assets": {
+        "total_declared_brl": 222000.0,
+        "count": 5,
+        "items": [
+          {
+            "order": 1,
+            "type": "Casa",
+            "description": "Casa Localizada No Bairro Fradinhos, Em Vitória",
+            "value_brl": 75000.0
+          },
+          {
+            "order": 2,
+            "type": "Veículo Automotor Terrestre: Caminhão, Automóvel, Moto, Etc.",
+            "description": "Automóvel Kia Sorento 2014/2014",
+            "value_brl": 60000.0
+          },
+          {
+            "order": 3,
+            "type": "Casa",
+            "description": "Casa Localizada Em Manguinhos, No Município de Serra",
+            "value_brl": 50000.0
+          },
+          {
+            "order": 4,
+            "type": "Terreno",
+            "description": "Terreno Localizado Em Manguinhos, No Município de Serra",
+            "value_brl": 25000.0
+          },
+          {
+            "order": 5,
+            "type": "Veículo Automotor Terrestre: Caminhão, Automóvel, Moto, Etc.",
+            "description": "Automóvel Chevrolet S10 1998/1998",
+            "value_brl": 12000.0
+          }
+        ],
+        "source": {
+          "institution": "TSE",
+          "dataset": "Bens de candidatos - 2026",
+          "official_candidate_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/20322002026/80002530022/2026/ES"
+        }
+      },
+      "social_links": [
+        "https://leonardomonjardim.com.br",
+        "https://facebook.com/leonardomonjardim",
+        "https://instagram.com/leonardomonjardim"
+      ],
+      "previous_elections": [
+        {
+          "year": 2024,
+          "office": "Vereador",
+          "party": "NOVO",
+          "uf": "ES",
+          "location": "Vitória",
+          "votes": 2449,
+          "result": "Eleito Por QP",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80001910716/2024/57053"
+        },
+        {
+          "year": 2020,
+          "office": "Vereador",
+          "party": "PATRIOTA",
+          "uf": "ES",
+          "location": "Vitória",
+          "votes": 1218,
+          "result": "Suplente",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001162315/2020/57053"
+        },
+        {
+          "year": 2016,
+          "office": "Vereador",
+          "party": "PDT",
+          "uf": "ES",
+          "location": "Vitória",
+          "votes": 1274,
+          "result": "Suplente",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000009428/2016/57053"
+        },
+        {
+          "year": 2008,
+          "office": "Vereador",
+          "party": "PT",
+          "uf": "ES",
+          "location": "Vitória",
+          "result": "Suplente",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14422/5947/2008/57053"
+        },
+        {
+          "year": 2004,
+          "office": "Vereador",
+          "party": "PAN",
+          "uf": "ES",
+          "location": "Vitória",
+          "result": "Não Eleito",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14431/30/2004/57053"
+        }
+      ],
+      "captured_at": "2026-09-29T19:14:11.183395+00:00"
+    },
     {
       "candidate_id": "80002531643",
       "transport_url": "https://meuvoto.org.br/candidato/80002531643.html",
@@ -6771,6 +6875,74 @@
       "previous_elections": []
     },
     {
+      "candidate_id": "80002538202",
+      "transport_url": "https://meuvoto.org.br/candidato/80002538202.html",
+      "transport_sha256": "02c6caeaff3c1d1389779d3292de543257b68bc6cd37e7a6518c443c3737fbd4",
+      "source_sync_at": "16/09/2026 às 16:35",
+      "official_candidate_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/20322002026/80002538202/2026/ES",
+      "assets": {
+        "total_declared_brl": 584138.0,
+        "count": 4,
+        "items": [
+          {
+            "order": 1,
+            "type": "Apartamento",
+            "description": "Apartamento Financiado Com 3 Quartos Sendo 1 Suite, Sala, Varanda, Cozinha, Área de Serviço, Uma Vaga de Garagem",
+            "value_brl": 530000.0
+          },
+          {
+            "order": 2,
+            "type": "Aplicação de Renda Fixa (CDB, RDB e Outros)",
+            "description": "Aplicação Financeira Banco do Brasil",
+            "value_brl": 26271.0
+          },
+          {
+            "order": 3,
+            "type": "Outras Aplicações e Investimentos",
+            "description": "Aplicação Financeira No Banco do Brasil",
+            "value_brl": 26174.0
+          },
+          {
+            "order": 4,
+            "type": "Depósito Bancário Em Conta Corrente No País",
+            "description": "Conta Corrente Banco do Brasil",
+            "value_brl": 1693.0
+          }
+        ],
+        "source": {
+          "institution": "TSE",
+          "dataset": "Bens de candidatos - 2026",
+          "official_candidate_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/20322002026/80002538202/2026/ES"
+        }
+      },
+      "social_links": [
+        "https://averdadedocumentada.com.br",
+        "https://senadortransparente.com.br",
+        "https://marcosdoval.com.br",
+        "https://facebook.com/marcosdoval",
+        "https://instagram.com/marcosdoval",
+        "https://flickr.com/photos/marcosdoval",
+        "https://youtube.com/marcosdoval",
+        "https://threads.com/@marcosdoval",
+        "https://x.com/marcosdoval",
+        "https://tiktok.com/@marcosdovalsenador",
+        "https://facebook.com/marcosdoval2"
+      ],
+      "previous_elections": [
+        {
+          "year": 2018,
+          "office": "Senador",
+          "party": "PPS",
+          "uf": "ES",
+          "location": "Espírito Santo",
+          "votes": 863359,
+          "result": "Eleito",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000625508/2018/ES"
+        }
+      ],
+      "captured_at": "2026-09-29T19:14:11.183395+00:00"
+    },
+    {
       "candidate_id": "80002538888",
       "transport_url": "https://meuvoto.org.br/candidato/80002538888.html",
       "transport_sha256": "db10e4d1ad9f35a1c58076971a940b9a2bed736d065fcb469d834f1aee231d55",
@@ -12378,6 +12550,66 @@
           "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80001942552/2024/57053"
         }
       ]
+    },
+    {
+      "candidate_id": "80002542401",
+      "transport_url": "https://meuvoto.org.br/candidato/80002542401.html",
+      "transport_sha256": "621c159b6e62e0acf727f4310a9b92baff1dcd5c26af69cc946687fc81ccce9f",
+      "source_sync_at": "16/09/2026 às 16:35",
+      "official_candidate_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/20322002026/80002542401/2026/ES",
+      "assets": {
+        "total_declared_brl": 850000.0,
+        "count": 1,
+        "items": [
+          {
+            "order": 1,
+            "type": "Terreno",
+            "description": "Terreno Urbano Dotado de Construção Residencial",
+            "value_brl": 850000.0
+          }
+        ],
+        "source": {
+          "institution": "TSE",
+          "dataset": "Bens de candidatos - 2026",
+          "official_candidate_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/20322002026/80002542401/2026/ES"
+        }
+      },
+      "social_links": [
+        "https://instagram.com/callegari_es",
+        "https://facebook.com/wellingtoncallegaries/?locale=PT_BR"
+      ],
+      "previous_elections": [
+        {
+          "year": 2022,
+          "office": "Deputado Estadual",
+          "party": "PL",
+          "uf": "ES",
+          "location": "Espírito Santo",
+          "votes": 16842,
+          "result": "Eleito Por Média",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001648804/2022/ES"
+        },
+        {
+          "year": 2020,
+          "office": "Vice-prefeito",
+          "party": "PL",
+          "uf": "ES",
+          "location": "Cachoeiro de Itapemirim",
+          "result": "Não Eleito",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80000956544/2020/56235"
+        },
+        {
+          "year": 2018,
+          "office": "Deputado Estadual",
+          "party": "PSC",
+          "uf": "ES",
+          "location": "Espírito Santo",
+          "votes": 6955,
+          "result": "Suplente",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000613560/2018/ES"
+        }
+      ],
+      "captured_at": "2026-09-29T19:14:11.183395+00:00"
     },
     {
       "candidate_id": "80002542403",
@@ -28762,6 +28994,137 @@
       ]
     },
     {
+      "candidate_id": "80002550187",
+      "transport_url": "https://meuvoto.org.br/candidato/80002550187.html",
+      "transport_sha256": "a9a03761884657abf9b8b4e642175b4528783bd655e8fa10640819ff4a46ab16",
+      "source_sync_at": "16/09/2026 às 16:35",
+      "official_candidate_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/20322002026/80002550187/2026/ES",
+      "assets": {
+        "total_declared_brl": 1497217.78,
+        "count": 13,
+        "items": [
+          {
+            "order": 1,
+            "type": "Apartamento",
+            "description": "Apartamento Em Vila Velha-es",
+            "value_brl": 580997.54
+          },
+          {
+            "order": 2,
+            "type": "Terreno",
+            "description": "Imovel Rural Em Santa Leopoldina-es",
+            "value_brl": 415000.0
+          },
+          {
+            "order": 3,
+            "type": "Aplicação de Renda Fixa (CDB, RDB e Outros)",
+            "description": "Saldo Em Renda Fixa No BB",
+            "value_brl": 171166.97
+          },
+          {
+            "order": 4,
+            "type": "Veículo Automotor Terrestre: Caminhão, Automóvel, Moto, Etc.",
+            "description": "Automóvel Hyundai",
+            "value_brl": 136000.0
+          },
+          {
+            "order": 5,
+            "type": "Consórcio Não Contemplado",
+            "description": "Consórcio Adquirido de Canopus Adm de Consorcios S/a",
+            "value_brl": 85524.46
+          },
+          {
+            "order": 6,
+            "type": "Consórcio Não Contemplado",
+            "description": "Consórcio Adquirido de Canopus Adm de Consorcios S/a",
+            "value_brl": 44627.74
+          },
+          {
+            "order": 7,
+            "type": "Aplicação de Renda Fixa (CDB, RDB e Outros)",
+            "description": "Saldo Em Aplicação No Banestes",
+            "value_brl": 31195.02
+          },
+          {
+            "order": 8,
+            "type": "VGBL - Vida Gerador de Benefício Livre",
+            "description": "Saldo Em VGBL Na Brasilprev",
+            "value_brl": 18463.86
+          },
+          {
+            "order": 9,
+            "type": "Outras Aplicações e Investimentos",
+            "description": "Saldo Em Titulo de Capitalização",
+            "value_brl": 13655.97
+          },
+          {
+            "order": 10,
+            "type": "Caderneta de Poupança",
+            "description": "Saldo Em Conta Poupança Na Cef",
+            "value_brl": 554.77
+          },
+          {
+            "order": 11,
+            "type": "Caderneta de Poupança",
+            "description": "Saldo Em Conta Poupança No Banestes",
+            "value_brl": 16.68
+          },
+          {
+            "order": 12,
+            "type": "Caderneta de Poupança",
+            "description": "Saldo Em Conta Poupança No Banco do Brasil",
+            "value_brl": 14.76
+          },
+          {
+            "order": 13,
+            "type": "Depósito Bancário Em Conta Corrente No País",
+            "description": "Depósito Em CC No Banco do Brasil",
+            "value_brl": 0.01
+          }
+        ],
+        "source": {
+          "institution": "TSE",
+          "dataset": "Bens de candidatos - 2026",
+          "official_candidate_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/20322002026/80002550187/2026/ES"
+        }
+      },
+      "social_links": [
+        "https://www.fabianocontarato.com.br",
+        "https://br.linkedin.com/in/fabianocontarato",
+        "https://facebook.com/fabianocontarato",
+        "https://flickr.com/photos/fabianocontarato",
+        "https://threads.com/@fabianocontarato",
+        "https://youtube.com/@fabianocontaratosenador?si=ZDQJ0IXN-2HBCQM_",
+        "https://instagram.com/fabianocontarato?igsh=MXV4A3ZQATFHMXNPNQ==",
+        "https://x.com/contaratosenado",
+        "https://k.kwai.com/u/@fabianocontarato/azczldyr",
+        "https://tiktok.com/@fabianocontarato?_r=1&_t=ZS-98BKX6UMLPF",
+        "https://whatsapp.com/channel/0029vbazrsq5a24ailv0bt0h"
+      ],
+      "previous_elections": [
+        {
+          "year": 2018,
+          "office": "Senador",
+          "party": "REDE",
+          "uf": "ES",
+          "location": "Espírito Santo",
+          "votes": 1117036,
+          "result": "Eleito",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000612948/2018/ES"
+        },
+        {
+          "year": 2014,
+          "office": "Senador",
+          "party": "PR",
+          "uf": "ES",
+          "location": "Espírito Santo",
+          "result": "Concorrendo",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000286/2014/ES"
+        }
+      ],
+      "captured_at": "2026-09-29T19:14:11.183395+00:00"
+    },
+    {
       "candidate_id": "80002550807",
       "transport_url": "https://meuvoto.org.br/candidato/80002550807.html",
       "transport_sha256": "4abe76b08ff5a2a8ce1e41c8e5141880958c36462f13866b586b04d624e51a6f",
@@ -29679,6 +30042,272 @@
           "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/RJ/2/190000023926/2016/58491"
         }
       ]
+    },
+    {
+      "candidate_id": "80002551368",
+      "transport_url": "https://meuvoto.org.br/candidato/80002551368.html",
+      "transport_sha256": "4e13aab43eb1d2c307b24a60e41875abb97de4ca65ba2215d7ddd54cce2d239c",
+      "source_sync_at": "16/09/2026 às 16:35",
+      "official_candidate_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/20322002026/80002551368/2026/ES",
+      "assets": {
+        "total_declared_brl": 1110945.72,
+        "count": 14,
+        "items": [
+          {
+            "order": 1,
+            "type": "Sala Ou Conjunto",
+            "description": "Sala Comercial",
+            "value_brl": 294952.69
+          },
+          {
+            "order": 2,
+            "type": "Veículo Automotor Terrestre: Caminhão, Automóvel, Moto, Etc.",
+            "description": "Jeep",
+            "value_brl": 161000.0
+          },
+          {
+            "order": 3,
+            "type": "Casa",
+            "description": "Em Fradinhos",
+            "value_brl": 160000.0
+          },
+          {
+            "order": 4,
+            "type": "Apartamento",
+            "description": "Apartamento Em São Paulo",
+            "value_brl": 116774.36
+          },
+          {
+            "order": 5,
+            "type": "Outros Bens Imóveis",
+            "description": "Sitio Em Domingos Martins",
+            "value_brl": 112909.13
+          },
+          {
+            "order": 6,
+            "type": "Veículo Automotor Terrestre: Caminhão, Automóvel, Moto, Etc.",
+            "description": "Tracker",
+            "value_brl": 91000.0
+          },
+          {
+            "order": 7,
+            "type": "Outras Aplicações e Investimentos",
+            "description": "Consorcio Não Contemplado",
+            "value_brl": 67208.71
+          },
+          {
+            "order": 8,
+            "type": "Casa",
+            "description": "Casa Em Meaipe",
+            "value_brl": 44752.0
+          },
+          {
+            "order": 9,
+            "type": "Outros Bens Imóveis",
+            "description": "Sitio Em Domingos Martins Região do Galo",
+            "value_brl": 30000.0
+          },
+          {
+            "order": 10,
+            "type": "Terreno",
+            "description": "Lote Em Fradinhos",
+            "value_brl": 16376.0
+          },
+          {
+            "order": 11,
+            "type": "Veículo Automotor Terrestre: Caminhão, Automóvel, Moto, Etc.",
+            "description": "Montana",
+            "value_brl": 14786.74
+          },
+          {
+            "order": 12,
+            "type": "Depósito Bancário Em Conta Corrente No País",
+            "description": "Banestes",
+            "value_brl": 1183.82
+          },
+          {
+            "order": 13,
+            "type": "Depósito Bancário Em Conta Corrente No País",
+            "description": "Caixa",
+            "value_brl": 2.02
+          },
+          {
+            "order": 14,
+            "type": "Depósito Bancário Em Conta Corrente No País",
+            "description": "Conta Banco do Brasil",
+            "value_brl": 0.25
+          }
+        ],
+        "source": {
+          "institution": "TSE",
+          "dataset": "Bens de candidatos - 2026",
+          "official_candidate_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/20322002026/80002551368/2026/ES"
+        }
+      },
+      "social_links": [
+        "https://instagram.com/senadorarosedefreitas",
+        "https://facebook.com/senadorarosedefreitas"
+      ],
+      "previous_elections": [
+        {
+          "year": 2022,
+          "office": "Senador",
+          "party": "MDB",
+          "uf": "ES",
+          "location": "Espírito Santo",
+          "votes": 747104,
+          "result": "Não Eleito",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001720737/2022/ES"
+        },
+        {
+          "year": 2018,
+          "office": "Governador",
+          "party": "PODE",
+          "uf": "ES",
+          "location": "Espírito Santo",
+          "votes": 105754,
+          "result": "Não Eleito",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000612946/2018/ES"
+        },
+        {
+          "year": 2014,
+          "office": "Senador",
+          "party": "PMDB",
+          "uf": "ES",
+          "location": "Espírito Santo",
+          "votes": 776978,
+          "result": "Eleito",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000426/2014/ES"
+        },
+        {
+          "year": 2010,
+          "office": "Deputado Federal",
+          "party": "PMDB",
+          "uf": "ES",
+          "location": "Espírito Santo",
+          "votes": 96454,
+          "result": "Eleito",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14417/80000000209/2010/ES"
+        },
+        {
+          "year": 2006,
+          "office": "Deputado Federal",
+          "party": "PMDB",
+          "uf": "ES",
+          "location": "Espírito Santo",
+          "result": "Concorrendo",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14423/10207/2006/ES"
+        }
+      ],
+      "captured_at": "2026-09-29T19:14:11.183395+00:00"
+    },
+    {
+      "candidate_id": "80002551370",
+      "transport_url": "https://meuvoto.org.br/candidato/80002551370.html",
+      "transport_sha256": "21b6c25a9859afdb85d9edd0d361b9cd56bc46e435d1caeabebe9958f9280fb2",
+      "source_sync_at": "16/09/2026 às 16:35",
+      "official_candidate_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/20322002026/80002551370/2026/ES",
+      "assets": {
+        "total_declared_brl": 3068203.91,
+        "count": 5,
+        "items": [
+          {
+            "order": 1,
+            "type": "Apartamento",
+            "description": "Apartamento",
+            "value_brl": 1581884.25
+          },
+          {
+            "order": 2,
+            "type": "Apartamento",
+            "description": "Apartamento",
+            "value_brl": 1099485.62
+          },
+          {
+            "order": 3,
+            "type": "Casa",
+            "description": "Participação 1/7",
+            "value_brl": 220714.28
+          },
+          {
+            "order": 4,
+            "type": "Aplicação de Renda Fixa (CDB, RDB e Outros)",
+            "description": "Outras Aplicações e Investimentos Renda Fixaq",
+            "value_brl": 164619.76
+          },
+          {
+            "order": 5,
+            "type": "Outras Participações Societárias",
+            "description": "Outras Participações",
+            "value_brl": 1500.0
+          }
+        ],
+        "source": {
+          "institution": "TSE",
+          "dataset": "Bens de candidatos - 2026",
+          "official_candidate_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/20322002026/80002551370/2026/ES"
+        }
+      },
+      "social_links": [
+        "http://www.renatocasagrande.com.br",
+        "https://instagram.com/renatocasagrande",
+        "https://tiktok.com/@casagrande_es",
+        "https://youtube.com/@renatocasagrande_es",
+        "https://facebook.com/renatocasagrande",
+        "https://x.com/casagrande_es"
+      ],
+      "previous_elections": [
+        {
+          "year": 2022,
+          "office": "Governador",
+          "party": "PSB",
+          "uf": "ES",
+          "location": "Espírito Santo",
+          "votes": 976652,
+          "result": "Eleito",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001649123/2022/ES"
+        },
+        {
+          "year": 2018,
+          "office": "Governador",
+          "party": "PSB",
+          "uf": "ES",
+          "location": "Espírito Santo",
+          "votes": 1072224,
+          "result": "Eleito",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000625512/2018/ES"
+        },
+        {
+          "year": 2014,
+          "office": "Governador",
+          "party": "PSB",
+          "uf": "ES",
+          "location": "Espírito Santo",
+          "votes": 751293,
+          "result": "Não Eleito",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000284/2014/ES"
+        },
+        {
+          "year": 2010,
+          "office": "Governador",
+          "party": "PSB",
+          "uf": "ES",
+          "location": "Espírito Santo",
+          "votes": 1502070,
+          "result": "Eleito",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14417/80000000182/2010/ES"
+        },
+        {
+          "year": 2006,
+          "office": "Senador",
+          "party": "PSB",
+          "uf": "ES",
+          "location": "Espírito Santo",
+          "result": "Concorrendo",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14423/10448/2006/ES"
+        }
+      ],
+      "captured_at": "2026-09-29T19:14:11.183395+00:00"
     },
     {
       "candidate_id": "80002551794",
@@ -31812,6 +32441,147 @@
       ]
     },
     {
+      "candidate_id": "80002551833",
+      "transport_url": "https://meuvoto.org.br/candidato/80002551833.html",
+      "transport_sha256": "3dc43deb36a4e5ec128c66d9f1ead7f0789e0833bfc4bfeb905cb9f1d768a875",
+      "source_sync_at": "16/09/2026 às 16:35",
+      "official_candidate_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/20322002026/80002551833/2026/ES",
+      "assets": {
+        "total_declared_brl": 1206682.23,
+        "count": 10,
+        "items": [
+          {
+            "order": 1,
+            "type": "VGBL - Vida Gerador de Benefício Livre",
+            "description": "VGBL Cef",
+            "value_brl": 631760.85
+          },
+          {
+            "order": 2,
+            "type": "Apartamento",
+            "description": "Apartamento Em Campo Grande, Cariacica-es",
+            "value_brl": 352453.0
+          },
+          {
+            "order": 3,
+            "type": "Sala Ou Conjunto",
+            "description": "Sala Comercial Em Campo Grande, Cariacica-es",
+            "value_brl": 138547.87
+          },
+          {
+            "order": 4,
+            "type": "Apartamento",
+            "description": "Apartamento Em São Geraldo, Cariacica-es",
+            "value_brl": 43000.0
+          },
+          {
+            "order": 5,
+            "type": "Depósito Bancário Em Conta Corrente No País",
+            "description": "Saldo Em CC Na Cef",
+            "value_brl": 16791.26
+          },
+          {
+            "order": 6,
+            "type": "Depósito Bancário Em Conta Corrente No País",
+            "description": "Deposito A Vista Na Wise Brasil",
+            "value_brl": 13042.57
+          },
+          {
+            "order": 7,
+            "type": "Caderneta de Poupança",
+            "description": "Saldo Em Poupança Na Cef",
+            "value_brl": 5020.7
+          },
+          {
+            "order": 8,
+            "type": "Terreno",
+            "description": "Terreno No Lot. São Conrado, Adquirido Em 09/1991",
+            "value_brl": 3977.97
+          },
+          {
+            "order": 9,
+            "type": "Plano Pait e Caderneta de Pecúlio",
+            "description": "Peculio Na Caixa",
+            "value_brl": 1943.12
+          },
+          {
+            "order": 10,
+            "type": "Depósito Bancário Em Conta Corrente No País",
+            "description": "Saldo Em Conta Corrente No Banestes",
+            "value_brl": 144.89
+          }
+        ],
+        "source": {
+          "institution": "TSE",
+          "dataset": "Bens de candidatos - 2026",
+          "official_candidate_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/20322002026/80002551833/2026/ES"
+        }
+      },
+      "social_links": [
+        "https://www.heldersalomao.com.br",
+        "http://heldersalomao13.com.br",
+        "https://x.com/heldersalomao",
+        "https://youtube.com/@heldersalom%c3%a3o_es",
+        "https://linkedin.com/in/helder-salom%c3%a3o-aa082b248",
+        "https://tiktok.com/@heldersalomao13",
+        "https://facebook.com/heldersalomao.espiritosanto",
+        "https://instagram.com/heldersalomao",
+        "https://threads.com/@heldersalomao?igshid=NTc4MTIwNjQ2YQ==",
+        "https://linkedin.com/in/helder-salom%c3%a3o-49a832103"
+      ],
+      "previous_elections": [
+        {
+          "year": 2022,
+          "office": "Deputado Federal",
+          "party": "PT",
+          "uf": "ES",
+          "location": "Espírito Santo",
+          "votes": 120337,
+          "result": "Eleito Por QP",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001719429/2022/ES"
+        },
+        {
+          "year": 2018,
+          "office": "Deputado Federal",
+          "party": "PT",
+          "uf": "ES",
+          "location": "Espírito Santo",
+          "votes": 73384,
+          "result": "Eleito Por Média",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000626736/2018/ES"
+        },
+        {
+          "year": 2014,
+          "office": "Deputado Federal",
+          "party": "PT",
+          "uf": "ES",
+          "location": "Espírito Santo",
+          "votes": 83967,
+          "result": "Eleito Por QP",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000400/2014/ES"
+        },
+        {
+          "year": 2008,
+          "office": "Prefeito",
+          "party": "PT",
+          "uf": "ES",
+          "location": "Cariacica",
+          "result": "Eleito",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14422/3285/2008/56251"
+        },
+        {
+          "year": 2004,
+          "office": "Prefeito",
+          "party": "PT",
+          "uf": "ES",
+          "location": "Cariacica",
+          "result": "Eleito",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14431/254/2004/56251"
+        }
+      ],
+      "captured_at": "2026-09-29T19:14:11.183395+00:00"
+    },
+    {
       "candidate_id": "80002552141",
       "transport_url": "https://meuvoto.org.br/candidato/80002552141.html",
       "transport_sha256": "309932b8e42d4ff6e1aa22bf6e7c28d194f2ed5e424c6dde4e6d5566c475f3a2",
@@ -32361,6 +33131,260 @@
       ]
     },
     {
+      "candidate_id": "80002552172",
+      "transport_url": "https://meuvoto.org.br/candidato/80002552172.html",
+      "transport_sha256": "54918b3aeb9e094a41daabbc755aa492cbf02f4b2a9b8398dd4ba6b5cee3deb3",
+      "source_sync_at": "16/09/2026 às 16:35",
+      "official_candidate_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/20322002026/80002552172/2026/ES",
+      "assets": {
+        "total_declared_brl": 27668789.55,
+        "count": 31,
+        "items": [
+          {
+            "order": 1,
+            "type": "Aplicação de Renda Fixa (CDB, RDB e Outros)",
+            "description": "Outras Aplicações e Investimentos (Poupança, Aplicação Financeira , Renda Fixa, Debêntures de Infraestrutura, Lca, Crédito Privado e Fundo de Investimento Imobiliário)",
+            "value_brl": 16921087.71
+          },
+          {
+            "order": 2,
+            "type": "Apartamento",
+            "description": "Apartamento",
+            "value_brl": 3615450.0
+          },
+          {
+            "order": 3,
+            "type": "Outras Participações Societárias",
+            "description": "Outras Participações Societárias",
+            "value_brl": 3169799.0
+          },
+          {
+            "order": 4,
+            "type": "Terreno",
+            "description": "Lote",
+            "value_brl": 1951871.0
+          },
+          {
+            "order": 5,
+            "type": "Apartamento",
+            "description": "Apartamento",
+            "value_brl": 984964.93
+          },
+          {
+            "order": 6,
+            "type": "Terreno",
+            "description": "Terreno Rural (Participação de 50%)",
+            "value_brl": 176316.0
+          },
+          {
+            "order": 7,
+            "type": "Outros Bens e Direitos",
+            "description": "Bens Imobiliários",
+            "value_brl": 152000.0
+          },
+          {
+            "order": 8,
+            "type": "Casa",
+            "description": "Casa ( Herança - Participação de 12,50%)",
+            "value_brl": 148075.29
+          },
+          {
+            "order": 9,
+            "type": "Crédito Decorrente de Empréstimo",
+            "description": "Crédito Decorrente de Empréstimo",
+            "value_brl": 70000.0
+          },
+          {
+            "order": 10,
+            "type": "Crédito Decorrente de Empréstimo",
+            "description": "Crédito Decorrente de Empréstimo",
+            "value_brl": 62084.16
+          },
+          {
+            "order": 11,
+            "type": "Depósito Bancário Em Conta Corrente No País",
+            "description": "Depósito Bancário Em Conta Corrente No País",
+            "value_brl": 56367.07
+          },
+          {
+            "order": 12,
+            "type": "Apartamento",
+            "description": "Apartamento (Herança - Participações de 12,50%)",
+            "value_brl": 56072.33
+          },
+          {
+            "order": 13,
+            "type": "Ações (Inclusive As Provenientes de Linha Telefônica)",
+            "description": "Ações",
+            "value_brl": 53816.0
+          },
+          {
+            "order": 14,
+            "type": "Apartamento",
+            "description": "Apartamento (Doação - Participação e 25%)",
+            "value_brl": 46265.73
+          },
+          {
+            "order": 15,
+            "type": "Apartamento",
+            "description": "Apartamento (Herança - Participações de 12,50%)",
+            "value_brl": 26023.97
+          },
+          {
+            "order": 16,
+            "type": "Apartamento",
+            "description": "Apartamento (Herança - Participações de 12,50%)",
+            "value_brl": 20551.08
+          },
+          {
+            "order": 17,
+            "type": "Apartamento",
+            "description": "Apartamento (Herança - Participações de 12,50%)",
+            "value_brl": 16210.5
+          },
+          {
+            "order": 18,
+            "type": "Apartamento",
+            "description": "Apartamento (Herança - Participações de 12,50%)",
+            "value_brl": 16210.5
+          },
+          {
+            "order": 19,
+            "type": "Apartamento",
+            "description": "Apartamento (Herança - Participações de 12,50%)",
+            "value_brl": 16210.5
+          },
+          {
+            "order": 20,
+            "type": "Apartamento",
+            "description": "Apartamento (Herança - Participações de 12,50%)",
+            "value_brl": 16210.5
+          },
+          {
+            "order": 21,
+            "type": "Apartamento",
+            "description": "Apartamento (Herança - Participações de 12,50%)",
+            "value_brl": 13879.46
+          },
+          {
+            "order": 22,
+            "type": "Apartamento",
+            "description": "Apartamento (Herança - Participações de 12,50%)",
+            "value_brl": 12521.69
+          },
+          {
+            "order": 23,
+            "type": "Apartamento",
+            "description": "Apartamento (Herança - Participações de 14,29%)",
+            "value_brl": 10677.07
+          },
+          {
+            "order": 24,
+            "type": "Apartamento",
+            "description": "Apartamento (Herança - Participações de 12,50 %)",
+            "value_brl": 10453.93
+          },
+          {
+            "order": 25,
+            "type": "Apartamento",
+            "description": "Apartamento (Herança - Participações de 12,50%)",
+            "value_brl": 10453.93
+          },
+          {
+            "order": 26,
+            "type": "Apartamento",
+            "description": "Apartamento (Herança - Participações de 12,50%)",
+            "value_brl": 9339.63
+          },
+          {
+            "order": 27,
+            "type": "Terreno",
+            "description": "Terreno ( Herança - Participação de 12,50%)",
+            "value_brl": 8934.97
+          },
+          {
+            "order": 28,
+            "type": "Sala Ou Conjunto",
+            "description": "2 Salas Comerciais ( Herança - Participação de 12,50% Sobre Cada Bem)",
+            "value_brl": 7741.28
+          },
+          {
+            "order": 29,
+            "type": "Apartamento",
+            "description": "Apartamento (Herança - Participações de 12,50%)",
+            "value_brl": 7165.12
+          },
+          {
+            "order": 30,
+            "type": "Casa",
+            "description": "Casa (Herança - Participação 14,29%)",
+            "value_brl": 1143.2
+          },
+          {
+            "order": 31,
+            "type": "Outros Bens Imóveis",
+            "description": "2 Vagas de Garagem(herança - Participações de 12,50% e 14,29%)",
+            "value_brl": 893.0
+          }
+        ],
+        "source": {
+          "institution": "TSE",
+          "dataset": "Bens de candidatos - 2026",
+          "official_candidate_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/20322002026/80002552172/2026/ES"
+        }
+      },
+      "social_links": [
+        "http://www.ricardogovernador.com.br",
+        "https://youtube.com/@ricardoferra%c3%a7ooficial",
+        "https://facebook.com/ricardorferraco",
+        "https://instagram.com/ricardoferraco",
+        "https://threads.com/@ricardoferraco",
+        "https://tiktok.com/@ricardo.ferraco",
+        "https://x.com/ricardoferraco"
+      ],
+      "previous_elections": [
+        {
+          "year": 2022,
+          "office": "Vice-governador",
+          "party": "PSDB",
+          "uf": "ES",
+          "location": "Espírito Santo",
+          "result": "Eleito",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001649124/2022/ES"
+        },
+        {
+          "year": 2018,
+          "office": "Senador",
+          "party": "PSDB",
+          "uf": "ES",
+          "location": "Espírito Santo",
+          "votes": 480122,
+          "result": "Não Eleito",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000625509/2018/ES"
+        },
+        {
+          "year": 2010,
+          "office": "Senador",
+          "party": "PMDB",
+          "uf": "ES",
+          "location": "Espírito Santo",
+          "votes": 1557409,
+          "result": "Eleito",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14417/80000000185/2010/ES"
+        },
+        {
+          "year": 2006,
+          "office": "Vice-governador",
+          "party": "PSDB",
+          "uf": "ES",
+          "location": "Espírito Santo",
+          "result": "Concorrendo",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14423/10248/2006/ES"
+        }
+      ],
+      "captured_at": "2026-09-29T19:14:11.183395+00:00"
+    },
+    {
       "candidate_id": "80002552222",
       "transport_url": "https://meuvoto.org.br/candidato/80002552222.html",
       "transport_sha256": "eb1ea3689acbec4191108eee76f50865aba46178cc28d78ba32097a810ea5f76",
@@ -32391,6 +33415,505 @@
         "https://facebook.com/eduardoafonso"
       ],
       "previous_elections": []
+    },
+    {
+      "candidate_id": "80002552373",
+      "transport_url": "https://meuvoto.org.br/candidato/80002552373.html",
+      "transport_sha256": "052be769f0d5fa6199f919eb9873df5299a0dc45c21984696cb30c4abb571eaa",
+      "source_sync_at": "16/09/2026 às 16:35",
+      "official_candidate_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/20322002026/80002552373/2026/ES",
+      "assets": {
+        "total_declared_brl": 4594177.63,
+        "count": 10,
+        "items": [
+          {
+            "order": 1,
+            "type": "Outros Bens Imóveis",
+            "description": "50% de Imóvel Rural - Faina - Go",
+            "value_brl": 1668048.5
+          },
+          {
+            "order": 2,
+            "type": "Apartamento",
+            "description": "Apartamento Financiado - Vila Velha - Es",
+            "value_brl": 1289327.05
+          },
+          {
+            "order": 3,
+            "type": "Terreno",
+            "description": "Lote Residencial - Goiânia - Go",
+            "value_brl": 832819.45
+          },
+          {
+            "order": 4,
+            "type": "Terreno",
+            "description": "Lote Residencial - Brasília - DF",
+            "value_brl": 256882.63
+          },
+          {
+            "order": 5,
+            "type": "Veículo Automotor Terrestre: Caminhão, Automóvel, Moto, Etc.",
+            "description": "Veiculo - Nissan Frontier - 2021",
+            "value_brl": 230000.0
+          },
+          {
+            "order": 6,
+            "type": "Quotas Ou Quinhões de Capital",
+            "description": "Quotas de Capital Social de Empresa",
+            "value_brl": 93700.0
+          },
+          {
+            "order": 7,
+            "type": "Apartamento",
+            "description": "Apartamento Chalé - Maragogi - Al",
+            "value_brl": 79285.0
+          },
+          {
+            "order": 8,
+            "type": "Veículo Automotor Terrestre: Caminhão, Automóvel, Moto, Etc.",
+            "description": "50% - Veiculo - L200 Triton - 2017/2018",
+            "value_brl": 67250.0
+          },
+          {
+            "order": 9,
+            "type": "Veículo Automotor Terrestre: Caminhão, Automóvel, Moto, Etc.",
+            "description": "Veículo - Ford Ka - 2019",
+            "value_brl": 51865.0
+          },
+          {
+            "order": 10,
+            "type": "Veículo Automotor Terrestre: Caminhão, Automóvel, Moto, Etc.",
+            "description": "Veiculo - Jeep - 1951",
+            "value_brl": 25000.0
+          }
+        ],
+        "source": {
+          "institution": "TSE",
+          "dataset": "Bens de candidatos - 2026",
+          "official_candidate_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/20322002026/80002552373/2026/ES"
+        }
+      },
+      "social_links": [
+        "https://instagram.com/rodneyrmiranda",
+        "https://linkedin.com/in/rodneyrmiranda?trk=people-search-result"
+      ],
+      "previous_elections": [
+        {
+          "year": 2022,
+          "office": "Deputado Federal",
+          "party": "REPUBLICANOS",
+          "uf": "GO",
+          "location": "Goiás",
+          "votes": 4869,
+          "result": "Suplente",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/CENTROOESTE/GO/2040602022/90001651345/2022/GO"
+        },
+        {
+          "year": 2018,
+          "office": "Deputado Federal",
+          "party": "PRB",
+          "uf": "ES",
+          "location": "Espírito Santo",
+          "votes": 42829,
+          "result": "Suplente",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000607520/2018/ES"
+        },
+        {
+          "year": 2016,
+          "office": "Prefeito",
+          "party": "DEM",
+          "uf": "ES",
+          "location": "Vila Velha",
+          "votes": 38513,
+          "result": "Não Eleito",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000004397/2016/57037"
+        },
+        {
+          "year": 2012,
+          "office": "Prefeito",
+          "party": "DEM",
+          "uf": "ES",
+          "location": "Vila Velha",
+          "votes": 82574,
+          "result": "Eleito",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000003899/2012/57037"
+        },
+        {
+          "year": 2010,
+          "office": "Deputado Estadual",
+          "party": "DEM",
+          "uf": "ES",
+          "location": "Espírito Santo",
+          "votes": 65049,
+          "result": "Eleito",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14417/80000000427/2010/ES"
+        }
+      ],
+      "captured_at": "2026-09-29T19:14:11.183395+00:00"
+    },
+    {
+      "candidate_id": "80002552682",
+      "transport_url": "https://meuvoto.org.br/candidato/80002552682.html",
+      "transport_sha256": "94e9354503ca8df17f5aece8e3ad2f26ff73d0a7e50482170a1b98f161d7bc61",
+      "source_sync_at": "16/09/2026 às 16:35",
+      "official_candidate_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/20322002026/80002552682/2026/ES",
+      "assets": {
+        "total_declared_brl": 1002342.77,
+        "count": 7,
+        "items": [
+          {
+            "order": 1,
+            "type": "Apartamento",
+            "description": "50% de Apartamento Em Barro Vermelho",
+            "value_brl": 628514.0
+          },
+          {
+            "order": 2,
+            "type": "Apartamento",
+            "description": "50% de Apartamento Em Jardim da Penha",
+            "value_brl": 195000.0
+          },
+          {
+            "order": 3,
+            "type": "VGBL - Vida Gerador de Benefício Livre",
+            "description": "VGBL Bradesco",
+            "value_brl": 100000.0
+          },
+          {
+            "order": 4,
+            "type": "Apartamento",
+            "description": "50% de Apartamento Em Guarapari",
+            "value_brl": 45000.0
+          },
+          {
+            "order": 5,
+            "type": "Outros Créditos e Poupança Vinculados",
+            "description": "Poupança Bradesco",
+            "value_brl": 32957.09
+          },
+          {
+            "order": 6,
+            "type": "Depósito Bancário Em Conta Corrente No País",
+            "description": "Conta Corrente Banestes",
+            "value_brl": 585.57
+          },
+          {
+            "order": 7,
+            "type": "Aplicação de Renda Fixa (CDB, RDB e Outros)",
+            "description": "CDB Bradesco",
+            "value_brl": 286.11
+          }
+        ],
+        "source": {
+          "institution": "TSE",
+          "dataset": "Bens de candidatos - 2026",
+          "official_candidate_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/20322002026/80002552682/2026/ES"
+        }
+      },
+      "social_links": [
+        "https://paz10.com.br",
+        "https://facebook.com/lorenzopazolinioficial",
+        "https://youtube.com/@pazolini10",
+        "https://threads.com/@lorenzopazolini?xmt=AQG07jlLNUsXNfairPa1lGtQsjBk2zT5vvO9m1o7gp9IOyA",
+        "https://instagram.com/lorenzopazolini"
+      ],
+      "previous_elections": [
+        {
+          "year": 2024,
+          "office": "Prefeito",
+          "party": "REPUBLICANOS",
+          "uf": "ES",
+          "location": "Vitória",
+          "votes": 105599,
+          "result": "Eleito",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2045202024/80002366610/2024/57053"
+        },
+        {
+          "year": 2020,
+          "office": "Prefeito",
+          "party": "REPUBLICANOS",
+          "uf": "ES",
+          "location": "Vitória",
+          "votes": 53014,
+          "result": "Eleito",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2030402020/80001188308/2020/57053"
+        },
+        {
+          "year": 2018,
+          "office": "Deputado Estadual",
+          "party": "PRP",
+          "uf": "ES",
+          "location": "Espírito Santo",
+          "votes": 43293,
+          "result": "Eleito Por QP",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000624435/2018/ES"
+        }
+      ],
+      "captured_at": "2026-09-29T19:14:11.183395+00:00"
+    },
+    {
+      "candidate_id": "80002552692",
+      "transport_url": "https://meuvoto.org.br/candidato/80002552692.html",
+      "transport_sha256": "7f97a2348233db72c99f1fcc19036e6a8263e52870b232397e57fb84b753fdc1",
+      "source_sync_at": "16/09/2026 às 16:35",
+      "official_candidate_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/20322002026/80002552692/2026/ES",
+      "assets": {
+        "total_declared_brl": 1288865.04,
+        "count": 8,
+        "items": [
+          {
+            "order": 1,
+            "type": "Apartamento",
+            "description": "Apartamento No Bairro Barro Vermelho",
+            "value_brl": 625000.0
+          },
+          {
+            "order": 2,
+            "type": "Caderneta de Poupança",
+            "description": "Saldo Em Poupança",
+            "value_brl": 209853.99
+          },
+          {
+            "order": 3,
+            "type": "Veículo Automotor Terrestre: Caminhão, Automóvel, Moto, Etc.",
+            "description": "Fiat Strada Ranch",
+            "value_brl": 128000.0
+          },
+          {
+            "order": 4,
+            "type": "Apartamento",
+            "description": "Apartamento N. 402, Localizado No Edifício Nossa Senhora da Penha, Situado Na Rua Adamastor Salvador, N. 277, Centro, Colatina/es, Inscrição Municipal (IPTU) N. 010109905110008",
+            "value_brl": 100000.0
+          },
+          {
+            "order": 5,
+            "type": "Apartamento",
+            "description": "Kitnet No Bairro Glória - Vila Velha (Bem Recebido Por Herança)",
+            "value_brl": 80850.0
+          },
+          {
+            "order": 6,
+            "type": "Outros Bens Móveis",
+            "description": "17% de Participação Em 02 Lojas Em Vila Velha (Participação Recebida Por Herança)",
+            "value_brl": 64474.88
+          },
+          {
+            "order": 7,
+            "type": "Terreno",
+            "description": "Lote No Bairro Adélia Giulbert",
+            "value_brl": 50686.17
+          },
+          {
+            "order": 8,
+            "type": "Dinheiro Em Espécie - Moeda Nacional",
+            "description": "Dinheiro Em Espécie",
+            "value_brl": 30000.0
+          }
+        ],
+        "source": {
+          "institution": "TSE",
+          "dataset": "Bens de candidatos - 2026",
+          "official_candidate_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/20322002026/80002552692/2026/ES"
+        }
+      },
+      "social_links": [
+        "https://facebook.com/sergiomeneguellioficial",
+        "https://instagram.com/sergiomeneguelli",
+        "https://tiktok.com/@sergiomeneguelli"
+      ],
+      "previous_elections": [
+        {
+          "year": 2022,
+          "office": "Deputado Estadual",
+          "party": "REPUBLICANOS",
+          "uf": "ES",
+          "location": "Espírito Santo",
+          "votes": 138523,
+          "result": "Eleito Por QP",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001604474/2022/ES"
+        },
+        {
+          "year": 2016,
+          "office": "Prefeito",
+          "party": "PMDB",
+          "uf": "ES",
+          "location": "Colatina",
+          "votes": 19689,
+          "result": "Eleito",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2/80000005249/2016/56294"
+        },
+        {
+          "year": 2014,
+          "office": "Deputado Estadual",
+          "party": "PMDB",
+          "uf": "ES",
+          "location": "Espírito Santo",
+          "votes": 17637,
+          "result": "Suplente",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000668/2014/ES"
+        },
+        {
+          "year": 2012,
+          "office": "Vereador",
+          "party": "PMDB",
+          "uf": "ES",
+          "location": "Colatina",
+          "votes": 3045,
+          "result": "Eleito Por QP",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1699/80000011620/2012/56294"
+        },
+        {
+          "year": 2010,
+          "office": "Deputado Estadual",
+          "party": "PSDB",
+          "uf": "ES",
+          "location": "Espírito Santo",
+          "result": "Concorrendo",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14417/80000000429/2010/ES"
+        },
+        {
+          "year": 2008,
+          "office": "Vereador",
+          "party": "PSDB",
+          "uf": "ES",
+          "location": "Colatina",
+          "result": "Média",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14422/4497/2008/56294"
+        },
+        {
+          "year": 2006,
+          "office": "Deputado Estadual",
+          "party": "PSDB",
+          "uf": "ES",
+          "location": "Espírito Santo",
+          "result": "Concorrendo",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14423/10254/2006/ES"
+        },
+        {
+          "year": 2004,
+          "office": "Vereador",
+          "party": "PPS",
+          "uf": "ES",
+          "location": "Colatina",
+          "result": "Média",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14431/286/2004/56294"
+        }
+      ],
+      "captured_at": "2026-09-29T19:14:11.183395+00:00"
+    },
+    {
+      "candidate_id": "80002553265",
+      "transport_url": "https://meuvoto.org.br/candidato/80002553265.html",
+      "transport_sha256": "cc80e2b0bcc511dec2ab5d44df6a05d56e78f15f859747fe95908379098778d1",
+      "source_sync_at": "16/09/2026 às 16:35",
+      "official_candidate_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/20322002026/80002553265/2026/ES",
+      "assets": {
+        "total_declared_brl": 142777.32,
+        "count": 7,
+        "items": [
+          {
+            "order": 1,
+            "type": "Veículo Automotor Terrestre: Caminhão, Automóvel, Moto, Etc.",
+            "description": "Ford Ecosport Ano/modelo 2015",
+            "value_brl": 52000.0
+          },
+          {
+            "order": 2,
+            "type": "VGBL - Vida Gerador de Benefício Livre",
+            "description": "Banco do Brasil",
+            "value_brl": 49725.41
+          },
+          {
+            "order": 3,
+            "type": "Aplicação de Renda Fixa (CDB, RDB e Outros)",
+            "description": "Depósito A Prazo Sicoob",
+            "value_brl": 20000.0
+          },
+          {
+            "order": 4,
+            "type": "Aplicação de Renda Fixa (CDB, RDB e Outros)",
+            "description": "CDB Banestes",
+            "value_brl": 13502.89
+          },
+          {
+            "order": 5,
+            "type": "Depósito Bancário Em Conta Corrente No País",
+            "description": "Sicoob",
+            "value_brl": 4140.71
+          },
+          {
+            "order": 6,
+            "type": "Quotas Ou Quinhões de Capital",
+            "description": "Capital Social Sicoob",
+            "value_brl": 2206.24
+          },
+          {
+            "order": 7,
+            "type": "Depósito Bancário Em Conta Corrente No País",
+            "description": "Banco do Brasil",
+            "value_brl": 1202.07
+          }
+        ],
+        "source": {
+          "institution": "TSE",
+          "dataset": "Bens de candidatos - 2026",
+          "official_candidate_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/20322002026/80002553265/2026/ES"
+        }
+      },
+      "social_links": [
+        "https://senadorevair100.com.br",
+        "https://evairdemelo.com.br",
+        "https://youtube.com/channel/uct5evlanh6iicl01fzpsobq",
+        "https://instagram.com/evair_de_melo",
+        "https://t.me/depevairdemelo",
+        "https://x.com/evairdemelo",
+        "https://tiktok.com/@evairdemelo",
+        "https://facebook.com/evair.vieirademelo",
+        "https://threads.com/@evair_de_melo",
+        "https://chat.whatsapp.com/htmrljrps4vgmsc7dtfkgy?s=sh&p=a&ilr=1"
+      ],
+      "previous_elections": [
+        {
+          "year": 2022,
+          "office": "Deputado Federal",
+          "party": "PP",
+          "uf": "ES",
+          "location": "Espírito Santo",
+          "votes": 75034,
+          "result": "Eleito Por QP",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2040602022/80001650199/2022/ES"
+        },
+        {
+          "year": 2018,
+          "office": "Deputado Federal",
+          "party": "PP",
+          "uf": "ES",
+          "location": "Espírito Santo",
+          "votes": 48412,
+          "result": "Eleito Por Média",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/2022802018/80000611871/2018/ES"
+        },
+        {
+          "year": 2014,
+          "office": "Deputado Federal",
+          "party": "PV",
+          "uf": "ES",
+          "location": "Espírito Santo",
+          "votes": 48829,
+          "result": "Eleito Por QP",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/680/80000000169/2014/ES"
+        },
+        {
+          "year": 2008,
+          "office": "Prefeito",
+          "party": "PSDB",
+          "uf": "ES",
+          "location": "Venda Nova do Imigrante",
+          "result": "Não Eleito",
+          "source_url": "https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/14422/4217/2008/57975"
+        }
+      ],
+      "captured_at": "2026-09-29T19:14:11.183395+00:00"
     },
     {
       "candidate_id": "80002553323",
