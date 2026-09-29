@@ -77,6 +77,24 @@ const SOCIAL_NETWORKS = {
   "linktr.ee": "Linktree",
 };
 
+// "ricardoferra%C3%A7oOficial" -> "ricardoferraçoOficial". Sequência inválida
+// fica como veio, em vez de quebrar o rótulo.
+function safeDecode(value) {
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
+}
+
+// Primeiro trecho do caminho que NÃO é o nome da pessoa/canal:
+// - opaco: o que vem depois é token ou ID (facebook.com/share/<token>,
+//   youtube.com/channel/UC…, kwai-video.com/u/<id>) — o rótulo é só a rede;
+// - nomeado: o nome vem no trecho seguinte (linkedin.com/in/<nome>,
+//   youtube.com/user/<nome>).
+const OPAQUE_FIRST_SEGMENTS = new Set(["share", "sharer", "people", "groups", "pages", "pg", "channel", "watch", "profile.php", "u", "p"]);
+const NAMED_FIRST_SEGMENTS = new Set(["in", "company", "school", "user", "c"]);
+
 // Rótulo legível de uma URL de rede social informada ao TSE.
 export function socialLabel(url) {
   try {
@@ -86,9 +104,13 @@ export function socialLabel(url) {
     // palavra "channel", que não identifica nada.
     if (host === "whatsapp.com") return "WhatsApp · canal";
     const network = SOCIAL_NETWORKS[host] || host;
-    const handle = u.pathname.split("/").filter(Boolean)[0];
-    const isId = !handle || /^profile\.php$/i.test(handle);
-    return isId ? network : `${network} · ${handle.startsWith("@") ? handle : "@" + handle.replace(/^@/, "")}`;
+    const segments = u.pathname.split("/").filter(Boolean).map(safeDecode);
+    const first = segments[0];
+    if (!first) return network;
+    const key = first.toLowerCase();
+    if (OPAQUE_FIRST_SEGMENTS.has(key)) return network;
+    if (NAMED_FIRST_SEGMENTS.has(key)) return segments[1] ? `${network} · ${segments[1]}` : network;
+    return `${network} · ${first.startsWith("@") ? first : "@" + first}`;
   } catch {
     return url;
   }
