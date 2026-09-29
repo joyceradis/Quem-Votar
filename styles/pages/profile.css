@@ -8,7 +8,7 @@
 .profile-shell {
   max-width: var(--max);
   margin: 0 auto;
-  padding: 26px max(20px, calc((100vw - var(--max)) / 2)) clamp(64px, 8vw, 96px);
+  padding: 26px 20px clamp(64px, 8vw, 96px);
 }
 
 .qv-loading,

@@ -8,7 +8,7 @@
 .qv-page {
   max-width: var(--max);
   margin: 0 auto;
-  padding: clamp(32px, 4vw, 64px) max(20px, calc((100vw - var(--max)) / 2)) clamp(64px, 8vw, 104px);
+  padding: clamp(32px, 4vw, 64px) 20px clamp(64px, 8vw, 104px);
 }
 
 .qv-page-intro {
