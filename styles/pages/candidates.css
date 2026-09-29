@@ -265,6 +265,16 @@
   opacity: 0.4;
 }
 
+.pagination-status {
+  display: none;
+}
+
+.pagination-pages {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
 /* Bandeja de comparação */
 .compare-tray {
   position: fixed;
@@ -350,6 +360,28 @@
   .qv-card-actions {
     grid-column: 2;
     justify-self: start;
+  }
+
+  .pagination {
+    justify-content: space-between;
+    gap: 6px;
+  }
+
+  .pagination-pages {
+    display: none;
+  }
+
+  .pagination-status {
+    display: block;
+    color: var(--muted);
+    font-size: 0.88rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .pagination > button {
+    padding: 0 9px;
+    white-space: nowrap;
   }
 
   .compare-tray {

@@ -24,6 +24,33 @@ test.describe("Listagem de candidaturas", () => {
     await expect(page.locator("#pageStatus")).toHaveText(/^Página 1 de \d+$/);
   });
 
+  test("paginação da lista cabe na viewport móvel a partir da página 4", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("candidatos.html?cargo=estadual&page=4");
+    await expect(page.locator("#pageStatus")).toHaveText(/^Página 4 de \d+$/);
+
+    for (const width of [320, 360, 390]) {
+      await page.setViewportSize({ width, height: 844 });
+      const dimensions = await page.evaluate(() => ({
+        viewport: document.documentElement.clientWidth,
+        document: document.documentElement.scrollWidth,
+        pagination: document.querySelector("#pagination").getBoundingClientRect(),
+      }));
+      expect(
+        dimensions.document,
+        `document overflows horizontally at ${width}px: ${JSON.stringify(dimensions)}`
+      ).toBeLessThanOrEqual(dimensions.viewport);
+      expect(dimensions.pagination.left).toBeGreaterThanOrEqual(0);
+      expect(dimensions.pagination.right).toBeLessThanOrEqual(dimensions.viewport);
+    }
+
+    await expect(page.locator(".pagination-pages")).toBeHidden();
+    await expect(page.locator(".pagination-status")).toBeVisible();
+    await page.getByRole("button", { name: "Próxima" }).click();
+    await expect(page.locator("#pageStatus")).toHaveText(/^Página 5 de \d+$/);
+    await expect(page).toHaveURL(/page=5/);
+  });
+
   // Achado do Codex no #198: um candidato com institutional_history mas
   // sem current_mandate fazia hasInstitutional() liberar a linha 'agora',
   // mas currentActivity() ainda retornava o texto de ausência — exatamente
