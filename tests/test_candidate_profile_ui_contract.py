@@ -27,8 +27,8 @@ class CandidateProfileUIContractTest(unittest.TestCase):
         for token in (
             "prospective.length", "item.statement || item.quote_or_summary",
             "evidenceMetaLine(item)", "sourceLink(item)",
-            "Nenhuma proposta ou declaração documentada nesta base ainda.",
-            "Sem registro não é o mesmo que sem proposta.",
+            "Esta ficha ainda não tem proposta ou declaração documentada.",
+            "Isso não significa que a candidatura não tenha propostas ou posições.",
         ):
             self.assertIn(token, block)
         self.assertNotIn("candidate.occupation", block)
