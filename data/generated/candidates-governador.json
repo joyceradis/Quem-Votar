@@ -280,14 +280,6 @@
         "uf": "ES",
         "location": "Cariacica",
         "result": "Eleito"
-      },
-      {
-        "year": 2004,
-        "office": "Prefeito",
-        "party": "PT",
-        "uf": "ES",
-        "location": "Cariacica",
-        "result": "2º turno"
       }
     ],
     "current_mandate": null,
@@ -439,14 +431,6 @@
         "uf": "ES",
         "location": "Vitória",
         "result": "Eleito"
-      },
-      {
-        "year": 2020,
-        "office": "Prefeito",
-        "party": "REPUBLICANOS",
-        "uf": "ES",
-        "location": "Vitória",
-        "result": "2º turno"
       },
       {
         "year": 2020,
@@ -884,14 +868,6 @@
         "uf": "ES",
         "location": "Espírito Santo",
         "result": "Eleito"
-      },
-      {
-        "year": 2022,
-        "office": "Vice-governador",
-        "party": "PSDB",
-        "uf": "ES",
-        "location": "Espírito Santo",
-        "result": "2º turno"
       },
       {
         "year": 2018,
