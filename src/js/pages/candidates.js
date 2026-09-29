@@ -5,7 +5,7 @@
 // aqui) e o cartão virou função própria.
 import { $, esc, norm, params } from "../core/dom.js";
 import { loadCore, applyGlobalMeta, OFFICES, officeLabel } from "../core/data.js";
-import { formatSnapshot, initials } from "../core/format.js";
+import { formatSnapshot, initials, registrationStatusException } from "../core/format.js";
 import { updateSearchParams } from "../core/url-state.js";
 import { setupNavigation } from "../core/a11y.js";
 import {
@@ -87,6 +87,7 @@ function candidateCard(candidate, kind, selectedIds) {
         .join("")}${remaining ? `<span class="qv-tag qv-tag--more">+${remaining} tema${remaining === 1 ? "" : "s"}</span>` : ""}</div>`
     : "";
 
+  const statusNote = registrationStatusException(candidate.registration_status);
   const proposalCount = topicEvidence(candidate).length;
   const electionsCount = (candidate.previous_elections || []).length;
   const assetsCount = candidate.assets?.count || (candidate.assets?.items || []).length || 0;
@@ -110,6 +111,7 @@ function candidateCard(candidate, kind, selectedIds) {
         <p class="qv-card-kicker">${esc(officeLabel(kind).toUpperCase())}</p>
         <h3><a href="${profileUrl}">${esc(name)}</a></h3>
         <p class="qv-card-electoral">${esc(candidate.party || "Partido não informado")} · nº ${esc(candidate.number || "—")}</p>
+        ${statusNote ? `<p class="qv-card-status">Situação da candidatura: ${esc(statusNote)}</p>` : ""}
         ${candidate.current_mandate ? `<p class="qv-card-now">${esc(currentActivity(candidate, kind))}</p>` : ""}
         ${usableOccupation(candidate.occupation) ? `<p class="qv-card-occupation">${esc(candidate.occupation)}</p>` : ""}
         ${topicTags}
