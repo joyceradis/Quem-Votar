@@ -1,8 +1,8 @@
 name: Coletar bootstrap TSE dos cargos majoritários
 
 # Versão TEMPORÁRIA de diagnóstico (branch claude/tse-diagnose, não vai para main):
-# só lê e imprime a estrutura das páginas que o coletor estrito recusou.
-# Nada é escrito no repositório.
+# só lê e imprime o cabeçalho do CSV de histórico de candidaturas do TSE e, de
+# um candidato de amostra, colunas não sensíveis. Nada é escrito no repositório.
 
 on:
   workflow_dispatch:
@@ -12,40 +12,41 @@ permissions:
 
 jobs:
   bootstrap:
-    name: Diagnóstico de estrutura das páginas recusadas
+    name: Diagnóstico do CSV de histórico do TSE
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: Imprimir a estrutura das páginas
+      - name: Cabeçalho e amostra não sensível
         shell: bash
         run: |
           set -euo pipefail
           python3 - <<'PY'
+          import csv
+          import io
           import re
           import urllib.request
+          import zipfile
 
           UA = "Quem-Votar-ES/4.0 (+https://github.com/joyceradis/Quem-Votar)"
-          # 4 recusadas + 1 controle que o coletor aceitou.
-          ids = ["80002541012", "80002549404", "80002550832", "80002553269", "80002552692"]
-          for cid in ids:
-              req = urllib.request.Request(
-                  f"https://meuvoto.org.br/candidato/{cid}.html",
-                  headers={"User-Agent": UA, "Accept": "text/html"},
-              )
-              raw = urllib.request.urlopen(req, timeout=30).read()
-              text = raw.decode("utf-8")
-              print(f"== {cid} bytes={len(raw)}")
-              for m in re.finditer(r"<h2\b([^>]*)>(.*?)</h2>", text, re.I | re.S):
-                  attrs = re.sub(r"\s+", " ", m.group(1)).strip()[:70]
-                  label = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", m.group(2))).strip()[:70]
-                  print(f"   h2 [{attrs}] {label}")
-              for kw in ("anteriores", "primeira", "sem candidatura", "histórico", "historico"):
-                  hits = list(re.finditer(kw, text, re.I))
-                  print(f"   kw {kw!r}: {len(hits)} ocorrências")
-                  for m in hits[:2]:
-                      s = max(0, m.start() - 90)
-                      e = min(len(text), m.end() + 150)
-                      print("      ...", re.sub(r"\s+", " ", text[s:e]))
-              caps = re.findall(r"<caption\b[^>]*>(.*?)</caption>", text, re.I | re.S)
-              print("   captions:", [re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", c)).strip()[:70] for c in caps])
+          URL = "https://cdn.tse.jus.br/estatistica/sead/odsele/historico_candidatura/historico_candidatura_2026.zip"
+          req = urllib.request.Request(URL, headers={"User-Agent": UA})
+          raw = urllib.request.urlopen(req, timeout=120).read()
+          archive = zipfile.ZipFile(io.BytesIO(raw))
+          print("membros:", archive.namelist())
+          member = next(n for n in archive.namelist() if n.endswith("_ES.csv"))
+          text = archive.read(member).decode("latin-1")
+          reader = csv.DictReader(io.StringIO(text), delimiter=";")
+          print("colunas:", reader.fieldnames)
+          sensivel = re.compile(r"CPF|TITULO|EMAIL|NASC|TELEFONE|ENDERECO|NM_CANDIDATO|NM_SOCIAL", re.I)
+          seguras = [f for f in reader.fieldnames if not sensivel.search(f)]
+          print("colunas não sensíveis usadas na amostra:", seguras)
+          amostra = "80002552692"
+          shown = 0
+          for row in reader:
+              if amostra in row.values():
+                  print("linha:", {k: row[k] for k in seguras})
+                  shown += 1
+                  if shown >= 3:
+                      break
+          print("linhas de amostra:", shown)
           PY
