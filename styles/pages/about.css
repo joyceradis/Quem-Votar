@@ -56,3 +56,16 @@
     gap: 8px;
   }
 }
+
+/* Link de fonte dentro da linha: fica sob o texto, alinhado à coluna de resposta */
+.about-list article > a {
+  grid-column: 2;
+  margin-top: -18px;
+}
+
+@media (max-width: 620px) {
+  .about-list article > a {
+    grid-column: 1;
+    margin-top: 0;
+  }
+}
