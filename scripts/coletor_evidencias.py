@@ -815,6 +815,7 @@ def collect_institutional_snapshot(
     item: dict[str, Any],
     *,
     candidate: dict[str, Any],
+    fetcher=fetch_bytes,
 ) -> dict[str, Any] | None:
     """Materialize a trusted Câmara draft from an official discovery snapshot.
 
@@ -842,8 +843,14 @@ def collect_institutional_snapshot(
     title = clean(item.get("source_title") or snapshot.get("title"))
     ementa = clean(snapshot.get("ementa"))
     normalized_text = clean("\n".join(x for x in (title, ementa) if x))
+    recovered = None
     if len(normalized_text) < 40:
-        raise RuntimeError("conteúdo institucional API insuficiente para revisão")
+        if snapshot.get("siglaTipo") not in {"EMR", "SBT"} or not snapshot.get("urlInteiroTeor"):
+            raise RuntimeError("conteúdo institucional API insuficiente para revisão")
+        from chamber_document_section import recover
+        recovered = recover(item, fetcher, max_pages=MAX_PDF_PAGES)
+        normalized_text = recovered["text"]
+        title = recovered["title"]
 
     raw_snapshot = json.dumps(
         snapshot,
@@ -867,7 +874,7 @@ def collect_institutional_snapshot(
     official_themes = snapshot.get("official_themes")
     if not isinstance(official_themes, list):
         official_themes = []
-    return {
+    draft = {
         "draft_id": draft_id,
         "candidate_id": candidate_id,
         "candidate_name": candidate_display_name(candidate),
@@ -903,6 +910,22 @@ def collect_institutional_snapshot(
             snapshot.get("bulk_snapshot_sha256")
         ) or source_hash,
     }
+    if recovered:
+        draft.update(
+            document_type="pdf_section", page_count=recovered["page_count"],
+            source_sha256=recovered["document_sha256"],
+            document_url=recovered["document_url"],
+            document_pages=recovered["pages"],
+            fiche_sha256=recovered["fiche_sha256"],
+            parent_context_only=recovered["parent_context_only"],
+            document_section_number=recovered["section_number"],
+            document_section_identity_basis=recovered["section_identity_basis"],
+            collection_notes=clean(f"{notes} Trecho individualizado do inteiro teor oficial; "
+                                  "ficha, projeto-pai, seção e autoria conferidos. "
+                                  "Páginas por ordem física do PDF. Ementa original preservada; "
+                                  "sem herança temática do projeto-pai. Revisão pendente."),
+        )
+    return draft
 
 
 def collect_source(
@@ -919,7 +942,7 @@ def collect_source(
     candidate = candidates[candidate_id]
     source_url = clean(item.get("source_url"))
 
-    snapshot_draft = collect_institutional_snapshot(item, candidate=candidate)
+    snapshot_draft = collect_institutional_snapshot(item, candidate=candidate, fetcher=fetcher)
     if snapshot_draft is not None:
         return snapshot_draft
 
