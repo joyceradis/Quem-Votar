@@ -140,18 +140,21 @@ function renderPagination(total, page, onPage) {
     if (current === 1 || current === pages || Math.abs(current - page) <= 2) visible.push(current);
   }
 
-  const parts = [`<button type="button" data-page="${page - 1}" ${page === 1 ? "disabled" : ""}>Anterior</button>`];
+  const pageParts = [];
   let previous = 0;
   visible.forEach((current) => {
-    if (previous && current - previous > 1) parts.push('<span aria-hidden="true">…</span>');
-    parts.push(
+    if (previous && current - previous > 1) pageParts.push('<span aria-hidden="true">…</span>');
+    pageParts.push(
       `<button type="button" data-page="${current}" class="${current === page ? "active" : ""}" ${current === page ? 'aria-current="page"' : ""}>${current}</button>`
     );
     previous = current;
   });
-  parts.push(`<button type="button" data-page="${page + 1}" ${page === pages ? "disabled" : ""}>Próxima</button>`);
-
-  mount.innerHTML = parts.join("");
+  mount.innerHTML = [
+    `<button type="button" data-page="${page - 1}" ${page === 1 ? "disabled" : ""}>Anterior</button>`,
+    `<span class="pagination-status">Página ${page} de ${pages}</span>`,
+    `<div class="pagination-pages" role="group" aria-label="Páginas">${pageParts.join("")}</div>`,
+    `<button type="button" data-page="${page + 1}" ${page === pages ? "disabled" : ""}>Próxima</button>`,
+  ].join("");
   mount.querySelectorAll("button[data-page]").forEach((button) => {
     button.addEventListener("click", () => {
       const next = Number(button.dataset.page);
