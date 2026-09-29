@@ -81,6 +81,19 @@ Universo atual:
 
 Nenhuma contagem acima deve ser tratada como avaliação de candidatura ou completude política.
 
+## Enriquecimento oficial ao vivo e cargos majoritários — #186 (2026-09-29)
+
+**Status: no ar** (verificado no site publicado, lido da rede do runner em 29/09/2026, `meta.collected_at` 19:54Z do snapshot deste PR e 19:43Z do anterior).
+
+- **Fonte:** o CDN do TSE voltou a responder ao runner (`bem_candidato_2026.zip` → HTTP 200). O `sync-data` passou a ler ao vivo os quatro CSVs oficiais — complementar, bens, redes e histórico de candidaturas — todos `status: fresh`, com `sha256` e contagem de linhas em `meta.json`, em vez da cópia preservada do espelho de 21/09. `data/reference/tse-enrichment-bootstrap.json` (559 entradas, dos quais 12 majoritários) permanece como **fallback** para quando o CDN voltar a responder 403; `tse-bootstrap.yml` coleta só o que falta, sem sobrescrever entradas existentes.
+- **Cobertura:** os 16 candidatos a Governador e Senador ficaram com bens, redes e histórico **sem lacuna** (`enrichment_gaps` vazio), com vice e suplentes vinculados. Nos 12 que o espelho MeuVoto também cobria, os totais de bens batem centavo a centavo com o dado oficial. Bens: 374 candidaturas / 1.652 registros; redes: 472 / 1.620 links; histórico: 386 candidaturas / 1.172 registros; `declares_assets` do TSE coerente com a contagem publicada (189 sem bens, 374 com).
+- **Situação da candidatura** deixou de ser `not_available` para os 563: 529 deferido, 19 renúncia, 4 indeferido, 6 indeferido em prazo recursal/com recurso, 4 deferido em prazo recursal/com recurso, 1 pendente de julgamento. O contrato da sentinela acima segue valendo para o caso em que a fonte não resolva.
+- **Normalização** (`scripts/sync-data.py`, `Authorization-Issue: #186`): redes sem convite de grupo/contato direto (`chat.whatsapp.com`, `wa.me`, `api/web.whatsapp`, `phone=`; canais públicos ficam) — #218; descrições de bens sem CPF nem número de conta bancária (tipo, descrição, banco, agência e valor ficam) — #221; histórico com o lugar (`NM_UE`) — #218; candidatura em dois turnos como **um** registro, com o resultado do último turno (1.199 → 1.172 registros) — #224.
+- **Interface:** situação da candidatura no topo da ficha, na comparação e, na lista, só quando foge do "deferido" — #220. Os testes de lacuna passaram a simular a lacuna por interceptação de rede, porque o snapshot completo não tem nenhuma.
+- **Limites conhecidos:** a descrição de bem continua como o TSE a declara e pode trazer endereço de imóvel e nº de inscrição municipal; a política de redes acima (o que é descartado) aguarda confirmação da mantenedora; o `audit-site.py` só reprova CPF/número de conta em texto livre a partir do guard proposto em PR seguinte.
+
+PRs: #215–#218, #220–#222, #224 e este.
+
 ## Contrato de situação da candidatura
 
 A sentinela TSE `#NE` não é interpretada como situação jurídica.
