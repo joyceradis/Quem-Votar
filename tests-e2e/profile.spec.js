@@ -112,7 +112,7 @@ test.describe("Ficha do candidato", () => {
     await expect(page.locator("#vai-fazer")).toBeVisible();
 
     await expect(page.locator("#vai-fazer")).toContainText(
-      "Sem registro não é o mesmo que sem proposta."
+      "Isso não significa que a candidatura não tenha propostas ou posições."
     );
     // nunca um zero ou um traço no lugar da explicação
     await expect(page.locator("#vai-fazer .promise-list")).toHaveCount(0);
@@ -222,4 +222,25 @@ test.describe("Ficha do candidato", () => {
     await openProfile(page, "candidato.html");
     await expect(page.locator("#profileMount")).toHaveText("Candidato não informado.");
   });
+});
+
+
+test("bens têm atalho visível e detalhamento progressivo com total preservado", async ({ page }) => {
+  const candidate = federais.find((c) => c.assets?.items?.length > 0);
+  test.skip(!candidate, "Snapshot sem declaração de bens");
+  await openProfile(page, fichaUrl(candidate));
+  const jump = page.getByRole("navigation", { name: "Navegar pela ficha" });
+  const assetsLink = jump.getByRole("link", { name: "Bens declarados", exact: true });
+  await expect(assetsLink).toBeVisible();
+  const navWidth = await jump.evaluate((el) => ({ scroll: el.scrollWidth, client: el.clientWidth }));
+  expect(navWidth.scroll).toBeLessThanOrEqual(navWidth.client + 1);
+  await assetsLink.click();
+  await expect(page).toHaveURL(/#bens-declarados$/);
+  const assets = page.locator("#bens-declarados");
+  await expect(assets.locator(".declared-assets-total")).toBeVisible();
+  await expect(assets.locator(".declared-assets-list")).not.toBeVisible();
+  await assets.locator("summary").focus();
+  await page.keyboard.press("Enter");
+  await expect(assets.locator(".declared-assets-list")).toBeVisible();
+  await expect(assets.locator(".declared-assets-list li")).toHaveCount(candidate.assets.items.length);
 });
