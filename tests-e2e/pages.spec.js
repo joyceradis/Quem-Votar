@@ -136,6 +136,47 @@ test.describe("Comparar", () => {
   });
 });
 
+test.describe("Rótulos de rede social", () => {
+  // Formas reais dos links informados ao TSE: handle percent-encoded
+  // ("ricardoferra%C3%A7oOficial"), facebook.com/share/<token> (99 links),
+  // linkedin.com/in/<nome>, youtube.com/channel/UC…, canal do WhatsApp,
+  // subdomínios (web./br./k.) e domínios alternativos.
+  test("rótulo decodifica o handle e nomeia a rede sem expor token", async ({ page }) => {
+    await page.goto("candidatos.html");
+    const rotulos = await page.evaluate(async () => {
+      const { socialLabel } = await import("./js/core/format.js");
+      return [
+        "https://www.youtube.com/@ricardoferra%C3%A7oOficial",
+        "https://www.youtube.com/CHANNEL/UCabcdefghijklmnopqrstuv",
+        "https://www.youtube.com/USER/Fulano",
+        "https://www.facebook.com/share/1AbCdEfGh/",
+        "https://www.facebook.com/PROFILE.PHP?id=100000000000000",
+        "https://web.facebook.com/RicardoRFerraco",
+        "https://br.linkedin.com/in/fulano-de-tal",
+        "https://www.kwai-video.com/u/abc123",
+        "https://k.kwai.com/@fulano",
+        "https://www.threads.com/@fulano",
+        "https://whatsapp.com/channel/0029Vb8QQsvKQuJDxKMxEM2m",
+        "https://www.instagram.com/%E0%A4%A",
+      ].map(socialLabel);
+    });
+    expect(rotulos).toEqual([
+      "YouTube · @ricardoferraçoOficial",
+      "YouTube",
+      "YouTube · Fulano",
+      "Facebook",
+      "Facebook",
+      "Facebook · @RicardoRFerraco",
+      "LinkedIn · fulano-de-tal",
+      "Kwai",
+      "Kwai · @fulano",
+      "Threads · @fulano",
+      "WhatsApp · canal",
+      "Instagram · @%E0%A4%A", // sequência inválida não quebra: fica como veio
+    ]);
+  });
+});
+
 test.describe("Assuntos", () => {
   test("lista só temas com evidência e liga para a listagem filtrada", async ({ page }) => {
     await page.goto("temas.html");
