@@ -106,7 +106,7 @@ const LINHAS = [
 ];
 
 async function initCompare() {
-  const [{ all, meta, comparisonReady }, topics] = await Promise.all([loadCore(), loadTopics()]);
+  const [{ all, meta, comparisonReady, comparisonComplete }, topics] = await Promise.all([loadCore(), loadTopics()]);
   setTopics(topics);
   applyGlobalMeta(meta);
 
@@ -123,7 +123,15 @@ async function initCompare() {
   const urlParams = params();
   const fromUrl = (urlParams.get("ids") || "").split(",").filter(Boolean).map(String);
   const validIds = all.map((candidate) => String(candidate.tse_id));
-  const ids = normalizeCompareIds(urlParams.has("ids") ? fromUrl : getCompareIds(), validIds);
+  const requestedIds = urlParams.has("ids") ? fromUrl : getCompareIds();
+  // Não reescrever o link nem a seleção se faltarem dados para resolvê-los.
+  // Comparações cujos candidatos carregaram continuam disponíveis.
+  if (!comparisonComplete && normalizeCompareIds(requestedIds).some((id) => !validIds.includes(id))) {
+    mount.textContent =
+      "Não foi possível carregar todos os candidatos. Sua seleção foi preservada. Tente novamente.";
+    return;
+  }
+  const ids = normalizeCompareIds(requestedIds, validIds);
   const selected = ids.map((id) => all.find((c) => String(c.tse_id) === id)).filter(Boolean);
 
   setCompareIds(ids);
