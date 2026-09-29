@@ -352,12 +352,38 @@ def _normalize_social_url(value):
     )
 
 
+# Contato direto e convite de grupo não são "rede social" pública. O telefone
+# vai embutido no link (wa.me/55…, api.whatsapp.com/send?phone=…) — dado que
+# AGENTS.md §5 proíbe publicar — e o convite de grupo dá entrada a um grupo
+# privado, com os números de quem participa visíveis. A fonte oficial pode
+# trazer dezenas deles por candidatura (78 numa só). Perfis e canais públicos
+# (instagram.com/…, whatsapp.com/channel/…, t.me/<usuário>) continuam.
+_PRIVATE_CONTACT_HOSTS = frozenset(
+    {"chat.whatsapp.com", "wa.me", "api.whatsapp.com", "web.whatsapp.com"}
+)
+
+
+def _is_private_contact_link(url):
+    parts = urllib.parse.urlsplit(url)
+    host = parts.netloc.lower().removeprefix("www.")
+    path = parts.path.lower()
+    if host in _PRIVATE_CONTACT_HOSTS:
+        return True
+    if host == "whatsapp.com" and not path.startswith("/channel/"):
+        return True
+    if host in {"t.me", "telegram.me"} and (
+        path.startswith("/+") or path.startswith("/joinchat")
+    ):
+        return True
+    return "phone=" in parts.query.lower()
+
+
 def _normalize_social_links(values):
     normalized = []
     seen = set()
     for value in values or []:
         url = _normalize_social_url(value)
-        if not url:
+        if not url or _is_private_contact_link(url):
             continue
         dedupe_key = url.casefold()
         if dedupe_key in seen:
@@ -365,6 +391,22 @@ def _normalize_social_links(values):
         seen.add(dedupe_key)
         normalized.append(url)
     return normalized
+
+
+_PLACE_LOWERCASE_WORDS = frozenset({"de", "da", "do", "das", "dos", "e"})
+
+
+def _title_place(value):
+    """'CACHOEIRO DE ITAPEMIRIM' -> 'Cachoeiro de Itapemirim'. O TSE publica
+    NM_UE em caixa alta; a ficha lê melhor com a grafia usual do município."""
+    value = clean(value)
+    if not value:
+        return None
+    words = value.lower().split()
+    return " ".join(
+        word if index and word in _PLACE_LOWERCASE_WORDS else word.capitalize()
+        for index, word in enumerate(words)
+    )
 
 
 def _history_uf_from_source_url(value):
@@ -800,6 +842,9 @@ def enrich_tse_open_data(groups):
                     or row.get("SG_UE")
                     or row.get("SG_UF_CANDIDATURA")
                 ),
+                # Município (eleições municipais) ou o próprio estado/país, como
+                # o TSE informa em NM_UE — sem isso "Vereador" perde o onde.
+                "location": _title_place(row.get("NM_UE")),
                 "result": clean(
                     row.get("DS_SIT_TOT_TURNO")
                     or row.get("DS_SITUACAO_CANDIDATURA")
@@ -834,6 +879,7 @@ def enrich_tse_open_data(groups):
                     record.get("office"),
                     record.get("party"),
                     record.get("uf"),
+                    record.get("location"),
                     record.get("result"),
                 )
                 if key in seen:
