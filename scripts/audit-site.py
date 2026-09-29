@@ -316,6 +316,7 @@ def main() -> None:
     # snapshots existem, sem excluí-los da validação obrigatória e sem quebrar
     # o contrato dos deputados (nem os stubs sociais, que hoje cobrem só eles).
     all_ids = list(ids)
+    majoritarian_rows = []
     for kind, fname, label in (
         ("governador", "candidates-governador.json", "GOVERNADOR"),
         ("senador", "candidates-senador.json", "SENADOR"),
@@ -331,6 +332,7 @@ def main() -> None:
         gids = [str(x.get("tse_id") or "") for x in group]
         assert all(gids), f"{kind}: registro sem SQ_CANDIDATO"
         all_ids.extend(gids)
+        majoritarian_rows.extend({**x, "_kind": kind} for x in group)
 
         # Anexo de vice/suplente: tolerante enquanto o CI não gerou o campo
         # (mesmo espírito do "if not path.exists(): continue" acima); quando
@@ -356,11 +358,18 @@ def main() -> None:
     social_root = ROOT / "social"
     fallback_og_image = ROOT / "assets" / "og-fallback-neutral.png"
     assert fallback_og_image.exists(), "asset neutro de fallback og:image ausente"
+    # Universo social/sitemap = os 4 cargos (deputados + majoritários): paridade
+    # de rota/preview, sem conteúdo político novo.
+    social_rows = [{**x, "_kind": "federal"} for x in federal] + [
+        {**x, "_kind": "estadual"} for x in estadual
+    ] + majoritarian_rows
+    social_ids = sorted(str(x.get("tse_id")) for x in social_rows)
+    assert len(social_ids) == len(set(social_ids)), "SQ_CANDIDATO duplicado no universo social"
     social_manifest = json.loads(read(social_root / "manifest.json"))
-    assert social_manifest.get("candidate_count") == len(rows), (
+    assert social_manifest.get("candidate_count") == len(social_rows), (
         "manifest de preview social diverge do snapshot"
     )
-    assert social_manifest.get("candidate_ids") == sorted(ids), (
+    assert social_manifest.get("candidate_ids") == social_ids, (
         "IDs do preview social divergem do snapshot eleitoral"
     )
     actual_social_ids = sorted(
@@ -368,26 +377,33 @@ def main() -> None:
         for path in social_root.iterdir()
         if path.is_dir() and (path / "index.html").exists()
     )
-    assert actual_social_ids == sorted(ids), (
+    assert actual_social_ids == social_ids, (
         "cobertura de preview social deve ser 1:1 por SQ_CANDIDATO"
     )
-    candidate_kind = {
-        str(row.get("tse_id")): "federal" for row in federal
-    } | {
-        str(row.get("tse_id")): "estadual" for row in estadual
-    }
-    candidate_record = {}
-    for row in federal:
-        candidate_record[str(row.get("tse_id"))] = {**row, "_kind": "federal"}
-    for row in estadual:
-        candidate_record[str(row.get("tse_id"))] = {**row, "_kind": "estadual"}
+    candidate_kind = {str(row.get("tse_id")): row["_kind"] for row in social_rows}
+    candidate_record = {str(row.get("tse_id")): row for row in social_rows}
 
     social_generator = load_social_generator()
+
+    # Sitemap: gerado de forma determinística dos 4 snapshots. Igualdade exata
+    # com o gerador canônico + invariante social ids == sitemap ids == snapshots.
+    sitemap_text = read(ROOT / "sitemap.xml")
+    expected_sitemap = social_generator.render_sitemap(
+        social_rows,
+        lastmod=social_generator.snapshot_date(DATA / "meta.json"),
+    )
+    assert sitemap_text == expected_sitemap, (
+        "sitemap.xml diverge do gerador canônico; rode scripts/generate-social-previews.py"
+    )
+    sitemap_ids = sorted(re.findall(r"candidato\.html\?id=(\d+)&amp;cargo=", sitemap_text))
+    assert sitemap_ids == social_ids == sorted(all_ids), (
+        "ids do sitemap, dos previews sociais e dos snapshots devem coincidir"
+    )
     individual_og_images = 0
     fallback_og_images = 0
     og_drift_ids = []
 
-    for cid in ids:
+    for cid in social_ids:
         preview = read(social_root / cid / "index.html")
         candidate = candidate_record[cid]
         expected_image, uses_candidate_photo = social_generator.resolve_og_image(
