@@ -1,8 +1,8 @@
 name: Coletar bootstrap TSE dos cargos majoritários
 
-# Versão TEMPORÁRIA de diagnóstico (branch claude/tse-diagnose, não vai para main):
-# só lê e imprime o cabeçalho do CSV de histórico de candidaturas do TSE e, de
-# um candidato de amostra, colunas não sensíveis. Nada é escrito no repositório.
+# Versão TEMPORÁRIA (branch claude/tse-diagnose, não vai para main): lê o site
+# PUBLICADO a partir da rede do runner e imprime fatos verificáveis do que está no ar.
+# Nada é escrito no repositório.
 
 on:
   workflow_dispatch:
@@ -12,41 +12,61 @@ permissions:
 
 jobs:
   bootstrap:
-    name: Diagnóstico do CSV de histórico do TSE
+    name: Verificação do site publicado
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: Cabeçalho e amostra não sensível
+      - name: Ler o site publicado
         shell: bash
         run: |
           set -euo pipefail
           python3 - <<'PY'
-          import csv
-          import io
+          import json
           import re
           import urllib.request
-          import zipfile
 
-          UA = "Quem-Votar-ES/4.0 (+https://github.com/joyceradis/Quem-Votar)"
-          URL = "https://cdn.tse.jus.br/estatistica/sead/odsele/historico_candidatura/historico_candidatura_2026.zip"
-          req = urllib.request.Request(URL, headers={"User-Agent": UA})
-          raw = urllib.request.urlopen(req, timeout=120).read()
-          archive = zipfile.ZipFile(io.BytesIO(raw))
-          print("membros:", archive.namelist())
-          member = next(n for n in archive.namelist() if n.endswith("_ES.csv"))
-          text = archive.read(member).decode("latin-1")
-          reader = csv.DictReader(io.StringIO(text), delimiter=";")
-          print("colunas:", reader.fieldnames)
-          sensivel = re.compile(r"CPF|TITULO|EMAIL|NASC|TELEFONE|ENDERECO|NM_CANDIDATO|NM_SOCIAL", re.I)
-          seguras = [f for f in reader.fieldnames if not sensivel.search(f)]
-          print("colunas não sensíveis usadas na amostra:", seguras)
-          amostra = "80002552692"
-          shown = 0
-          for row in reader:
-              if amostra in row.values():
-                  print("linha:", {k: row[k] for k in seguras})
-                  shown += 1
-                  if shown >= 3:
-                      break
-          print("linhas de amostra:", shown)
+          BASE = "https://joyceradis.github.io/Quem-Votar/"
+
+          def get(path):
+              req = urllib.request.Request(BASE + path, headers={"User-Agent": "Quem-Votar-smoke/1.0", "Cache-Control": "no-cache"})
+              with urllib.request.urlopen(req, timeout=60) as response:
+                  return response.status, dict(response.headers), response.read()
+
+          status, headers, raw = get("data/generated/meta.json")
+          meta = json.loads(raw)
+          print("meta.json", status, "last-modified:", headers.get("Last-Modified"), "collected_at:", meta.get("collected_at"))
+          print("counts:", {k: meta["counts"].get(k) for k in ("federal", "estadual", "governador", "senador", "candidates_with_assets", "candidates_with_social_links", "candidates_with_previous_elections", "candidates_with_registration_status")})
+
+          cpf = re.compile(r"\b\d{3}\.\d{3}\.\d{3}-\d{2}\b")
+          account = re.compile(r"\b(?:conta|cc|c/c|c\.c\.)\s*:\s*\d[\d.\-]{2,}\d", re.I)
+          private = re.compile(r"chat\.whatsapp\.com|wa\.me|api\.whatsapp\.com|web\.whatsapp\.com|phone=", re.I)
+          for kind in ("federal", "estadual", "governador", "senador"):
+              status, headers, raw = get(f"data/generated/candidates-{kind}.json")
+              text = raw.decode("utf-8")
+              rows = json.loads(text)
+              statuses = {}
+              for c in rows:
+                  statuses[c.get("registration_status")] = statuses.get(c.get("registration_status"), 0) + 1
+              print(f"{kind}: {status} n={len(rows)} cpf={len(cpf.findall(text))} conta={len(account.findall(text))} contato_privado={len(private.findall(text))}")
+              print(f"   situação: {statuses}")
+              if kind in ("governador", "senador"):
+                  for c in rows:
+                      gaps = c.get("enrichment_gaps") or []
+                      assets = c.get("assets") or {}
+                      print(
+                          f"   {(c.get('ballot_name') or '')[:24]:<24} bens={assets.get('count')} total={assets.get('total_declared_brl')} "
+                          f"redes={len(c.get('social_links') or [])} hist={len(c.get('previous_elections') or [])} lacunas={gaps or '-'} situacao={c.get('registration_status')}"
+                      )
+
+          for path, needle in (
+              ("js/core/format.js", "registrationStatusText"),
+              ("js/pages/candidates.js", "qv-card-status"),
+              ("js/pages/profile.js", "Situação da candidatura"),
+              ("js/pages/compare.js", "registrationStatusText"),
+          ):
+              status, headers, raw = get(path)
+              print(f"{path}: {status} contém {needle!r}: {needle in raw.decode('utf-8')} last-modified={headers.get('Last-Modified')}")
+          for path in ("index.html", "candidatos.html", "candidato.html", "comparar.html", "sobre.html", "sitemap.xml"):
+              status, headers, raw = get(path)
+              print(f"{path}: {status} bytes={len(raw)}")
           PY
