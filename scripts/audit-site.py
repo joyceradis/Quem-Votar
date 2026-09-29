@@ -96,6 +96,23 @@ def og_meta(html_text: str) -> dict[str, str]:
 CANONICAL_BRANCHES = ("main", "master")
 
 
+# Texto livre (descrição de bem) pode trazer CPF de terceiros e número de conta
+# bancária. A normalização do sync os oculta (#221); este guard garante que
+# nenhum chegou ao snapshot publicado, nos quatro cargos (AGENTS.md §5).
+PRIVACY_CPF = re.compile(r"\b\d{3}\.\d{3}\.\d{3}-\d{2}\b")
+PRIVACY_ACCOUNT = re.compile(r"\b(?:conta|cc|c/c|c\.c\.)\s*:\s*\d[\d.\-]{2,}\d", re.I)
+
+
+def privacy_leaks(candidates) -> list[str]:
+    """SQ_CANDIDATO das candidaturas com CPF ou número de conta em algum texto."""
+    leaks = []
+    for candidate in candidates:
+        text = json.dumps(candidate, ensure_ascii=False)
+        if PRIVACY_CPF.search(text) or PRIVACY_ACCOUNT.search(text):
+            leaks.append(str(candidate.get("tse_id")))
+    return leaks
+
+
 def check_sync_never_writes_to_main(sync_workflow: str) -> None:
     """Garante que o pipeline de sync nunca escreve diretamente na branch
     canônica, mesmo quando publica um snapshot já auditado numa branch de
@@ -481,6 +498,8 @@ def main() -> None:
         f"amostra={unresolved_registration[:5]}"
     )
     assert not any(f'"{field}"' in blob for field in FORBIDDEN_FIELDS), "campo pessoal proibido no snapshot"
+    leaks = privacy_leaks(social_rows)
+    assert not leaks, f"CPF ou número de conta no snapshot; amostra={leaks[:5]}"
     assert all(x.get("source", {}).get("institution") == "TSE" for x in rows), "origem eleitoral inconsistente"
     assert all(x.get("photo_source", {}).get("institution") == "TSE" for x in rows), "origem da foto não rastreável ao TSE"
 
