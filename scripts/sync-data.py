@@ -352,12 +352,38 @@ def _normalize_social_url(value):
     )
 
 
+# Contato direto e convite de grupo não são "rede social" pública. O telefone
+# vai embutido no link (wa.me/55…, api.whatsapp.com/send?phone=…) — dado que
+# AGENTS.md §5 proíbe publicar — e o convite de grupo dá entrada a um grupo
+# privado, com os números de quem participa visíveis. A fonte oficial pode
+# trazer dezenas deles por candidatura (78 numa só). Perfis e canais públicos
+# (instagram.com/…, whatsapp.com/channel/…, t.me/<usuário>) continuam.
+_PRIVATE_CONTACT_HOSTS = frozenset(
+    {"chat.whatsapp.com", "wa.me", "api.whatsapp.com", "web.whatsapp.com"}
+)
+
+
+def _is_private_contact_link(url):
+    parts = urllib.parse.urlsplit(url)
+    host = parts.netloc.lower().removeprefix("www.")
+    path = parts.path.lower()
+    if host in _PRIVATE_CONTACT_HOSTS:
+        return True
+    if host == "whatsapp.com" and not path.startswith("/channel/"):
+        return True
+    if host in {"t.me", "telegram.me"} and (
+        path.startswith("/+") or path.startswith("/joinchat")
+    ):
+        return True
+    return "phone=" in parts.query.lower()
+
+
 def _normalize_social_links(values):
     normalized = []
     seen = set()
     for value in values or []:
         url = _normalize_social_url(value)
-        if not url:
+        if not url or _is_private_contact_link(url):
             continue
         dedupe_key = url.casefold()
         if dedupe_key in seen:
@@ -365,6 +391,87 @@ def _normalize_social_links(values):
         seen.add(dedupe_key)
         normalized.append(url)
     return normalized
+
+
+# Descrição de bem é texto livre do declarante: a fonte oficial traz CPF de
+# terceiros (cônjuge, vendedor do imóvel) e número de conta bancária. AGENTS.md
+# §5 proíbe publicar CPF e identificador técnico sem necessidade pública. Ao
+# eleitor importam o tipo, a descrição e o valor do bem — não a chave de uma
+# pessoa nem o número que dá acesso a uma conta. Tipo, descrição e valor ficam.
+_CPF_FORMATTED = re.compile(r"\b\d{3}\.\d{3}\.\d{3}-\d{2}\b")
+_CPF_AFTER_LABEL = re.compile(r"(\bCPF\b[^\d\n]{0,8})\d{11}\b", re.I)
+_BANK_ACCOUNT = re.compile(
+    r"(\b(?:conta|cc|c/c|c\.c\.)\s*:\s*)\d[\d.\-]{2,}\d", re.I
+)
+
+
+def _scrub_asset_description(value):
+    if not value:
+        return value
+    text = _CPF_FORMATTED.sub("[omitido]", str(value))
+    text = _CPF_AFTER_LABEL.sub(r"\1[omitido]", text)
+    return _BANK_ACCOUNT.sub(r"\1[omitida]", text)
+
+
+_PLACE_LOWERCASE_WORDS = frozenset({"de", "da", "do", "das", "dos", "e"})
+
+
+def _title_place(value):
+    """'CACHOEIRO DE ITAPEMIRIM' -> 'Cachoeiro de Itapemirim'. O TSE publica
+    NM_UE em caixa alta; a ficha lê melhor com a grafia usual do município."""
+    value = clean(value)
+    if not value:
+        return None
+    words = value.lower().split()
+    return " ".join(
+        word if index and word in _PLACE_LOWERCASE_WORDS else word.capitalize()
+        for index, word in enumerate(words)
+    )
+
+
+# Candidatura que foi a dois turnos aparece no CSV em duas linhas: a do 1º turno
+# com resultado "2º turno" e a do 2º turno com o desfecho. O histórico mostra a
+# candidatura uma vez, com o resultado do último turno — senão "5 eleições
+# anteriores" conta a mesma disputa duas vezes (27 candidaturas afetadas).
+_INTERMEDIATE_RESULTS = frozenset({"2º turno"})
+
+
+def _round_rank(record):
+    turn = record.get("_turn")
+    result = str(record.get("result") or "").strip().lower()
+    # Último turno primeiro; no mesmo turno, vence a linha com desfecho real
+    # (nem sentinela sem resultado, nem "2º turno").
+    return (
+        turn if isinstance(turn, int) else 0,
+        bool(result) and result not in _INTERMEDIATE_RESULTS,
+    )
+
+
+def _collapse_election_rounds(rows):
+    final = {}
+    for record in rows:
+        key = (
+            record.get("year"),
+            record.get("office"),
+            record.get("party"),
+            record.get("uf"),
+            record.get("location"),
+        )
+        current = final.get(key)
+        if current is None or _round_rank(record) > _round_rank(current):
+            final[key] = record
+    records = [
+        {name: value for name, value in record.items() if name != "_turn"}
+        for record in final.values()
+    ]
+    return sorted(
+        records,
+        key=lambda item: (
+            -(item.get("year") or 0),
+            item.get("office") or "",
+            item.get("party") or "",
+        ),
+    )
 
 
 def _history_uf_from_source_url(value):
@@ -800,11 +907,16 @@ def enrich_tse_open_data(groups):
                     or row.get("SG_UE")
                     or row.get("SG_UF_CANDIDATURA")
                 ),
+                # Município (eleições municipais) ou o próprio estado/país, como
+                # o TSE informa em NM_UE — sem isso "Vereador" perde o onde.
+                "location": _title_place(row.get("NM_UE")),
                 "result": clean(
                     row.get("DS_SIT_TOT_TURNO")
                     or row.get("DS_SITUACAO_CANDIDATURA")
                     or row.get("DS_RESULTADO")
                 ),
+                # Só para escolher o último turno; nunca vai para o snapshot.
+                "_turn": number(row.get("NR_TURNO")),
             }
             record = {
                 key: value for key, value in record.items()
@@ -819,28 +931,7 @@ def enrich_tse_open_data(groups):
             )
 
         for candidate_id, rows in grouped.items():
-            seen = set()
-            records = []
-            for record in sorted(
-                rows,
-                key=lambda item: (
-                    -(item.get("year") or 0),
-                    item.get("office") or "",
-                    item.get("party") or "",
-                ),
-            ):
-                key = (
-                    record.get("year"),
-                    record.get("office"),
-                    record.get("party"),
-                    record.get("uf"),
-                    record.get("result"),
-                )
-                if key in seen:
-                    continue
-                seen.add(key)
-                records.append(record)
-            by_id[candidate_id]["previous_elections"] = records
+            by_id[candidate_id]["previous_elections"] = _collapse_election_rounds(rows)
     else:
         covered = _fill_enrichment_field(
             candidates, previous, bootstrap, "previous_elections", previous_enrichment_valid
@@ -864,6 +955,12 @@ def enrich_tse_open_data(groups):
         candidate["previous_elections"] = _normalize_history_records(
             candidate.get("previous_elections")
         )
+
+    # Vale para dado ao vivo, restaurado e de bootstrap: passa por aqui.
+    for candidate in candidates:
+        for item in (candidate.get("assets") or {}).get("items") or []:
+            if item.get("description"):
+                item["description"] = _scrub_asset_description(item["description"])
 
     counts = {
         "candidates_with_assets": sum(

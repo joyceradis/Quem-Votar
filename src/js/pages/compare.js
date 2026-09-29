@@ -7,7 +7,7 @@
 // pontuação ou destaque de "melhor".
 import { $, esc, params } from "../core/dom.js";
 import { loadCore, applyGlobalMeta, officeLabel } from "../core/data.js";
-import { formatBRL, formatSnapshot, initials } from "../core/format.js";
+import { formatBRL, formatSnapshot, initials, registrationStatusText } from "../core/format.js";
 import { updateSearchParams } from "../core/url-state.js";
 import { setupNavigation } from "../core/a11y.js";
 import {
@@ -64,6 +64,7 @@ const LINHAS = [
       return areas.length ? areas.map((t) => t.label).join(" · ") : "Há proposta ou declaração documentada";
     },
   ],
+  ["Situação da candidatura", (c) => registrationStatusText(c.registration_status) || NAO_DISPONIVEL],
   ["Ocupação declarada", (c) => c.occupation || "Não disponível"],
   [
     "Histórico eleitoral",

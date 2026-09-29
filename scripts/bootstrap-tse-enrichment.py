@@ -45,8 +45,10 @@ OFFICE_SNAPSHOT_FILES = (
     "candidates-governador.json",
     "candidates-senador.json",
 )
-# Seções que toda página completa do MeuVoto traz, mesmo sem registros.
-# Página sem elas tem estrutura inesperada: não pode virar "zero verificado".
+# Seções que a página completa do MeuVoto traz. Página sem elas tem estrutura
+# inesperada: não pode virar "zero verificado". Única exceção documentada:
+# "historico" é omitida de quem não tem candidatura anterior e a própria
+# página declara isso na identificação (ver `declared_previous_elections`).
 REQUIRED_SECTIONS = ("patrimonio", "canais", "historico")
 
 
@@ -230,6 +232,20 @@ def extract_history(html: str):
     return records
 
 
+def declared_previous_elections(html: str):
+    """Contagem de "Eleições anteriores" que a própria página declara na
+    identificação (`<dt>Eleições anteriores</dt><dd>N</dd>`), ou None se a
+    página não a traz. É a afirmação da fonte — não uma inferência nossa por
+    ausência de seção — e só ela autoriza tratar a falta da seção `historico`
+    como lista vazia (primeira disputa mapeada)."""
+    match = re.search(
+        r"<dt>\s*Elei(?:ç|c)(?:õ|o)es anteriores\s*</dt>\s*<dd[^>]*>\s*(\d+)\s*</dd>",
+        html,
+        flags=re.I,
+    )
+    return int(match.group(1)) if match else None
+
+
 def extract_official_candidate_url(html: str):
     matches = re.findall(
         r'href=["\'](https://divulgacandcontas\.tse\.jus\.br/divulga/#/candidato/[^"\']+)["\']',
@@ -271,6 +287,13 @@ def fetch_candidate(
                 raise RuntimeError("página sem vínculo explícito ao DivulgaCandContas")
             if require_sections:
                 absent = [sid for sid in REQUIRED_SECTIONS if not has_section(text, sid)]
+                # A página omite "historico" de quem não tem candidatura anterior
+                # e diz isso ("Eleições anteriores: 0 — primeira disputa
+                # mapeada"). Só com essa declaração explícita a omissão vira
+                # lista vazia; sem ela (ou com contagem > 0) segue sendo
+                # estrutura inesperada.
+                if absent == ["historico"] and declared_previous_elections(text) == 0:
+                    absent = []
                 if absent:
                     raise RuntimeError(
                         "página sem as seções " + ", ".join(absent)

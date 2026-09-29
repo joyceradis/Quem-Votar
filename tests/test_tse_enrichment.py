@@ -230,13 +230,22 @@ def _entry(cid: str, sha: str = "a", sync: str = "16/09/2026 às 16:35", **extra
     }
 
 
-def _page(cid: str, sections=("patrimonio", "canais", "historico")) -> bytes:
+def _page(cid: str, sections=("patrimonio", "canais", "historico"), identification: str = "") -> bytes:
     body = "".join(f'<h2 id="{sid}">x</h2><p>sem registros</p>' for sid in sections)
     return (
-        f'<html><body data-salvar="{cid}" data-quando="16/09/2026 às 16:35">{body}'
+        f'<html><body data-salvar="{cid}" data-quando="16/09/2026 às 16:35">{identification}{body}'
         f'<a href="https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1/{cid}/2026/ES">tse</a>'
         "</body></html>"
     ).encode("utf-8")
+
+
+def _declared_previous(count: int) -> str:
+    """Trecho da identificação como o MeuVoto o publica (visto no run 36618481606)."""
+    note = "primeira disputa mapeada" if count == 0 else f"desde 2004"
+    return (
+        f'<dl><div>\n<dt>Eleições anteriores</dt>\n<dd>{count}</dd>\n'
+        f'<dd class="perfil-exato">{note}</dd>\n</div></dl>'
+    )
 
 
 class _FakeResponse:
@@ -325,6 +334,46 @@ class BootstrapMajoritarianCoverageTests(unittest.TestCase):
         self.assertEqual(0, entry["assets"]["count"])
         self.assertEqual([], entry["social_links"])
         self.assertEqual("2026-09-29T20:00:00+00:00", entry["captured_at"])
+
+    def test_first_time_candidate_without_history_section_is_a_declared_empty(self):
+        # 4 dos 16 majoritários (run 36618481606): sem seção "historico", e a
+        # própria página declara "Eleições anteriores: 0 — primeira disputa mapeada".
+        raw = _page("58", sections=("patrimonio", "canais"), identification=_declared_previous(0))
+        with patch.object(bootstrap.urllib.request, "urlopen", return_value=_FakeResponse(raw)):
+            entry = bootstrap.fetch_candidate("58", require_sections=True)
+        self.assertEqual([], entry["previous_elections"])
+        self.assertEqual(0, entry["assets"]["count"])
+
+    def test_missing_history_section_with_declared_previous_elections_is_rejected(self):
+        raw = _page("59", sections=("patrimonio", "canais"), identification=_declared_previous(3))
+        with patch.object(bootstrap.urllib.request, "urlopen", return_value=_FakeResponse(raw)), patch.object(
+            bootstrap.time, "sleep"
+        ):
+            with self.assertRaisesRegex(RuntimeError, "estrutura inesperada"):
+                bootstrap.fetch_candidate("59", require_sections=True)
+
+    def test_missing_history_section_without_declaration_is_rejected(self):
+        raw = _page("60", sections=("patrimonio", "canais"))
+        with patch.object(bootstrap.urllib.request, "urlopen", return_value=_FakeResponse(raw)), patch.object(
+            bootstrap.time, "sleep"
+        ):
+            with self.assertRaisesRegex(RuntimeError, "estrutura inesperada"):
+                bootstrap.fetch_candidate("60", require_sections=True)
+
+    def test_declared_zero_does_not_excuse_other_missing_sections(self):
+        for sections in (("canais",), ("patrimonio",), ()):
+            raw = _page("61", sections=sections, identification=_declared_previous(0))
+            with patch.object(bootstrap.urllib.request, "urlopen", return_value=_FakeResponse(raw)), patch.object(
+                bootstrap.time, "sleep"
+            ):
+                with self.assertRaisesRegex(RuntimeError, "estrutura inesperada"):
+                    bootstrap.fetch_candidate("61", require_sections=True)
+
+    def test_declared_previous_elections_parses_only_the_explicit_count(self):
+        self.assertEqual(0, bootstrap.declared_previous_elections(_declared_previous(0)))
+        self.assertEqual(8, bootstrap.declared_previous_elections(_declared_previous(8)))
+        self.assertIsNone(bootstrap.declared_previous_elections("<p>Eleições anteriores</p>"))
+        self.assertIsNone(bootstrap.declared_previous_elections("<dt>Eleições anteriores</dt><dd>—</dd>"))
 
     def test_page_for_another_candidate_is_rejected(self):
         raw = _page("999")
