@@ -713,7 +713,14 @@ def run_discovery(
     exact: list[dict[str, Any]] = []
 
     if discover_sites:
-        site_seeds = [x for x in seeds if not is_social_host(clean(x.get("seed_url")))]
+        # Preserve researched and aggregator-derived seeds across runs. The
+        # fresh TSE list alone does not contain these discovery destinations.
+        site_seeds = [
+            x for x in dedupe_sources(existing_sources + seeds)
+            if x.get("discovery_status") == "seed"
+            and clean(x.get("candidate_id")) in candidates
+            and not is_social_host(clean(x.get("seed_url")))
+        ]
         with ThreadPoolExecutor(max_workers=max(1, site_workers)) as pool:
             futures = {
                 pool.submit(discover_site, seed, candidates, max_links_per_site): seed
@@ -822,6 +829,7 @@ def run_discovery(
         ),
         "discovery_run": {
             "candidate_universe": len(candidate_ids),
+            "candidate_ids": sorted(candidate_ids),
             "candidates_with_seed": len(with_seed & candidate_ids),
             "candidates_with_exact_content": len(with_exact & candidate_ids),
             "source_records": len(merged),
