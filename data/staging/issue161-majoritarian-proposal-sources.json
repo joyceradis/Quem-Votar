@@ -11,7 +11,7 @@
       "candidate_id": "80002541012",
       "candidate_name": "BRENO BARCELOS",
       "office": "GOVERNADOR",
-      "source_kind": "official_candidate",
+      "source_kind": "institutional",
       "source_url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026/resource/c1df9a86-90df-4f1f-a604-a0b55a1ffcae",
       "source_title": "ES - Proposta de governo — Eleições 2026",
       "source_publisher": "Tribunal Superior Eleitoral",
@@ -20,7 +20,8 @@
       "retrieval": {
         "mode": "public_mirror_of_tse_document",
         "url": "https://nortiva.io/eleicoes/proposta/80002541012.pdf",
-        "note": "PDF identificado como cópia do documento entregue ao TSE; requer hash/revalidação contra o pacote oficial antes de promoção canônica."
+        "note": "PDF identificado como cópia do documento entregue ao TSE; requer hash/revalidação contra o pacote oficial antes de promoção canônica.",
+        "hash_status": "pending_official_package_check"
       }
     },
     {
@@ -28,7 +29,7 @@
       "candidate_id": "80002551833",
       "candidate_name": "HELDER SALOMÃO",
       "office": "GOVERNADOR",
-      "source_kind": "official_candidate",
+      "source_kind": "institutional",
       "source_url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026/resource/c1df9a86-90df-4f1f-a604-a0b55a1ffcae",
       "source_title": "ES - Proposta de governo — Eleições 2026",
       "source_publisher": "Tribunal Superior Eleitoral",
@@ -37,7 +38,8 @@
       "retrieval": {
         "mode": "public_mirror_of_tse_document",
         "url": "https://nortiva.io/eleicoes/proposta/80002551833.pdf",
-        "note": "PDF identificado como cópia do documento entregue ao TSE; requer hash/revalidação contra o pacote oficial antes de promoção canônica."
+        "note": "PDF identificado como cópia do documento entregue ao TSE; requer hash/revalidação contra o pacote oficial antes de promoção canônica.",
+        "hash_status": "pending_official_package_check"
       }
     },
     {
@@ -45,7 +47,7 @@
       "candidate_id": "80002552682",
       "candidate_name": "LORENZO PAZOLINI",
       "office": "GOVERNADOR",
-      "source_kind": "official_candidate",
+      "source_kind": "institutional",
       "source_url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026/resource/c1df9a86-90df-4f1f-a604-a0b55a1ffcae",
       "source_title": "ES - Proposta de governo — Eleições 2026",
       "source_publisher": "Tribunal Superior Eleitoral",
@@ -54,7 +56,8 @@
       "retrieval": {
         "mode": "public_mirror_of_tse_document",
         "url": "https://nortiva.io/eleicoes/proposta/80002552682.pdf",
-        "note": "PDF identificado como cópia do documento entregue ao TSE; requer hash/revalidação contra o pacote oficial antes de promoção canônica."
+        "note": "PDF identificado como cópia do documento entregue ao TSE; requer hash/revalidação contra o pacote oficial antes de promoção canônica.",
+        "hash_status": "pending_official_package_check"
       }
     },
     {
@@ -62,7 +65,7 @@
       "candidate_id": "80002550832",
       "candidate_name": "RAFAEL DEMUNER",
       "office": "GOVERNADOR",
-      "source_kind": "official_candidate",
+      "source_kind": "institutional",
       "source_url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026/resource/c1df9a86-90df-4f1f-a604-a0b55a1ffcae",
       "source_title": "ES - Proposta de governo — Eleições 2026",
       "source_publisher": "Tribunal Superior Eleitoral",
@@ -71,7 +74,8 @@
       "retrieval": {
         "mode": "public_mirror_of_tse_document",
         "url": "https://nortiva.io/eleicoes/proposta/80002550832.pdf",
-        "note": "PDF identificado como cópia do documento entregue ao TSE; requer hash/revalidação contra o pacote oficial antes de promoção canônica."
+        "note": "PDF identificado como cópia do documento entregue ao TSE; requer hash/revalidação contra o pacote oficial antes de promoção canônica.",
+        "hash_status": "pending_official_package_check"
       }
     },
     {
@@ -79,7 +83,7 @@
       "candidate_id": "80002552172",
       "candidate_name": "RICARDO FERRAÇO",
       "office": "GOVERNADOR",
-      "source_kind": "official_candidate",
+      "source_kind": "institutional",
       "source_url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026/resource/c1df9a86-90df-4f1f-a604-a0b55a1ffcae",
       "source_title": "ES - Proposta de governo — Eleições 2026",
       "source_publisher": "Tribunal Superior Eleitoral",
@@ -88,7 +92,8 @@
       "retrieval": {
         "mode": "public_mirror_of_tse_document",
         "url": "https://nortiva.io/eleicoes/proposta/80002552172.pdf",
-        "note": "PDF identificado como cópia do documento entregue ao TSE; requer hash/revalidação contra o pacote oficial antes de promoção canônica."
+        "note": "PDF identificado como cópia do documento entregue ao TSE; requer hash/revalidação contra o pacote oficial antes de promoção canônica.",
+        "hash_status": "pending_official_package_check"
       }
     },
     {
