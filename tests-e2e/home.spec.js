@@ -12,11 +12,44 @@ test.describe("Home", () => {
 
   test("contratos exigidos pelo audit-site.py", async ({ page }) => {
     await expect(page.locator("body")).toHaveAttribute("data-page", "home");
-    await expect(page.locator("h1")).not.toBeEmpty();
+    await expect(page.locator("h1")).toHaveText("Em quem eu vou votar?");
     await expect(page.locator('input[type="search"][name="q"]')).toBeVisible();
     await expect(page.locator("[data-snapshot-date]").first()).toBeAttached();
     // a Home não pode voltar a concentrar a listagem de candidaturas
     await expect(page.locator("#cards")).toHaveCount(0);
+  });
+
+  test("oferece caminhos de entrada sem repetir as perguntas internas da ficha", async ({ page }) => {
+    await expect(page.locator(".home-answers")).toHaveCount(0);
+    await expect(page.locator("#homeChoicesTitle")).toHaveText("O que importa pra você?");
+
+    const paths = page.locator(".home-choice-list a");
+    await expect(paths).toHaveCount(3);
+    await expect(paths.nth(0)).toContainText("Procure uma pessoa");
+    await expect(paths.nth(0)).toHaveAttribute("href", "candidatos.html?cargo=federal");
+    await expect(paths.nth(1)).toContainText("Explore um assunto");
+    await expect(paths.nth(1)).toHaveAttribute("href", "temas.html");
+    await expect(paths.nth(2)).toContainText("Compare candidaturas");
+    await expect(paths.nth(2)).toHaveAttribute("href", "comparar.html");
+  });
+
+  test("a Home usa a composição visual e a grade responsiva previstas", async ({ page }) => {
+    const layout = await page.evaluate(() => {
+      const heading = document.querySelector(".home-hero h1");
+      const choices = document.querySelector(".home-choice-list");
+      const path = document.querySelector(".home-choice-list a");
+      return {
+        headingSize: Number.parseFloat(getComputedStyle(heading).fontSize),
+        columns: getComputedStyle(choices).gridTemplateColumns.split(" ").length,
+        pathHeight: path.getBoundingClientRect().height,
+        heroBackground: getComputedStyle(document.querySelector(".home-hero")).backgroundImage,
+      };
+    });
+
+    expect(layout.headingSize).toBeGreaterThanOrEqual(48);
+    expect(layout.columns).toBe(page.viewportSize().width <= 920 ? 1 : 3);
+    expect(layout.pathHeight).toBeGreaterThanOrEqual(page.viewportSize().width <= 920 ? 120 : 180);
+    expect(layout.heroBackground).toContain("radial-gradient");
   });
 
   test("busca preserva o contrato de URL da listagem", async ({ page }) => {
