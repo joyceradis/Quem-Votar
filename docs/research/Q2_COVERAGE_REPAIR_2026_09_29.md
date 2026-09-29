@@ -25,7 +25,7 @@ Não foi encontrada perda entre canônico e snapshot neste checkout.
 - Timestamp global deixa de certificar descoberta de candidaturas não listadas no run.
 - Onze fontes já pesquisadas entram na fila comum: 8 matérias específicas e 3 sites como seeds.
 - Sete matérias foram capturadas pelo coletor comum, com hashes, datas e menção nominal. Os sete drafts permanecem `pending`; uma fonte respondeu HTTP 429.
-- Planos de governo com verificação de hash oficial pendente permanecem no staging de pesquisa.
+- Os cinco planos de governo foram obtidos diretamente do pacote oficial TSE; hashes, membros ZIP, páginas e suporte textual foram materializados em staging.
 - O mapa legado de ocupações é identificado como legado; evidência usa `policy-topics.json`.
 
 ## Reprodução
@@ -53,7 +53,7 @@ Os demais rascunhos de pesquisa precisam de captura verificável, suporte textua
 atribuição e revisão independente antes da aprovação humana e promoção.
 Sites com propostas no corpo da página inicial continuam seeds: não relaxar
 silenciosamente a regra que rejeita perfis/URLs genéricas como evidência.
-Os cinco planos espelhados precisam de verificação contra o pacote oficial.
+A nova captura direta dos cinco planos oficiais substitui a dependência do espelho. Os cinco registros concretos em `data/staging/tse-q2-publication-proposal.json` precisam de revisão independente e aprovação humana; o resumo de Ricardo foi ajustado para preservar “apoio diagnóstico”.
 Somente após esses gates, sync e publicação poderão preencher Q2 e derivar Q3.
 
 O reparo técnico permite processamento uniforme dos quatro cargos; ele não

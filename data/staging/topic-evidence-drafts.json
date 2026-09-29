@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "updated_at": "2026-09-29T22:43:16+00:00",
+  "updated_at": "2026-09-29T23:09:11.207290+00:00",
   "semantics": "Material bruto de staging. Nenhum registro deste arquivo é publicado na UI sem revisão e promoção explícitas.",
   "drafts": [
     {
@@ -219,6 +219,203 @@
       },
       "attribution_trust": "",
       "attribution_basis_hint": ""
+    },
+    {
+      "draft_id": "1a5912f6cc931e296eec",
+      "candidate_id": "80002541012",
+      "candidate_name": "BRENO BARCELOS",
+      "office": "GOVERNADOR",
+      "party": "MISSÃO",
+      "source_kind": "institutional",
+      "source_url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026/resource/c1df9a86-90df-4f1f-a604-a0b55a1ffcae",
+      "source_title": "Plano de governo — BRENO BARCELOS — TSE ES 2026, páginas físicas 12",
+      "source_publisher": "Tribunal Superior Eleitoral",
+      "published_at": null,
+      "captured_at": "2026-09-29T23:09:11.207290+00:00",
+      "document_type": "pdf_section",
+      "page_count": 61,
+      "document_pages": [
+        12
+      ],
+      "source_sha256": "aa288d9a332f2e7aeec90ceab6b82b80c07cf288011ae59b3f1607aa2cbff972",
+      "content_sha256": "b3c8cd2714b26130d2df90776cdd6be6f4994ee57de300621be8f0377a749067",
+      "candidate_mentioned": false,
+      "raw_excerpt": "4 11 SEGURANÇA PÚBLICA Por isso, garantiremos às forças policiais do Espírito Santo assistência jurídica gratuita para esses casos, seja por meio de uma defensorias especializadas ou núcleos jurídicos específicos dentro das próprias corporações. Além disso, durante as reocupações territoriais, o governador chamará para si a responsabilidade pelos atos legítimos praticados pelas polícias durante as operações. A tropa não será, em hipótese alguma, abandonada nessa missão civilizatória. Construção de um presídio para membros de facções criminosas Há, atualmente, um déficit no sistema prisional capixaba de cerca de dez mil vagas — conforme apontado pelo próprio Poder Judiciário —, situação que tende a se agravar no momento em que começarmos as operações de reocupação territorial. Propomos, pois, a construção de um novo presídio de segurança máxima, inspirado no modelo do CECOT (El Salvador), destinado a membros de facções criminosas. Dessa forma, não só garantiremos o isolamento desses indivíduos de alta periculosidade, evitando que continuem praticando crimes a partir do interior do sistema prisional, como os afastaremos por completo do convívio com detentos comuns. Trazer o modelo do Smart Sampa e expandir a rede de totens de segurança para todo o estado O Smart Sampa é o maior programa de videomonitoramento de segurança pública da América Latina e já apresentou resultados excepcionais no combate à criminalidade.",
+      "review_status": "pending",
+      "collection_notes": "Captura direta de documento do TSE por SQ_CANDIDATO no nome do membro ZIP. Trecho conferido visualmente; revisão independente e aprovação humana pendentes. Não representa síntese do programa completo.",
+      "source_origin": {
+        "institution": "TSE",
+        "resource_url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026/resource/c1df9a86-90df-4f1f-a604-a0b55a1ffcae",
+        "download_url": "https://cdn.tse.jus.br/estatistica/sead/odsele/proposta_governo/proposta_governo_2026_ES.zip",
+        "package_sha256": "577af6305bee4ef07f517cb3ab02ac338ccd05e865e25f7263021cf1db46a6dc",
+        "member_path": "ES/2026ES80002541012_01.pdf",
+        "document_sha256": "aa288d9a332f2e7aeec90ceab6b82b80c07cf288011ae59b3f1607aa2cbff972",
+        "physical_pages": [
+          12
+        ],
+        "captured_at": "2026-09-29T23:09:11.207290+00:00"
+      },
+      "attribution_trust": "official_tse_filename_sq_candidato",
+      "attribution_basis_hint": "Identificador eleitoral no nome do PDF do pacote oficial ES 2026.",
+      "extraction_scope": "selected_physical_pages"
+    },
+    {
+      "draft_id": "dec8877ea0fbded39de2",
+      "candidate_id": "80002551833",
+      "candidate_name": "HELDER SALOMÃO",
+      "office": "GOVERNADOR",
+      "party": "PT",
+      "source_kind": "institutional",
+      "source_url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026/resource/c1df9a86-90df-4f1f-a604-a0b55a1ffcae",
+      "source_title": "Plano de governo — HELDER SALOMÃO — TSE ES 2026, páginas físicas 31, 32",
+      "source_publisher": "Tribunal Superior Eleitoral",
+      "published_at": null,
+      "captured_at": "2026-09-29T23:09:11.207290+00:00",
+      "document_type": "pdf_section",
+      "page_count": 63,
+      "document_pages": [
+        31,
+        32
+      ],
+      "source_sha256": "d25cb154f8de6276c82f504c81ca3b0ec7f6925625a53788ba1bf77c4d628989",
+      "content_sha256": "4e6340f4af1075d4ab8860f703859af86bc7916dd9b5ea1e5f62142841518a7a",
+      "candidate_mentioned": false,
+      "raw_excerpt": "31 público de alta capacidade, tipo VLT ou similares. A elaboração do Plano de Mobilidade Metropolitana, com integração de modais, é fundamental e precisa começar no início do próximo governo para ser implantado nas próximas décadas. Da mesma forma, o novo marco nacional do saneamento exige medidas urgentes para alcançar as metas qualitativas e quantitativas nele estabelecidas, sendo necessária uma revisão dos mecanismos adotados para sua gestão, que privilegiam o lucro de parceiros privados inseridos na prestação desses serviços. O direito de viver nas cidades também diz respeito ao direito à moradia. Portanto, é necessário e urgente reduzir o déficit habitacional no Espírito Santo, que atinge cerca de 123.855 famílias, correspondendo a 20,47% das famílias capixabas (IJSN/Censo 2022), e garantir moradia digna para todos. Só com a implementação de políticas efetivas de oferta de novas unidades habitacionais e ações de qualificação e inserção de áreas ocupadas na malha urbana, dotada de adequada infraestrutura de serviços, será possível eliminar as segregações ainda existentes e reduzir os custos da habitação para amplos setores da sociedade que hoje concorrem com grupos especulativos que se beneficiam desse mercado. Os compromissos que aqui assumimos buscam dar concretude ao nosso entendimento de como garantir, em conjunto com a sociedade organizada e instituições, o direito à cidade para todos os cidadãos e cidadãs capixabas. COMPROMISSOS 䬌 Criar Comitê de Mobilidade Urbana com governo estadual, instituições de ensino e pesquisa, municípios e sociedade civil, para planejar, projetar e monitorar a execução de soluções de mobilidade urbana. 䬌 Retomar os estudos que tratam da defesa dos interesses públicos e que requalifiquem o espaço urbano, melhorando a circulação, com foco na melhoria da eficiência do sistema de transporte coletivo. 䬌 Aprofundar o estudo do Banco Nacional do Desenvolvimento (BNDES), que considerou a viabilidade da implantação de projetos de corredores de BRT, além de transporte público de alta capacidade, tipo VLT ou similares para serem implantados nas próximas décadas. 䬌 Desenvolver o Plano Integrado de Mobilidade Metropolitano, com a participação de especialistas, empresários, trabalhadores e sociedade organizada. 䬌 Realizar estudos técnicos para constituir fontes extra tarifárias de financiamento do transporte coletivo, em conformidade com o novo marco legal (Lei 15.432/2026) avaliando a viabilidade da implantação da Tarifa Zero, alinhados aos estudos em curso no âmbito do Governo Federal e o Ministério Público de Contas (MPContas) do Espírito Santo. 䬌 Instituir o Programa Capixaba de Transição Energética no Transporte Público com o objetivo de corrigir a rota da transição do transporte no Espírito Santo, que fortalece o individual e o privado sem a consolidação de uma estratégia pública de transição no transporte coletivo. 䬌 Criar programas e ações educativas visando a redução da violência no trânsito. 䬌 Apoiar a implantação de unidades habitacionais populares em parceria com movimentos e entidades sociais que lutam pelo direito à moradia, bem como com financiamento do Programa Minha Casa, Minha Vida, do Governo Federal. 䬌 Revisar o Programa Habitacional do Estado (PHSES) como facilitador de construção e melhorias em moradias, com subsídio para aquisição de material e oferta de formação de mão de obra. 䬌 Fortalecer o saneamento público de qualidade por meio da Cesan e demais operadoras, e ampliar os mecanismos que garantam a segurança hídrica para o abastecimento humano e a produção agropecuária, principalmente para os pequenos e médios produtores rurais. 䬌 Avançar no cumprimento das metas do Plano Nacional de Saneamento, ampliando a oferta de serviços em todo o estado, tendo como prioridade a zona rural. 䬌 Garantir ações de contenção e drenagem para prevenção e controle de enchentes, alagamentos e inundações. 䬌 Fortalecer, valorizar e ampliar os recursos financeiros e humanos para garantir presença e atuação da Defesa Civil Estadual, bem como apoiar estruturação das defesas nos municípios. 䬌 Fortalecer, valorizar e ampliar os recursos financeiros e humanos para garantir presença e atuação da Defesa Civil Estadual, bem como apoiar estruturação das defesas nos municípios.",
+      "review_status": "pending",
+      "collection_notes": "Captura direta de documento do TSE por SQ_CANDIDATO no nome do membro ZIP. Trecho conferido visualmente; revisão independente e aprovação humana pendentes. Não representa síntese do programa completo.",
+      "source_origin": {
+        "institution": "TSE",
+        "resource_url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026/resource/c1df9a86-90df-4f1f-a604-a0b55a1ffcae",
+        "download_url": "https://cdn.tse.jus.br/estatistica/sead/odsele/proposta_governo/proposta_governo_2026_ES.zip",
+        "package_sha256": "577af6305bee4ef07f517cb3ab02ac338ccd05e865e25f7263021cf1db46a6dc",
+        "member_path": "ES/2026ES80002551833_01.pdf",
+        "document_sha256": "d25cb154f8de6276c82f504c81ca3b0ec7f6925625a53788ba1bf77c4d628989",
+        "physical_pages": [
+          31,
+          32
+        ],
+        "captured_at": "2026-09-29T23:09:11.207290+00:00"
+      },
+      "attribution_trust": "official_tse_filename_sq_candidato",
+      "attribution_basis_hint": "Identificador eleitoral no nome do PDF do pacote oficial ES 2026.",
+      "extraction_scope": "selected_physical_pages"
+    },
+    {
+      "draft_id": "260e6365beb23b4090d0",
+      "candidate_id": "80002552682",
+      "candidate_name": "LORENZO PAZOLINI",
+      "office": "GOVERNADOR",
+      "party": "REPUBLICANOS",
+      "source_kind": "institutional",
+      "source_url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026/resource/c1df9a86-90df-4f1f-a604-a0b55a1ffcae",
+      "source_title": "Plano de governo — LORENZO PAZOLINI — TSE ES 2026, páginas físicas 14",
+      "source_publisher": "Tribunal Superior Eleitoral",
+      "published_at": null,
+      "captured_at": "2026-09-29T23:09:11.207290+00:00",
+      "document_type": "pdf_section",
+      "page_count": 54,
+      "document_pages": [
+        14
+      ],
+      "source_sha256": "c1e92e41340af2f42a7d4d1945ca88a1664f5d603f21c91116b34381b78965d4",
+      "content_sha256": "a681a0c07605adbdafce715bda3d628d9ea74418a24f04a66fffececb558f05c",
+      "candidate_mentioned": false,
+      "raw_excerpt": "PAZ, TRABALHA E CONFIA 14 primeira infância e os anos iniciais do Ensino Fundamental. Ainda hoje, no Espírito Santo, 23% das crianças chegam ao ﬁnal do 2º ano sem estarem alfabetizadas. Por isso, vamos ser parceiros dos municípios, oferecendo apoio técnico, pedagógico e ﬁnanceiro para garantir a alfabetização e a aprendizagem com qualidade até o ﬁnal do 2º ano, fortalecer as aprendizagens em Língua Portuguesa e Matemática, ampliar o acesso à creche para as famílias que mais precisam e apoiar a recomposição das aprendizagens ao longo do Ensino Fundamental. A educação especial receberá atenção prioritária na nossa gestão. A política deverá combinar equidade e altas expectativas de aprendizagem, reconhecendo que estudantes diferentes podem necessitar de apoios diferentes para que todos tenham assegurado o direito de aprender, desenvolver autonomia e participar plenamente da vida escolar. Faremos isso com uma gestão orientada por evidências, com monitoramento da aprendizagem, da permanência e das desigualdades educacionais e prestação de contas à sociedade, porque cada real investido em educação deve se traduzir em resultado concreto na vida das crianças e dos adolescentes e jovens capixabas e na conﬁança das famílias. Diretrizes Estratégicas Para transformar o Espírito Santo em referência nacional em aprendizagem com equidade assegurando que toda criança tenha seu direito à aprendizagem garantido desde a primeira infância, todo jovem conclua a trajetória escolar com projeto de vida e toda escola seja um espaço seguro e acolhedor estabelecem-se as seguintes diretrizes: • Alfabetização e Aprendizagem com Qualidade e Ampliação do Atendimento à Primeira Infância: Faremos da alfabetização uma prioridade permanente da política educacional estadual, em colaboração com os municípios, fortalecendo o regime de colaboração para garantir a alfabetização e a aprendizagem com qualidade até o ﬁnal do 2º ano do Ensino Fundamental, envolvendo suporte ao professor (avaliação da aprendizagem, materiais, jogos pedagógicos e formação continuada) e às equipes gestoras para a aprendizagem; apoio técnico-ﬁnanceiro e formação de alfabetizadores para os municípios; apoio aos municípios para ampliação da oferta de creche e pré-escola com foco nas famílias mais vulneráveis. • Ensino Fundamental com Aprendizagem e Fortalecimento dos Anos Finais:",
+      "review_status": "pending",
+      "collection_notes": "Captura direta de documento do TSE por SQ_CANDIDATO no nome do membro ZIP. Trecho conferido visualmente; revisão independente e aprovação humana pendentes. Não representa síntese do programa completo.",
+      "source_origin": {
+        "institution": "TSE",
+        "resource_url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026/resource/c1df9a86-90df-4f1f-a604-a0b55a1ffcae",
+        "download_url": "https://cdn.tse.jus.br/estatistica/sead/odsele/proposta_governo/proposta_governo_2026_ES.zip",
+        "package_sha256": "577af6305bee4ef07f517cb3ab02ac338ccd05e865e25f7263021cf1db46a6dc",
+        "member_path": "ES/2026ES80002552682_01.pdf",
+        "document_sha256": "c1e92e41340af2f42a7d4d1945ca88a1664f5d603f21c91116b34381b78965d4",
+        "physical_pages": [
+          14
+        ],
+        "captured_at": "2026-09-29T23:09:11.207290+00:00"
+      },
+      "attribution_trust": "official_tse_filename_sq_candidato",
+      "attribution_basis_hint": "Identificador eleitoral no nome do PDF do pacote oficial ES 2026.",
+      "extraction_scope": "selected_physical_pages"
+    },
+    {
+      "draft_id": "a2dad26703a039436e9c",
+      "candidate_id": "80002550832",
+      "candidate_name": "RAFAEL DEMUNER",
+      "office": "GOVERNADOR",
+      "party": "UP",
+      "source_kind": "institutional",
+      "source_url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026/resource/c1df9a86-90df-4f1f-a604-a0b55a1ffcae",
+      "source_title": "Plano de governo — RAFAEL DEMUNER — TSE ES 2026, páginas físicas 9",
+      "source_publisher": "Tribunal Superior Eleitoral",
+      "published_at": null,
+      "captured_at": "2026-09-29T23:09:11.207290+00:00",
+      "document_type": "pdf_section",
+      "page_count": 23,
+      "document_pages": [
+        9
+      ],
+      "source_sha256": "fdb7dcc3ff7e430894465a9b1e4a68e16442552da4682f7c796b44229a3e0aef",
+      "content_sha256": "1b69c9ece264ed33b573fd09ef9bbc2180415594b4e6ad144357eb21f1574d83",
+      "candidate_mentioned": false,
+      "raw_excerpt": "Programa da Unidade Popular pelo Socialismo para o governo do estado do Espírito Santo (ES). Agosto de 2026. 9 PROPOSTAS Nosso estado não pode ser pensado separadamente do Brasil e do mundo. O Espírito Santo ocupa uma posição estratégica na produção e circulação de riquezas do país, concentrando atividades de mineração, siderurgia, petróleo e gás, celulose, logística e grandes complexos portuários. Entretanto, essa riqueza não é colocada a serviço de quem trabalha. Enquanto grandes grupos eco nômicos acumulam bilhões, grande parte do povo capixaba enfrenta baixos salários, alto custo de vida, moradia cara, serviços públicos precarizados e os efeitos sociais e ambientais da exploração econômica. Por isso, nossas propostas estaduais estão articu ladas ao programa nacional da Unidade Popular e têm como objetivo imediato melhorar profundamente as condições de vida do povo e, ao mesmo tempo, ampliar sua organização e seu controle sobre as riquezas e o Estado. 1. Aumento de 100% do salário -mínimo. Re vogação das reformas trabalhista e da Previdência. Redução da jornada de trabalho, fim da escala 6x1 e jornada de 36 horas semanais ● Criação do salário-mínimo capixaba de R$ 3.242,00. ● Redução da jornada dos servidores públicos estaduais e das trabalhadoras e trabalhadores terceirizados contratados pelo Estado para 36 horas semanais, sem redução salarial. ● Política permanente de valorização dos servidores estaduais, com reajustes acima da inflação. ● Abertura de concursos públicos para substituir progressivamente vínculos precários e terceirizações nos serviços públicos estaduais. ● Criação de Frentes Estaduais de Trabalho, empregando diretamente trabalhadores desempregados e subempregados em obras de habitação, saneamento, recuperação ambiental, man utenção de escolas, hospitais, estradas e demais equipamentos públicos. ● Prioridade para contratação de trabalhadores residentes nas regiões onde forem realizadas grandes obras públicas. ● Política estadual de geração de emprego para a juventude, com formação profissional e integração às frentes de trabalho. ● Combate ao trabalho análogo à escravidão e fortalecimento da fiscalização, em articulação com os órgãos competentes. ● Apoio às cooperativas de trabalhadores, empreendimentos de economia solidária, feiras populares, pequenos produtores e iniciativas comunitárias.",
+      "review_status": "pending",
+      "collection_notes": "Captura direta de documento do TSE por SQ_CANDIDATO no nome do membro ZIP. Trecho conferido visualmente; revisão independente e aprovação humana pendentes. Não representa síntese do programa completo.",
+      "source_origin": {
+        "institution": "TSE",
+        "resource_url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026/resource/c1df9a86-90df-4f1f-a604-a0b55a1ffcae",
+        "download_url": "https://cdn.tse.jus.br/estatistica/sead/odsele/proposta_governo/proposta_governo_2026_ES.zip",
+        "package_sha256": "577af6305bee4ef07f517cb3ab02ac338ccd05e865e25f7263021cf1db46a6dc",
+        "member_path": "ES/2026ES80002550832_01.pdf",
+        "document_sha256": "fdb7dcc3ff7e430894465a9b1e4a68e16442552da4682f7c796b44229a3e0aef",
+        "physical_pages": [
+          9
+        ],
+        "captured_at": "2026-09-29T23:09:11.207290+00:00"
+      },
+      "attribution_trust": "official_tse_filename_sq_candidato",
+      "attribution_basis_hint": "Identificador eleitoral no nome do PDF do pacote oficial ES 2026.",
+      "extraction_scope": "selected_physical_pages"
+    },
+    {
+      "draft_id": "4434c40814ac0b309d19",
+      "candidate_id": "80002552172",
+      "candidate_name": "RICARDO FERRAÇO",
+      "office": "GOVERNADOR",
+      "party": "MDB",
+      "source_kind": "institutional",
+      "source_url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026/resource/c1df9a86-90df-4f1f-a604-a0b55a1ffcae",
+      "source_title": "Plano de governo — RICARDO FERRAÇO — TSE ES 2026, páginas físicas 26",
+      "source_publisher": "Tribunal Superior Eleitoral",
+      "published_at": null,
+      "captured_at": "2026-09-29T23:09:11.207290+00:00",
+      "document_type": "pdf_section",
+      "page_count": 152,
+      "document_pages": [
+        26
+      ],
+      "source_sha256": "5b1bf276f82a0f7b410e0506ffef4577770673d4f7736d456583b5b81c652cc3",
+      "content_sha256": "0b540edf8edd6cea7dd3fb056c49cfbb46a574ce2382a382f3a5de83b5489dc4",
+      "candidate_mentioned": false,
+      "raw_excerpt": "26 2027 — 2030 de dados, telessaúde, centrais inteligentes de regulação, novos serviços especializados e monitoramento permanente dos tempos de espera. Modernizar a infraestrutura da saúde Concluiremos o Hospital Geral de Cariacica, o Complexo de Saúde Norte e construiremos o Complexo de Saúde Central, em Colatina. Também ampliaremos hospitais estratégicos, fortaleceremos o LACEN e expandiremos a rede de Centros de Especialidades. Liderar a transformação digital do SUS Implantaremos o programa Minha Saúde ES, com prontuário eletrônico integrado, inteligência artificial aplicada à gestão e ao apoio diagnóstico, ampliação da telessaúde, centros inteligentes de regulação e plataformas digitais para acompanhamento do cidadão. Preparar a saúde para os desafios do futuro Fortaleceremos a saúde mental, ampliaremos a política estadual de atenção ao envelhecimento saudável, consolidaremos uma rede inteligente de vigilância em saúde e desenvolveremos estratégias permanentes para enfrentar epidemias, eventos climáticos extremos e novas emergências sanitárias. Valorizar os profissionais da saúde Seguir com política de valorização dos profissionais da saúde, ampliando os investimentos em qualificação, formação continuada, desenvolvimento profissional e melhoria das condições de trabalho, reconhecendo o papel essencial de quem cuida diariamente da população capixaba. Ampliação da Rede de Farmácias Cidadãs Estaduais Ampliação da capacidade e atendimento das unidades garantindo o fornecimento de medicamentos de alto custo e de uso continuado de forma gratuita aos capixabas.",
+      "review_status": "pending",
+      "collection_notes": "Captura direta de documento do TSE por SQ_CANDIDATO no nome do membro ZIP. Trecho conferido visualmente; revisão independente e aprovação humana pendentes. Não representa síntese do programa completo.",
+      "source_origin": {
+        "institution": "TSE",
+        "resource_url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026/resource/c1df9a86-90df-4f1f-a604-a0b55a1ffcae",
+        "download_url": "https://cdn.tse.jus.br/estatistica/sead/odsele/proposta_governo/proposta_governo_2026_ES.zip",
+        "package_sha256": "577af6305bee4ef07f517cb3ab02ac338ccd05e865e25f7263021cf1db46a6dc",
+        "member_path": "ES/2026ES80002552172_01.pdf",
+        "document_sha256": "5b1bf276f82a0f7b410e0506ffef4577770673d4f7736d456583b5b81c652cc3",
+        "physical_pages": [
+          26
+        ],
+        "captured_at": "2026-09-29T23:09:11.207290+00:00"
+      },
+      "attribution_trust": "official_tse_filename_sq_candidato",
+      "attribution_basis_hint": "Identificador eleitoral no nome do PDF do pacote oficial ES 2026.",
+      "extraction_scope": "selected_physical_pages"
     }
   ]
 }
