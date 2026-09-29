@@ -43,13 +43,49 @@ export function formatDateBR(value) {
   return match ? `${match[3]}/${match[2]}/${match[1]}` : value || "";
 }
 
+// Situação da candidatura como o TSE a informa, em caixa de frase
+// ("RENÚNCIA" -> "Renúncia"). A sentinela (not_available) e o vazio não viram
+// afirmação: devolvem null e quem chama diz "não disponível".
+export function registrationStatusText(value) {
+  const raw = String(value || "").trim();
+  if (!raw || raw.toLowerCase() === "not_available") return null;
+  const lower = raw.toLocaleLowerCase("pt-BR");
+  return lower.charAt(0).toLocaleUpperCase("pt-BR") + lower.slice(1);
+}
+
+// Só o que foge do "deferido" precisa de aviso na lista: é a exceção que muda
+// o que a pessoa faz na urna (renúncia, indeferimento, julgamento pendente).
+// Deferido é o estado comum e não recebe marcação — nada aqui é nota de qualidade.
+export function registrationStatusException(value) {
+  const text = registrationStatusText(value);
+  return text && text !== "Deferido" ? text : null;
+}
+
+const SOCIAL_NETWORKS = {
+  "instagram.com": "Instagram",
+  "facebook.com": "Facebook",
+  "twitter.com": "X (Twitter)",
+  "x.com": "X (Twitter)",
+  "tiktok.com": "TikTok",
+  "youtube.com": "YouTube",
+  "kwai.com": "Kwai",
+  "kwai-video.com": "Kwai",
+  "threads.net": "Threads",
+  "threads.com": "Threads",
+  "linkedin.com": "LinkedIn",
+  "t.me": "Telegram",
+  "linktr.ee": "Linktree",
+};
+
 // Rótulo legível de uma URL de rede social informada ao TSE.
 export function socialLabel(url) {
   try {
     const u = new URL(url);
-    const host = u.hostname.replace(/^(www|m|pt-br)\./, "");
-    const network =
-      { "instagram.com": "Instagram", "facebook.com": "Facebook", "twitter.com": "X (Twitter)", "x.com": "X (Twitter)", "tiktok.com": "TikTok", "youtube.com": "YouTube", "kwai.com": "Kwai", "threads.net": "Threads", "linkedin.com": "LinkedIn", "t.me": "Telegram" }[host] || host;
+    const host = u.hostname.replace(/^(www|m|web|br|k|pt-br)\./, "");
+    // Canal público do WhatsApp (whatsapp.com/channel/…): o "handle" da URL é a
+    // palavra "channel", que não identifica nada.
+    if (host === "whatsapp.com") return "WhatsApp · canal";
+    const network = SOCIAL_NETWORKS[host] || host;
     const handle = u.pathname.split("/").filter(Boolean)[0];
     const isId = !handle || /^profile\.php$/i.test(handle);
     return isId ? network : `${network} · ${handle.startsWith("@") ? handle : "@" + handle.replace(/^@/, "")}`;

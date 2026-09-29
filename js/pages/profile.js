@@ -19,7 +19,14 @@
 //   prejuízo ou efeito individual.
 import { $, esc, norm, params } from "../core/dom.js";
 import { loadCore, getJSON, DATA, applyGlobalMeta, officeLabel } from "../core/data.js";
-import { formatBRL, formatSnapshot, formatDateBR, initials, socialLabel } from "../core/format.js";
+import {
+  formatBRL,
+  formatSnapshot,
+  formatDateBR,
+  initials,
+  socialLabel,
+  registrationStatusText,
+} from "../core/format.js";
 import { buildUrl } from "../core/url-state.js";
 import { setupNavigation } from "../core/a11y.js";
 import {
@@ -45,9 +52,7 @@ setupNavigation();
 
 // A sentinela do TSE nunca é traduzida em conclusão jurídica (#91/PR #92).
 function registrationStatusLabel(value) {
-  const normalized = String(value || "").trim().toLowerCase();
-  if (!normalized || normalized === "not_available") return "Ainda não disponível na fonte atual";
-  return value;
+  return registrationStatusText(value) || "Ainda não disponível na fonte atual";
 }
 
 // Monograma neutro; o texto segue no DOM para leitores de tela.
@@ -86,6 +91,9 @@ function renderHeroFacts(candidate) {
     ["Partido", candidate.party_name || candidate.party],
     ["Federação / coligação", organization],
     ["Escolaridade", candidate.education],
+    // Situação jurídica no topo: renúncia ou indeferimento mudam o que a pessoa
+    // faz na urna, então não podem ficar só na seção de dados eleitorais.
+    ["Situação da candidatura", registrationStatusText(candidate.registration_status)],
   ].filter(([, value]) => value);
   if (!facts.length) return "";
   return `<dl class="hero-facts">${facts
