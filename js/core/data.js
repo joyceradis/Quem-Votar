@@ -50,18 +50,21 @@ export async function getJSON(path, fallback = []) {
 // loadCore/applyGlobalMeta — portados literalmente de app.js:119-150, agora
 // generalizados para os 4 cargos do registry (#193).
 export async function loadCore() {
+  const loaded = Object.fromEntries(
+    await Promise.all(OFFICES.map(async ({ kind }) => [kind, await getJSON(DATA[kind], null)]))
+  );
+  const comparisonComplete = OFFICES.every(({ kind }) => Array.isArray(loaded[kind]));
   const byKind = Object.fromEntries(
-    await Promise.all(OFFICES.map(async ({ kind }) => [kind, await getJSON(DATA[kind])]))
+    OFFICES.map(({ kind }) => [kind, Array.isArray(loaded[kind]) ? loaded[kind] : []])
   );
   const meta = await getJSON(DATA.meta, {});
 
   const { federal, estadual, governador, senador } = byKind;
 
-  // Deputado Federal/Estadual continuam o par obrigatório para a
-  // comparação: é o baseline vigente (AGENTS.md §6) e o que o audit-site.py
-  // já exige presente em todo snapshot. Governador/Senador entram na
-  // comparação assim que carregarem, sem bloquear os dois obrigatórios.
-  if (federal.length && estadual.length) {
+  // Uma resposta vazia válida confirma ausência; falha de rede não.
+  // Só podemos eliminar IDs antigos depois de consultar todos os cargos.
+  setValidCompareIds(null);
+  if (comparisonComplete) {
     setValidCompareIds(
       OFFICES.flatMap(({ kind }) => byKind[kind]).map((item) => String(item.tse_id))
     );
@@ -75,6 +78,7 @@ export async function loadCore() {
     senador,
     meta,
     comparisonReady: Boolean(federal.length && estadual.length),
+    comparisonComplete,
     all: OFFICES.flatMap(({ kind }) => byKind[kind].map((item) => ({ ...item, _kind: kind }))),
   };
 }
