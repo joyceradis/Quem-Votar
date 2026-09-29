@@ -112,7 +112,7 @@ test.describe("Ficha do candidato", () => {
     await expect(page.locator("#vai-fazer")).toBeVisible();
 
     await expect(page.locator("#vai-fazer")).toContainText(
-      "Sem registro não é o mesmo que sem proposta."
+      "Isso não significa que a candidatura não tenha propostas ou posições."
     );
     // nunca um zero ou um traço no lugar da explicação
     await expect(page.locator("#vai-fazer .promise-list")).toHaveCount(0);
