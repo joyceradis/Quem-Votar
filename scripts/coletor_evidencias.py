@@ -40,6 +40,8 @@ STAGING = ROOT / "data" / "staging"
 
 FEDERAL_FILE = GENERATED / "candidates-federal.json"
 ESTADUAL_FILE = GENERATED / "candidates-estadual.json"
+GOVERNADOR_FILE = GENERATED / "candidates-governador.json"
+SENADOR_FILE = GENERATED / "candidates-senador.json"
 TOPICS_FILE = REFERENCE / "policy-topics.json"
 CANONICAL_FILE = REFERENCE / "topic-evidence.json"
 
@@ -171,7 +173,7 @@ def write_json(path: Path, value: Any) -> None:
 
 def load_candidates() -> dict[str, dict[str, Any]]:
     rows: list[dict[str, Any]] = []
-    for path in (FEDERAL_FILE, ESTADUAL_FILE):
+    for path in (FEDERAL_FILE, ESTADUAL_FILE, GOVERNADOR_FILE, SENADOR_FILE):
         payload = read_json(path)
         if not isinstance(payload, list):
             raise RuntimeError(f"{path.relative_to(ROOT)} deve ser uma lista")

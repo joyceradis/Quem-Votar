@@ -12,6 +12,35 @@ spec.loader.exec_module(reporter)
 
 
 class EvidenceCoverageReportTests(unittest.TestCase):
+    def test_q2_distinguishes_staging_history_and_sync_gap(self):
+        candidates = [
+            {"tse_id": "1", "topic_evidence": [{"evidence_type": "atuação"}]},
+            {"tse_id": "2", "topic_evidence": []},
+            {"tse_id": "3", "topic_evidence": [{"evidence_type": "proposta"}]},
+            {"tse_id": "4", "topic_evidence": []},
+        ]
+        canonical = [
+            {"candidate_id": "1", "evidence_type": "atuação"},
+            {"candidate_id": "2", "evidence_type": "declaração"},
+            {"candidate_id": "3", "evidence_type": "proposta"},
+        ]
+        staged = [{"candidate_id": "1", "evidence_type": "proposta", "review_status": "pending"}]
+        result = reporter.build_report(candidates, [], [], [], canonical, staged_drafts=staged)
+        rows = {x["candidate_id"]: x for x in result["ledger"]}
+        self.assertEqual("staged_not_promoted", rows["1"]["q2"]["state"])
+        self.assertEqual(0, rows["1"]["q2"]["canonical_prospective"])
+        self.assertEqual("canonical_not_in_snapshot", rows["2"]["q2"]["state"])
+        self.assertEqual("published", rows["3"]["q2"]["state"])
+        self.assertEqual("no_published_prospective_evidence", rows["4"]["q2"]["state"])
+        self.assertEqual(1, result["metrics"]["candidates_with_public_q2"])
+        self.assertEqual(1, result["metrics"]["candidates_with_staged_q2_not_published"])
+        self.assertEqual(1, result["metrics"]["candidates_with_canonical_q2_not_in_snapshot"])
+
+    def test_orphan_staged_draft_fails_closed(self):
+        with self.assertRaisesRegex(RuntimeError, "unknown candidate"):
+            reporter.build_report([{"tse_id": "1"}], [], [], [], [],
+                                  staged_drafts=[{"candidate_id": "999", "evidence_type": "proposta"}])
+
     def test_states_and_metrics_are_candidate_based(self):
         candidates = [
             {"tse_id": "1", "ballot_name": "A", "office": "DEPUTADO FEDERAL", "party": "X"},
@@ -41,6 +70,7 @@ class EvidenceCoverageReportTests(unittest.TestCase):
         result = reporter.build_report(
             candidates, [], [], [], [],
             discovery_checked_at="2026-09-20T14:00:00+00:00",
+            discovery_candidate_ids=["1"],
         )
         row = result["ledger"][0]
         self.assertEqual(
@@ -53,6 +83,18 @@ class EvidenceCoverageReportTests(unittest.TestCase):
         )
         self.assertIn("tse_declared_channels", row["discovery"]["sources_checked"])
         self.assertIn("não implica ausência exaustiva", row["discovery"]["scope_note"])
+
+    def test_global_timestamp_does_not_claim_new_candidates_were_checked(self):
+        result = reporter.build_report(
+            [{"tse_id": "1"}, {"tse_id": "2", "office": "SENADOR"}],
+            [], [], [], [], discovery_checked_at="2026-09-20T14:00:00+00:00",
+            discovery_candidate_ids=["1"],
+        )
+        rows = {x["candidate_id"]: x for x in result["ledger"]}
+        self.assertEqual("not_checked", rows["2"]["discovery"]["outcome"])
+        self.assertEqual("", rows["2"]["discovery"]["checked_at"])
+        self.assertEqual([], rows["2"]["discovery"]["sources_checked"])
+        self.assertEqual(1, result["metrics"]["candidates_discovery_checked"])
 
     def test_processing_and_exception_counts_are_candidate_scoped(self):
         candidates = [{"tse_id": "1", "ballot_name": "A", "office": "DEPUTADO ESTADUAL", "party": "X"}]

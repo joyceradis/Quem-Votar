@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "note": "A classificação por área profissional usa apenas a ocupação declarada no cadastro eleitoral. Não representa posição política nem proposta de campanha.",
+  "note": "LEGADO — taxonomia de ocupações/profissões declaradas ao TSE. NÃO é a taxonomia pública de política pública e NÃO pode fornecer topic_id para topic_evidence. Para evidência temática use data/reference/policy-topics.json.",
   "topics": [
     {
       "id": "saude",

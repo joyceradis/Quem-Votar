@@ -17,6 +17,24 @@ SPEC.loader.exec_module(discovery)
 
 
 class DiscoveryTests(unittest.TestCase):
+    def test_researched_site_seed_is_resumed_and_deduplicated(self):
+        candidates = {"123": self.candidate()}
+        seed = {"candidate_id": "123", "discovery_status": "seed",
+                "seed_url": "https://example.org/", "source_kind": "official_candidate"}
+        exact = {"candidate_id": "123", "discovery_status": "exact_content",
+                 "source_url": "https://example.org/propostas/saude"}
+        with patch.object(discovery, "declared_seed_sources", return_value=([], [], {})), \
+             patch.object(discovery, "discover_site", return_value=([exact], [])) as discover:
+            payload, failures, metrics = discovery.run_discovery(
+                candidates=candidates, existing_sources=[seed, seed],
+                discover_chamber_sources=False,
+            )
+        discover.assert_called_once()
+        self.assertEqual("https://example.org/", discover.call_args.args[0]["seed_url"])
+        self.assertEqual(1, metrics["exact_content_records"])
+        self.assertEqual(2, len(payload["sources"]))
+        self.assertFalse(failures["rejections"])
+
     def candidate(self):
         return {
             "tse_id": "123",
