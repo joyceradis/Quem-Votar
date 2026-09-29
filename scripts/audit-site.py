@@ -196,6 +196,21 @@ def main() -> None:
     assert re.search(r"<h1(?:\s[^>]*)?>\s*\S", home), (
         "Home deve manter um H1 principal não vazio"
     )
+    assert re.search(r"<h1(?:\s[^>]*)?>Em quem eu vou votar\?</h1>", home), (
+        "Home deve orientar a busca sem expor as perguntas internas da ficha"
+    )
+    assert "home-answers" not in home and "O que ela diz que vai fazer?" not in home, (
+        "Home não deve repetir a arquitetura de perguntas da ficha"
+    )
+    assert all(
+        text in home
+        for text in (
+            "O que importa pra você?",
+            "Procure uma pessoa",
+            "Explore um assunto",
+            "Compare candidaturas",
+        )
+    ), "Home deve oferecer caminhos claros para busca, temas e comparação"
     assert 'type="search"' in home and 'name="q"' in home, (
         "Home deve manter busca de candidatura orientada à tarefa"
     )
@@ -262,9 +277,16 @@ def main() -> None:
     assert "topic-icon" not in public_markup and "step-no" not in public_markup, "ícones decorativos antigos reapareceram"
     assert "office-card.estadual" not in styles, "cargo estadual não pode receber cor partidária/semântica própria"
     assert "profile-tab" not in public_markup, "V5 não usa abas estreitas na ficha"
-    assert "O que essa pessoa faz hoje?" in app and "O que ela diz que vai fazer?" in app and "Onde isso pode mexer na vida real?" in app, "ficha deve responder as três perguntas práticas"
-    profile_question_order = [app.index("O que essa pessoa faz hoje?"), app.index("O que ela diz que vai fazer?"), app.index("Onde isso pode mexer na vida real?")]
-    assert profile_question_order == sorted(profile_question_order), "ordem HOJE → PROPÕE → IMPACTO foi alterada"
+    profile_questions = [
+        "O que essa pessoa faz hoje?",
+        "O que a candidatura propõe?",
+        "Onde isso pode mexer na vida real?",
+    ]
+    assert all(question in app for question in profile_questions), (
+        "ficha deve responder as três perguntas práticas"
+    )
+    profile_question_order = [app.index(question) for question in profile_questions]
+    assert profile_question_order == sorted(profile_question_order), "ordem HOJE → PROPOSTAS → IMPACTO foi alterada"
     assert 'id="dados-eleitorais"' in app and app.index('id="dados-eleitorais"') > app.index('id="impacto"'), "dados eleitorais devem permanecer na camada secundária"
     assert "Essas são áreas que a proposta pode atingir." not in app, "copy causal antiga reapareceu"
     assert "Áreas relacionadas às propostas e declarações documentadas nesta ficha." in app, "impacto prospectivo deve permanecer taxonômico e não valorativo"

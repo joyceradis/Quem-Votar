@@ -145,12 +145,31 @@
   border-bottom: 1px solid var(--line);
 }
 
+.answer-section--proposals {
+  margin-block: 12px;
+  padding: clamp(26px, 4vw, 42px) clamp(18px, 3vw, 34px);
+  border: 1px solid var(--line);
+  border-inline-start: 4px solid var(--pink-strong);
+  border-radius: var(--radius-md);
+  background: linear-gradient(115deg, var(--blue-soft), var(--white) 48%);
+  box-shadow: var(--shadow-soft);
+}
+
 .section-number {
   margin: 0;
   color: var(--pink-strong);
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.12em;
+}
+
+.answer-section--proposals .section-number {
+  margin-top: -5px;
+  color: var(--blue-strong);
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 6vw, 4.5rem);
+  line-height: 0.9;
+  letter-spacing: -0.08em;
 }
 
 .answer-section h2 {
