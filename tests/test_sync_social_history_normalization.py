@@ -9,7 +9,9 @@ espelho de contingência. Dois efeitos só apareceram com o dado real:
   em alguns — dado que AGENTS.md §5 proíbe publicar;
 - o CSV de histórico traz o município em NM_UE, e o registro perdia o "onde";
 - a descrição de bem é texto livre e traz CPF de terceiros e número de conta
-  bancária (AGENTS.md §5).
+  bancária (AGENTS.md §5);
+- candidatura em dois turnos vira duas linhas no CSV e contava a mesma disputa
+  duas vezes no histórico.
 """
 from __future__ import annotations
 
@@ -358,6 +360,95 @@ class AssetDescriptionPrivacyTests(unittest.TestCase):
         self.assertEqual(
             "COMPRADO DE CPF [omitido]", restored[0]["assets"]["items"][0]["description"]
         )
+
+
+class ElectionRoundsTests(unittest.TestCase):
+    def _history(self, rows):
+        candidates = [{
+            "tse_id": "80000000020",
+            "ballot_name": "CAROL",
+            "full_name": "CAROL TESTE",
+            "social_name": None,
+            "registration_status": None,
+            "assets": {},
+            "social_links": [],
+            "previous_elections": [],
+            "tse_additional": {},
+        }]
+        base = {"SQ_CANDIDATO_ATUAL": "80000000020", "SG_UF": "ES"}
+        datasets = {
+            sync.TSE_COMPLEMENT_ZIP: [{"SQ_CANDIDATO": "80000000020", "DS_SITUACAO_JULGAMENTO": "DEFERIDO"}],
+            sync.TSE_ASSETS_ZIP: [{"SQ_CANDIDATO": "80000000020", "VR_BEM_CANDIDATO": "1,00"}],
+            sync.TSE_SOCIAL_ZIP: [{"SQ_CANDIDATO": "80000000020", "DS_URL": "https://x.com/carol"}],
+            sync.TSE_HISTORY_ZIP: [{**base, **row} for row in rows],
+        }
+
+        def fake_archive(url, preferred_suffix=None, timeout=90):
+            return datasets[url], {
+                "institution": "TSE",
+                "url": url,
+                "archive_member": preferred_suffix or "historico.csv",
+                "sha256": "d" * 64,
+                "generated_at": "29/09/2026 12:00:00",
+                "row_count": len(datasets[url]),
+                "status": "fresh",
+            }
+
+        with patch.object(sync, "read_tse_archive", side_effect=fake_archive), patch.object(
+            sync, "_previous_candidate_map", return_value={}
+        ), patch.object(sync, "_load_enrichment_bootstrap", return_value=({}, None)):
+            sync.enrich_tse_open_data([candidates])
+        return candidates[0]["previous_elections"]
+
+    def test_two_round_candidacy_is_one_record_with_the_final_result(self):
+        records = self._history([
+            # 2022, Vice-governador: 1º turno "2º turno", 2º turno "Eleito"
+            {"ANO_ELEICAO": "2022", "NR_TURNO": "1", "DS_CARGO": "Vice-governador", "SG_PARTIDO": "PSDB", "NM_UE": "ESPÍRITO SANTO", "DS_SIT_TOT_TURNO": "2º turno"},
+            {"ANO_ELEICAO": "2022", "NR_TURNO": "2", "DS_CARGO": "Vice-governador", "SG_PARTIDO": "PSDB", "NM_UE": "ESPÍRITO SANTO", "DS_SIT_TOT_TURNO": "Eleito"},
+            # 2018: um turno só
+            {"ANO_ELEICAO": "2018", "NR_TURNO": "1", "DS_CARGO": "Senador", "SG_PARTIDO": "PSDB", "NM_UE": "ESPÍRITO SANTO", "DS_SIT_TOT_TURNO": "Não eleito"},
+        ])
+        self.assertEqual([(2022, "Eleito"), (2018, "Não eleito")], [(r["year"], r["result"]) for r in records])
+        self.assertTrue(all("_turn" not in r for r in records))  # detalhe interno não vaza
+
+    def test_order_of_rows_does_not_decide_which_round_wins(self):
+        rows = [
+            {"ANO_ELEICAO": "2020", "NR_TURNO": "2", "DS_CARGO": "Prefeito", "SG_PARTIDO": "PT", "NM_UE": "VITÓRIA", "DS_SIT_TOT_TURNO": "Não eleito"},
+            {"ANO_ELEICAO": "2020", "NR_TURNO": "1", "DS_CARGO": "Prefeito", "SG_PARTIDO": "PT", "NM_UE": "VITÓRIA", "DS_SIT_TOT_TURNO": "2º turno"},
+        ]
+        for ordered in (rows, list(reversed(rows))):
+            records = self._history(ordered)
+            self.assertEqual([("Prefeito", "Não eleito")], [(r["office"], r["result"]) for r in records])
+
+    def test_without_turn_number_the_intermediate_result_still_loses(self):
+        records = self._history([
+            {"ANO_ELEICAO": "2016", "DS_CARGO": "Prefeito", "SG_PARTIDO": "SD", "NM_UE": "VITÓRIA", "DS_SIT_TOT_TURNO": "2º turno"},
+            {"ANO_ELEICAO": "2016", "DS_CARGO": "Prefeito", "SG_PARTIDO": "SD", "NM_UE": "VITÓRIA", "DS_SIT_TOT_TURNO": "Não eleito"},
+        ])
+        self.assertEqual(["Não eleito"], [r["result"] for r in records])
+
+    def test_same_turn_prefers_the_row_that_has_an_outcome(self):
+        # Caso real (deputado estadual 2014): duas linhas, uma "Suplente" e outra sem resultado.
+        row = {"ANO_ELEICAO": "2014", "NR_TURNO": "1", "DS_CARGO": "Deputado Estadual", "SG_PARTIDO": "PRB", "NM_UE": "ESPÍRITO SANTO"}
+        for ordered in (
+            [{**row, "DS_SIT_TOT_TURNO": "Suplente"}, {**row, "DS_SIT_TOT_TURNO": "#NULO"}],
+            [{**row, "DS_SIT_TOT_TURNO": "#NULO"}, {**row, "DS_SIT_TOT_TURNO": "Suplente"}],
+        ):
+            records = self._history(ordered)
+            self.assertEqual(["Suplente"], [r.get("result") for r in records])
+
+    def test_runoff_without_final_row_is_kept_as_the_source_says(self):
+        records = self._history([
+            {"ANO_ELEICAO": "2022", "NR_TURNO": "1", "DS_CARGO": "Governador", "SG_PARTIDO": "PL", "NM_UE": "ESPÍRITO SANTO", "DS_SIT_TOT_TURNO": "2º turno"},
+        ])
+        self.assertEqual(["2º turno"], [r["result"] for r in records])
+
+    def test_different_office_or_party_in_the_same_year_stay_separate(self):
+        records = self._history([
+            {"ANO_ELEICAO": "2018", "NR_TURNO": "1", "DS_CARGO": "Senador", "SG_PARTIDO": "PSDB", "NM_UE": "ESPÍRITO SANTO", "DS_SIT_TOT_TURNO": "Não eleito"},
+            {"ANO_ELEICAO": "2018", "NR_TURNO": "1", "DS_CARGO": "Deputado Federal", "SG_PARTIDO": "PSDB", "NM_UE": "ESPÍRITO SANTO", "DS_SIT_TOT_TURNO": "Suplente"},
+        ])
+        self.assertEqual(2, len(records))
 
 
 if __name__ == "__main__":
