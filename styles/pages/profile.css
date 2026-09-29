@@ -110,20 +110,26 @@
 /* Navegação entre as perguntas */
 .profile-jump {
   display: flex;
-  gap: 22px;
-  overflow: auto;
-  white-space: nowrap;
+  flex-wrap: wrap;
+  gap: 0 24px;
   margin: 26px 0 0;
   border-bottom: 1px solid var(--line);
-  scrollbar-width: thin;
 }
 
 .profile-jump a {
-  padding: 15px 0;
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 10px 0;
   color: var(--ink-soft);
   font-size: 0.8rem;
   font-weight: 700;
   text-decoration: none;
+}
+
+.profile-jump a:focus-visible {
+  outline: 2px solid var(--blue-strong);
+  outline-offset: 4px;
 }
 
 .profile-jump a:hover {
@@ -363,7 +369,7 @@
   border-top: 1px solid rgba(17, 59, 86, 0.12);
 }
 
-#dados-eleitorais .electoral-data {
+.assets-section .declared-assets {
   margin-top: 0;
   padding-top: 0;
   border-top: 0;
@@ -425,6 +431,23 @@
   font-size: 0.72rem;
   font-weight: 500;
   line-height: 1.3;
+}
+
+.assets-section {
+  scroll-margin-top: 100px;
+  margin-bottom: 28px;
+}
+
+.assets-breakdown {
+  margin-top: 12px;
+}
+
+.assets-breakdown summary {
+  min-height: 48px;
+  padding: 12px 0;
+  color: var(--blue-strong);
+  font-weight: 700;
+  cursor: pointer;
 }
 
 .declared-assets-total {
@@ -530,6 +553,12 @@
 }
 
 @media (max-width: 620px) {
+  .profile-jump {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 16px;
+  }
+
   .profile-hero {
     grid-template-columns: 1fr;
     padding: 22px;

@@ -402,12 +402,13 @@ function renderElectoralData(candidate, assets) {
           <span>${esc(assets?.source?.dataset || "Bens de candidatos")}</span>
         </div>
         <p class="declared-assets-total">${assetsCount} ${assetsCount === 1 ? "bem declarado" : "bens declarados"} ao TSE${assetsTotal ? ` · valor total declarado ao TSE: ${esc(assetsTotal)}` : ""}</p>
+        <details class="assets-breakdown"><summary>Ver bens e valores declarados</summary>
         <ul class="declared-assets-list">${(assets.items || [])
           .map(
             (item) =>
               `<li><span>${esc(item.description || item.type || "Bem declarado")}</span>${formatBRL(item.value_brl) ? `<strong>${esc(formatBRL(item.value_brl))}</strong>` : ""}</li>`
           )
-          .join("")}</ul>
+          .join("")}</ul></details>
         ${assets?.source?.official_candidate_url ? `<a class="declared-assets-source" target="_blank" rel="noopener" href="${esc(assets.source.official_candidate_url)}">Abrir declaração de bens</a>` : ""}
       </div>`
     : hasGap(candidate, "assets")
@@ -429,7 +430,7 @@ function renderElectoralData(candidate, assets) {
       ? `<p class="plain-empty">Redes sociais informadas ao TSE: ${esc(NAO_DISPONIVEL)}.</p>`
       : "";
 
-  return `${factsBlock}${assetsBlock}${socialBlock}`;
+  return `<div id="bens-declarados" class="assets-section">${assetsBlock || `<p class="plain-empty">Bens declarados ao TSE: ${esc(NAO_DISPONIVEL)}.</p>`}</div>${factsBlock}${socialBlock}`;
 }
 
 // 06 — FONTES. Toda afirmação da ficha tem de ser rastreável até aqui.
@@ -558,11 +559,12 @@ async function initProfile() {
   mount.innerHTML = `
     ${renderHero(candidate, kind, name, socialName, currentActivityText)}
 
-    <nav class="profile-jump" aria-label="Ir para uma pergunta">
+    <nav class="profile-jump" aria-label="Navegar pela ficha">
       <a href="#faz-hoje">Hoje</a>
       <a href="#vai-fazer">Propõe</a>
       <a href="#impacto">Impacto</a>
-      <a href="#historico">Histórico</a>
+      <a href="#historico">Histórico e trajetória</a>
+      <a href="#bens-declarados">Bens declarados</a>
       <a href="#dados-eleitorais">Dados eleitorais</a>
       <a href="#fontes">Fontes</a>
     </nav>
