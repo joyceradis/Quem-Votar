@@ -37,6 +37,43 @@ test.describe("Casco em todas as páginas", () => {
   }
 });
 
+// Cabeçalho compartilhado por Candidatos, Comparar e Assuntos: título à
+// esquerda e carimbo de atualização (data + fonte) à direita. Em tela estreita
+// o carimbo desce para baixo do título. A regra de empilhar vivia só no CSS da
+// listagem; Comparar e Assuntos mantinham as duas colunas no celular e o
+// título ficava espremido numa faixa de ~140px (cerca de 40% do cabeçalho),
+// sem que nenhum teste percebesse. O teste lê a largura do projeto em execução
+// (desktop 1200, mobile 390) e confere o contrato daquela largura.
+test.describe("Cabeçalho de página com carimbo de atualização", () => {
+  for (const rota of ["candidatos.html", "comparar.html", "temas.html"]) {
+    test(`${rota}: carimbo fica embaixo do título no celular e ao lado no desktop`, async ({ page }) => {
+      await page.goto(rota);
+      const cabecalho = page.locator("header.qv-page-intro");
+      await expect(cabecalho.locator(".qv-page-snapshot")).toBeVisible();
+
+      const m = await cabecalho.evaluate((el) => {
+        const titulo = el.querySelector("h1").getBoundingClientRect();
+        const carimbo = el.querySelector(".qv-page-snapshot").getBoundingClientRect();
+        return {
+          larguraCabecalho: el.getBoundingClientRect().width,
+          larguraTitulo: titulo.width,
+          tituloDireita: titulo.right,
+          tituloBase: titulo.bottom,
+          carimboEsquerda: carimbo.left,
+          carimboTopo: carimbo.top,
+        };
+      });
+
+      if (page.viewportSize().width < 700) {
+        expect(m.carimboTopo).toBeGreaterThanOrEqual(m.tituloBase); // embaixo, não ao lado
+        expect(m.larguraTitulo / m.larguraCabecalho).toBeGreaterThan(0.6); // título com a largura toda
+      } else {
+        expect(m.carimboEsquerda).toBeGreaterThanOrEqual(m.tituloDireita); // ao lado, não embaixo
+      }
+    });
+  }
+});
+
 test.describe("Comparar", () => {
   test("mostra os mesmos campos para todos e não elege vencedor", async ({ page }) => {
     await page.goto(`comparar.html?ids=${doisIds.join(",")}`);
