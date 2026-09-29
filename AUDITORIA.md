@@ -193,7 +193,8 @@ O shell estrutural usa azul/navy/branco. Cores da navegação não são utilizad
 
 ### Área profissional
 
-A taxonomia é pública em `data/reference/topics.json` e usa somente a ocupação declarada no cadastro eleitoral.
+A taxonomia pública de política pública é `data/reference/policy-topics.json`.
+`data/reference/topics.json` é um mapa legado de ocupações/profissões e não pode classificar `topic_evidence`.
 
 Cobertura do snapshot atual:
 - Saúde: 44 candidaturas;

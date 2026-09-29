@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "updated_at": "2026-09-20T01:36:00+00:00",
+  "updated_at": "2026-09-29T22:40:45+00:00",
   "semantics": "Fila de fontes para descoberta/coleta. Perfis declarados ao TSE são sementes, não evidências publicáveis.",
   "sources": [
     {
@@ -19,6 +19,228 @@
         "discovery_method": "pesquisa pública",
         "related_primary_process": "ALES — Processo 988/2026 / PL 20/2026"
       }
+    },
+    {
+      "source_id": "sen-callegari-site",
+      "candidate_id": "80002542401",
+      "candidate_name": "CALLEGARI",
+      "office": "SENADOR",
+      "source_kind": "official_candidate",
+      "source_title": "Espírito Santo | Wellington Callegari",
+      "source_publisher": "Campanha Wellington Callegari",
+      "published_at": null,
+      "captured_at": "2026-09-29",
+      "discovery_status": "seed",
+      "seed_url": "https://www.wellingtoncallegari.com.br/",
+      "source_url": "",
+      "source_origin": {
+        "discovery_method": "existing_research_handoff",
+        "research_path": "data/staging/issue161-majoritarian-proposal-sources.json",
+        "research_source_id": "sen-callegari-site"
+      },
+      "collection_notes": "Fonte pesquisada já existente; adicionada à fila comum, sem aprovação ou promoção de conteúdo."
+    },
+    {
+      "source_id": "sen-evair-sim-202608",
+      "candidate_id": "80002553265",
+      "candidate_name": "EVAIR DE MELO",
+      "office": "SENADOR",
+      "source_kind": "secondary",
+      "source_url": "https://simnoticias.com.br/eleicoes/evair-dispara-contra-lula-e-stf-em-sabatina-do-grupo-sim",
+      "source_title": "Evair dispara contra Lula e STF em Sabatina do Grupo SIM",
+      "source_publisher": "Sim Notícias",
+      "published_at": "2026-08-27",
+      "captured_at": "2026-09-29",
+      "discovery_status": "exact_content",
+      "seed_url": "",
+      "source_origin": {
+        "discovery_method": "existing_research_handoff",
+        "research_path": "data/staging/issue161-majoritarian-proposal-sources.json",
+        "research_source_id": "sen-evair-sim-202608"
+      },
+      "collection_notes": "Fonte pesquisada já existente; adicionada à fila comum, sem aprovação ou promoção de conteúdo."
+    },
+    {
+      "source_id": "sen-contarato-sim-20260824",
+      "candidate_id": "80002550187",
+      "candidate_name": "FABIANO CONTARATO",
+      "office": "SENADOR",
+      "source_kind": "secondary",
+      "source_url": "https://simnoticias.com.br/eleicoes/contarato-abre-sabatina-na-tv-sim-sbt-com-criticas-a-polarizacao",
+      "source_title": "Contarato abre Sabatina do Grupo Sim com críticas à polarização",
+      "source_publisher": "Sim Notícias",
+      "published_at": "2026-08-24",
+      "captured_at": "2026-09-29",
+      "discovery_status": "exact_content",
+      "seed_url": "",
+      "source_origin": {
+        "discovery_method": "existing_research_handoff",
+        "research_path": "data/staging/issue161-majoritarian-proposal-sources.json",
+        "research_source_id": "sen-contarato-sim-20260824"
+      },
+      "collection_notes": "Fonte pesquisada já existente; adicionada à fila comum, sem aprovação ou promoção de conteúdo."
+    },
+    {
+      "source_id": "sen-monjardim-sim-20260902",
+      "candidate_id": "80002530022",
+      "candidate_name": "LEONARDO MONJARDIM",
+      "office": "SENADOR",
+      "source_kind": "secondary",
+      "source_url": "https://simnoticias.com.br/eleicoes/monjardim-promete-mao-de-ferro-contra-o-crime-e-critica-o-stf",
+      "source_title": "Monjardim promete “mão de ferro” contra o crime e critica o STF",
+      "source_publisher": "Sim Notícias",
+      "published_at": "2026-09-02",
+      "captured_at": "2026-09-29",
+      "discovery_status": "exact_content",
+      "seed_url": "",
+      "source_origin": {
+        "discovery_method": "existing_research_handoff",
+        "research_path": "data/staging/issue161-majoritarian-proposal-sources.json",
+        "research_source_id": "sen-monjardim-sim-20260902"
+      },
+      "collection_notes": "Fonte pesquisada já existente; adicionada à fila comum, sem aprovação ou promoção de conteúdo."
+    },
+    {
+      "source_id": "sen-maguinha-site",
+      "candidate_id": "80002553269",
+      "candidate_name": "MAGUINHA MALTA",
+      "office": "SENADOR",
+      "source_kind": "official_candidate",
+      "source_title": "Maguinha Malta 222 | Senadora pelo Espírito Santo",
+      "source_publisher": "Campanha Maguinha Malta",
+      "published_at": null,
+      "captured_at": "2026-09-29",
+      "discovery_status": "seed",
+      "seed_url": "https://www.maguinhamalta.com.br/",
+      "source_url": "",
+      "source_origin": {
+        "discovery_method": "existing_research_handoff",
+        "research_path": "data/staging/issue161-majoritarian-proposal-sources.json",
+        "research_source_id": "sen-maguinha-site"
+      },
+      "collection_notes": "Fonte pesquisada já existente; adicionada à fila comum, sem aprovação ou promoção de conteúdo."
+    },
+    {
+      "source_id": "sen-marcos-sim-20260828",
+      "candidate_id": "80002538202",
+      "candidate_name": "MARCOS DO VAL",
+      "office": "SENADOR",
+      "source_kind": "secondary",
+      "source_url": "https://simnoticias.com.br/eleicoes/marcos-do-val-critica-stf-e-se-diz-contra-fim-da-escala-6x1",
+      "source_title": "Marcos do Val critica STF e se diz contra fim da escala 6×1",
+      "source_publisher": "Sim Notícias",
+      "published_at": "2026-08-28",
+      "captured_at": "2026-09-29",
+      "discovery_status": "exact_content",
+      "seed_url": "",
+      "source_origin": {
+        "discovery_method": "existing_research_handoff",
+        "research_path": "data/staging/issue161-majoritarian-proposal-sources.json",
+        "research_source_id": "sen-marcos-sim-20260828"
+      },
+      "collection_notes": "Fonte pesquisada já existente; adicionada à fila comum, sem aprovação ou promoção de conteúdo."
+    },
+    {
+      "source_id": "sen-fabian-site",
+      "candidate_id": "80002549404",
+      "candidate_name": "PROFESSOR FABIAN",
+      "office": "SENADOR",
+      "source_kind": "official_candidate",
+      "source_title": "Professor Fabian — Senador — PSOL ES",
+      "source_publisher": "Campanha Professor Fabian",
+      "published_at": null,
+      "captured_at": "2026-09-29",
+      "discovery_status": "seed",
+      "seed_url": "https://professorfabian.com.br/",
+      "source_url": "",
+      "source_origin": {
+        "discovery_method": "existing_research_handoff",
+        "research_path": "data/staging/issue161-majoritarian-proposal-sources.json",
+        "research_source_id": "sen-fabian-site"
+      },
+      "collection_notes": "Fonte pesquisada já existente; adicionada à fila comum, sem aprovação ou promoção de conteúdo."
+    },
+    {
+      "source_id": "sen-casagrande-sim-20260826",
+      "candidate_id": "80002551370",
+      "candidate_name": "RENATO CASAGRANDE",
+      "office": "SENADOR",
+      "source_kind": "secondary",
+      "source_url": "https://simnoticias.com.br/eleicoes/de-apex-a-escala-6x1-o-que-disse-casagrande-em-sabatina-do-grupo-sim",
+      "source_title": "De Apex à escala 6×1: o que disse Casagrande em sabatina do Grupo SIM",
+      "source_publisher": "Sim Notícias",
+      "published_at": "2026-08-26",
+      "captured_at": "2026-09-29",
+      "discovery_status": "exact_content",
+      "seed_url": "",
+      "source_origin": {
+        "discovery_method": "existing_research_handoff",
+        "research_path": "data/staging/issue161-majoritarian-proposal-sources.json",
+        "research_source_id": "sen-casagrande-sim-20260826"
+      },
+      "collection_notes": "Fonte pesquisada já existente; adicionada à fila comum, sem aprovação ou promoção de conteúdo."
+    },
+    {
+      "source_id": "sen-rodney-sim-20260903",
+      "candidate_id": "80002552373",
+      "candidate_name": "RODNEY MIRANDA",
+      "office": "SENADOR",
+      "source_kind": "secondary",
+      "source_url": "https://simnoticias.com.br/eleicoes/o-que-rodney-promete-para-o-es-alem-da-seguranca-publica",
+      "source_title": "O que Rodney promete para o ES além da segurança pública",
+      "source_publisher": "Sim Notícias",
+      "published_at": "2026-09-03",
+      "captured_at": "2026-09-29",
+      "discovery_status": "exact_content",
+      "seed_url": "",
+      "source_origin": {
+        "discovery_method": "existing_research_handoff",
+        "research_path": "data/staging/issue161-majoritarian-proposal-sources.json",
+        "research_source_id": "sen-rodney-sim-20260903"
+      },
+      "collection_notes": "Fonte pesquisada já existente; adicionada à fila comum, sem aprovação ou promoção de conteúdo."
+    },
+    {
+      "source_id": "sen-rose-sim-20260925",
+      "candidate_id": "80002551368",
+      "candidate_name": "ROSE DE FREITAS",
+      "office": "SENADOR",
+      "source_kind": "secondary",
+      "source_url": "https://simnoticias.com.br/eleicoes/rose-fala-sobre-seguranca-bets-banestes-e-escala-6x1",
+      "source_title": "Rose fala sobre segurança, bets, Banestes e escala 6×1",
+      "source_publisher": "Sim Notícias",
+      "published_at": "2026-09-25",
+      "captured_at": "2026-09-29",
+      "discovery_status": "exact_content",
+      "seed_url": "",
+      "source_origin": {
+        "discovery_method": "existing_research_handoff",
+        "research_path": "data/staging/issue161-majoritarian-proposal-sources.json",
+        "research_source_id": "sen-rose-sim-20260925"
+      },
+      "collection_notes": "Fonte pesquisada já existente; adicionada à fila comum, sem aprovação ou promoção de conteúdo."
+    },
+    {
+      "source_id": "sen-meneguelli-politicacapixaba-20260922",
+      "candidate_id": "80002552692",
+      "candidate_name": "SERGIO MENEGUELLI",
+      "office": "SENADOR",
+      "source_kind": "secondary",
+      "source_url": "https://politicacapixaba.com.br/meneguelli-defende-investimentos-no-norte-do-espirito-santo/noticias-politicas",
+      "source_title": "Meneguelli defende investimentos no Norte do Espírito Santo",
+      "source_publisher": "Política Capixaba",
+      "published_at": "2026-09-22",
+      "captured_at": "2026-09-29",
+      "source_origin": {
+        "event": "Entrevista ao Bom Dia Espírito Santo",
+        "note": "A matéria atribui nominalmente ao candidato as declarações da entrevista.",
+        "discovery_method": "existing_research_handoff",
+        "research_path": "data/staging/issue161-majoritarian-proposal-sources.json",
+        "research_source_id": "sen-meneguelli-politicacapixaba-20260922"
+      },
+      "discovery_status": "exact_content",
+      "seed_url": "",
+      "collection_notes": "Fonte pesquisada já existente; adicionada à fila comum, sem aprovação ou promoção de conteúdo."
     }
   ]
 }

@@ -11,6 +11,9 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_FEDERAL = ROOT / "data/generated/candidates-federal.json"
 DEFAULT_ESTADUAL = ROOT / "data/generated/candidates-estadual.json"
+DEFAULT_GOVERNADOR = ROOT / "data/generated/candidates-governador.json"
+DEFAULT_SENADOR = ROOT / "data/generated/candidates-senador.json"
+DEFAULT_STAGED_DRAFTS = ROOT / "data/staging/issue161-majoritarian-proposal-drafts.json"
 DEFAULT_SOURCES = ROOT / "data/staging/topic-evidence-sources.json"
 DEFAULT_DRAFTS = ROOT / "data/staging/topic-evidence-drafts.json"
 DEFAULT_REVIEWS = ROOT / "data/staging/topic-evidence-reviews.json"
@@ -96,12 +99,20 @@ def build_report(
     discovery_checked_at: str = "",
     processing_state: dict[str, Any] | None = None,
     exception_queue: dict[str, Any] | None = None,
+    staged_drafts: list[dict[str, Any]] | None = None,
+    discovery_candidate_ids: list[str] | None = None,
 ) -> dict[str, Any]:
     by_candidate: dict[str, Counter[str]] = defaultdict(Counter)
     draft_to_candidate: dict[str, str] = {}
     processing_by_candidate: dict[str, Counter[str]] = defaultdict(Counter)
     exceptions_by_candidate: dict[str, Counter[str]] = defaultdict(Counter)
     seed_urls_by_candidate: dict[str, list[str]] = defaultdict(list)
+    checked_ids = {clean(cid) for cid in discovery_candidate_ids or []}
+    prospective_types = {"proposta", "declaração", "declaracao"}
+    staged_by_candidate: Counter[str] = Counter()
+    for draft in staged_drafts or []:
+        if clean(draft.get("evidence_type")).casefold() in prospective_types:
+            staged_by_candidate[clean(draft.get("candidate_id"))] += 1
 
     for source in sources:
         cid = clean(source.get("candidate_id"))
@@ -127,6 +138,8 @@ def build_report(
     for entry in canonical:
         cid = clean(entry.get("candidate_id"))
         by_candidate[cid]["canonical"] += 1
+        if clean(entry.get("evidence_type")).casefold() in prospective_types:
+            by_candidate[cid]["canonical_prospective"] += 1
 
     if processing_state:
         states = processing_state.get("sources", {})
@@ -154,7 +167,7 @@ def build_report(
     state_counts: Counter[str] = Counter()
     known_ids = {clean(x.get("tse_id")) for x in candidates}
 
-    orphan_ids = sorted(cid for cid in by_candidate if cid and cid not in known_ids)
+    orphan_ids = sorted(cid for cid in set(by_candidate) | set(staged_by_candidate) if cid and cid not in known_ids)
     if orphan_ids:
         raise RuntimeError(f"pipeline contains unknown candidate ids: {orphan_ids[:10]}")
 
@@ -163,8 +176,21 @@ def build_report(
         counts = by_candidate[cid]
         state = state_for(counts)
         state_counts[state] += 1
+        public_prospective = sum(
+            clean(item.get("evidence_type")).casefold() in prospective_types
+            for item in candidate.get("topic_evidence", [])
+        )
+        if public_prospective:
+            q2_state = "published"
+        elif counts["canonical_prospective"]:
+            q2_state = "canonical_not_in_snapshot"
+        elif staged_by_candidate[cid]:
+            q2_state = "staged_not_promoted"
+        else:
+            q2_state = "no_published_prospective_evidence"
         checked_routes: list[str] = []
-        if discovery_checked_at:
+        candidate_checked_at = discovery_checked_at if cid in checked_ids else ""
+        if candidate_checked_at:
             checked_routes.append("tse_declared_channels")
             if any(url and not is_social_seed(url) for url in seed_urls_by_candidate[cid]):
                 checked_routes.append("declared_official_site_links")
@@ -173,9 +199,9 @@ def build_report(
 
         if counts["exact_sources"]:
             discovery_outcome = "exact_content_found"
-        elif counts["seeds"]:
+        elif counts["seeds"] and candidate_checked_at:
             discovery_outcome = "no_exact_content_found_in_checked_sources"
-        elif discovery_checked_at:
+        elif candidate_checked_at:
             discovery_outcome = "no_seed_or_exact_content_found_in_checked_sources"
         else:
             discovery_outcome = "not_checked"
@@ -187,8 +213,15 @@ def build_report(
                 "office": clean(candidate.get("office")),
                 "party": clean(candidate.get("party")),
                 "state": state,
+                "q2": {
+                    "state": q2_state,
+                    "public_prospective": public_prospective,
+                    "canonical_prospective": counts["canonical_prospective"],
+                    "staged_prospective": staged_by_candidate[cid],
+                    "scope_note": "Staging não é aprovação; atuação histórica não responde Q2. Ausência de registro não implica ausência de proposta.",
+                },
                 "discovery": {
-                    "checked_at": discovery_checked_at,
+                    "checked_at": candidate_checked_at,
                     "sources_checked": checked_routes,
                     "outcome": discovery_outcome,
                     "scope_note": (
@@ -224,7 +257,7 @@ def build_report(
     candidates_with_canonical = sum(1 for x in ledger if x["canonical"] > 0)
 
     return {
-        "version": "1.1.0",
+        "version": "1.2.0",
         "generated_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
         "semantics": (
             "Operational coverage only. It does not rank candidates, infer political positions, "
@@ -242,6 +275,9 @@ def build_report(
             "draft_records": len(drafts),
             "review_records": len(reviews),
             "canonical_records": len(canonical),
+            "candidates_with_public_q2": sum(x["q2"]["public_prospective"] > 0 for x in ledger),
+            "candidates_with_staged_q2_not_published": sum(x["q2"]["state"] == "staged_not_promoted" for x in ledger),
+            "candidates_with_canonical_q2_not_in_snapshot": sum(x["q2"]["state"] == "canonical_not_in_snapshot" for x in ledger),
             "candidates_discovery_checked": sum(1 for x in ledger if x["discovery"]["checked_at"]),
             "candidates_no_exact_content_in_checked_sources": sum(
                 1 for x in ledger
@@ -261,6 +297,9 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Generate a read-only evidence coverage ledger.")
     parser.add_argument("--federal", type=Path, default=DEFAULT_FEDERAL)
     parser.add_argument("--estadual", type=Path, default=DEFAULT_ESTADUAL)
+    parser.add_argument("--governador", type=Path, default=DEFAULT_GOVERNADOR)
+    parser.add_argument("--senador", type=Path, default=DEFAULT_SENADOR)
+    parser.add_argument("--staged-drafts", type=Path, default=DEFAULT_STAGED_DRAFTS)
     parser.add_argument("--sources", type=Path, default=DEFAULT_SOURCES)
     parser.add_argument("--drafts", type=Path, default=DEFAULT_DRAFTS)
     parser.add_argument("--reviews", type=Path, default=DEFAULT_REVIEWS)
@@ -285,7 +324,7 @@ def main() -> int:
         else None
     )
     report = build_report(
-        candidate_rows(args.federal, args.estadual),
+        candidate_rows(args.federal, args.estadual, args.governador, args.senador),
         source_rows,
         list_field(args.drafts, "drafts"),
         list_field(args.reviews, "reviews"),
@@ -293,6 +332,8 @@ def main() -> int:
         discovery_checked_at=clean(sources_payload.get("updated_at")),
         processing_state=processing_state,
         exception_queue=exception_queue,
+        staged_drafts=list_field(args.staged_drafts, "drafts"),
+        discovery_candidate_ids=sources_payload.get("discovery_run", {}).get("candidate_ids", []),
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
