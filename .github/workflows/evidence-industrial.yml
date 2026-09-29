@@ -8,6 +8,10 @@ on:
         description: "Run ID do artifact histórico com as fontes oficiais"
         required: false
         type: string
+      recovery_state_run_id:
+        description: "Run ID do artifact que comprova o estado failed inicial"
+        required: false
+        type: string
       reprocess_source_ids:
         description: "Source IDs exatos separados por vírgula (máximo de 20)"
         required: false
@@ -115,11 +119,13 @@ jobs:
           STATE="$RUNNER_TEMP/evidence-industrial-state"
           BULK="$RUNNER_TEMP/camara-bulk-cache"
           RECOVERY="$RUNNER_TEMP/chamber-recovery-source"
-          mkdir -p "$OUT" "$STATE" "$BULK" "$RECOVERY"
+          RECOVERY_STATE="$RUNNER_TEMP/chamber-recovery-baseline"
+          mkdir -p "$OUT" "$STATE" "$BULK" "$RECOVERY" "$RECOVERY_STATE"
           echo "out=$OUT" >> "$GITHUB_OUTPUT"
           echo "state=$STATE" >> "$GITHUB_OUTPUT"
           echo "bulk=$BULK" >> "$GITHUB_OUTPUT"
           echo "recovery=$RECOVERY" >> "$GITHUB_OUTPUT"
+          echo "recovery_state=$RECOVERY_STATE" >> "$GITHUB_OUTPUT"
 
       - name: Resolve Câmara bulk cache day
         id: bulk-key
@@ -175,15 +181,16 @@ jobs:
         shell: bash
         env:
           RECOVERY_SOURCE_RUN_ID: ${{ inputs.recovery_source_run_id }}
+          RECOVERY_STATE_RUN_ID: ${{ inputs.recovery_state_run_id }}
           RECOVERY_SOURCE_IDS: ${{ inputs.reprocess_source_ids }}
         run: |
           set -euo pipefail
-          if [[ -z "$RECOVERY_SOURCE_RUN_ID" && -z "$RECOVERY_SOURCE_IDS" ]]; then
+          if [[ -z "$RECOVERY_SOURCE_RUN_ID" && -z "$RECOVERY_STATE_RUN_ID" && -z "$RECOVERY_SOURCE_IDS" ]]; then
             echo "enabled=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          if [[ ! "$RECOVERY_SOURCE_RUN_ID" =~ ^[0-9]{1,15}$ || -z "$RECOVERY_SOURCE_IDS" ]]; then
-            echo "::error::Recovery requires a numeric source run ID and explicit source IDs."
+          if [[ ! "$RECOVERY_SOURCE_RUN_ID" =~ ^[0-9]{1,15}$ || ! "$RECOVERY_STATE_RUN_ID" =~ ^[0-9]{1,15}$ || -z "$RECOVERY_SOURCE_IDS" ]]; then
+            echo "::error::Recovery requires numeric source and baseline-state run IDs plus explicit source IDs."
             exit 1
           fi
           IFS=',' read -r -a source_ids <<< "$RECOVERY_SOURCE_IDS"
@@ -208,6 +215,15 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path: ${{ steps.ws.outputs.recovery }}
 
+      - name: Download recovery baseline state artifact
+        if: ${{ steps.recovery.outputs.enabled == 'true' }}
+        uses: actions/download-artifact@v4
+        with:
+          name: evidence-worker-${{ inputs.recovery_state_run_id }}
+          run-id: ${{ inputs.recovery_state_run_id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: ${{ steps.ws.outputs.recovery_state }}
+
       - name: Discover candidate-specific sources
         if: ${{ steps.recovery.outputs.enabled != 'true' }}
         shell: bash
@@ -230,6 +246,7 @@ jobs:
         shell: bash
         env:
           RECOVERY_SOURCE_RUN_ID: ${{ inputs.recovery_source_run_id }}
+          RECOVERY_STATE_RUN_ID: ${{ inputs.recovery_state_run_id }}
           RECOVERY_SOURCE_IDS: ${{ inputs.reprocess_source_ids }}
         run: |
           set -euo pipefail
@@ -237,9 +254,11 @@ jobs:
           STATE="${{ steps.ws.outputs.state }}"
           python scripts/prepare_chamber_recovery.py \
             --artifact-dir "${{ steps.ws.outputs.recovery }}" \
+            --baseline-artifact-dir "${{ steps.ws.outputs.recovery_state }}" \
             --state "$STATE/processing-state.json" \
             --source-ids "$RECOVERY_SOURCE_IDS" \
             --expected-run-id "$RECOVERY_SOURCE_RUN_ID" \
+            --expected-baseline-run-id "$RECOVERY_STATE_RUN_ID" \
             --expected-repository "$GITHUB_REPOSITORY" \
             --output-sources "$OUT/topic-evidence-sources.json" \
             --output-audit "$OUT/recovery-source-selection.json"
@@ -276,10 +295,11 @@ jobs:
             --limit 200
             --per-candidate-limit 12
           )
+          recovery_args=()
           if [[ -n "${RECOVERY_SOURCE_IDS:-}" ]]; then
             IFS=',' read -r -a source_ids <<< "$RECOVERY_SOURCE_IDS"
             for source_id in "${source_ids[@]}"; do
-              processor_args+=(--reprocess-source-id "$source_id")
+              recovery_args+=(--reprocess-source-id "$source_id")
             done
           fi
 
@@ -292,8 +312,13 @@ jobs:
 
             echo "=== wartime cycle ${cycle} ===" | tee -a "$OUT/processing.log"
 
+            cycle_args=("${processor_args[@]}")
+            if [[ "$cycle" -eq 1 && -n "${RECOVERY_SOURCE_IDS:-}" ]]; then
+              cycle_args+=("${recovery_args[@]}")
+            fi
+
             python scripts/process_evidence_batch.py \
-              "${processor_args[@]}" \
+              "${cycle_args[@]}" \
               --metrics "$METRICS" \
               | tee -a "$OUT/processing.log"
 
@@ -360,12 +385,14 @@ jobs:
         env:
           RECOVERY_SOURCE_IDS: ${{ inputs.reprocess_source_ids }}
           RECOVERY_SOURCE_RUN_ID: ${{ inputs.recovery_source_run_id }}
+          RECOVERY_STATE_RUN_ID: ${{ inputs.recovery_state_run_id }}
         run: |
           set -euo pipefail
           OUT="${{ steps.ws.outputs.out }}"
           STATE="${{ steps.ws.outputs.state }}"
           python - "$STATE/processing-state.json" "$STATE/drafts.json" \
-            "$OUT/recovery-source-selection.json" "$OUT/recovery-audit.json" <<'PY'
+            "$OUT/recovery-source-selection.json" "$OUT/drain-status.json" \
+            "$OUT/processing-metrics-cycle-2.json" "$OUT/recovery-audit.json" <<'PY'
           import json
           import os
           import sys
@@ -374,6 +401,8 @@ jobs:
           state = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))["sources"]
           drafts = json.loads(Path(sys.argv[2]).read_text(encoding="utf-8"))["drafts"]
           selection = json.loads(Path(sys.argv[3]).read_text(encoding="utf-8"))
+          drain = json.loads(Path(sys.argv[4]).read_text(encoding="utf-8"))
+          second_pass = json.loads(Path(sys.argv[5]).read_text(encoding="utf-8"))
           draft_by_id = {row.get("draft_id"): row for row in drafts}
           results = []
           for source_id in selection["source_ids"]:
@@ -383,19 +412,35 @@ jobs:
                   "source_id": source_id,
                   "status": row.get("status"),
                   "attempts": row.get("attempts"),
+                  "expected_attempts": selection["baseline_attempts"][source_id] + 1,
                   "reprocess_count": row.get("reprocess_count"),
                   "chamber_section_recovery_v1": row.get("chamber_section_recovery_v1", False),
                   "draft_id": row.get("draft_id"),
                   "draft_review_status": draft.get("review_status"),
               })
-          Path(sys.argv[4]).write_text(json.dumps({
+          Path(sys.argv[6]).write_text(json.dumps({
               "source_run_id": os.environ["RECOVERY_SOURCE_RUN_ID"],
+              "baseline_state_run_id": os.environ["RECOVERY_STATE_RUN_ID"],
               "selected_sources": len(results),
-              "migration_complete": all(
-                  row["status"] == "collected"
-                  and row["chamber_section_recovery_v1"] is True
-                  and row["draft_review_status"] == "pending"
-                  for row in results
+              "drain_status": drain.get("stop_reason"),
+              "second_pass": {
+                  "queued": second_pass.get("queued"),
+                  "skipped_collected": second_pass.get("skipped_collected"),
+                  "failed": second_pass.get("failed"),
+              },
+              "migration_complete": (
+                  drain.get("backlog_drained") is True
+                  and second_pass.get("queued") == 0
+                  and second_pass.get("failed") == 0
+                  and second_pass.get("skipped_collected") == len(results)
+                  and all(
+                      row["status"] == "collected"
+                      and row["chamber_section_recovery_v1"] is True
+                      and row["reprocess_count"] == 1
+                      and row["attempts"] == row["expected_attempts"]
+                      and row["draft_review_status"] == "pending"
+                      for row in results
+                  )
               ),
               "sources": results,
               "semantics": "Non-canonical migration evidence; drafts remain pending human review.",
