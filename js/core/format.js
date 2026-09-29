@@ -55,7 +55,7 @@ export function registrationStatusText(value) {
 
 // Só o que foge do "deferido" precisa de aviso na lista: é a exceção que muda
 // o que a pessoa faz na urna (renúncia, indeferimento, julgamento pendente).
-// Deferido é o estado comum e não ganha selo — nada aqui é nota de qualidade.
+// Deferido é o estado comum e não recebe marcação — nada aqui é nota de qualidade.
 export function registrationStatusException(value) {
   const text = registrationStatusText(value);
   return text && text !== "Deferido" ? text : null;
