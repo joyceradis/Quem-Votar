@@ -81,16 +81,50 @@ test.describe("Comparar", () => {
     await expect(page.locator(".compare-empty")).toBeVisible();
   });
 
+  test("comparação mostra a situação da candidatura como o TSE informa, sem ordenar nem destacar", async ({ page }) => {
+    const ids = federais.slice(0, 2).map((c) => c.tse_id);
+    await page.route("**/data/generated/candidates-federal.json**", async (route) => {
+      const response = await route.fetch();
+      const body = await response.json();
+      const a = body.findIndex((c) => String(c.tse_id) === String(ids[0]));
+      const b = body.findIndex((c) => String(c.tse_id) === String(ids[1]));
+      body[a] = { ...body[a], registration_status: "RENÚNCIA" };
+      body[b] = { ...body[b], registration_status: "DEFERIDO" };
+      await route.fulfill({ response, json: body });
+    });
+    await page.goto(`comparar.html?ids=${ids.join(",")}`);
+    const grid = page.locator(".comparison-grid");
+    await expect(grid).toBeVisible();
+    await expect(grid).toContainText("Situação da candidatura");
+    await expect(grid).toContainText("Renúncia");
+    await expect(grid).toContainText("Deferido");
+  });
+
   // #193: candidatura sem fonte para bens/redes/histórico (enrichment_gaps)
   // não pode aparecer como "nenhum"/"zero" — isso seria ausência virando
   // zero, proibido pelo AGENTS.md §2/§5. Usa Governador porque, neste
   // ciclo, as rotas TSE de enriquecimento retornaram 403 e nenhum bootstrap
   // cobre esse cargo ainda: é o caso real, não um mock.
   test("candidatura sem fonte de enriquecimento mostra 'não disponível', nunca zero", async ({ page }) => {
-    const comGap = governadores.filter((c) => (c.enrichment_gaps || []).length >= 3);
-    if (comGap.length < 2) test.skip();
-
-    const ids = comGap.slice(0, 2).map((c) => c.tse_id);
+    // Sem lacuna real (16/16 majoritários cobertos), simula duas por
+    // interceptação: a regra continua precisando de teste.
+    if (governadores.length < 2) test.skip();
+    const ids = governadores.slice(0, 2).map((c) => c.tse_id);
+    await page.route("**/data/generated/candidates-governador.json**", async (route) => {
+      const response = await route.fetch();
+      const body = await response.json();
+      for (const id of ids) {
+        const i = body.findIndex((c) => String(c.tse_id) === String(id));
+        body[i] = {
+          ...body[i],
+          assets: { total_declared_brl: null, count: 0, items: [], source: null },
+          social_links: [],
+          previous_elections: [],
+          enrichment_gaps: ["assets", "social_links", "previous_elections"],
+        };
+      }
+      await route.fulfill({ response, json: body });
+    });
     await page.goto(`comparar.html?ids=${ids.join(",")}`);
     await expect(page.locator(".comparison-grid")).toBeVisible();
 

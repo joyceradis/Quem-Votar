@@ -195,6 +195,15 @@
   font-weight: 600;
 }
 
+/* Situação da candidatura quando foge do "deferido" (renúncia, indeferimento,
+   julgamento pendente). Só texto, em tinta escura: informa, não sinaliza. */
+.qv-card-status {
+  margin: 6px 0 0;
+  color: var(--ink);
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
 .qv-card-now,
 .qv-card-occupation,
 .qv-card-meta {
