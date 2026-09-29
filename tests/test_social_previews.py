@@ -22,7 +22,12 @@ def candidate(cid: str, kind: str = "federal") -> dict:
         "ballot_name": "MARIA & TESTE",
         "full_name": "MARIA DE TESTE",
         "number": 1234,
-        "office": "DEPUTADO FEDERAL" if kind == "federal" else "DEPUTADO ESTADUAL",
+        "office": {
+            "federal": "DEPUTADO FEDERAL",
+            "estadual": "DEPUTADO ESTADUAL",
+            "governador": "GOVERNADOR",
+            "senador": "SENADOR",
+        }[kind],
         "party": "ABC",
         "photo_url": f"https://example.org/{cid}.jpg",
         "_kind": kind,
@@ -124,6 +129,53 @@ class StaticSocialPreviewTests(unittest.TestCase):
             self.assertTrue((out / "80000000001" / "index.html").exists())
             self.assertTrue((out / "80000000002" / "index.html").exists())
             self.assertTrue((out / "manifest.json").exists())
+
+    def test_four_offices_redirect_with_their_own_cargo(self) -> None:
+        for index, kind in enumerate(("federal", "estadual", "governador", "senador")):
+            cid = f"8000000010{index}"
+            html = previews.render_preview(candidate(cid, kind))
+            self.assertIn(f"candidato.html?id={cid}&amp;cargo={kind}", html)
+        self.assertIn("Governador", previews.render_preview(candidate("80000000110", "governador")))
+        self.assertIn("Senador", previews.render_preview(candidate("80000000111", "senador")))
+
+    def test_unknown_kind_fails_closed(self) -> None:
+        row = candidate("80000000120", "federal")
+        row["_kind"] = "prefeito"
+        with self.assertRaisesRegex(RuntimeError, "cargo/kind inválido"):
+            previews.render_preview(row)
+
+    def test_sitemap_is_deterministic_and_covers_every_candidate(self) -> None:
+        rows = [
+            candidate("80000000132", "senador"),
+            candidate("80000000131", "governador"),
+            candidate("80000000130", "federal"),
+            candidate("80000000133", "estadual"),
+        ]
+        first = previews.render_sitemap(rows, lastmod="2026-09-27")
+        second = previews.render_sitemap(list(reversed(rows)), lastmod="2026-09-27")
+        self.assertEqual(first, second)
+        self.assertEqual(len(previews.STATIC_ROUTES) + 4, first.count("<url>"))
+        for kind, cid in (
+            ("federal", "80000000130"),
+            ("governador", "80000000131"),
+            ("senador", "80000000132"),
+            ("estadual", "80000000133"),
+        ):
+            self.assertIn(f"candidato.html?id={cid}&amp;cargo={kind}", first)
+        self.assertLess(
+            first.index("80000000130"), first.index("80000000133")
+        )  # ordem do registry: federal antes de estadual
+        self.assertIn("<lastmod>2026-09-27</lastmod>", first)
+        self.assertNotIn("2026-09-21", first)
+
+    def test_snapshot_date_rejects_missing_collection_date(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            meta = Path(tmp) / "meta.json"
+            meta.write_text("{}", encoding="utf-8")
+            with self.assertRaisesRegex(RuntimeError, "collected_at"):
+                previews.snapshot_date(meta)
+            meta.write_text('{"collected_at": "2026-09-27T13:42:29+00:00"}', encoding="utf-8")
+            self.assertEqual("2026-09-27", previews.snapshot_date(meta))
 
     def test_invalid_candidate_identity_fails_closed(self) -> None:
         bad = candidate("not-an-sq")
