@@ -59,7 +59,9 @@ jobs:
                       )
 
           for path, needle in (
+              ("js/core/format.js", "safeDecode"),
               ("js/core/format.js", "registrationStatusText"),
+              ("sobre.html", "O que não é publicado?"),
               ("js/pages/candidates.js", "qv-card-status"),
               ("js/pages/profile.js", "Situação da candidatura"),
               ("js/pages/compare.js", "registrationStatusText"),
