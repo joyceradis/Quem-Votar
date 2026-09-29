@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "updated_at": "2026-09-29",
+  "updated_at": "2026-09-29T23:09:11.207290+00:00",
   "authorization_issue": 161,
   "status": "staging_only",
   "semantics": "Primeira extração normalizada para estabelecer cobertura documental de Governador e Senador no ES 2026. Cada registro abaixo é um rascunho pendente, não exibido na UI e não promovido ao canônico. A presença, ordem ou tema escolhido nesta primeira passada não representa prioridade da candidatura nem seleção editorial de mérito.",
@@ -16,12 +16,26 @@
       "evidence_type": "proposta",
       "statement": "Propõe construir um novo presídio de segurança máxima, inspirado no modelo CECOT, destinado a integrantes de facções criminosas.",
       "source_id": "gov-breno-tse-plan",
-      "source_locator": "Programa de governo, seção Segurança Pública; PDF de leitura, índice de página 0-based 11.",
+      "source_locator": "Pacote oficial TSE: ES/2026ES80002541012_01.pdf; páginas físicas 12.",
       "attribution_basis": "Proposta registrada no documento de governo atribuído à candidatura no recurso oficial do TSE.",
       "scope": "estadual",
       "verification_status": "not_integrated",
       "review_status": "pending",
-      "promotion_status": "not_promoted"
+      "promotion_status": "not_promoted",
+      "captured_draft_id": "1a5912f6cc931e296eec",
+      "support_text": "Propomos, pois, a construção de um novo presídio de segurança máxima, inspirado no modelo do CECOT (El Salvador), destinado a membros de facções criminosas.",
+      "source_origin": {
+        "institution": "TSE",
+        "resource_url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026/resource/c1df9a86-90df-4f1f-a604-a0b55a1ffcae",
+        "download_url": "https://cdn.tse.jus.br/estatistica/sead/odsele/proposta_governo/proposta_governo_2026_ES.zip",
+        "package_sha256": "577af6305bee4ef07f517cb3ab02ac338ccd05e865e25f7263021cf1db46a6dc",
+        "member_path": "ES/2026ES80002541012_01.pdf",
+        "document_sha256": "aa288d9a332f2e7aeec90ceab6b82b80c07cf288011ae59b3f1607aa2cbff972",
+        "physical_pages": [
+          12
+        ],
+        "captured_at": "2026-09-29T23:09:11.207290+00:00"
+      }
     },
     {
       "draft_id": "issue161-gov-helder-infraestrutura-01",
@@ -32,12 +46,27 @@
       "evidence_type": "proposta",
       "statement": "Propõe realizar estudos técnicos sobre fontes extratarifárias de financiamento do transporte coletivo e avaliar a viabilidade da Tarifa Zero, além de instituir programa estadual de transição energética no transporte público.",
       "source_id": "gov-helder-tse-plan",
-      "source_locator": "Programa de governo, seção de mobilidade/transporte; PDF de leitura, índice de página 0-based 31.",
+      "source_locator": "Pacote oficial TSE: ES/2026ES80002551833_01.pdf; páginas físicas 31, 32.",
       "attribution_basis": "Proposta registrada no documento de governo atribuído à candidatura no recurso oficial do TSE.",
       "scope": "estadual",
       "verification_status": "not_integrated",
       "review_status": "pending",
-      "promotion_status": "not_promoted"
+      "promotion_status": "not_promoted",
+      "captured_draft_id": "dec8877ea0fbded39de2",
+      "support_text": "Realizar estudos técnicos para constituir fontes extra tarifárias de financiamento do transporte coletivo, em conformidade com o novo marco legal (Lei 15.432/2026) avaliando a viabilidade da implantação da Tarifa Zero, alinhados aos estudos em curso no âmbito do Governo Federal e o Ministério Público de Contas (MPContas) do Espírito Santo. 䬌 Instituir o Programa Capixaba de Transição Energética no Transporte Público com o objetivo de corrigir a rota da transição do transporte no Espírito Santo, que fortalece o individual e o privado sem a consolidação de uma estratégia pública de transição no transporte coletivo. 䬌",
+      "source_origin": {
+        "institution": "TSE",
+        "resource_url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026/resource/c1df9a86-90df-4f1f-a604-a0b55a1ffcae",
+        "download_url": "https://cdn.tse.jus.br/estatistica/sead/odsele/proposta_governo/proposta_governo_2026_ES.zip",
+        "package_sha256": "577af6305bee4ef07f517cb3ab02ac338ccd05e865e25f7263021cf1db46a6dc",
+        "member_path": "ES/2026ES80002551833_01.pdf",
+        "document_sha256": "d25cb154f8de6276c82f504c81ca3b0ec7f6925625a53788ba1bf77c4d628989",
+        "physical_pages": [
+          31,
+          32
+        ],
+        "captured_at": "2026-09-29T23:09:11.207290+00:00"
+      }
     },
     {
       "draft_id": "issue161-gov-lorenzo-educacao-01",
@@ -48,12 +77,26 @@
       "evidence_type": "proposta",
       "statement": "Propõe apoiar técnica, pedagógica e financeiramente os municípios para garantir alfabetização até o fim do 2º ano e ampliar creches e pré-escola para famílias em maior vulnerabilidade.",
       "source_id": "gov-lorenzo-tse-plan",
-      "source_locator": "Programa de governo, eixo Educação; PDF de leitura, índice de página 0-based 13.",
+      "source_locator": "Pacote oficial TSE: ES/2026ES80002552682_01.pdf; páginas físicas 14.",
       "attribution_basis": "Proposta registrada no documento de governo atribuído à candidatura no recurso oficial do TSE.",
       "scope": "estadual",
       "verification_status": "not_integrated",
       "review_status": "pending",
-      "promotion_status": "not_promoted"
+      "promotion_status": "not_promoted",
+      "captured_draft_id": "260e6365beb23b4090d0",
+      "support_text": "Faremos da alfabetização uma prioridade permanente da política educacional estadual, em colaboração com os municípios, fortalecendo o regime de colaboração para garantir a alfabetização e a aprendizagem com qualidade até o ﬁnal do 2º ano do Ensino Fundamental, envolvendo suporte ao professor (avaliação da aprendizagem, materiais, jogos pedagógicos e formação continuada) e às equipes gestoras para a aprendizagem; apoio técnico-ﬁnanceiro e formação de alfabetizadores para os municípios; apoio aos municípios para ampliação da oferta de creche e pré-escola com foco nas famílias mais vulneráveis.",
+      "source_origin": {
+        "institution": "TSE",
+        "resource_url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026/resource/c1df9a86-90df-4f1f-a604-a0b55a1ffcae",
+        "download_url": "https://cdn.tse.jus.br/estatistica/sead/odsele/proposta_governo/proposta_governo_2026_ES.zip",
+        "package_sha256": "577af6305bee4ef07f517cb3ab02ac338ccd05e865e25f7263021cf1db46a6dc",
+        "member_path": "ES/2026ES80002552682_01.pdf",
+        "document_sha256": "c1e92e41340af2f42a7d4d1945ca88a1664f5d603f21c91116b34381b78965d4",
+        "physical_pages": [
+          14
+        ],
+        "captured_at": "2026-09-29T23:09:11.207290+00:00"
+      }
     },
     {
       "draft_id": "issue161-gov-rafael-economia-01",
@@ -64,12 +107,26 @@
       "evidence_type": "proposta",
       "statement": "Propõe criar um salário mínimo capixaba de R$ 3.242.",
       "source_id": "gov-rafael-tse-plan",
-      "source_locator": "Programa de governo, seção de trabalho e renda; PDF de leitura, índice de página 0-based 8.",
+      "source_locator": "Pacote oficial TSE: ES/2026ES80002550832_01.pdf; páginas físicas 9.",
       "attribution_basis": "Proposta registrada no documento de governo atribuído à candidatura no recurso oficial do TSE.",
       "scope": "estadual",
       "verification_status": "not_integrated",
       "review_status": "pending",
-      "promotion_status": "not_promoted"
+      "promotion_status": "not_promoted",
+      "captured_draft_id": "a2dad26703a039436e9c",
+      "support_text": "Criação do salário-mínimo capixaba de R$ 3.242,00.",
+      "source_origin": {
+        "institution": "TSE",
+        "resource_url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026/resource/c1df9a86-90df-4f1f-a604-a0b55a1ffcae",
+        "download_url": "https://cdn.tse.jus.br/estatistica/sead/odsele/proposta_governo/proposta_governo_2026_ES.zip",
+        "package_sha256": "577af6305bee4ef07f517cb3ab02ac338ccd05e865e25f7263021cf1db46a6dc",
+        "member_path": "ES/2026ES80002550832_01.pdf",
+        "document_sha256": "fdb7dcc3ff7e430894465a9b1e4a68e16442552da4682f7c796b44229a3e0aef",
+        "physical_pages": [
+          9
+        ],
+        "captured_at": "2026-09-29T23:09:11.207290+00:00"
+      }
     },
     {
       "draft_id": "issue161-gov-ricardo-saude-01",
@@ -78,14 +135,28 @@
       "office": "GOVERNADOR",
       "topic_id": "saude",
       "evidence_type": "proposta",
-      "statement": "Propõe implantar o Minha Saúde ES, com prontuário eletrônico integrado, inteligência artificial aplicada à gestão e ao diagnóstico, telessaúde, regulação inteligente e plataformas digitais de acompanhamento ao cidadão.",
+      "statement": "Propõe implantar o Minha Saúde ES, com prontuário eletrônico integrado, inteligência artificial aplicada à gestão e ao apoio diagnóstico, ampliação da telessaúde, centros inteligentes de regulação e plataformas digitais de acompanhamento ao cidadão.",
       "source_id": "gov-ricardo-tse-plan",
-      "source_locator": "Programa de governo, eixo Saúde; PDF de leitura, índice de página 0-based 25.",
+      "source_locator": "Pacote oficial TSE: ES/2026ES80002552172_01.pdf; páginas físicas 26.",
       "attribution_basis": "Proposta registrada no documento de governo atribuído à candidatura no recurso oficial do TSE.",
       "scope": "estadual",
       "verification_status": "not_integrated",
       "review_status": "pending",
-      "promotion_status": "not_promoted"
+      "promotion_status": "not_promoted",
+      "captured_draft_id": "4434c40814ac0b309d19",
+      "support_text": "Implantaremos o programa Minha Saúde ES, com prontuário eletrônico integrado, inteligência artificial aplicada à gestão e ao apoio diagnóstico, ampliação da telessaúde, centros inteligentes de regulação e plataformas digitais para acompanhamento do cidadão.",
+      "source_origin": {
+        "institution": "TSE",
+        "resource_url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026/resource/c1df9a86-90df-4f1f-a604-a0b55a1ffcae",
+        "download_url": "https://cdn.tse.jus.br/estatistica/sead/odsele/proposta_governo/proposta_governo_2026_ES.zip",
+        "package_sha256": "577af6305bee4ef07f517cb3ab02ac338ccd05e865e25f7263021cf1db46a6dc",
+        "member_path": "ES/2026ES80002552172_01.pdf",
+        "document_sha256": "5b1bf276f82a0f7b410e0506ffef4577770673d4f7736d456583b5b81c652cc3",
+        "physical_pages": [
+          26
+        ],
+        "captured_at": "2026-09-29T23:09:11.207290+00:00"
+      }
     },
     {
       "draft_id": "issue161-sen-callegari-economia-01",

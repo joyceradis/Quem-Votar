@@ -1,0 +1,178 @@
+{
+  "version": "1.0.0",
+  "updated_at": "2026-09-29T23:09:11.207290+00:00",
+  "authorization_issue": 2,
+  "related_issue": 161,
+  "status": "pending_independent_review_and_human_approval",
+  "semantics": "Proposta concreta de publicação de cinco registros Q2, a partir de PDFs obtidos diretamente do TSE. Este arquivo não é consumido pela UI e não constitui aprovação ou promoção canônica. Cada registro é um trecho do programa, não sua síntese.",
+  "package_url": "https://cdn.tse.jus.br/estatistica/sead/odsele/proposta_governo/proposta_governo_2026_ES.zip",
+  "package_sha256": "577af6305bee4ef07f517cb3ab02ac338ccd05e865e25f7263021cf1db46a6dc",
+  "entries": [
+    {
+      "draft_id": "1a5912f6cc931e296eec",
+      "candidate_name": "BRENO BARCELOS",
+      "review_status": "pending",
+      "support_text": "Propomos, pois, a construção de um novo presídio de segurança máxima, inspirado no modelo do CECOT (El Salvador), destinado a membros de facções criminosas.",
+      "attribution_basis": "SQ_CANDIDATO no nome do PDF do pacote oficial TSE ES 2026; proposta explicitamente descrita no trecho citado.",
+      "source_origin": {
+        "institution": "TSE",
+        "resource_url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026/resource/c1df9a86-90df-4f1f-a604-a0b55a1ffcae",
+        "download_url": "https://cdn.tse.jus.br/estatistica/sead/odsele/proposta_governo/proposta_governo_2026_ES.zip",
+        "package_sha256": "577af6305bee4ef07f517cb3ab02ac338ccd05e865e25f7263021cf1db46a6dc",
+        "member_path": "ES/2026ES80002541012_01.pdf",
+        "document_sha256": "aa288d9a332f2e7aeec90ceab6b82b80c07cf288011ae59b3f1607aa2cbff972",
+        "physical_pages": [
+          12
+        ],
+        "captured_at": "2026-09-29T23:09:11.207290+00:00"
+      },
+      "proposed_entry": {
+        "candidate_id": "80002541012",
+        "topic_id": "seguranca",
+        "evidence_type": "proposta",
+        "statement": "Propõe construir um novo presídio de segurança máxima, inspirado no modelo CECOT, destinado a integrantes de facções criminosas.",
+        "quote_or_summary": "",
+        "source_url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026/resource/c1df9a86-90df-4f1f-a604-a0b55a1ffcae",
+        "source_title": "Plano de governo — BRENO BARCELOS — TSE ES 2026, páginas físicas 12",
+        "source_publisher": "Tribunal Superior Eleitoral",
+        "published_at": null,
+        "captured_at": "2026-09-29T23:09:11.207290+00:00",
+        "scope": "estadual",
+        "verification_status": "verified"
+      }
+    },
+    {
+      "draft_id": "dec8877ea0fbded39de2",
+      "candidate_name": "HELDER SALOMÃO",
+      "review_status": "pending",
+      "support_text": "Realizar estudos técnicos para constituir fontes extra tarifárias de financiamento do transporte coletivo, em conformidade com o novo marco legal (Lei 15.432/2026) avaliando a viabilidade da implantação da Tarifa Zero, alinhados aos estudos em curso no âmbito do Governo Federal e o Ministério Público de Contas (MPContas) do Espírito Santo. 䬌 Instituir o Programa Capixaba de Transição Energética no Transporte Público com o objetivo de corrigir a rota da transição do transporte no Espírito Santo, que fortalece o individual e o privado sem a consolidação de uma estratégia pública de transição no transporte coletivo. 䬌",
+      "attribution_basis": "SQ_CANDIDATO no nome do PDF do pacote oficial TSE ES 2026; proposta explicitamente descrita no trecho citado.",
+      "source_origin": {
+        "institution": "TSE",
+        "resource_url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026/resource/c1df9a86-90df-4f1f-a604-a0b55a1ffcae",
+        "download_url": "https://cdn.tse.jus.br/estatistica/sead/odsele/proposta_governo/proposta_governo_2026_ES.zip",
+        "package_sha256": "577af6305bee4ef07f517cb3ab02ac338ccd05e865e25f7263021cf1db46a6dc",
+        "member_path": "ES/2026ES80002551833_01.pdf",
+        "document_sha256": "d25cb154f8de6276c82f504c81ca3b0ec7f6925625a53788ba1bf77c4d628989",
+        "physical_pages": [
+          31,
+          32
+        ],
+        "captured_at": "2026-09-29T23:09:11.207290+00:00"
+      },
+      "proposed_entry": {
+        "candidate_id": "80002551833",
+        "topic_id": "infraestrutura",
+        "evidence_type": "proposta",
+        "statement": "Propõe realizar estudos técnicos sobre fontes extratarifárias de financiamento do transporte coletivo e avaliar a viabilidade da Tarifa Zero, além de instituir programa estadual de transição energética no transporte público.",
+        "quote_or_summary": "",
+        "source_url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026/resource/c1df9a86-90df-4f1f-a604-a0b55a1ffcae",
+        "source_title": "Plano de governo — HELDER SALOMÃO — TSE ES 2026, páginas físicas 31, 32",
+        "source_publisher": "Tribunal Superior Eleitoral",
+        "published_at": null,
+        "captured_at": "2026-09-29T23:09:11.207290+00:00",
+        "scope": "estadual",
+        "verification_status": "verified"
+      }
+    },
+    {
+      "draft_id": "260e6365beb23b4090d0",
+      "candidate_name": "LORENZO PAZOLINI",
+      "review_status": "pending",
+      "support_text": "Faremos da alfabetização uma prioridade permanente da política educacional estadual, em colaboração com os municípios, fortalecendo o regime de colaboração para garantir a alfabetização e a aprendizagem com qualidade até o ﬁnal do 2º ano do Ensino Fundamental, envolvendo suporte ao professor (avaliação da aprendizagem, materiais, jogos pedagógicos e formação continuada) e às equipes gestoras para a aprendizagem; apoio técnico-ﬁnanceiro e formação de alfabetizadores para os municípios; apoio aos municípios para ampliação da oferta de creche e pré-escola com foco nas famílias mais vulneráveis.",
+      "attribution_basis": "SQ_CANDIDATO no nome do PDF do pacote oficial TSE ES 2026; proposta explicitamente descrita no trecho citado.",
+      "source_origin": {
+        "institution": "TSE",
+        "resource_url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026/resource/c1df9a86-90df-4f1f-a604-a0b55a1ffcae",
+        "download_url": "https://cdn.tse.jus.br/estatistica/sead/odsele/proposta_governo/proposta_governo_2026_ES.zip",
+        "package_sha256": "577af6305bee4ef07f517cb3ab02ac338ccd05e865e25f7263021cf1db46a6dc",
+        "member_path": "ES/2026ES80002552682_01.pdf",
+        "document_sha256": "c1e92e41340af2f42a7d4d1945ca88a1664f5d603f21c91116b34381b78965d4",
+        "physical_pages": [
+          14
+        ],
+        "captured_at": "2026-09-29T23:09:11.207290+00:00"
+      },
+      "proposed_entry": {
+        "candidate_id": "80002552682",
+        "topic_id": "educacao",
+        "evidence_type": "proposta",
+        "statement": "Propõe apoiar técnica, pedagógica e financeiramente os municípios para garantir alfabetização até o fim do 2º ano e ampliar creches e pré-escola para famílias em maior vulnerabilidade.",
+        "quote_or_summary": "",
+        "source_url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026/resource/c1df9a86-90df-4f1f-a604-a0b55a1ffcae",
+        "source_title": "Plano de governo — LORENZO PAZOLINI — TSE ES 2026, páginas físicas 14",
+        "source_publisher": "Tribunal Superior Eleitoral",
+        "published_at": null,
+        "captured_at": "2026-09-29T23:09:11.207290+00:00",
+        "scope": "estadual",
+        "verification_status": "verified"
+      }
+    },
+    {
+      "draft_id": "a2dad26703a039436e9c",
+      "candidate_name": "RAFAEL DEMUNER",
+      "review_status": "pending",
+      "support_text": "Criação do salário-mínimo capixaba de R$ 3.242,00.",
+      "attribution_basis": "SQ_CANDIDATO no nome do PDF do pacote oficial TSE ES 2026; proposta explicitamente descrita no trecho citado.",
+      "source_origin": {
+        "institution": "TSE",
+        "resource_url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026/resource/c1df9a86-90df-4f1f-a604-a0b55a1ffcae",
+        "download_url": "https://cdn.tse.jus.br/estatistica/sead/odsele/proposta_governo/proposta_governo_2026_ES.zip",
+        "package_sha256": "577af6305bee4ef07f517cb3ab02ac338ccd05e865e25f7263021cf1db46a6dc",
+        "member_path": "ES/2026ES80002550832_01.pdf",
+        "document_sha256": "fdb7dcc3ff7e430894465a9b1e4a68e16442552da4682f7c796b44229a3e0aef",
+        "physical_pages": [
+          9
+        ],
+        "captured_at": "2026-09-29T23:09:11.207290+00:00"
+      },
+      "proposed_entry": {
+        "candidate_id": "80002550832",
+        "topic_id": "economia",
+        "evidence_type": "proposta",
+        "statement": "Propõe criar um salário mínimo capixaba de R$ 3.242.",
+        "quote_or_summary": "",
+        "source_url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026/resource/c1df9a86-90df-4f1f-a604-a0b55a1ffcae",
+        "source_title": "Plano de governo — RAFAEL DEMUNER — TSE ES 2026, páginas físicas 9",
+        "source_publisher": "Tribunal Superior Eleitoral",
+        "published_at": null,
+        "captured_at": "2026-09-29T23:09:11.207290+00:00",
+        "scope": "estadual",
+        "verification_status": "verified"
+      }
+    },
+    {
+      "draft_id": "4434c40814ac0b309d19",
+      "candidate_name": "RICARDO FERRAÇO",
+      "review_status": "pending",
+      "support_text": "Implantaremos o programa Minha Saúde ES, com prontuário eletrônico integrado, inteligência artificial aplicada à gestão e ao apoio diagnóstico, ampliação da telessaúde, centros inteligentes de regulação e plataformas digitais para acompanhamento do cidadão.",
+      "attribution_basis": "SQ_CANDIDATO no nome do PDF do pacote oficial TSE ES 2026; proposta explicitamente descrita no trecho citado.",
+      "source_origin": {
+        "institution": "TSE",
+        "resource_url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026/resource/c1df9a86-90df-4f1f-a604-a0b55a1ffcae",
+        "download_url": "https://cdn.tse.jus.br/estatistica/sead/odsele/proposta_governo/proposta_governo_2026_ES.zip",
+        "package_sha256": "577af6305bee4ef07f517cb3ab02ac338ccd05e865e25f7263021cf1db46a6dc",
+        "member_path": "ES/2026ES80002552172_01.pdf",
+        "document_sha256": "5b1bf276f82a0f7b410e0506ffef4577770673d4f7736d456583b5b81c652cc3",
+        "physical_pages": [
+          26
+        ],
+        "captured_at": "2026-09-29T23:09:11.207290+00:00"
+      },
+      "proposed_entry": {
+        "candidate_id": "80002552172",
+        "topic_id": "saude",
+        "evidence_type": "proposta",
+        "statement": "Propõe implantar o Minha Saúde ES, com prontuário eletrônico integrado, inteligência artificial aplicada à gestão e ao apoio diagnóstico, ampliação da telessaúde, centros inteligentes de regulação e plataformas digitais de acompanhamento ao cidadão.",
+        "quote_or_summary": "",
+        "source_url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026/resource/c1df9a86-90df-4f1f-a604-a0b55a1ffcae",
+        "source_title": "Plano de governo — RICARDO FERRAÇO — TSE ES 2026, páginas físicas 26",
+        "source_publisher": "Tribunal Superior Eleitoral",
+        "published_at": null,
+        "captured_at": "2026-09-29T23:09:11.207290+00:00",
+        "scope": "estadual",
+        "verification_status": "verified"
+      }
+    }
+  ]
+}
