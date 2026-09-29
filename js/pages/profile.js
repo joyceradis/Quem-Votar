@@ -139,8 +139,8 @@ function renderProposes(prospective) {
   if (!prospective.length) {
     return `
       <div class="plain-empty">
-        <strong>Nenhuma proposta ou declaração documentada nesta base ainda.</strong>
-        <p>Sem registro não é o mesmo que sem proposta.</p>
+        <strong>Esta ficha ainda não tem proposta ou declaração documentada.</strong>
+        <p>Isso não significa que a candidatura não tenha propostas ou posições.</p>
       </div>`;
   }
   return `<div class="promise-list">${prospective
