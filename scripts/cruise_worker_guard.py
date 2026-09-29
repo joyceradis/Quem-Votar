@@ -12,6 +12,7 @@ import json
 import re
 from pathlib import Path
 from typing import Any
+from urllib.parse import parse_qs, urlparse
 
 
 def read_json(path: Path) -> dict[str, Any]:
@@ -37,6 +38,18 @@ def is_chamber_source(row: dict[str, Any]) -> bool:
 def proposition_id_from_url(url: str) -> str:
     match = re.search(r"[?&]idProposicao=(\d+)", url)
     return match.group(1) if match else ""
+
+
+def is_official_chamber_proposition_url(url: str) -> bool:
+    parsed = urlparse(url)
+    proposition_ids = parse_qs(parsed.query).get("idProposicao", [])
+    return (
+        parsed.scheme == "https"
+        and parsed.hostname == "www.camara.leg.br"
+        and parsed.path == "/proposicoesWeb/fichadetramitacao"
+        and len(proposition_ids) == 1
+        and proposition_ids[0].isdigit()
+    )
 
 
 def load_candidate_chamber_ids(
@@ -77,12 +90,17 @@ def build_report(
         and clean(row.get("discovery_status")) == "exact_content"
         and clean(row.get("source_url"))
     }
+    actionable_chamber_urls = current_chamber_urls | {
+        clean(failure.get("source_url"))
+        for failure in failures
+        if is_official_chamber_proposition_url(clean(failure.get("source_url")))
+    }
 
     incidents: list[dict[str, Any]] = []
 
     for failure in failures:
         url = clean(failure.get("source_url"))
-        if url and url in current_chamber_urls:
+        if url and url in actionable_chamber_urls:
             incidents.append(
                 {
                     "type": "institutional_reacquisition_failure",
