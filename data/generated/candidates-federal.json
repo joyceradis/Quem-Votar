@@ -715,14 +715,6 @@
         "result": "Não eleito"
       },
       {
-        "year": 2016,
-        "office": "Prefeito",
-        "party": "SD",
-        "uf": "ES",
-        "location": "Vitória",
-        "result": "2º turno"
-      },
-      {
         "year": 2014,
         "office": "Deputado Estadual",
         "party": "PPS",
@@ -2530,14 +2522,6 @@
         "uf": "ES",
         "location": "Espírito Santo",
         "result": "Não eleito"
-      },
-      {
-        "year": 2020,
-        "office": "Vice-prefeito",
-        "party": "REPUBLICANOS",
-        "uf": "ES",
-        "location": "Vitória",
-        "result": "2º turno"
       },
       {
         "year": 2020,
@@ -7210,14 +7194,6 @@
         "party": "PT",
         "uf": "ES",
         "location": "Vitória",
-        "result": "2º turno"
-      },
-      {
-        "year": 2020,
-        "office": "Vice-prefeito",
-        "party": "PT",
-        "uf": "ES",
-        "location": "Vitória",
         "result": "Não eleito"
       },
       {
@@ -7746,14 +7722,6 @@
         "party": "PT",
         "uf": "ES",
         "location": "Vitória",
-        "result": "2º turno"
-      },
-      {
-        "year": 2020,
-        "office": "Prefeito",
-        "party": "PT",
-        "uf": "ES",
-        "location": "Vitória",
         "result": "Não eleito"
       },
       {
@@ -7779,14 +7747,6 @@
         "uf": "ES",
         "location": "Vitória",
         "result": "Eleito"
-      },
-      {
-        "year": 2004,
-        "office": "Prefeito",
-        "party": "PT",
-        "uf": "ES",
-        "location": "Vitoria",
-        "result": "2º turno"
       },
       {
         "year": 2004,
@@ -9662,14 +9622,6 @@
         "result": "Não eleito"
       },
       {
-        "year": 2022,
-        "office": "Governador",
-        "party": "PL",
-        "uf": "ES",
-        "location": "Espírito Santo",
-        "result": "2º turno"
-      },
-      {
         "year": 2018,
         "office": "Governador",
         "party": "PSL",
@@ -10056,28 +10008,12 @@
         "result": "Não eleito"
       },
       {
-        "year": 2016,
-        "office": "Prefeito",
-        "party": "PMDB",
-        "uf": "ES",
-        "location": "Cariacica",
-        "result": "2º turno"
-      },
-      {
         "year": 2014,
         "office": "Deputado Estadual",
         "party": "PMDB",
         "uf": "ES",
         "location": "Espírito Santo",
         "result": "Eleito por QP"
-      },
-      {
-        "year": 2012,
-        "office": "Prefeito",
-        "party": "PMDB",
-        "uf": "ES",
-        "location": "Cariacica",
-        "result": "2º turno"
       },
       {
         "year": 2012,
@@ -11029,14 +10965,6 @@
         "party": "PSD",
         "uf": "ES",
         "location": "Vila Velha",
-        "result": "2º turno"
-      },
-      {
-        "year": 2016,
-        "office": "Prefeito",
-        "party": "PSD",
-        "uf": "ES",
-        "location": "Vila Velha",
         "result": "Não eleito"
       },
       {
@@ -11061,22 +10989,6 @@
         "uf": "ES",
         "location": "Vila Velha",
         "result": "Não eleito"
-      },
-      {
-        "year": 2012,
-        "office": "Prefeito",
-        "party": "PR",
-        "uf": "ES",
-        "location": "Vila Velha",
-        "result": "2º turno"
-      },
-      {
-        "year": 2008,
-        "office": "Prefeito",
-        "party": "PR",
-        "uf": "ES",
-        "location": "Vila Velha",
-        "result": "2º turno"
       },
       {
         "year": 2008,
@@ -14810,14 +14722,6 @@
         "party": "PDT",
         "uf": "ES",
         "location": "Serra",
-        "result": "2º turno"
-      },
-      {
-        "year": 2020,
-        "office": "Vice-prefeito",
-        "party": "PDT",
-        "uf": "ES",
-        "location": "Serra",
         "result": "Eleito"
       },
       {
@@ -15258,14 +15162,6 @@
         "uf": "ES",
         "location": "Espírito Santo",
         "result": "Eleito por média"
-      },
-      {
-        "year": 2020,
-        "office": "Vice-prefeito",
-        "party": "PODE",
-        "uf": "ES",
-        "location": "Vila Velha",
-        "result": "2º turno"
       },
       {
         "year": 2020,
