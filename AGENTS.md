@@ -202,6 +202,8 @@ O checkout do `Quem-Votar` e os recursos explicitamente autorizados para a taref
 
 **Fail-closed:** se conteúdo potencialmente clínico, pessoal, credencial ou de identidade/assinatura aparecer, não avançar naquele conteúdo. O agente pode continuar a tarefa legítima do repositório apenas se conseguir fazê-lo sem abrir, atravessar, capturar ou usar esse recurso. Se o próximo passo exigir acesso fora do working set, deve parar esse passo e solicitar autorização humana específica.
 
+**Conflito ou ambiguidade:** se uma tarefa legítima parecer contradizer estes limites, o agente não resolve o conflito por conta própria nem amplia permissões. Deve sinalizar o ponto exato e suspender somente o passo conflitante. O restante da lane pode continuar quando independente. A mantenedora decide produto; a avaliação de segurança pode ser encaminhada ao auditor/control plane antes de qualquer acesso excepcional.
+
 Quando suportado, usar sandbox/allowlist e menor privilégio de filesystem, tela e automação. Instrução textual é defesa adicional, não substitui isolamento técnico. Nenhum teste usa dado real de paciente.
 
 ## 10. Feature freeze e sustentabilidade
