@@ -75,7 +75,7 @@ Universo atual:
 - **11** para Senador;
 - **7** vínculos atuais com mandato federal na Câmara preservados;
 - **28** evidências institucionais ALES 2025 vinculadas;
-- **22** evidências temáticas canônicas em `data/reference/topic-evidence.json`.
+- **24** evidências temáticas canônicas em `data/reference/topic-evidence.json`.
 
 `SQ_CANDIDATO` permanece a chave eleitoral canônica.
 
