@@ -3,10 +3,12 @@ from __future__ import annotations
 
 import importlib.util
 import io
+import json
 import sys
 import unittest
 import zipfile
 from pathlib import Path
+from unittest.mock import patch
 
 MODULE_PATH = Path(__file__).resolve().parents[1] / "scripts" / "coletor_evidencias.py"
 SPEC = importlib.util.spec_from_file_location("coletor_evidencias", MODULE_PATH)
@@ -58,6 +60,24 @@ startxref
 
 
 class CollectorTests(unittest.TestCase):
+    def test_candidate_universe_includes_all_four_offices(self) -> None:
+        paths = (collector.FEDERAL_FILE, collector.ESTADUAL_FILE,
+                 collector.GOVERNADOR_FILE, collector.SENADOR_FILE)
+        snapshots = {path: [{"tse_id": str(index)}] for index, path in enumerate(paths, 1)}
+        with patch.object(collector, "read_json", side_effect=snapshots.__getitem__):
+            self.assertEqual({"1", "2", "3", "4"}, set(collector.load_candidates()))
+
+    def test_duplicate_id_across_majoritarian_and_legislative_snapshots_fails_closed(self) -> None:
+        with patch.object(collector, "read_json", return_value=[{"tse_id": "123"}]):
+            with self.assertRaisesRegex(RuntimeError, "duplicado"):
+                collector.load_candidates()
+
+    def test_evidence_topic_ids_come_from_policy_topics_not_legacy_occupations(self) -> None:
+        policy = MODULE_PATH.parents[1] / "data/reference/policy-topics.json"
+        expected = {item["id"].strip() for item in json.loads(policy.read_text())["topics"] if item.get("id")}
+        self.assertEqual(policy, collector.TOPICS_FILE)
+        self.assertEqual(expected, collector.load_topic_ids())
+
     def setUp(self) -> None:
         self.candidates = {
             "123": {
