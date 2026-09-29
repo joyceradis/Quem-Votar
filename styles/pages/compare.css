@@ -110,3 +110,67 @@
   color: var(--blue-strong);
   font-weight: 700;
 }
+
+/* Celular: sem rolagem lateral. Cada campo vira um bloco com o rótulo em cima
+   e um valor por candidato, sempre identificado pelo nome. Mesma ordem e mesmos
+   campos para todos; nenhuma coluna recebe destaque. */
+@media (max-width: 720px) {
+  .comparison-wrap {
+    overflow: visible;
+  }
+
+  .comparison-grid {
+    grid-template-columns: minmax(0, 1fr);
+    min-width: 0;
+  }
+
+  .comparison-grid > div {
+    border-right: 0;
+    padding: 12px 4px;
+  }
+
+  .comparison-grid > .row-label {
+    position: static;
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-bottom: 0;
+    border-radius: var(--radius-sm);
+    font-size: 0.74rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .compare-value {
+    display: grid;
+    gap: 2px;
+    font-size: 0.95rem;
+  }
+
+  .compare-value::before {
+    content: attr(data-who);
+    color: var(--muted);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .compare-person {
+    display: grid;
+    grid-template-columns: 84px minmax(0, 1fr);
+    gap: 2px 14px;
+    align-items: center;
+  }
+
+  .compare-person img,
+  .compare-person .profile-fallback {
+    grid-row: 1 / span 4;
+    width: 84px;
+    height: 100px;
+    border-radius: 16px;
+  }
+
+  .compare-person h2 {
+    margin: 0;
+  }
+}

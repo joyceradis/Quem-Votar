@@ -140,7 +140,10 @@ async function initCompare() {
 
   const linha = (label, renderer) =>
     `<div class="row-label">${esc(label)}</div>${selected
-      .map((candidate) => `<div class="compare-value">${esc(renderer(candidate))}</div>`)
+      .map(
+        (candidate) =>
+          `<div class="compare-value" data-who="${esc(candidate.ballot_name || candidate.full_name || "")}">${esc(renderer(candidate))}</div>`
+      )
       .join("")}`;
 
   mount.innerHTML = `
