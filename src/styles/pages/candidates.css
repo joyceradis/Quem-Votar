@@ -322,14 +322,6 @@
 }
 
 @media (max-width: 920px) {
-  .qv-page-intro {
-    grid-template-columns: 1fr;
-  }
-
-  .qv-page-snapshot {
-    text-align: left;
-  }
-
   .secondary-filters {
     grid-template-columns: 1fr 1fr;
   }
