@@ -1398,14 +1398,6 @@
         "result": "Eleito"
       },
       {
-        "year": 2022,
-        "office": "Governador",
-        "party": "PSB",
-        "uf": "ES",
-        "location": "Espírito Santo",
-        "result": "2º turno"
-      },
-      {
         "year": 2018,
         "office": "Governador",
         "party": "PSB",
@@ -1647,14 +1639,6 @@
         "uf": "ES",
         "location": "Vila Velha",
         "result": "Eleito"
-      },
-      {
-        "year": 2012,
-        "office": "Prefeito",
-        "party": "DEM",
-        "uf": "ES",
-        "location": "Vila Velha",
-        "result": "2º turno"
       },
       {
         "year": 2010,

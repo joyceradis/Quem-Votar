@@ -4583,14 +4583,6 @@
         "party": "REDE",
         "uf": "ES",
         "location": "Serra",
-        "result": "2º turno"
-      },
-      {
-        "year": 2016,
-        "office": "Prefeito",
-        "party": "REDE",
-        "uf": "ES",
-        "location": "Serra",
         "result": "Eleito"
       },
       {
@@ -7217,14 +7209,6 @@
         "uf": "ES",
         "location": "Cariacica",
         "result": "Não eleito"
-      },
-      {
-        "year": 2020,
-        "office": "Prefeito",
-        "party": "PT",
-        "uf": "ES",
-        "location": "Cariacica",
-        "result": "2º turno"
       },
       {
         "year": 2020,
@@ -13240,14 +13224,6 @@
         "party": "REDE",
         "uf": "ES",
         "location": "Serra",
-        "result": "2º turno"
-      },
-      {
-        "year": 2020,
-        "office": "Prefeito",
-        "party": "REDE",
-        "uf": "ES",
-        "location": "Serra",
         "result": "Não eleito"
       },
       {
@@ -16649,14 +16625,6 @@
         "uf": "ES",
         "location": "Vila Velha",
         "result": "Não eleito"
-      },
-      {
-        "year": 2008,
-        "office": "Prefeito",
-        "party": "PMDB",
-        "uf": "ES",
-        "location": "Vila Velha",
-        "result": "2º turno"
       },
       {
         "year": 2006,
@@ -23941,14 +23909,6 @@
         "party": "PSDB",
         "uf": "ES",
         "location": "Vitória",
-        "result": "2º turno"
-      },
-      {
-        "year": 2012,
-        "office": "Prefeito",
-        "party": "PSDB",
-        "uf": "ES",
-        "location": "Vitória",
         "result": "Não eleito"
       },
       {
@@ -28635,14 +28595,6 @@
         "party": "REPUBLICANOS",
         "uf": "ES",
         "location": "Serra",
-        "result": "2º turno"
-      },
-      {
-        "year": 2024,
-        "office": "Prefeito",
-        "party": "REPUBLICANOS",
-        "uf": "ES",
-        "location": "Serra",
         "result": "Não eleito"
       },
       {
@@ -29191,13 +29143,6 @@
         "uf": "ES",
         "location": "Espírito Santo",
         "result": "Suplente"
-      },
-      {
-        "year": 2014,
-        "office": "Deputado Estadual",
-        "party": "PRB",
-        "uf": "ES",
-        "location": "Espírito Santo"
       }
     ],
     "current_mandate": null,
@@ -33195,14 +33140,6 @@
         "uf": "ES",
         "location": "Vila Velha",
         "result": "Eleito"
-      },
-      {
-        "year": 2012,
-        "office": "Vice-prefeito",
-        "party": "DEM",
-        "uf": "ES",
-        "location": "Vila Velha",
-        "result": "2º turno"
       },
       {
         "year": 2010,
@@ -40983,14 +40920,6 @@
         "uf": "ES",
         "location": "Espírito Santo",
         "result": "Eleito por QP"
-      },
-      {
-        "year": 2016,
-        "office": "Vice-prefeito",
-        "party": "PSDB",
-        "uf": "ES",
-        "location": "Serra",
-        "result": "2º turno"
       },
       {
         "year": 2016,
