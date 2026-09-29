@@ -62,7 +62,7 @@ const normalizaOcupacao = (value) =>
     .toUpperCase();
 
 test.describe("Ficha do candidato", () => {
-  test("ordem normativa HOJE → PROPÕE → IMPACTO → HISTÓRICO → DADOS → FONTES", async ({ page }) => {
+  test("ordem normativa HOJE → PROPOSTAS → IMPACTO → HISTÓRICO → DADOS → FONTES", async ({ page }) => {
     await openProfile(page, fichaUrl(comEvidencia));
     await expect(page.locator("#faz-hoje")).toBeVisible();
 
@@ -77,9 +77,11 @@ test.describe("Ficha do candidato", () => {
     ]);
   });
 
-  test("PROPÕE só aceita proposta e declaração; atuação vai para histórico", async ({ page }) => {
+  test("propostas e declarações ficam distintas da atuação no histórico", async ({ page }) => {
     await openProfile(page, fichaUrl(comEvidencia));
     await expect(page.locator("#vai-fazer")).toBeVisible();
+    await expect(page.locator("#vai-fazer h2")).toHaveText("O que a candidatura propõe?");
+    await expect(page.locator("#vai-fazer")).toHaveClass(/answer-section--proposals/);
 
     const evidencias = comEvidencia.topic_evidence || [];
     const normaliza = (v) =>
@@ -93,7 +95,7 @@ test.describe("Ficha do candidato", () => {
     await expect(page.locator("#historico .public-records article")).toHaveCount(atuacoes.length);
   });
 
-  test("toda evidência em PROPÕE mostra tipo, fonte e link", async ({ page }) => {
+  test("toda proposta ou declaração documentada mostra tipo, fonte e link", async ({ page }) => {
     await openProfile(page, fichaUrl(comEvidencia));
     const itens = page.locator("#vai-fazer .promise-list article");
     const total = await itens.count();
