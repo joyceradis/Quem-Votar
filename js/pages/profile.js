@@ -647,9 +647,9 @@ async function initProfile() {
       <div><h2>O que essa pessoa faz hoje?</h2>${renderToday(institutional, currentActivityText, candidate.occupation, candidate.source?.official_portal)}</div>
     </section>
 
-    <section class="answer-section answer-section--proposals" id="vai-fazer">
-      <p class="section-number" aria-hidden="true">02</p>
-      <div><h2>O que a candidatura propõe?</h2>${renderProposes(prospective)}</div>
+    <section class="answer-section" id="vai-fazer">
+      <p class="section-number">02</p>
+      <div><h2>O que ela diz que vai fazer?</h2>${renderProposes(prospective)}</div>
     </section>
 
     <section class="answer-section impact-section" id="impacto">
