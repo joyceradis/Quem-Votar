@@ -49,6 +49,31 @@
         "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/governador.json"
       }
     },
+    "running_mate": {
+      "status": "linked",
+      "tse_id": "80002541013",
+      "ballot_name": "VICTOR OLIVEIRA",
+      "full_name": "VICTOR RICARDO DE OLIVEIRA",
+      "social_name": null,
+      "party": "MISSÃO",
+      "party_name": "PARTIDO MISSÃO",
+      "role": "VICE-GOVERNADOR",
+      "registration_status": "not_available",
+      "source": {
+        "institution": "TSE",
+        "type": "fonte primária",
+        "dataset": "Candidatos - 2026",
+        "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+        "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+        "transport": {
+          "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+          "mirror_repository": "herminiotorres/dossie-cidadao",
+          "mirror_path": "docs/data/tse/candidatos/ES/vice-governador.json",
+          "mirror_blob_sha": "97822c9d1e6b42cfd8d2e91e1d5ff61cd088f0a4",
+          "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/vice-governador.json"
+        }
+      }
+    },
     "enrichment_gaps": [
       "assets",
       "social_links",
@@ -104,6 +129,31 @@
         "mirror_path": "docs/data/tse/candidatos/ES/governador.json",
         "mirror_blob_sha": "f40aaa162593f39c27c50edcb6b3c0bbbb07cc66",
         "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/governador.json"
+      }
+    },
+    "running_mate": {
+      "status": "linked",
+      "tse_id": "80002551834",
+      "ballot_name": "PROFESSORA VALDIRENE",
+      "full_name": "VALDIRENE BERNADINO PIRES",
+      "social_name": null,
+      "party": "PT",
+      "party_name": "PARTIDO DOS TRABALHADORES",
+      "role": "VICE-GOVERNADOR",
+      "registration_status": "not_available",
+      "source": {
+        "institution": "TSE",
+        "type": "fonte primária",
+        "dataset": "Candidatos - 2026",
+        "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+        "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+        "transport": {
+          "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+          "mirror_repository": "herminiotorres/dossie-cidadao",
+          "mirror_path": "docs/data/tse/candidatos/ES/vice-governador.json",
+          "mirror_blob_sha": "97822c9d1e6b42cfd8d2e91e1d5ff61cd088f0a4",
+          "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/vice-governador.json"
+        }
       }
     },
     "enrichment_gaps": [
@@ -163,6 +213,31 @@
         "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/governador.json"
       }
     },
+    "running_mate": {
+      "status": "linked",
+      "tse_id": "80002553263",
+      "ballot_name": "ELIANE LEAL",
+      "full_name": "ELIANE LEAL VIEIRA",
+      "social_name": null,
+      "party": "PL",
+      "party_name": "PARTIDO LIBERAL",
+      "role": "VICE-GOVERNADOR",
+      "registration_status": "not_available",
+      "source": {
+        "institution": "TSE",
+        "type": "fonte primária",
+        "dataset": "Candidatos - 2026",
+        "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+        "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+        "transport": {
+          "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+          "mirror_repository": "herminiotorres/dossie-cidadao",
+          "mirror_path": "docs/data/tse/candidatos/ES/vice-governador.json",
+          "mirror_blob_sha": "97822c9d1e6b42cfd8d2e91e1d5ff61cd088f0a4",
+          "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/vice-governador.json"
+        }
+      }
+    },
     "enrichment_gaps": [
       "assets",
       "social_links",
@@ -220,6 +295,31 @@
         "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/governador.json"
       }
     },
+    "running_mate": {
+      "status": "linked",
+      "tse_id": "80002550833",
+      "ballot_name": "DIONARY SARMENTO",
+      "full_name": "DIONARY SARMENTO REGIS",
+      "social_name": null,
+      "party": "UP",
+      "party_name": "UNIDADE POPULAR",
+      "role": "VICE-GOVERNADOR",
+      "registration_status": "not_available",
+      "source": {
+        "institution": "TSE",
+        "type": "fonte primária",
+        "dataset": "Candidatos - 2026",
+        "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+        "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+        "transport": {
+          "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+          "mirror_repository": "herminiotorres/dossie-cidadao",
+          "mirror_path": "docs/data/tse/candidatos/ES/vice-governador.json",
+          "mirror_blob_sha": "97822c9d1e6b42cfd8d2e91e1d5ff61cd088f0a4",
+          "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/vice-governador.json"
+        }
+      }
+    },
     "enrichment_gaps": [
       "assets",
       "social_links",
@@ -275,6 +375,31 @@
         "mirror_path": "docs/data/tse/candidatos/ES/governador.json",
         "mirror_blob_sha": "f40aaa162593f39c27c50edcb6b3c0bbbb07cc66",
         "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/governador.json"
+      }
+    },
+    "running_mate": {
+      "status": "linked",
+      "tse_id": "80002552171",
+      "ballot_name": "CAMILLO NEVES",
+      "full_name": "CAMILLO AUGUSTO MARCHEZI DE OLIVEIRA NEVES",
+      "social_name": null,
+      "party": "PP",
+      "party_name": "PROGRESSISTAS",
+      "role": "VICE-GOVERNADOR",
+      "registration_status": "not_available",
+      "source": {
+        "institution": "TSE",
+        "type": "fonte primária",
+        "dataset": "Candidatos - 2026",
+        "url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026",
+        "official_portal": "https://divulgacandcontas.tse.jus.br/divulga/",
+        "transport": {
+          "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
+          "mirror_repository": "herminiotorres/dossie-cidadao",
+          "mirror_path": "docs/data/tse/candidatos/ES/vice-governador.json",
+          "mirror_blob_sha": "97822c9d1e6b42cfd8d2e91e1d5ff61cd088f0a4",
+          "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/vice-governador.json"
+        }
       }
     },
     "enrichment_gaps": [
