@@ -393,6 +393,26 @@ def _normalize_social_links(values):
     return normalized
 
 
+# Descrição de bem é texto livre do declarante: a fonte oficial traz CPF de
+# terceiros (cônjuge, vendedor do imóvel) e número de conta bancária. AGENTS.md
+# §5 proíbe publicar CPF e identificador técnico sem necessidade pública. Ao
+# eleitor importam o tipo, a descrição e o valor do bem — não a chave de uma
+# pessoa nem o número que dá acesso a uma conta. Tipo, descrição e valor ficam.
+_CPF_FORMATTED = re.compile(r"\b\d{3}\.\d{3}\.\d{3}-\d{2}\b")
+_CPF_AFTER_LABEL = re.compile(r"(\bCPF\b[^\d\n]{0,8})\d{11}\b", re.I)
+_BANK_ACCOUNT = re.compile(
+    r"(\b(?:conta|cc|c/c|c\.c\.)\s*:\s*)\d[\d.\-]{2,}\d", re.I
+)
+
+
+def _scrub_asset_description(value):
+    if not value:
+        return value
+    text = _CPF_FORMATTED.sub("[omitido]", str(value))
+    text = _CPF_AFTER_LABEL.sub(r"\1[omitido]", text)
+    return _BANK_ACCOUNT.sub(r"\1[omitida]", text)
+
+
 _PLACE_LOWERCASE_WORDS = frozenset({"de", "da", "do", "das", "dos", "e"})
 
 
@@ -910,6 +930,12 @@ def enrich_tse_open_data(groups):
         candidate["previous_elections"] = _normalize_history_records(
             candidate.get("previous_elections")
         )
+
+    # Vale para dado ao vivo, restaurado e de bootstrap: passa por aqui.
+    for candidate in candidates:
+        for item in (candidate.get("assets") or {}).get("items") or []:
+            if item.get("description"):
+                item["description"] = _scrub_asset_description(item["description"])
 
     counts = {
         "candidates_with_assets": sum(

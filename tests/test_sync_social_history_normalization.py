@@ -7,7 +7,9 @@ espelho de contingência. Dois efeitos só apareceram com o dado real:
 - a fonte oficial traz contatos diretos e convites de grupo como "rede social"
   (78 links de grupo de WhatsApp numa única candidatura), com telefone embutido
   em alguns — dado que AGENTS.md §5 proíbe publicar;
-- o CSV de histórico traz o município em NM_UE, e o registro perdia o "onde".
+- o CSV de histórico traz o município em NM_UE, e o registro perdia o "onde";
+- a descrição de bem é texto livre e traz CPF de terceiros e número de conta
+  bancária (AGENTS.md §5).
 """
 from __future__ import annotations
 
@@ -231,6 +233,131 @@ class HistoryLocationTests(unittest.TestCase):
 
         places = sorted(item["location"] for item in candidates[0]["previous_elections"])
         self.assertEqual(["Serra", "Vila Velha"], places)
+
+
+class AssetDescriptionPrivacyTests(unittest.TestCase):
+    def test_cpf_is_omitted_wherever_it_appears(self):
+        cases = {
+            "APARTAMENTO ADQUIRIDO JUNTAMENTE COM ANA TESTE, CPF NO 123.456.789-09 PELO VALOR DE R$ 270.000,00":
+                "APARTAMENTO ADQUIRIDO JUNTAMENTE COM ANA TESTE, CPF NO [omitido] PELO VALOR DE R$ 270.000,00",
+            "TERRENO FRAÇÃO - ADQUIRIDO DE CPF 123.456.789-09 E OUTROS EM 01/01/2020":
+                "TERRENO FRAÇÃO - ADQUIRIDO DE CPF [omitido] E OUTROS EM 01/01/2020",
+            "IMÓVEL, CPF Nº 12345678909": "IMÓVEL, CPF Nº [omitido]",
+            "cpf: 12345678909 (vendedor)": "cpf: [omitido] (vendedor)",
+        }
+        for raw, expected in cases.items():
+            self.assertEqual(expected, sync._scrub_asset_description(raw), raw)
+
+    def test_bank_account_number_is_omitted_but_bank_and_agency_stay(self):
+        self.assertEqual(
+            "BANCO: 104 AGÊNCIA: 1234 CONTA: [omitida]",
+            sync._scrub_asset_description("BANCO: 104 AGÊNCIA: 1234 CONTA: 12345-6"),
+        )
+        self.assertEqual(
+            "AG: 1234 CC: [omitida]. POUPANÇA INTEGRADA, SALDO EM 09/26.",
+            sync._scrub_asset_description("AG: 1234 CC: 12345678-9. POUPANÇA INTEGRADA, SALDO EM 09/26."),
+        )
+
+    def test_descriptions_without_identifiers_are_untouched(self):
+        for text in (
+            "CLÍNICA VETERINÁRIA EM GUARAPARI",
+            "AG: 1234 CC: CEF. SALDO EM 09/26.",  # conta sem número: nada a ocultar
+            "Saldo depositado em conta corrente na Caixa Econômica Federal (Agência 1234) em 01/01/2026.",
+            "17% DE PARTICIPAÇÃO NA EMPRESA X LTDA, CNPJ N. 12.345.678/0001-90",  # CNPJ é público
+            "VEÍCULO AUTOMOTOR TERRESTRE: TOYOTA CAMRY, ANO 2020",
+            "",
+            None,
+        ):
+            self.assertEqual(text, sync._scrub_asset_description(text), text)
+
+    def test_scrub_runs_over_live_and_restored_assets(self):
+        def candidate(cid):
+            return {
+                "tse_id": cid,
+                "ballot_name": "X",
+                "full_name": "X TESTE",
+                "social_name": None,
+                "registration_status": None,
+                "assets": {},
+                "social_links": [],
+                "previous_elections": [],
+                "tse_additional": {},
+            }
+
+        # Ao vivo: o CSV oficial traz CPF e conta na descrição.
+        live = [candidate("80000000010")]
+        datasets = {
+            sync.TSE_COMPLEMENT_ZIP: [{"SQ_CANDIDATO": "80000000010", "DS_SITUACAO_JULGAMENTO": "DEFERIDO"}],
+            sync.TSE_ASSETS_ZIP: [
+                {
+                    "SQ_CANDIDATO": "80000000010",
+                    "NR_ORDEM_BEM_CANDIDATO": "1",
+                    "DS_TIPO_BEM_CANDIDATO": "Apartamento",
+                    "DS_BEM_CANDIDATO": "ADQUIRIDO COM ANA, CPF NO 123.456.789-09",
+                    "VR_BEM_CANDIDATO": "270000,00",
+                },
+                {
+                    "SQ_CANDIDATO": "80000000010",
+                    "NR_ORDEM_BEM_CANDIDATO": "2",
+                    "DS_TIPO_BEM_CANDIDATO": "Poupança",
+                    "DS_BEM_CANDIDATO": "BANCO: 104 AGÊNCIA: 1234 CONTA: 12345-6",
+                    "VR_BEM_CANDIDATO": "1000,00",
+                },
+            ],
+            sync.TSE_SOCIAL_ZIP: [{"SQ_CANDIDATO": "80000000010", "DS_URL": "https://x.com/x"}],
+            sync.TSE_HISTORY_ZIP: [
+                {"SQ_CANDIDATO_ATUAL": "80000000010", "ANO_ELEICAO": "2022", "DS_CARGO": "Vereador", "SG_UF": "ES"}
+            ],
+        }
+
+        def fake_archive(url, preferred_suffix=None, timeout=90):
+            return datasets[url], {
+                "institution": "TSE",
+                "url": url,
+                "archive_member": preferred_suffix or "historico.csv",
+                "sha256": "c" * 64,
+                "generated_at": "29/09/2026 12:00:00",
+                "row_count": len(datasets[url]),
+                "status": "fresh",
+            }
+
+        with patch.object(sync, "read_tse_archive", side_effect=fake_archive), patch.object(
+            sync, "_previous_candidate_map", return_value={}
+        ), patch.object(sync, "_load_enrichment_bootstrap", return_value=({}, None)):
+            sync.enrich_tse_open_data([live])
+
+        items = live[0]["assets"]["items"]
+        self.assertEqual("ADQUIRIDO COM ANA, CPF NO [omitido]", items[0]["description"])
+        self.assertEqual("BANCO: 104 AGÊNCIA: 1234 CONTA: [omitida]", items[1]["description"])
+        # tipo e valor não mudam; o total declarado continua somando os dois bens
+        self.assertEqual("Apartamento", items[0]["type"])
+        self.assertEqual(270000.0, items[0]["value_brl"])
+        self.assertEqual(271000.0, live[0]["assets"]["total_declared_brl"])
+
+        # Sem fonte ao vivo: o valor restaurado do estado anterior também passa pelo scrub.
+        restored = [candidate("80000000011")]
+        previous = {
+            "80000000011": {
+                "tse_id": "80000000011",
+                "assets": {
+                    "total_declared_brl": 5.0,
+                    "count": 1,
+                    "items": [{"order": 1, "type": "Terreno", "description": "COMPRADO DE CPF 123.456.789-09", "value_brl": 5.0}],
+                    "source": {"institution": "TSE"},
+                },
+                "social_links": [],
+                "previous_elections": [],
+            }
+        }
+        with patch.object(sync, "read_tse_archive", side_effect=RuntimeError("HTTP 403")), patch.object(
+            sync, "_previous_candidate_map", return_value=previous
+        ), patch.object(sync, "_load_enrichment_bootstrap", return_value=({}, None)), patch.object(
+            sync, "read_existing_json", return_value={"normalizer_version": "4.0.0"}
+        ):
+            sync.enrich_tse_open_data([restored])
+        self.assertEqual(
+            "COMPRADO DE CPF [omitido]", restored[0]["assets"]["items"][0]["description"]
+        )
 
 
 if __name__ == "__main__":
