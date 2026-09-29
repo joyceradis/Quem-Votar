@@ -14,7 +14,25 @@ const semEvidencia = federais.find((c) => (c.topic_evidence || []).length === 0)
 
 const governadorPath = path.join(__dirname, "..", "data", "generated", "candidates-governador.json");
 const governadores = fs.existsSync(governadorPath) ? JSON.parse(fs.readFileSync(governadorPath, "utf8")) : [];
-const comGap = governadores.find((c) => (c.enrichment_gaps || []).length >= 3);
+// Governador que hoje não tem lacuna alguma (16/16 majoritários cobertos): a
+// regra "lacuna nunca vira zero" continua exigindo teste, então a lacuna é
+// simulada por interceptação de rede sobre este candidato.
+const alvoGap = governadores[0];
+const GAPS = ["assets", "social_links", "previous_elections"];
+const simulaGap = (page) =>
+  page.route("**/data/generated/candidates-governador.json**", async (route) => {
+    const response = await route.fetch();
+    const body = await response.json();
+    const i = body.findIndex((c) => String(c.tse_id) === String(alvoGap.tse_id));
+    body[i] = {
+      ...body[i],
+      assets: { total_declared_brl: null, count: 0, items: [], source: null },
+      social_links: [],
+      previous_elections: [],
+      enrichment_gaps: GAPS,
+    };
+    await route.fulfill({ response, json: body });
+  });
 
 const senadorPath = path.join(__dirname, "..", "data", "generated", "candidates-senador.json");
 const senadores = fs.existsSync(senadorPath) ? JSON.parse(fs.readFileSync(senadorPath, "utf8")) : [];
@@ -123,8 +141,9 @@ test.describe("Ficha do candidato", () => {
   // "não possui" bens/redes/histórico na ficha — mesmo caso real usado por
   // tests-e2e/pages.spec.js para o comparador.
   test("Histórico e Dados eleitorais avisam lacuna de fonte, nunca 'não possui'", async ({ page }) => {
-    if (!comGap) test.skip();
-    await openProfile(page, fichaUrl({ ...comGap, tse_id: comGap.tse_id }).replace("cargo=federal", "cargo=governador"));
+    if (!alvoGap) test.skip();
+    await simulaGap(page);
+    await openProfile(page, fichaUrl({ ...alvoGap, tse_id: alvoGap.tse_id }).replace("cargo=federal", "cargo=governador"));
 
     const historico = page.locator("#historico");
     const dados = page.locator("#dados-eleitorais");
@@ -204,6 +223,33 @@ test.describe("Ficha do candidato", () => {
     if (!comEvidencia.registration_status || comEvidencia.registration_status === "not_available") {
       expect(texto).toContain("Ainda não disponível na fonte atual");
     }
+  });
+
+  // Renúncia ou indeferimento mudam o que a pessoa faz na urna: a situação sobe
+  // para o topo da ficha, em caixa de frase. A sentinela não vira afirmação
+  // (a seção de dados eleitorais é que diz "não disponível").
+  test("situação da candidatura aparece no topo da ficha, sem virar afirmação quando indisponível", async ({ page }) => {
+    const alterna = async (status) => {
+      await page.unroute("**/data/generated/candidates-federal.json**").catch(() => {});
+      await page.route("**/data/generated/candidates-federal.json**", async (route) => {
+        const response = await route.fetch();
+        const body = await response.json();
+        const i = body.findIndex((c) => String(c.tse_id) === String(comEvidencia.tse_id));
+        body[i] = { ...body[i], registration_status: status };
+        await route.fulfill({ response, json: body });
+      });
+      await openProfile(page, fichaUrl(comEvidencia));
+      await expect(page.locator("#dados-eleitorais")).toBeVisible();
+    };
+
+    await alterna("RENÚNCIA");
+    await expect(page.locator(".hero-facts")).toContainText("Situação da candidatura");
+    await expect(page.locator(".hero-facts")).toContainText("Renúncia");
+    await expect(page.locator(".hero-facts")).not.toContainText("RENÚNCIA");
+
+    await alterna("not_available");
+    await expect(page.locator(".hero-facts")).not.toContainText("Situação da candidatura");
+    await expect(page.locator("#dados-eleitorais")).toContainText("Ainda não disponível na fonte atual");
   });
 
   test("compartilhamento aponta para o stub estático de /social/", async ({ page }) => {
