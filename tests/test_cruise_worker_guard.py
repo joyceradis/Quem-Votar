@@ -71,6 +71,42 @@ class CruiseWorkerGuardTests(unittest.TestCase):
             report["incidents"][0]["type"],
         )
 
+    def test_persisted_chamber_failures_remain_actionable_when_discovery_omits_them(self):
+        failures = [{
+            "candidate_id": "1",
+            "source_id": f"source-{number}",
+            "source_url": (
+                "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao"
+                f"?idProposicao={number}"
+            ),
+            "error": "conteúdo institucional API insuficiente para revisão",
+        } for number in range(14)]
+        report = guard.build_report(
+            sources_payload={"sources": []},
+            failures_payload={"failures": failures},
+            drafts_payload={"drafts": []},
+            canonical_payload={"entries": []},
+            candidate_chamber_ids={},
+        )
+        self.assertEqual(14, report["metrics"]["actionable_incidents"])
+        self.assertEqual(14, len(report["incidents"]))
+
+    def test_untrusted_chamber_lookalike_url_is_not_actionable_when_absent(self):
+        report = guard.build_report(
+            sources_payload={"sources": []},
+            failures_payload={"failures": [{
+                "source_url": (
+                    "https://evil.example/camara.leg.br/proposicoesWeb/"
+                    "fichadetramitacao?idProposicao=10"
+                ),
+                "error": "timeout",
+            }]},
+            drafts_payload={"drafts": []},
+            canonical_payload={"entries": []},
+            candidate_chamber_ids={},
+        )
+        self.assertEqual(0, report["metrics"]["actionable_incidents"])
+
     def test_noninstitutional_failure_does_not_page(self):
         report=guard.build_report(
             sources_payload={"sources":[{
