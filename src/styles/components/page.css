@@ -64,6 +64,21 @@
   text-underline-offset: 2px;
 }
 
+/* Em tela estreita o carimbo de atualização desce para baixo do título.
+   Esta regra vivia só em pages/candidates.css, então Comparar e Assuntos
+   (que usam o mesmo cabeçalho) mantinham as duas colunas no celular e o
+   título ficava espremido numa faixa de ~140px. Layout compartilhado mora
+   aqui, não num arquivo de página. */
+@media (max-width: 920px) {
+  .qv-page-intro {
+    grid-template-columns: 1fr;
+  }
+
+  .qv-page-snapshot {
+    text-align: left;
+  }
+}
+
 .qv-visually-hidden {
   position: absolute;
   width: 1px;
