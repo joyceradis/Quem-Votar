@@ -429,6 +429,51 @@ def _title_place(value):
     )
 
 
+# Candidatura que foi a dois turnos aparece no CSV em duas linhas: a do 1º turno
+# com resultado "2º turno" e a do 2º turno com o desfecho. O histórico mostra a
+# candidatura uma vez, com o resultado do último turno — senão "5 eleições
+# anteriores" conta a mesma disputa duas vezes (27 candidaturas afetadas).
+_INTERMEDIATE_RESULTS = frozenset({"2º turno"})
+
+
+def _round_rank(record):
+    turn = record.get("_turn")
+    result = str(record.get("result") or "").strip().lower()
+    # Último turno primeiro; no mesmo turno, vence a linha com desfecho real
+    # (nem sentinela sem resultado, nem "2º turno").
+    return (
+        turn if isinstance(turn, int) else 0,
+        bool(result) and result not in _INTERMEDIATE_RESULTS,
+    )
+
+
+def _collapse_election_rounds(rows):
+    final = {}
+    for record in rows:
+        key = (
+            record.get("year"),
+            record.get("office"),
+            record.get("party"),
+            record.get("uf"),
+            record.get("location"),
+        )
+        current = final.get(key)
+        if current is None or _round_rank(record) > _round_rank(current):
+            final[key] = record
+    records = [
+        {name: value for name, value in record.items() if name != "_turn"}
+        for record in final.values()
+    ]
+    return sorted(
+        records,
+        key=lambda item: (
+            -(item.get("year") or 0),
+            item.get("office") or "",
+            item.get("party") or "",
+        ),
+    )
+
+
 def _history_uf_from_source_url(value):
     value = clean(value)
     if not value:
@@ -870,6 +915,8 @@ def enrich_tse_open_data(groups):
                     or row.get("DS_SITUACAO_CANDIDATURA")
                     or row.get("DS_RESULTADO")
                 ),
+                # Só para escolher o último turno; nunca vai para o snapshot.
+                "_turn": number(row.get("NR_TURNO")),
             }
             record = {
                 key: value for key, value in record.items()
@@ -884,29 +931,7 @@ def enrich_tse_open_data(groups):
             )
 
         for candidate_id, rows in grouped.items():
-            seen = set()
-            records = []
-            for record in sorted(
-                rows,
-                key=lambda item: (
-                    -(item.get("year") or 0),
-                    item.get("office") or "",
-                    item.get("party") or "",
-                ),
-            ):
-                key = (
-                    record.get("year"),
-                    record.get("office"),
-                    record.get("party"),
-                    record.get("uf"),
-                    record.get("location"),
-                    record.get("result"),
-                )
-                if key in seen:
-                    continue
-                seen.add(key)
-                records.append(record)
-            by_id[candidate_id]["previous_elections"] = records
+            by_id[candidate_id]["previous_elections"] = _collapse_election_rounds(rows)
     else:
         covered = _fill_enrichment_field(
             candidates, previous, bootstrap, "previous_elections", previous_enrichment_valid
