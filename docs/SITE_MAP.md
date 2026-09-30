@@ -17,7 +17,7 @@ O mapa descreve superfícies públicas. Rotas técnicas de compartilhamento não
 - caminhos por candidatura, tema e comparação;
 - acesso aos temas de política pública.
 
-### `/candidatos.html?cargo=federal|estadual`
+### `/candidatos.html?cargo=federal|estadual|governador|senador`
 - 12 candidaturas por página;
 - busca dominante;
 - filtros progressivos por partido, tema documentado e registro institucional;
@@ -66,6 +66,8 @@ Contrato:
 - o `body` não replica conteúdo editorial;
 - a rota direciona tecnicamente para a ficha canônica;
 - não cria ranking, priorização ou versão paralela da candidatura.
+
+A cobertura inclui os quatro cargos publicados: governador, senador, deputado federal e deputado estadual.
 
 ## Sitemap XML
 
