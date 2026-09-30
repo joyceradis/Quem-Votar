@@ -291,7 +291,8 @@ def main() -> None:
     federal = json.loads(read(DATA / "candidates-federal.json"))
     estadual = json.loads(read(DATA / "candidates-estadual.json"))
     meta = json.loads(read(DATA / "meta.json"))
-    rows = federal + estadual  # universo deputado; os stubs sociais cobrem estes.
+    rows = federal + estadual
+    candidate_groups = {"federal": federal, "estadual": estadual}
 
     assert federal and estadual, "snapshot eleitoral vazio"
     assert meta["counts"]["federal"] == len(federal), "contagem federal divergente"
@@ -314,7 +315,7 @@ def main() -> None:
 
     # Cargos majoritários (#161): validados com o mesmo rigor quando seus
     # snapshots existem, sem excluí-los da validação obrigatória e sem quebrar
-    # o contrato dos deputados (nem os stubs sociais, que hoje cobrem só eles).
+    # o contrato dos deputados.
     all_ids = list(ids)
     for kind, fname, label in (
         ("governador", "candidates-governador.json", "GOVERNADOR"),
@@ -324,6 +325,7 @@ def main() -> None:
         if not path.exists():
             continue
         group = json.loads(read(path))
+        candidate_groups[kind] = group
         assert group, f"snapshot {kind} vazio"
         assert meta["counts"].get(kind) == len(group), f"contagem {kind} divergente"
         assert all(x.get("office") == label for x in group), f"{kind}: office divergente"
@@ -353,14 +355,16 @@ def main() -> None:
                     )
     assert len(all_ids) == len(set(all_ids)), "SQ_CANDIDATO duplicado entre cargos"
 
+    all_rows = [row for group in candidate_groups.values() for row in group]
+
     social_root = ROOT / "social"
     fallback_og_image = ROOT / "assets" / "og-fallback-neutral.png"
     assert fallback_og_image.exists(), "asset neutro de fallback og:image ausente"
     social_manifest = json.loads(read(social_root / "manifest.json"))
-    assert social_manifest.get("candidate_count") == len(rows), (
+    assert social_manifest.get("candidate_count") == len(all_rows), (
         "manifest de preview social diverge do snapshot"
     )
-    assert social_manifest.get("candidate_ids") == sorted(ids), (
+    assert social_manifest.get("candidate_ids") == sorted(all_ids), (
         "IDs do preview social divergem do snapshot eleitoral"
     )
     actual_social_ids = sorted(
@@ -368,26 +372,26 @@ def main() -> None:
         for path in social_root.iterdir()
         if path.is_dir() and (path / "index.html").exists()
     )
-    assert actual_social_ids == sorted(ids), (
+    assert actual_social_ids == sorted(all_ids), (
         "cobertura de preview social deve ser 1:1 por SQ_CANDIDATO"
     )
     candidate_kind = {
-        str(row.get("tse_id")): "federal" for row in federal
-    } | {
-        str(row.get("tse_id")): "estadual" for row in estadual
+        str(row.get("tse_id")): kind
+        for kind, group in candidate_groups.items()
+        for row in group
     }
-    candidate_record = {}
-    for row in federal:
-        candidate_record[str(row.get("tse_id"))] = {**row, "_kind": "federal"}
-    for row in estadual:
-        candidate_record[str(row.get("tse_id"))] = {**row, "_kind": "estadual"}
+    candidate_record = {
+        str(row.get("tse_id")): {**row, "_kind": kind}
+        for kind, group in candidate_groups.items()
+        for row in group
+    }
 
     social_generator = load_social_generator()
     individual_og_images = 0
     fallback_og_images = 0
     og_drift_ids = []
 
-    for cid in ids:
+    for cid in all_ids:
         preview = read(social_root / cid / "index.html")
         candidate = candidate_record[cid]
         expected_image, uses_candidate_photo = social_generator.resolve_og_image(
@@ -478,10 +482,10 @@ def main() -> None:
             assert mirror.get("content_sha256"), f"{kind}: hash dos bytes processados ausente"
     assert meta.get("sources", {}).get("camara_federal"), "fonte Câmara ausente: preservar último estado ou falhar fechado"
 
-    valid_photo_urls = sum(is_valid_https_url(x.get("photo_url")) for x in rows)
-    assert valid_photo_urls == len(rows), (
+    valid_photo_urls = sum(is_valid_https_url(x.get("photo_url")) for x in all_rows)
+    assert valid_photo_urls == len(all_rows), (
         "photo_url deve ser HTTPS sintaticamente válida (scheme=https + netloc): "
-        f"{valid_photo_urls}/{len(rows)}"
+        f"{valid_photo_urls}/{len(all_rows)}"
     )
 
     linked_federal = sum(bool(x.get("current_mandate")) for x in federal)
@@ -506,7 +510,9 @@ def main() -> None:
         "AUDITORIA OK | "
         f"assets v{next(iter(versions))} | "
         f"{len(federal)} federais | {len(estadual)} estaduais | "
-        f"{valid_photo_urls}/{len(rows)} URLs HTTPS de foto | "
+        f"{len(candidate_groups.get('governador', []))} governador | "
+        f"{len(candidate_groups.get('senador', []))} senador | "
+        f"{valid_photo_urls}/{len(all_rows)} URLs HTTPS de foto | "
         f"OG individual={individual_og_images} fallback={fallback_og_images} drift={len(og_drift_ids)} | "
         f"{linked_federal} vínculos Câmara | {linked_ales} evidências ALES | "
         f"{len(topic_ids)} temas de política pública | {len(source_entries)} evidências temáticas"

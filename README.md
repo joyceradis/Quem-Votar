@@ -6,7 +6,7 @@ O projeto organiza cadastro eleitoral, histórico institucional e evidências do
 
 [**Abrir produto**](https://joyceradis.github.io/Quem-Votar/) · [Metodologia](METODOLOGIA.md) · [Auditoria](AUDITORIA.md) · [Documentação técnica](docs/README.md) · [Licença](LICENSE)
 
-> Versão pública atual: **V6.0.0**. O recorte visível em produção cobre candidaturas a Deputado Federal e Deputado Estadual no Espírito Santo. A arquitetura de dados foi desenhada para comportar outros cargos sem criar fluxos específicos por candidatura.
+> Versão pública atual: **V6.0.0**. O recorte visível cobre candidaturas a Governador, Senador, Deputado Federal e Deputado Estadual no Espírito Santo, sem criar fluxos específicos por candidatura.
 
 ---
 

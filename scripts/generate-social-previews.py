@@ -22,6 +22,13 @@ DEFAULT_OUTPUT = ROOT / "social"
 DEFAULT_SITE_BASE = "https://joyceradis.github.io/Quem-Votar/"
 FALLBACK_OG_IMAGE_PATH = "assets/og-fallback-neutral.png"
 ID_RE = re.compile(r"^\d+$")
+OFFICE_SNAPSHOTS = (
+    ("candidates-federal.json", "federal", "Deputado Federal"),
+    ("candidates-estadual.json", "estadual", "Deputado Estadual"),
+    ("candidates-governador.json", "governador", "Governador"),
+    ("candidates-senador.json", "senador", "Senador"),
+)
+OFFICE_LABELS = {kind: label for _filename, kind, label in OFFICE_SNAPSHOTS}
 
 
 def clean(value: Any) -> str:
@@ -50,10 +57,7 @@ def resolve_og_image(
 
 def load_candidates() -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
-    for name, kind in (
-        ("candidates-federal.json", "federal"),
-        ("candidates-estadual.json", "estadual"),
-    ):
+    for name, kind, _label in OFFICE_SNAPSHOTS:
         payload = json.loads((GENERATED / name).read_text(encoding="utf-8"))
         if not isinstance(payload, list):
             raise RuntimeError(f"{name}: snapshot deve ser lista")
@@ -68,11 +72,8 @@ def role_label(candidate: dict[str, Any]) -> str:
     office = clean(candidate.get("office"))
     if office:
         return office.title()
-    return (
-        "Deputado Federal"
-        if clean(candidate.get("_kind")) == "federal"
-        else "Deputado Estadual"
-    )
+    kind = clean(candidate.get("_kind"))
+    return OFFICE_LABELS.get(kind, "Cargo não informado")
 
 
 def factual_description(candidate: dict[str, Any]) -> str:
@@ -95,7 +96,7 @@ def candidate_urls(
     if not ID_RE.fullmatch(cid):
         raise RuntimeError(f"SQ_CANDIDATO inválido para preview: {cid!r}")
     kind = clean(candidate.get("_kind"))
-    if kind not in {"federal", "estadual"}:
+    if kind not in OFFICE_LABELS:
         raise RuntimeError(f"{cid}: cargo/kind inválido para preview")
     base = site_base.rstrip("/") + "/"
     preview = f"{base}social/{quote(cid, safe='')}/"

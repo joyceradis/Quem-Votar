@@ -17,12 +17,18 @@ SPEC.loader.exec_module(previews)
 
 
 def candidate(cid: str, kind: str = "federal") -> dict:
+    offices = {
+        "federal": "DEPUTADO FEDERAL",
+        "estadual": "DEPUTADO ESTADUAL",
+        "governador": "GOVERNADOR",
+        "senador": "SENADOR",
+    }
     return {
         "tse_id": cid,
         "ballot_name": "MARIA & TESTE",
         "full_name": "MARIA DE TESTE",
         "number": 1234,
-        "office": "DEPUTADO FEDERAL" if kind == "federal" else "DEPUTADO ESTADUAL",
+        "office": offices[kind],
         "party": "ABC",
         "photo_url": f"https://example.org/{cid}.jpg",
         "_kind": kind,
@@ -109,6 +115,8 @@ class StaticSocialPreviewTests(unittest.TestCase):
         rows = [
             candidate("80000000001", "federal"),
             candidate("80000000002", "estadual"),
+            candidate("80000000003", "governador"),
+            candidate("80000000004", "senador"),
         ]
         with tempfile.TemporaryDirectory() as tmp, patch.object(
             previews, "load_candidates", return_value=rows
@@ -116,14 +124,22 @@ class StaticSocialPreviewTests(unittest.TestCase):
             out = Path(tmp) / "social"
             manifest = previews.generate(output_dir=out)
 
-            self.assertEqual(2, manifest["candidate_count"])
+            self.assertEqual(4, manifest["candidate_count"])
             self.assertEqual(
-                ["80000000001", "80000000002"],
+                ["80000000001", "80000000002", "80000000003", "80000000004"],
                 manifest["candidate_ids"],
             )
             self.assertTrue((out / "80000000001" / "index.html").exists())
             self.assertTrue((out / "80000000002" / "index.html").exists())
+            self.assertTrue((out / "80000000003" / "index.html").exists())
+            self.assertTrue((out / "80000000004" / "index.html").exists())
             self.assertTrue((out / "manifest.json").exists())
+
+    def test_majority_offices_keep_their_kind_in_profile_redirect(self) -> None:
+        for index, kind in enumerate(("governador", "senador"), start=10):
+            html = previews.render_preview(candidate(f"800000000{index}", kind))
+            self.assertIn(f"cargo={kind}", html)
+            self.assertIn(f"· {previews.OFFICE_LABELS[kind]} ·", html)
 
     def test_invalid_candidate_identity_fails_closed(self) -> None:
         bad = candidate("not-an-sq")
