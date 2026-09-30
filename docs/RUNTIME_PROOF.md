@@ -1,5 +1,7 @@
 # Runtime UI proof harness
 
+Governance authorization: Issue #128 (human authority recorded in the PR/Issue thread).
+
 ## Purpose
 
 This workflow is the canonical durable browser harness for checkout-level UI validation in _Quem Votar?_.
@@ -14,19 +16,34 @@ After independent review of the bridge and an explicit human command, run
 - `harness_ref`: audited commit containing both workflow and harness, lowercase full 40-character SHA;
 - `target_ref`: target commit, lowercase full 40-character SHA.
 
-There are no push, PR, comment or recurring triggers for this browser workflow.
-Neither input has a default. Branches, tags, abbreviated SHAs and malformed inputs
+The browser workflow itself remains `workflow_dispatch`-only. A separate, deliberately
+narrow Issue-command bridge may request that dispatch from Issue #128; it does not add a
+comment trigger to the browser workflow itself. Neither input has a default. Branches,
+tags, abbreviated SHAs and malformed inputs
 are rejected before checkout. The two checkouts must match the requested SHAs.
 The preflight also requires `QV_WORKFLOW_SHA == QV_HARNESS_REF` before any checkout,
 dependency installation or browser execution. Reconciliation repeats this check.
 The target must remain clean; tracked harness files must remain unchanged.
 Only dependency installation may create untracked files in the harness checkout.
 
-Use the GitHub Actions manual form on the audited workflow revision. The workflow
-must first be available on the default branch through the normal reviewed PR flow.
-The existing Quality and rule-inspection checks still apply to that PR.
-Submitting a PR or posting a coordination comment does not authorize browser execution.
-No comment-to-dispatch bot, extra credential or write permission is needed.
+Use the GitHub Actions manual form on the audited workflow revision, or—after the bridge
+itself has been reviewed and integrated—post exactly this command on Issue #128 using an
+account with `write`, `maintain` or `admin` repository permission:
+
+```text
+/runtime-proof harness=<40-character SHA> target=<40-character SHA>
+```
+
+The bridge accepts only two full immutable SHAs that resolve exactly in this repository.
+Because the canonical runtime workflow verifies `github.workflow_sha == harness_ref`,
+the bridge also requires `harness_ref` to equal the current default-branch HEAD before it
+dispatches `runtime-proof.yml`. The receipt comment is not proof of success: the run
+conclusion, artifact and manifest remain authoritative.
+
+The workflow and bridge must first be available on the default branch through the normal
+reviewed PR flow. Existing Quality and rule-inspection checks still apply. A malformed
+command or a commenter without write-level permission fails closed; no personal login is
+hard-coded and no extra long-lived credential is introduced.
 
 For the complementary proof of PR #128, the frozen target is
 `2423d0ebbcdd0008a44cd052939228ba62c42f4c`. Set `harness_ref` to exactly the audited

@@ -1,0 +1,97 @@
+name: Runtime proof command bridge
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  actions: write
+  contents: read
+  issues: write
+
+concurrency:
+  group: runtime-proof-command-${{ github.event.comment.id }}
+  cancel-in-progress: false
+
+jobs:
+  dispatch:
+    if: >-
+      github.event.issue.number == 128 &&
+      github.event.issue.pull_request == null &&
+      startsWith(github.event.comment.body, '/runtime-proof ')
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Validate command and dispatch proof
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
+        env:
+          COMMAND: ${{ github.event.comment.body }}
+        with:
+          script: |
+            const command = process.env.COMMAND.trim();
+            const match = command.match(/^\/runtime-proof\s+harness=([0-9a-f]{40})\s+target=([0-9a-f]{40})$/i);
+            if (!match) {
+              core.setFailed("Comando inválido. Use /runtime-proof harness=<SHA de 40 hex> target=<SHA de 40 hex>");
+              return;
+            }
+
+            const harnessRef = match[1].toLowerCase();
+            const targetRef = match[2].toLowerCase();
+            const { owner, repo } = context.repo;
+
+            const permission = await github.rest.repos.getCollaboratorPermissionLevel({
+              owner,
+              repo,
+              username: context.actor,
+            });
+            const allowedPermissions = new Set(["admin", "maintain", "write"]);
+            if (!allowedPermissions.has(permission.data.permission)) {
+              core.setFailed(`Ator ${context.actor} sem permissão de escrita para solicitar dispatch.`);
+              return;
+            }
+
+            for (const [label, ref] of [["harness", harnessRef], ["target", targetRef]]) {
+              const commit = await github.rest.repos.getCommit({ owner, repo, ref });
+              if (commit.data.sha.toLowerCase() !== ref) {
+                core.setFailed(`${label} não resolveu para o SHA exato solicitado.`);
+                return;
+              }
+            }
+
+            const defaultBranch = context.payload.repository.default_branch;
+            const branch = await github.rest.repos.getBranch({ owner, repo, branch: defaultBranch });
+            const defaultSha = branch.data.commit.sha.toLowerCase();
+            if (harnessRef !== defaultSha) {
+              core.setFailed(
+                `harness precisa ser o HEAD atual de ${defaultBranch} (${defaultSha}) para corresponder ao workflow executado.`
+              );
+              return;
+            }
+
+            await github.rest.actions.createWorkflowDispatch({
+              owner,
+              repo,
+              workflow_id: "runtime-proof.yml",
+              ref: defaultBranch,
+              inputs: {
+                harness_ref: harnessRef,
+                target_ref: targetRef,
+              },
+            });
+
+            const requestId = `issue-${context.issue.number}-comment-${context.payload.comment.id}`;
+            const actionsUrl = `${context.payload.repository.html_url}/actions/workflows/runtime-proof.yml`;
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number: context.issue.number,
+              body: [
+                `✅ Dispatch aceito: \`${requestId}\`.`,
+                "",
+                `- harness: \`${harnessRef}\``,
+                `- target: \`${targetRef}\``,
+                `- execução: ${actionsUrl}`,
+                "",
+                "O artifact e o manifest continuam sendo a prova canônica; este comentário é apenas o recibo do comando.",
+              ].join("\n"),
+            });

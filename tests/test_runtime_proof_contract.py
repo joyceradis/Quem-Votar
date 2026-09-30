@@ -26,6 +26,22 @@ class RuntimeProofContractTests(unittest.TestCase):
         self.assertLess(workflow.index("Upload canonical proof artifact"), workflow.index("Enforce binary merge gate"))
         self.assertIn('if merge_gate != "PASS"', workflow)
 
+    def test_issue_command_bridge_is_narrow_and_fail_closed(self):
+        workflow = (ROOT / ".github/workflows/runtime-proof-command.yml").read_text(encoding="utf-8")
+        self.assertIn("github.event.issue.number == 128", workflow)
+        self.assertIn("github.rest.repos.getCollaboratorPermissionLevel", workflow)
+        self.assertIn('new Set(["admin", "maintain", "write"])', workflow)
+        self.assertIn("[0-9a-f]{40}", workflow)
+        self.assertIn("github.rest.repos.getCommit", workflow)
+        self.assertIn("github.rest.repos.getBranch", workflow)
+        self.assertIn("harnessRef !== defaultSha", workflow)
+        self.assertIn("github.rest.actions.createWorkflowDispatch", workflow)
+        self.assertIn('workflow_id: "runtime-proof.yml"', workflow)
+        self.assertIn("harness_ref: harnessRef", workflow)
+        self.assertIn("target_ref: targetRef", workflow)
+        self.assertNotIn("github.actor == 'joyceradis'", workflow)
+        self.assertIn("artifact e o manifest continuam sendo a prova canônica", workflow)
+
     def test_each_scenario_gets_fresh_context_and_observable_teardown(self):
         script = (ROOT / "scripts/runtime-proof.cjs").read_text(encoding="utf-8")
         self.assertIn("async function runScenario", script)
