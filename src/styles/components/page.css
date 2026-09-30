@@ -8,7 +8,7 @@
 .qv-page {
   max-width: var(--max);
   margin: 0 auto;
-  padding: clamp(32px, 4vw, 64px) 20px clamp(64px, 8vw, 104px);
+  padding: clamp(40px, 5vw, 76px) var(--gutter) clamp(64px, 8vw, 104px);
 }
 
 .qv-page-intro {
@@ -16,14 +16,17 @@
   grid-template-columns: minmax(0, 1fr) auto;
   gap: clamp(20px, 4vw, 44px);
   align-items: end;
+  padding-bottom: clamp(24px, 3vw, 36px);
   margin-bottom: 32px;
+  border-bottom: 1px solid var(--line-strong);
 }
 
 .qv-page-intro h1 {
   margin: 0;
   max-width: 16ch;
-  font-size: clamp(2.2rem, 5vw, 3.6rem);
-  line-height: 1;
+  color: var(--blue-dark);
+  font-size: clamp(2.35rem, 5.2vw, 4rem);
+  line-height: 1.04;
   letter-spacing: -0.035em;
 }
 
@@ -42,7 +45,7 @@
   margin: 0;
   text-align: right;
   color: var(--muted);
-  font-size: 0.68rem;
+  font-size: 0.76rem;
 }
 
 /* Antes era azul forte com sublinhado permanente — feedback direto da

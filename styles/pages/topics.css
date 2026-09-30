@@ -11,14 +11,16 @@
   grid-template-columns: minmax(0, 1fr) 210px auto;
   gap: 26px;
   align-items: center;
-  padding: 30px 2px;
+  padding: clamp(28px, 4vw, 44px) 2px;
   border-bottom: 1px solid var(--line);
   scroll-margin-top: 100px;
 }
 
 .topic-main h2 {
   margin: 0;
-  font-size: 1.55rem;
+  color: var(--blue-dark);
+  font-size: clamp(1.7rem, 3vw, 2.1rem);
+  line-height: 1.15;
   letter-spacing: -0.025em;
 }
 
@@ -36,7 +38,8 @@
 }
 
 .topic-status strong {
-  font-size: 1.8rem;
+  font-family: var(--font-display);
+  font-size: 2.2rem;
   color: var(--ink);
   font-variant-numeric: tabular-nums;
 }
@@ -49,7 +52,10 @@
 .topic-row > a {
   color: var(--blue-strong);
   font-weight: 800;
-  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-min);
+  text-decoration: underline;
 }
 
 @media (max-width: 920px) {
