@@ -206,6 +206,8 @@ permanece fonte única para as sete rotas; o teste de casco verifica a ausência
 da superfície raster antiga, a cor única do traço e overflow horizontal no
 viewport móvel.
 
+O cache público correspondente é `6.0.5`.
+
 ## Verificação de ponta a ponta (Playwright, versionado)
 
 As checagens comportamentais que vinham sendo rodadas como scripts
