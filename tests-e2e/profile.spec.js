@@ -14,7 +14,25 @@ const semEvidencia = federais.find((c) => (c.topic_evidence || []).length === 0)
 
 const governadorPath = path.join(__dirname, "..", "data", "generated", "candidates-governador.json");
 const governadores = fs.existsSync(governadorPath) ? JSON.parse(fs.readFileSync(governadorPath, "utf8")) : [];
-const comGap = governadores.find((c) => (c.enrichment_gaps || []).length >= 3);
+// Governador que hoje não tem lacuna alguma (16/16 majoritários cobertos): a
+// regra "lacuna nunca vira zero" continua exigindo teste, então a lacuna é
+// simulada por interceptação de rede sobre este candidato.
+const alvoGap = governadores[0];
+const GAPS = ["assets", "social_links", "previous_elections"];
+const simulaGap = (page) =>
+  page.route("**/data/generated/candidates-governador.json**", async (route) => {
+    const response = await route.fetch();
+    const body = await response.json();
+    const i = body.findIndex((c) => String(c.tse_id) === String(alvoGap.tse_id));
+    body[i] = {
+      ...body[i],
+      assets: { total_declared_brl: null, count: 0, items: [], source: null },
+      social_links: [],
+      previous_elections: [],
+      enrichment_gaps: GAPS,
+    };
+    await route.fulfill({ response, json: body });
+  });
 
 const senadorPath = path.join(__dirname, "..", "data", "generated", "candidates-senador.json");
 const senadores = fs.existsSync(senadorPath) ? JSON.parse(fs.readFileSync(senadorPath, "utf8")) : [];
@@ -26,9 +44,26 @@ const comHistoricoCamara = federais.find((c) => c.institutional_history);
 
 const fichaUrl = (c) => `candidato.html?id=${c.tse_id}&cargo=federal`;
 
+// A foto da ficha vem de um host externo. A navegação só precisa do DOM;
+// cada teste aguarda explicitamente o conteúdo da ficha que verifica.
+const openProfile = (page, url) => page.goto(url, { waitUntil: "domcontentloaded" });
+
+// Mesma regra de "ocupação utilizável" de src/js/pages/profile.js
+// (GENERIC_OCCUPATIONS/isUsableOccupation) — replicada aqui só para decidir
+// a expectativa do teste, nunca para gerar o dado.
+const OCUPACOES_GENERICAS = new Set(["OUTROS", "OUTRO"]);
+const normalizaOcupacao = (value) =>
+  String(value || "")
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-zA-Z0-9 ]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toUpperCase();
+
 test.describe("Ficha do candidato", () => {
-  test("ordem normativa HOJE → PROPÕE → IMPACTO → HISTÓRICO → DADOS → FONTES", async ({ page }) => {
-    await page.goto(fichaUrl(comEvidencia));
+  test("ordem normativa HOJE → PROPOSTAS → IMPACTO → HISTÓRICO → DADOS → FONTES", async ({ page }) => {
+    await openProfile(page, fichaUrl(comEvidencia));
     await expect(page.locator("#faz-hoje")).toBeVisible();
 
     const ordem = await page.locator(".answer-section").evaluateAll((els) => els.map((e) => e.id));
@@ -42,9 +77,22 @@ test.describe("Ficha do candidato", () => {
     ]);
   });
 
-  test("PROPÕE só aceita proposta e declaração; atuação vai para histórico", async ({ page }) => {
-    await page.goto(fichaUrl(comEvidencia));
+  test("propostas e declarações ficam distintas da atuação no histórico", async ({ page }) => {
+    await openProfile(page, fichaUrl(comEvidencia));
     await expect(page.locator("#vai-fazer")).toBeVisible();
+    await expect(page.locator("#vai-fazer h2")).toHaveText("O que ela diz que vai fazer?");
+    await expect(page.locator("#vai-fazer .section-number")).toBeVisible();
+    await expect(page.locator("#vai-fazer .section-number")).toHaveText("02");
+    const perguntas = await page.locator("#faz-hoje, #vai-fazer, #impacto").evaluateAll((sections) =>
+      sections.map((section) => {
+        const style = getComputedStyle(section);
+        const number = getComputedStyle(section.querySelector(".section-number"));
+        return [style.backgroundImage, style.borderRadius, style.boxShadow,
+          style.paddingTop, style.paddingLeft, number.fontSize, number.color];
+      })
+    );
+    expect(perguntas[1]).toEqual(perguntas[0]);
+    expect(perguntas[1]).toEqual(perguntas[2]);
 
     const evidencias = comEvidencia.topic_evidence || [];
     const normaliza = (v) =>
@@ -58,8 +106,9 @@ test.describe("Ficha do candidato", () => {
     await expect(page.locator("#historico .public-records article")).toHaveCount(atuacoes.length);
   });
 
-  test("toda evidência em PROPÕE mostra tipo, fonte e link", async ({ page }) => {
-    await page.goto(fichaUrl(comEvidencia));
+  test("toda proposta ou declaração documentada mostra tipo, fonte e link", async ({ page }) => {
+    await openProfile(page, fichaUrl(comEvidencia));
+    await expect(page.locator("#vai-fazer")).toBeVisible();
     const itens = page.locator("#vai-fazer .promise-list article");
     const total = await itens.count();
     if (total === 0) test.skip();
@@ -73,7 +122,7 @@ test.describe("Ficha do candidato", () => {
   });
 
   test("ocupação declarada não é apresentada como atuação atual", async ({ page }) => {
-    await page.goto(fichaUrl(comEvidencia));
+    await openProfile(page, fichaUrl(comEvidencia));
     await expect(page.locator(".profile-now")).toBeVisible();
 
     const agora = (await page.locator(".profile-now").textContent()).trim();
@@ -91,11 +140,11 @@ test.describe("Ficha do candidato", () => {
 
   test("ausência de evidência é dita como ausência de registro", async ({ page }) => {
     if (!semEvidencia) test.skip();
-    await page.goto(fichaUrl(semEvidencia));
+    await openProfile(page, fichaUrl(semEvidencia));
     await expect(page.locator("#vai-fazer")).toBeVisible();
 
     await expect(page.locator("#vai-fazer")).toContainText(
-      "Sem registro não é o mesmo que sem proposta."
+      "Isso não significa que a candidatura não tenha propostas ou posições."
     );
     // nunca um zero ou um traço no lugar da explicação
     await expect(page.locator("#vai-fazer .promise-list")).toHaveCount(0);
@@ -106,8 +155,9 @@ test.describe("Ficha do candidato", () => {
   // "não possui" bens/redes/histórico na ficha — mesmo caso real usado por
   // tests-e2e/pages.spec.js para o comparador.
   test("Histórico e Dados eleitorais avisam lacuna de fonte, nunca 'não possui'", async ({ page }) => {
-    if (!comGap) test.skip();
-    await page.goto(fichaUrl({ ...comGap, tse_id: comGap.tse_id }).replace("cargo=federal", "cargo=governador"));
+    if (!alvoGap) test.skip();
+    await simulaGap(page);
+    await openProfile(page, fichaUrl({ ...alvoGap, tse_id: alvoGap.tse_id }).replace("cargo=federal", "cargo=governador"));
 
     const historico = page.locator("#historico");
     const dados = page.locator("#dados-eleitorais");
@@ -119,18 +169,33 @@ test.describe("Ficha do candidato", () => {
   // datado) é dado canônico que a ficha ignorava. Precisa aparecer em
   // Histórico com fonte e aviso — e NUNCA em "O que essa pessoa faz hoje?",
   // que só pode vir de current_mandate. Caso real: candidato de Senador com
-  // institutional_evidence e sem current_mandate.
+  // institutional_evidence e sem current_mandate. A ocupação autodeclarada ao
+  // TSE é um dado diferente: pode legitimamente aparecer em "faz hoje" como
+  // fato autodeclarado (nunca como atuação institucional confirmada), e isso
+  // não é o mesmo que institutional_evidence vazar para lá — as duas coisas
+  // são testadas separadamente aqui.
   test("institutional_evidence aparece em Histórico com fonte e aviso, nunca em 'faz hoje'", async ({ page }) => {
     if (!comEvidenciaInstitucionalSemMandato) test.skip();
     const c = comEvidenciaInstitucionalSemMandato;
-    await page.goto(`candidato.html?id=${c.tse_id}&cargo=senador`);
+    await openProfile(page, `candidato.html?id=${c.tse_id}&cargo=senador`);
 
     const record = c.institutional_evidence[0];
     const hoje = page.locator("#faz-hoje");
     const historico = page.locator("#historico");
 
-    await expect(hoje).toContainText("Sem atuação pública atual confirmada nesta base");
+    const ocupacaoUtilizavel =
+      Boolean(c.occupation) && !OCUPACOES_GENERICAS.has(normalizaOcupacao(c.occupation));
+    if (ocupacaoUtilizavel) {
+      // Sem current_mandate, mas com ocupação utilizável: aparece como fato
+      // autodeclarado, nunca como confirmação de atuação institucional.
+      await expect(hoje).toContainText(c.occupation);
+      await expect(hoje).toContainText("Autodeclarado no registro de candidatura ao TSE");
+    } else {
+      await expect(hoje).toContainText("Sem atuação pública atual confirmada nesta base");
+    }
+    // institutional_evidence nunca vaza para "faz hoje", com ou sem ocupação.
     await expect(hoje).not.toContainText(record.institution);
+    await expect(hoje).not.toContainText(record.type);
 
     await expect(historico).toContainText(record.institution);
     await expect(historico).toContainText(record.type);
@@ -143,12 +208,12 @@ test.describe("Ficha do candidato", () => {
   // Câmara) também vira conteúdo em Histórico, não só fonte de link.
   test("institutional_history aparece como trajetória em Histórico", async ({ page }) => {
     if (!comHistoricoCamara) test.skip();
-    await page.goto(fichaUrl(comHistoricoCamara));
+    await openProfile(page, fichaUrl(comHistoricoCamara));
     await expect(page.locator("#historico")).toContainText("Trajetória institucional na Câmara");
   });
 
   test("IMPACTO não afirma benefício nem prejuízo", async ({ page }) => {
-    await page.goto(fichaUrl(comEvidencia));
+    await openProfile(page, fichaUrl(comEvidencia));
     const impacto = page.locator("#impacto");
     await expect(impacto).toBeVisible();
 
@@ -162,7 +227,7 @@ test.describe("Ficha do candidato", () => {
   });
 
   test("sentinela do TSE não vira conclusão jurídica", async ({ page }) => {
-    await page.goto(fichaUrl(comEvidencia));
+    await openProfile(page, fichaUrl(comEvidencia));
     const dados = page.locator("#dados-eleitorais");
     await expect(dados).toBeVisible();
 
@@ -174,8 +239,35 @@ test.describe("Ficha do candidato", () => {
     }
   });
 
+  // Renúncia ou indeferimento mudam o que a pessoa faz na urna: a situação sobe
+  // para o topo da ficha, em caixa de frase. A sentinela não vira afirmação
+  // (a seção de dados eleitorais é que diz "não disponível").
+  test("situação da candidatura aparece no topo da ficha, sem virar afirmação quando indisponível", async ({ page }) => {
+    const alterna = async (status) => {
+      await page.unroute("**/data/generated/candidates-federal.json**").catch(() => {});
+      await page.route("**/data/generated/candidates-federal.json**", async (route) => {
+        const response = await route.fetch();
+        const body = await response.json();
+        const i = body.findIndex((c) => String(c.tse_id) === String(comEvidencia.tse_id));
+        body[i] = { ...body[i], registration_status: status };
+        await route.fulfill({ response, json: body });
+      });
+      await openProfile(page, fichaUrl(comEvidencia));
+      await expect(page.locator("#dados-eleitorais")).toBeVisible();
+    };
+
+    await alterna("RENÚNCIA");
+    await expect(page.locator(".hero-facts")).toContainText("Situação da candidatura");
+    await expect(page.locator(".hero-facts")).toContainText("Renúncia");
+    await expect(page.locator(".hero-facts")).not.toContainText("RENÚNCIA");
+
+    await alterna("not_available");
+    await expect(page.locator(".hero-facts")).not.toContainText("Situação da candidatura");
+    await expect(page.locator("#dados-eleitorais")).toContainText("Ainda não disponível na fonte atual");
+  });
+
   test("compartilhamento aponta para o stub estático de /social/", async ({ page }) => {
-    await page.goto(fichaUrl(comEvidencia));
+    await openProfile(page, fichaUrl(comEvidencia));
     await expect(page.locator("h1")).not.toBeEmpty();
     await expect(page.locator('meta[property="og:url"]')).toHaveAttribute(
       "content",
@@ -184,10 +276,31 @@ test.describe("Ficha do candidato", () => {
   });
 
   test("id inexistente e id ausente falham de forma explícita", async ({ page }) => {
-    await page.goto("candidato.html?id=000000000&cargo=federal");
+    await openProfile(page, "candidato.html?id=000000000&cargo=federal");
     await expect(page.locator("#profileMount")).toHaveText("Candidato não encontrado na base atual.");
 
-    await page.goto("candidato.html");
+    await openProfile(page, "candidato.html");
     await expect(page.locator("#profileMount")).toHaveText("Candidato não informado.");
   });
+});
+
+
+test("bens têm atalho visível e detalhamento progressivo com total preservado", async ({ page }) => {
+  const candidate = federais.find((c) => c.assets?.items?.length > 0);
+  test.skip(!candidate, "Snapshot sem declaração de bens");
+  await openProfile(page, fichaUrl(candidate));
+  const jump = page.getByRole("navigation", { name: "Navegar pela ficha" });
+  const assetsLink = jump.getByRole("link", { name: "Bens declarados", exact: true });
+  await expect(assetsLink).toBeVisible();
+  const navWidth = await jump.evaluate((el) => ({ scroll: el.scrollWidth, client: el.clientWidth }));
+  expect(navWidth.scroll).toBeLessThanOrEqual(navWidth.client + 1);
+  await assetsLink.click();
+  await expect(page).toHaveURL(/#bens-declarados$/);
+  const assets = page.locator("#bens-declarados");
+  await expect(assets.locator(".declared-assets-total")).toBeVisible();
+  await expect(assets.locator(".declared-assets-list")).not.toBeVisible();
+  await assets.locator("summary").focus();
+  await page.keyboard.press("Enter");
+  await expect(assets.locator(".declared-assets-list")).toBeVisible();
+  await expect(assets.locator(".declared-assets-list li")).toHaveCount(candidate.assets.items.length);
 });

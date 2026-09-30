@@ -11,14 +11,16 @@
   display: grid;
   grid-template-columns: 240px 1fr;
   gap: 32px;
-  padding: 26px 0;
+  padding: clamp(28px, 4vw, 40px) 0;
   border-bottom: 1px solid var(--line);
   scroll-margin-top: 100px;
 }
 
 .about-list h2 {
   margin: 0;
-  font-size: 1.15rem;
+  color: var(--blue-dark);
+  font-size: 1.4rem;
+  line-height: 1.2;
   letter-spacing: -0.015em;
 }
 
@@ -54,5 +56,18 @@
   .about-list article {
     grid-template-columns: 1fr;
     gap: 8px;
+  }
+}
+
+/* Link de fonte dentro da linha: fica sob o texto, alinhado à coluna de resposta */
+.about-list article > a {
+  grid-column: 2;
+  margin-top: -18px;
+}
+
+@media (max-width: 620px) {
+  .about-list article > a {
+    grid-column: 1;
+    margin-top: 0;
   }
 }

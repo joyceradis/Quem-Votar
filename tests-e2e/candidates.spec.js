@@ -24,6 +24,33 @@ test.describe("Listagem de candidaturas", () => {
     await expect(page.locator("#pageStatus")).toHaveText(/^Página 1 de \d+$/);
   });
 
+  test("paginação da lista cabe na viewport móvel a partir da página 4", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("candidatos.html?cargo=estadual&page=4");
+    await expect(page.locator("#pageStatus")).toHaveText(/^Página 4 de \d+$/);
+
+    for (const width of [320, 360, 390]) {
+      await page.setViewportSize({ width, height: 844 });
+      const dimensions = await page.evaluate(() => ({
+        viewport: document.documentElement.clientWidth,
+        document: document.documentElement.scrollWidth,
+        pagination: document.querySelector("#pagination").getBoundingClientRect(),
+      }));
+      expect(
+        dimensions.document,
+        `document overflows horizontally at ${width}px: ${JSON.stringify(dimensions)}`
+      ).toBeLessThanOrEqual(dimensions.viewport);
+      expect(dimensions.pagination.left).toBeGreaterThanOrEqual(0);
+      expect(dimensions.pagination.right).toBeLessThanOrEqual(dimensions.viewport);
+    }
+
+    await expect(page.locator(".pagination-pages")).toBeHidden();
+    await expect(page.locator(".pagination-status")).toBeVisible();
+    await page.getByRole("button", { name: "Próxima" }).click();
+    await expect(page.locator("#pageStatus")).toHaveText(/^Página 5 de \d+$/);
+    await expect(page).toHaveURL(/page=5/);
+  });
+
   // Achado do Codex no #198: um candidato com institutional_history mas
   // sem current_mandate fazia hasInstitutional() liberar a linha 'agora',
   // mas currentActivity() ainda retornava o texto de ausência — exatamente
@@ -49,6 +76,32 @@ test.describe("Listagem de candidaturas", () => {
     const primeiroCard = page.locator(".qv-card").first();
     await expect(primeiroCard.locator(".qv-card-now")).toHaveCount(0);
     await expect(primeiroCard).not.toContainText("Atuação atual ainda não confirmada");
+  });
+
+  // Situação da candidatura: só a exceção ao "deferido" (renúncia,
+  // indeferimento, julgamento pendente) ganha uma linha no card — é o que muda
+  // o que a pessoa faz na urna. "Deferido" e a sentinela não ganham selo.
+  // Simulado por interceptação: o dado real muda a cada sync.
+  test("card avisa a situação da candidatura só quando foge do 'deferido'", async ({ page }) => {
+    let nomes = [];
+    await page.route("**/data/generated/candidates-governador.json**", async (route) => {
+      const response = await route.fetch();
+      const body = await response.json();
+      body[0] = { ...body[0], registration_status: "RENÚNCIA" };
+      body[1] = { ...body[1], registration_status: "DEFERIDO" };
+      body[2] = { ...body[2], registration_status: "not_available" };
+      nomes = body.slice(0, 3).map((c) => c.ballot_name || c.name);
+      await route.fulfill({ response, json: body });
+    });
+    await page.goto("candidatos.html?cargo=governador");
+    await expect(page.locator("#resultCount")).not.toHaveText("Carregando…");
+
+    const escapa = (v) => v.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const card = (nome) =>
+      page.locator(".qv-card", { has: page.locator("h3", { hasText: new RegExp(escapa(nome), "i") }) });
+    await expect(card(nomes[0]).locator(".qv-card-status")).toHaveText("Situação da candidatura: Renúncia");
+    await expect(card(nomes[1]).locator(".qv-card-status")).toHaveCount(0);
+    await expect(card(nomes[2]).locator(".qv-card-status")).toHaveCount(0);
   });
 
   // Feedback direto da mantenedora: partido é critério de escolha para
@@ -114,7 +167,22 @@ test.describe("Listagem de candidaturas", () => {
   // neste ciclo) não pode ficar com o card em branco onde antes aparecia
   // "X bens declarados" etc. — silêncio pareceria "não possui" (AGENTS.md §2/§5).
   test("card de candidato sem fonte de enriquecimento avisa a lacuna, não fica em branco", async ({ page }) => {
-    await page.locator('.office-button[data-kind="governador"]').click();
+    // Sem lacuna real no snapshot (16/16 majoritários cobertos), simula uma por
+    // interceptação: a regra continua precisando de teste.
+    await page.route("**/data/generated/candidates-governador.json**", async (route) => {
+      const response = await route.fetch();
+      const body = await response.json();
+      body[0] = {
+        ...body[0],
+        assets: { total_declared_brl: null, count: 0, items: [], source: null },
+        social_links: [],
+        previous_elections: [],
+        enrichment_gaps: ["assets", "social_links", "previous_elections"],
+      };
+      await route.fulfill({ response, json: body });
+    });
+    await page.goto("candidatos.html?cargo=governador");
+    await expect(page.locator("#resultCount")).not.toHaveText("Carregando…");
     await expect(page.locator(".qv-card").first()).toBeVisible();
     await expect(page.locator(".qv-card-meta", { hasText: "ainda não disponíve" }).first()).toBeVisible();
   });

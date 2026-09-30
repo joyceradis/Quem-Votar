@@ -6,34 +6,34 @@
 
 <script src="telemetry.js?v=1"></script>
 <meta name="theme-color" content="#113b56">
-<meta name="description" content="Consulte candidatos a deputado federal e estadual no Espírito Santo, compare informações públicas e confira as fontes.">
-<meta name="qv-asset-version" content="6.0.0">
+<meta name="description" content="Consulte candidatos a deputado, senador e governador no Espírito Santo, compare informações públicas e confira as fontes.">
+<meta name="qv-asset-version" content="6.0.4">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
 <link rel="canonical" href="https://joyceradis.github.io/Quem-Votar/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Quem Votar?">
 <meta property="og:title" content="Quem Votar? · Espírito Santo 2026">
-<meta property="og:description" content="Consulte candidatos a deputado federal e estadual no Espírito Santo, compare informações públicas e confira as fontes.">
+<meta property="og:description" content="Consulte candidatos a deputado, senador e governador no Espírito Santo, compare informações públicas e confira as fontes.">
 <meta property="og:url" content="https://joyceradis.github.io/Quem-Votar/">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Quem Votar? · Espírito Santo 2026">
-<meta name="twitter:description" content="Consulte candidatos a deputado federal e estadual no Espírito Santo, compare informações públicas e confira as fontes.">
-<link rel="icon" href="assets/favicon.svg?v=6.0.0" type="image/svg+xml">
+<meta name="twitter:description" content="Consulte candidatos a deputado, senador e governador no Espírito Santo, compare informações públicas e confira as fontes.">
+<link rel="icon" href="assets/favicon.svg?v=6.0.4" type="image/svg+xml">
 <link rel="manifest" href="manifest.webmanifest">
 
 <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles/fonts.css?v=6.0.0">
-<link rel="stylesheet" href="styles/tokens.css?v=6.0.0">
-<link rel="stylesheet" href="styles/base.css?v=6.0.0">
-<link rel="stylesheet" href="styles/components/button.css?v=6.0.0">
-<link rel="stylesheet" href="styles/components/pill-search.css?v=6.0.0">
-<link rel="stylesheet" href="styles/components/tag.css?v=6.0.0">
-<link rel="stylesheet" href="styles/components/card.css?v=6.0.0">
-<link rel="stylesheet" href="styles/components/page.css?v=6.0.0">
-<link rel="stylesheet" href="styles/components/nav.css?v=6.0.0">
-<link rel="stylesheet" href="styles/components/footer.css?v=6.0.0">
-<link rel="stylesheet" href="styles/pages/home.css?v=6.0.0">
+<link rel="stylesheet" href="styles/fonts.css?v=6.0.4">
+<link rel="stylesheet" href="styles/tokens.css?v=6.0.4">
+<link rel="stylesheet" href="styles/base.css?v=6.0.4">
+<link rel="stylesheet" href="styles/components/button.css?v=6.0.4">
+<link rel="stylesheet" href="styles/components/pill-search.css?v=6.0.4">
+<link rel="stylesheet" href="styles/components/tag.css?v=6.0.4">
+<link rel="stylesheet" href="styles/components/card.css?v=6.0.4">
+<link rel="stylesheet" href="styles/components/page.css?v=6.0.4">
+<link rel="stylesheet" href="styles/components/nav.css?v=6.0.4">
+<link rel="stylesheet" href="styles/components/footer.css?v=6.0.4">
+<link rel="stylesheet" href="styles/pages/home.css?v=6.0.4">
 
 <title>Quem Votar? · Espírito Santo 2026</title>
 </head>
@@ -189,8 +189,8 @@
 
   <div class="home-hero-copy">
     <p class="qv-eyebrow">Espírito Santo · Eleições 2026</p>
-    <h1>Tá, mas o que esse candidato pode mudar na sua vida?</h1>
-    <p class="home-hero-lead">Procure pelo nome, número ou partido. A gente reúne o que há de registro público e mostra de onde saiu cada informação. Sem ranking e sem dizer em quem votar.</p>
+    <h1>Em quem eu vou votar?</h1>
+    <p class="home-hero-lead">Encontre candidaturas, consulte propostas e trajetórias documentadas e confira as fontes — sem ranking e sem dizer em quem votar.</p>
 
     <form class="qv-pill-search" action="candidatos.html" method="get">
       <label>
@@ -203,8 +203,8 @@
         </select>
       </label>
       <label>
-        <span>Quem você quer entender?</span>
-        <input type="search" name="q" placeholder="Nome, número ou partido" aria-label="Buscar candidato">
+        <span>Procure uma candidatura</span>
+        <input type="search" name="q" placeholder="Nome, número ou partido" aria-label="Buscar candidatura">
       </label>
       <button type="submit">Buscar</button>
     </form>
@@ -213,54 +213,45 @@
   </div>
 </section>
 
-<section class="home-answers" aria-labelledby="answersTitle">
-  <div class="home-answers-inner">
-    <p class="qv-eyebrow qv-eyebrow--onDark">Sem enrolação</p>
-    <h2 id="answersTitle">O que você encontra na ficha?</h2>
-    <ol class="home-answer-list">
-      <li>
-        <span>01</span>
-        <h3>O que essa pessoa faz hoje?</h3>
-        <p>Se há atuação pública atual registrada, ela aparece aqui. Se não há registro suficiente, a ficha deixa isso claro.</p>
-      </li>
-      <li>
-        <span>02</span>
-        <h3>O que ela diz que vai fazer?</h3>
-        <p>Propostas e declarações aparecem com fonte e data. Partido ou profissão não viram proposta por dedução.</p>
-      </li>
-      <li>
-        <span>03</span>
-        <h3>Onde isso pode mexer na vida real?</h3>
-        <p>Mostramos quais áreas da vida pública aparecem no que foi documentado — sem transformar contexto em recomendação.</p>
-      </li>
-    </ol>
-  </div>
-</section>
-
 <section class="home-topics" hidden>
   <div class="home-section-head">
     <div>
       <p class="qv-eyebrow">Assuntos</p>
-      <h2>O que pega na vida real?</h2>
+      <h2>Assuntos com evidência documentada</h2>
     </div>
     <p>Só aparecem temas com evidência documentada. A ausência de um tema significa que ainda não encontramos registro — não que o candidato não tenha posição.</p>
   </div>
   <div id="homeTopics" class="home-topic-links" aria-live="polite"></div>
 </section>
 
-<section class="home-choices">
-  <a href="candidatos.html?cargo=federal">
-    <strong>Tenho um nome em mente</strong>
-    <span>Buscar por nome, número ou partido</span>
-  </a>
-  <a href="temas.html">
-    <strong>Quero começar por um assunto</strong>
-    <span>Ver os temas com evidência documentada</span>
-  </a>
-  <a href="comparar.html">
-    <strong>Quero comparar</strong>
-    <span>Até 3 candidatos lado a lado, sem ranking</span>
-  </a>
+<section class="home-choices" aria-labelledby="homeChoicesTitle">
+  <div class="home-choices-head">
+    <p class="qv-eyebrow">Comece por aqui</p>
+    <h2 id="homeChoicesTitle">O que importa pra você?</h2>
+  </div>
+  <div class="home-choice-list">
+    <a href="candidatos.html?cargo=federal">
+      <span class="home-choice-copy">
+        <strong>Procure uma pessoa</strong>
+        <span>Busque candidaturas por nome, número ou partido.</span>
+      </span>
+      <span class="home-choice-arrow" aria-hidden="true">→</span>
+    </a>
+    <a href="temas.html">
+      <span class="home-choice-copy">
+        <strong>Explore um assunto</strong>
+        <span>Veja temas ligados a propostas, declarações e atuação documentada.</span>
+      </span>
+      <span class="home-choice-arrow" aria-hidden="true">→</span>
+    </a>
+    <a href="comparar.html">
+      <span class="home-choice-copy">
+        <strong>Compare candidaturas</strong>
+        <span>Consulte informações lado a lado, sem ranking.</span>
+      </span>
+      <span class="home-choice-arrow" aria-hidden="true">→</span>
+    </a>
+  </div>
 </section>
 
 </main>
@@ -411,6 +402,6 @@
   </div>
 </footer>
 
-<script type="module" src="js/pages/home.js?v=6.0.0"></script>
+<script type="module" src="js/pages/home.js?v=6.0.4"></script>
 </body>
 </html>

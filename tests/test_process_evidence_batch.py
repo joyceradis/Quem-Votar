@@ -4,6 +4,7 @@ from __future__ import annotations
 import importlib.util
 import sys
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 SCRIPTS = Path(__file__).resolve().parents[1] / "scripts"
@@ -51,6 +52,137 @@ def html_fetch(body_text: str, counter: list[int]):
 
 
 class ReliableBatchTests(unittest.TestCase):
+    def test_section_migration_transport_failure_does_not_reopen_exhausted_source(self):
+        from test_wartime_throughput import chamber_source
+        item = chamber_source()
+        item['source_title'] = 'EMR 1/0'
+        item['institutional_snapshot'].update(
+            siglaTipo='EMR', numero='1', title='EMR 1/0', ementa='',
+            urlInteiroTeor='https://www.camara.leg.br/proposicoesWeb/prop_mostrarintegra?codteor=789')
+        sid = batch.make_source_id(item)
+        for error in ('HTTP 429 ao coletar ficha', 'timeout ao coletar ficha',
+                      'falha de rede ao coletar ficha', 'HTTP 503 ao coletar ficha'):
+            with self.subTest(error=error):
+                state = {'sources': {sid: {'status': 'failed', 'attempts': 3,
+                    'last_error': 'conteúdo institucional API insuficiente para revisão'}}}
+                calls = []
+
+                def fetch(url):
+                    calls.append(url)
+                    raise RuntimeError(error)
+
+                kwargs = dict(source_payload={'sources': [item]}, candidates={'123': candidate()},
+                              existing_drafts=[], workers=1, fetcher=fetch)
+                state, drafts, failures, metrics = batch.run_batch(**kwargs, state_payload=state)
+                self.assertEqual(metrics['failed'], 1)
+                self.assertEqual(state['sources'][sid]['attempts'], 4)
+                self.assertTrue(state['sources'][sid]['chamber_section_recovery_v1'])
+                self.assertEqual(failures[0]['error'], error)
+                self.assertEqual(drafts, [])
+                for _ in range(2):
+                    state, _, _, metrics = batch.run_batch(**kwargs, state_payload=state)
+                    self.assertEqual(metrics['queued'], 0)
+                    self.assertEqual(state['sources'][sid]['attempts'], 4)
+                self.assertEqual(len(calls), 1)
+
+    def test_section_upgrade_is_once_only_and_preserves_quarantine(self):
+        item = source()
+        item.update(attribution_trust="official_author_bulk", institutional_snapshot={
+            "siglaTipo": "EMR", "urlInteiroTeor": "https://www.camara.leg.br/documento"})
+        sid = batch.make_source_id(item)
+        previous = {"status": "failed", "attempts": 3,
+                    "last_error": "conteúdo institucional API insuficiente para revisão"}
+        kwargs = dict(source_payload={"sources": [item]}, candidates={"123": candidate()},
+                      existing_drafts=[], workers=1)
+        # Even if a failed transport repeats the OLD error verbatim, no loop.
+        with patch.object(batch, 'attempt_source', return_value=(None, 1, previous['last_error'])) as attempt:
+            state, _, _, metrics = batch.run_batch(**kwargs, state_payload={"sources": {sid: previous}})
+            self.assertEqual(metrics['queued'], 1)
+            self.assertEqual(state['sources'][sid]['attempts'], 4)
+            self.assertTrue(state['sources'][sid]['chamber_section_recovery_v1'])
+            _, _, _, again = batch.run_batch(**kwargs, state_payload=state)
+            self.assertEqual(again['queued'], 0)
+            self.assertEqual(attempt.call_count, 1)
+            for status in ('quarantined', 'rejected', 'collected'):
+                _, _, _, metrics = batch.run_batch(**kwargs, state_payload={
+                    'sources': {sid: dict(previous, status=status)}})
+                self.assertEqual(metrics['queued'], 0)
+
+    def test_selective_recovery_is_idempotent_and_leaves_other_state_untouched(self):
+        targets = []
+        previous_sources = {}
+        for proposition_id in (10, 11):
+            item = source(
+                "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao"
+                f"?idProposicao={proposition_id}"
+            )
+            item.update(
+                candidate_id="123",
+                source_kind="institutional",
+                attribution_trust="official_author_bulk",
+                institutional_snapshot={
+                    "siglaTipo": "EMR",
+                    "urlInteiroTeor": "https://www.camara.leg.br/documento",
+                },
+            )
+            targets.append(item)
+            previous_sources[batch.make_source_id(item)] = {
+                "status": "failed",
+                "attempts": 3,
+                "reprocess_count": 0,
+                "last_error": "conteúdo institucional API insuficiente para revisão",
+            }
+
+        unrelated_id = "unrelated-source-id"
+        unrelated_state = {
+            "status": "failed",
+            "attempts": 3,
+            "reprocess_count": 0,
+            "last_error": "falha independente",
+        }
+        previous_sources[unrelated_id] = dict(unrelated_state)
+        target_ids = set(previous_sources) - {unrelated_id}
+
+        def recovered_draft(item, **kwargs):
+            return ({
+                "draft_id": batch.make_source_id(item),
+                "candidate_id": item["candidate_id"],
+                "source_url": item["source_url"],
+                "review_status": "pending",
+            }, 1, "")
+
+        with patch.object(batch, "attempt_source", side_effect=recovered_draft) as attempt:
+            state, drafts, failures, metrics = batch.run_batch(
+                source_payload={"sources": targets},
+                candidates={"123": candidate()},
+                existing_drafts=[],
+                state_payload={"sources": previous_sources},
+                reprocess_source_ids=target_ids,
+                workers=1,
+            )
+            self.assertEqual(2, metrics["collected"])
+            self.assertEqual([], failures)
+            self.assertEqual(2, len(drafts))
+            self.assertTrue(all(row["review_status"] == "pending" for row in drafts))
+            self.assertEqual(unrelated_state, state["sources"][unrelated_id])
+            for source_id in target_ids:
+                migrated = state["sources"][source_id]
+                self.assertEqual("collected", migrated["status"])
+                self.assertEqual(4, migrated["attempts"])
+                self.assertEqual(1, migrated["reprocess_count"])
+                self.assertTrue(migrated["chamber_section_recovery_v1"])
+
+            _, _, _, second_metrics = batch.run_batch(
+                source_payload={"sources": targets},
+                candidates={"123": candidate()},
+                existing_drafts=drafts,
+                state_payload=state,
+                workers=1,
+            )
+
+        self.assertEqual(0, second_metrics["queued"])
+        self.assertEqual(2, attempt.call_count)
+
     def test_resume_skips_already_collected_source(self):
         counter = [0]
         payload = {"sources": [source()]}

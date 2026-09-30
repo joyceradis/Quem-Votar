@@ -1,0 +1,241 @@
+{
+  "baseline_sha": "855198e051033b83402b951df379cf6a5b4b1d2b",
+  "status": "technical_repair_pending_independent_review",
+  "canonical_write": false,
+  "metrics": {
+    "candidate_universe": 563,
+    "candidates_accounted_for": 563,
+    "candidates_with_seed": 3,
+    "candidates_with_exact_content": 9,
+    "candidates_with_draft": 13,
+    "candidates_with_review": 1,
+    "candidates_with_canonical_evidence": 7,
+    "source_records": 12,
+    "draft_records": 13,
+    "review_records": 1,
+    "canonical_records": 24,
+    "candidates_with_public_q2": 2,
+    "candidates_with_staged_q2_not_published": 16,
+    "candidates_with_canonical_q2_not_in_snapshot": 0,
+    "candidates_discovery_checked": 0,
+    "candidates_no_exact_content_in_checked_sources": 0,
+    "candidates_no_seed_or_exact_in_checked_sources": 0,
+    "state_counts": {
+      "approved_not_canonical": 1,
+      "canonical_published": 7,
+      "discovery_only": 3,
+      "draft_collected": 12,
+      "exact_source_found": 1,
+      "not_started": 539
+    }
+  },
+  "q2_staged_candidates": [
+    {
+      "candidate_id": "80002541012",
+      "candidate_name": "BRENO BARCELOS",
+      "office": "GOVERNADOR",
+      "q2": {
+        "state": "staged_not_promoted",
+        "public_prospective": 0,
+        "canonical_prospective": 0,
+        "staged_prospective": 1,
+        "scope_note": "Staging não é aprovação; atuação histórica não responde Q2. Ausência de registro não implica ausência de proposta."
+      }
+    },
+    {
+      "candidate_id": "80002551833",
+      "candidate_name": "HELDER SALOMÃO",
+      "office": "GOVERNADOR",
+      "q2": {
+        "state": "staged_not_promoted",
+        "public_prospective": 0,
+        "canonical_prospective": 0,
+        "staged_prospective": 1,
+        "scope_note": "Staging não é aprovação; atuação histórica não responde Q2. Ausência de registro não implica ausência de proposta."
+      }
+    },
+    {
+      "candidate_id": "80002552682",
+      "candidate_name": "LORENZO PAZOLINI",
+      "office": "GOVERNADOR",
+      "q2": {
+        "state": "staged_not_promoted",
+        "public_prospective": 0,
+        "canonical_prospective": 0,
+        "staged_prospective": 1,
+        "scope_note": "Staging não é aprovação; atuação histórica não responde Q2. Ausência de registro não implica ausência de proposta."
+      }
+    },
+    {
+      "candidate_id": "80002550832",
+      "candidate_name": "RAFAEL DEMUNER",
+      "office": "GOVERNADOR",
+      "q2": {
+        "state": "staged_not_promoted",
+        "public_prospective": 0,
+        "canonical_prospective": 0,
+        "staged_prospective": 1,
+        "scope_note": "Staging não é aprovação; atuação histórica não responde Q2. Ausência de registro não implica ausência de proposta."
+      }
+    },
+    {
+      "candidate_id": "80002552172",
+      "candidate_name": "RICARDO FERRAÇO",
+      "office": "GOVERNADOR",
+      "q2": {
+        "state": "staged_not_promoted",
+        "public_prospective": 0,
+        "canonical_prospective": 0,
+        "staged_prospective": 1,
+        "scope_note": "Staging não é aprovação; atuação histórica não responde Q2. Ausência de registro não implica ausência de proposta."
+      }
+    },
+    {
+      "candidate_id": "80002542401",
+      "candidate_name": "CALLEGARI",
+      "office": "SENADOR",
+      "q2": {
+        "state": "staged_not_promoted",
+        "public_prospective": 0,
+        "canonical_prospective": 0,
+        "staged_prospective": 1,
+        "scope_note": "Staging não é aprovação; atuação histórica não responde Q2. Ausência de registro não implica ausência de proposta."
+      }
+    },
+    {
+      "candidate_id": "80002553265",
+      "candidate_name": "EVAIR DE MELO",
+      "office": "SENADOR",
+      "q2": {
+        "state": "staged_not_promoted",
+        "public_prospective": 0,
+        "canonical_prospective": 0,
+        "staged_prospective": 1,
+        "scope_note": "Staging não é aprovação; atuação histórica não responde Q2. Ausência de registro não implica ausência de proposta."
+      }
+    },
+    {
+      "candidate_id": "80002550187",
+      "candidate_name": "FABIANO CONTARATO",
+      "office": "SENADOR",
+      "q2": {
+        "state": "staged_not_promoted",
+        "public_prospective": 0,
+        "canonical_prospective": 0,
+        "staged_prospective": 1,
+        "scope_note": "Staging não é aprovação; atuação histórica não responde Q2. Ausência de registro não implica ausência de proposta."
+      }
+    },
+    {
+      "candidate_id": "80002530022",
+      "candidate_name": "LEONARDO MONJARDIM",
+      "office": "SENADOR",
+      "q2": {
+        "state": "staged_not_promoted",
+        "public_prospective": 0,
+        "canonical_prospective": 0,
+        "staged_prospective": 1,
+        "scope_note": "Staging não é aprovação; atuação histórica não responde Q2. Ausência de registro não implica ausência de proposta."
+      }
+    },
+    {
+      "candidate_id": "80002553269",
+      "candidate_name": "MAGUINHA MALTA",
+      "office": "SENADOR",
+      "q2": {
+        "state": "staged_not_promoted",
+        "public_prospective": 0,
+        "canonical_prospective": 0,
+        "staged_prospective": 1,
+        "scope_note": "Staging não é aprovação; atuação histórica não responde Q2. Ausência de registro não implica ausência de proposta."
+      }
+    },
+    {
+      "candidate_id": "80002538202",
+      "candidate_name": "MARCOS DO VAL",
+      "office": "SENADOR",
+      "q2": {
+        "state": "staged_not_promoted",
+        "public_prospective": 0,
+        "canonical_prospective": 0,
+        "staged_prospective": 1,
+        "scope_note": "Staging não é aprovação; atuação histórica não responde Q2. Ausência de registro não implica ausência de proposta."
+      }
+    },
+    {
+      "candidate_id": "80002549404",
+      "candidate_name": "PROFESSOR FABIAN",
+      "office": "SENADOR",
+      "q2": {
+        "state": "staged_not_promoted",
+        "public_prospective": 0,
+        "canonical_prospective": 0,
+        "staged_prospective": 1,
+        "scope_note": "Staging não é aprovação; atuação histórica não responde Q2. Ausência de registro não implica ausência de proposta."
+      }
+    },
+    {
+      "candidate_id": "80002551370",
+      "candidate_name": "RENATO CASAGRANDE",
+      "office": "SENADOR",
+      "q2": {
+        "state": "staged_not_promoted",
+        "public_prospective": 0,
+        "canonical_prospective": 0,
+        "staged_prospective": 1,
+        "scope_note": "Staging não é aprovação; atuação histórica não responde Q2. Ausência de registro não implica ausência de proposta."
+      }
+    },
+    {
+      "candidate_id": "80002552373",
+      "candidate_name": "RODNEY MIRANDA",
+      "office": "SENADOR",
+      "q2": {
+        "state": "staged_not_promoted",
+        "public_prospective": 0,
+        "canonical_prospective": 0,
+        "staged_prospective": 1,
+        "scope_note": "Staging não é aprovação; atuação histórica não responde Q2. Ausência de registro não implica ausência de proposta."
+      }
+    },
+    {
+      "candidate_id": "80002551368",
+      "candidate_name": "ROSE DE FREITAS",
+      "office": "SENADOR",
+      "q2": {
+        "state": "staged_not_promoted",
+        "public_prospective": 0,
+        "canonical_prospective": 0,
+        "staged_prospective": 1,
+        "scope_note": "Staging não é aprovação; atuação histórica não responde Q2. Ausência de registro não implica ausência de proposta."
+      }
+    },
+    {
+      "candidate_id": "80002552692",
+      "candidate_name": "SERGIO MENEGUELLI",
+      "office": "SENADOR",
+      "q2": {
+        "state": "staged_not_promoted",
+        "public_prospective": 0,
+        "canonical_prospective": 0,
+        "staged_prospective": 1,
+        "scope_note": "Staging não é aprovação; atuação histórica não responde Q2. Ausência de registro não implica ausência de proposta."
+      }
+    }
+  ],
+  "scope": "Snapshot do checkout e staging versionado; não mede drafts dos artifacts do worker.",
+  "publication_gate": "Revisão/aprovação de evidência política e integração do PR; nada deste relatório alimenta a UI.",
+  "capture": {
+    "captured": 7,
+    "failures": [
+      {
+        "candidate_id": "80002552692",
+        "source_url": "https://politicacapixaba.com.br/meneguelli-defende-investimentos-no-norte-do-espirito-santo/noticias-politicas",
+        "error": "HTTP 429 ao coletar https://politicacapixaba.com.br/meneguelli-defende-investimentos-no-norte-do-espirito-santo/noticias-politicas"
+      }
+    ],
+    "status": "7 raw drafts pending review; no new approved review"
+  },
+  "official_tse_plans_captured": 5,
+  "official_tse_package_sha256": "577af6305bee4ef07f517cb3ab02ac338ccd05e865e25f7263021cf1db46a6dc"
+}

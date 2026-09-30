@@ -189,7 +189,24 @@ Parar para decisão humana quando houver:
 
 Agentes persistentes/bots com escrita devem usar permissão mínima, histórico de ações e desativação simples. Merge destrutivo silencioso é proibido.
 
-## 9. Feature freeze e sustentabilidade
+## 9. Limites do host e dados sensíveis
+
+O checkout do `Quem-Votar` e os recursos explicitamente autorizados para a tarefa são o working set padrão. A existência de outros dados no mesmo computador **não é autorização de acesso**.
+
+É proibido ao agente:
+- procurar ou explorar `~`, Desktop, Documents, Downloads, iCloud Drive, volumes externos, perfis/cache/histórico do navegador, Keychain, clipboard global ou outras áreas pessoais para obter contexto;
+- abrir, ler, capturar, transcrever, indexar, copiar ou usar prontuários, prescrições, exames, documentos de pacientes ou outros dados clínicos;
+- observar outras janelas/telas por screen recording, accessibility/computer-use ou automação para obter informação fora do working set;
+- acessar ou operar certificado digital, assinatura eletrônica, autenticação, OTP, QR, push, biometria, credenciais, sessão autenticada ou qualquer fluxo que produza manifestação de vontade da mantenedora;
+- reproduzir conteúdo sensível encontrado incidentalmente em prompt, log, artifact, commit, Issue ou PR.
+
+**Fail-closed:** se conteúdo potencialmente clínico, pessoal, credencial ou de identidade/assinatura aparecer, não avançar naquele conteúdo. O agente pode continuar a tarefa legítima do repositório apenas se conseguir fazê-lo sem abrir, atravessar, capturar ou usar esse recurso. Se o próximo passo exigir acesso fora do working set, deve parar esse passo e solicitar autorização humana específica.
+
+**Conflito ou ambiguidade:** se uma tarefa legítima parecer contradizer estes limites, o agente não resolve o conflito por conta própria nem amplia permissões. Deve sinalizar o ponto exato e suspender somente o passo conflitante. O restante da lane pode continuar quando independente. A mantenedora decide produto; a avaliação de segurança pode ser encaminhada ao auditor/control plane antes de qualquer acesso excepcional.
+
+Quando suportado, usar sandbox/allowlist e menor privilégio de filesystem, tela e automação. Instrução textual é defesa adicional, não substitui isolamento técnico. Nenhum teste usa dado real de paciente.
+
+## 10. Feature freeze e sustentabilidade
 
 Durante o freeze V5.5, o núcleo eleitoral permanece congelado salvo correção, segurança, acessibilidade, disponibilidade, atualização factual ou proveniência.
 
@@ -202,7 +219,7 @@ A camada de sustentabilidade pode evoluir separadamente (`FUNDING.yml`, Sponsors
 - não conceda influência editorial a apoiadores;
 - não escreva em `topic-evidence.json`.
 
-## 10. Topologia de trabalho
+## 11. Topologia de trabalho
 
 Função dos artefatos:
 - `README.md`: produto estável, não backlog;

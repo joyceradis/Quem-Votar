@@ -5,7 +5,7 @@
 // aqui) e o cartão virou função própria.
 import { $, esc, norm, params } from "../core/dom.js";
 import { loadCore, applyGlobalMeta, OFFICES, officeLabel } from "../core/data.js";
-import { formatSnapshot } from "../core/format.js";
+import { formatSnapshot, initials, registrationStatusException } from "../core/format.js";
 import { updateSearchParams } from "../core/url-state.js";
 import { setupNavigation } from "../core/a11y.js";
 import {
@@ -33,11 +33,22 @@ const PAGE_SIZE = 12;
 
 setupNavigation();
 
+// Monograma neutro no lugar da foto ausente. O texto "Imagem não disponível"
+// continua no DOM (leitor de tela) e as iniciais são desenhadas por CSS.
+// "Outros" é o código genérico do TSE (nº 956) e não descreve ocupação.
+function usableOccupation(value) {
+  return Boolean(value) && !/^OUTROS?$/i.test(String(value).trim());
+}
+
+function fallbackMarkup(name) {
+  return `<div class="photo-fallback" data-initials="${esc(initials(name))}">Imagem não disponível</div>`;
+}
+
 function photoMarkup(candidate) {
   const source =
     candidate.photo_url || candidate.photoUrl || candidate.foto_url || candidate.photo?.url || "";
   const name = candidate.ballot_name || candidate.full_name || "candidato";
-  if (!source) return `<div class="photo-fallback">Imagem não disponível</div>`;
+  if (!source) return fallbackMarkup(name);
   return `<img src="${esc(source)}" alt="Foto de ${esc(name)}" loading="lazy" data-photo>`;
 }
 
@@ -76,6 +87,7 @@ function candidateCard(candidate, kind, selectedIds) {
         .join("")}${remaining ? `<span class="qv-tag qv-tag--more">+${remaining} tema${remaining === 1 ? "" : "s"}</span>` : ""}</div>`
     : "";
 
+  const statusNote = registrationStatusException(candidate.registration_status);
   const proposalCount = topicEvidence(candidate).length;
   const electionsCount = (candidate.previous_elections || []).length;
   const assetsCount = candidate.assets?.count || (candidate.assets?.items || []).length || 0;
@@ -99,8 +111,9 @@ function candidateCard(candidate, kind, selectedIds) {
         <p class="qv-card-kicker">${esc(officeLabel(kind).toUpperCase())}</p>
         <h3><a href="${profileUrl}">${esc(name)}</a></h3>
         <p class="qv-card-electoral">${esc(candidate.party || "Partido não informado")} · nº ${esc(candidate.number || "—")}</p>
+        ${statusNote ? `<p class="qv-card-status">Situação da candidatura: ${esc(statusNote)}</p>` : ""}
         ${candidate.current_mandate ? `<p class="qv-card-now">${esc(currentActivity(candidate, kind))}</p>` : ""}
-        ${candidate.occupation ? `<p class="qv-card-occupation">${esc(candidate.occupation)}</p>` : ""}
+        ${usableOccupation(candidate.occupation) ? `<p class="qv-card-occupation">${esc(candidate.occupation)}</p>` : ""}
         ${topicTags}
         ${proposalCount ? `<p class="qv-card-meta">${proposalCount} registro${proposalCount === 1 ? "" : "s"} temático${proposalCount === 1 ? "" : "s"} com fonte</p>` : ""}
         ${density.length ? `<p class="qv-card-meta">${density.join(" · ")}</p>` : enrichmentGapLabel(candidate) ? `<p class="qv-card-meta">${enrichmentGapLabel(candidate)}</p>` : ""}
@@ -127,18 +140,21 @@ function renderPagination(total, page, onPage) {
     if (current === 1 || current === pages || Math.abs(current - page) <= 2) visible.push(current);
   }
 
-  const parts = [`<button type="button" data-page="${page - 1}" ${page === 1 ? "disabled" : ""}>Anterior</button>`];
+  const pageParts = [];
   let previous = 0;
   visible.forEach((current) => {
-    if (previous && current - previous > 1) parts.push('<span aria-hidden="true">…</span>');
-    parts.push(
+    if (previous && current - previous > 1) pageParts.push('<span aria-hidden="true">…</span>');
+    pageParts.push(
       `<button type="button" data-page="${current}" class="${current === page ? "active" : ""}" ${current === page ? 'aria-current="page"' : ""}>${current}</button>`
     );
     previous = current;
   });
-  parts.push(`<button type="button" data-page="${page + 1}" ${page === pages ? "disabled" : ""}>Próxima</button>`);
-
-  mount.innerHTML = parts.join("");
+  mount.innerHTML = [
+    `<button type="button" data-page="${page - 1}" ${page === 1 ? "disabled" : ""}>Anterior</button>`,
+    `<span class="pagination-status">Página ${page} de ${pages}</span>`,
+    `<div class="pagination-pages" role="group" aria-label="Páginas">${pageParts.join("")}</div>`,
+    `<button type="button" data-page="${page + 1}" ${page === pages ? "disabled" : ""}>Próxima</button>`,
+  ].join("");
   mount.querySelectorAll("button[data-page]").forEach((button) => {
     button.addEventListener("click", () => {
       const next = Number(button.dataset.page);
@@ -322,7 +338,7 @@ async function initCandidates() {
       .querySelectorAll("img[data-photo]")
       .forEach((img) => {
         img.addEventListener("error", () => {
-          img.outerHTML = '<div class="photo-fallback">Imagem não disponível</div>';
+          img.outerHTML = fallbackMarkup(img.alt.replace(/^Foto de /, ""));
         });
       });
 

@@ -216,5 +216,242 @@ class TseEnrichmentTests(unittest.TestCase):
         self.assertNotIn("protocolo", exported)
 
 
+def _entry(cid: str, sha: str = "a", sync: str = "16/09/2026 às 16:35", **extra) -> dict:
+    return {
+        "candidate_id": cid,
+        "transport_url": f"https://meuvoto.org.br/candidato/{cid}.html",
+        "transport_sha256": sha * 64,
+        "source_sync_at": sync,
+        "official_candidate_url": f"https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1/{cid}/2026/ES",
+        "assets": {"total_declared_brl": None, "count": 0, "items": []},
+        "social_links": [],
+        "previous_elections": [],
+        **extra,
+    }
+
+
+def _page(cid: str, sections=("patrimonio", "canais", "historico"), identification: str = "") -> bytes:
+    body = "".join(f'<h2 id="{sid}">x</h2><p>sem registros</p>' for sid in sections)
+    return (
+        f'<html><body data-salvar="{cid}" data-quando="16/09/2026 às 16:35">{identification}{body}'
+        f'<a href="https://divulgacandcontas.tse.jus.br/divulga/#/candidato/SUDESTE/ES/1/{cid}/2026/ES">tse</a>'
+        "</body></html>"
+    ).encode("utf-8")
+
+
+def _declared_previous(count: int) -> str:
+    """Trecho da identificação como o MeuVoto o publica (visto no run 36618481606)."""
+    note = "primeira disputa mapeada" if count == 0 else f"desde 2004"
+    return (
+        f'<dl><div>\n<dt>Eleições anteriores</dt>\n<dd>{count}</dd>\n'
+        f'<dd class="perfil-exato">{note}</dd>\n</div></dl>'
+    )
+
+
+class _FakeResponse:
+    def __init__(self, raw: bytes):
+        self.raw = raw
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        return False
+
+    def read(self):
+        return self.raw
+
+
+class BootstrapMajoritarianCoverageTests(unittest.TestCase):
+    def test_universe_covers_the_four_offices(self):
+        import json
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            for index, name in enumerate(bootstrap.OFFICE_SNAPSHOT_FILES):
+                (root / name).write_text(json.dumps([{"tse_id": 100 + index}]), encoding="utf-8")
+            with patch.object(bootstrap, "GENERATED", root):
+                self.assertEqual(["100", "101", "102", "103"], bootstrap.current_candidate_ids())
+
+    def test_missing_office_snapshot_fails_closed(self):
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmp, patch.object(bootstrap, "GENERATED", Path(tmp)):
+            with self.assertRaises(FileNotFoundError):
+                bootstrap.current_candidate_ids()
+
+    def test_merge_keeps_existing_entries_and_recomputes_aggregate(self):
+        old_a, old_b = _entry("1", "a"), _entry("3", "b")
+        existing = {
+            "version": "1.0.0",
+            "captured_at": "2026-09-21T22:42:54+00:00",
+            "source": {"observed_source_sync_at": ["16/09/2026 às 16:35"], "candidate_count": 2},
+            "entries": [old_a, old_b],
+        }
+        new = _entry("2", "c", sync="28/09/2026 às 10:00", captured_at="2026-09-29T20:00:00+00:00")
+        merged = bootstrap.merge_payload(existing, [new])
+
+        self.assertEqual(["1", "2", "3"], [e["candidate_id"] for e in merged["entries"]])
+        self.assertIs(merged["entries"][0], old_a)  # entradas existentes passam intactas
+        self.assertIs(merged["entries"][2], old_b)
+        self.assertEqual(3, merged["source"]["candidate_count"])
+        self.assertEqual(bootstrap.aggregate_sha256(merged["entries"]), merged["source"]["aggregate_sha256"])
+        self.assertEqual(
+            ["16/09/2026 às 16:35", "28/09/2026 às 10:00"],
+            merged["source"]["observed_source_sync_at"],
+        )
+        # captura nova não rejuvenesce a antiga
+        self.assertEqual("2026-09-21T22:42:54+00:00", merged["captured_at"])
+
+    def test_merge_never_overwrites_an_existing_entry(self):
+        existing = {"source": {}, "entries": [_entry("1")]}
+        with self.assertRaisesRegex(RuntimeError, "não sobrescreve"):
+            bootstrap.merge_payload(existing, [_entry("1", "z")])
+
+    def test_committed_bootstrap_is_stable_and_reproducible(self):
+        import json
+
+        path = Path(__file__).resolve().parents[1] / "data" / "reference" / "tse-enrichment-bootstrap.json"
+        raw = path.read_text(encoding="utf-8")
+        payload = json.loads(raw)
+        self.assertEqual(raw, bootstrap.dump_payload(payload))  # merge não reformata o que já existe
+        self.assertEqual(payload["source"]["aggregate_sha256"], bootstrap.aggregate_sha256(payload["entries"]))
+        self.assertEqual(payload["source"]["candidate_count"], len(payload["entries"]))
+
+    def test_unexpected_page_structure_is_not_recorded_as_zero(self):
+        raw = _page("55", sections=("patrimonio",))  # sem canais/historico
+        with patch.object(bootstrap.urllib.request, "urlopen", return_value=_FakeResponse(raw)), patch.object(
+            bootstrap.time, "sleep"
+        ):
+            with self.assertRaisesRegex(RuntimeError, "estrutura inesperada"):
+                bootstrap.fetch_candidate("55", require_sections=True)
+
+    def test_page_with_sections_and_no_records_is_a_legitimate_empty(self):
+        raw = _page("56")
+        with patch.object(bootstrap.urllib.request, "urlopen", return_value=_FakeResponse(raw)):
+            entry = bootstrap.fetch_candidate("56", require_sections=True, captured_at="2026-09-29T20:00:00+00:00")
+        self.assertEqual(0, entry["assets"]["count"])
+        self.assertEqual([], entry["social_links"])
+        self.assertEqual("2026-09-29T20:00:00+00:00", entry["captured_at"])
+
+    def test_first_time_candidate_without_history_section_is_a_declared_empty(self):
+        # 4 dos 16 majoritários (run 36618481606): sem seção "historico", e a
+        # própria página declara "Eleições anteriores: 0 — primeira disputa mapeada".
+        raw = _page("58", sections=("patrimonio", "canais"), identification=_declared_previous(0))
+        with patch.object(bootstrap.urllib.request, "urlopen", return_value=_FakeResponse(raw)):
+            entry = bootstrap.fetch_candidate("58", require_sections=True)
+        self.assertEqual([], entry["previous_elections"])
+        self.assertEqual(0, entry["assets"]["count"])
+
+    def test_missing_history_section_with_declared_previous_elections_is_rejected(self):
+        raw = _page("59", sections=("patrimonio", "canais"), identification=_declared_previous(3))
+        with patch.object(bootstrap.urllib.request, "urlopen", return_value=_FakeResponse(raw)), patch.object(
+            bootstrap.time, "sleep"
+        ):
+            with self.assertRaisesRegex(RuntimeError, "estrutura inesperada"):
+                bootstrap.fetch_candidate("59", require_sections=True)
+
+    def test_missing_history_section_without_declaration_is_rejected(self):
+        raw = _page("60", sections=("patrimonio", "canais"))
+        with patch.object(bootstrap.urllib.request, "urlopen", return_value=_FakeResponse(raw)), patch.object(
+            bootstrap.time, "sleep"
+        ):
+            with self.assertRaisesRegex(RuntimeError, "estrutura inesperada"):
+                bootstrap.fetch_candidate("60", require_sections=True)
+
+    def test_declared_zero_does_not_excuse_other_missing_sections(self):
+        for sections in (("canais",), ("patrimonio",), ()):
+            raw = _page("61", sections=sections, identification=_declared_previous(0))
+            with patch.object(bootstrap.urllib.request, "urlopen", return_value=_FakeResponse(raw)), patch.object(
+                bootstrap.time, "sleep"
+            ):
+                with self.assertRaisesRegex(RuntimeError, "estrutura inesperada"):
+                    bootstrap.fetch_candidate("61", require_sections=True)
+
+    def test_declared_previous_elections_parses_only_the_explicit_count(self):
+        self.assertEqual(0, bootstrap.declared_previous_elections(_declared_previous(0)))
+        self.assertEqual(8, bootstrap.declared_previous_elections(_declared_previous(8)))
+        self.assertIsNone(bootstrap.declared_previous_elections("<p>Eleições anteriores</p>"))
+        self.assertIsNone(bootstrap.declared_previous_elections("<dt>Eleições anteriores</dt><dd>—</dd>"))
+
+    def test_page_for_another_candidate_is_rejected(self):
+        raw = _page("999")
+        with patch.object(bootstrap.urllib.request, "urlopen", return_value=_FakeResponse(raw)), patch.object(
+            bootstrap.time, "sleep"
+        ):
+            with self.assertRaisesRegex(RuntimeError, "SQ_CANDIDATO esperado"):
+                bootstrap.fetch_candidate("57", require_sections=True)
+
+    def test_merge_missing_reports_failures_and_writes_only_successes(self):
+        import json
+        import tempfile
+        from contextlib import redirect_stdout
+
+        existing = {
+            "version": "1.0.0",
+            "captured_at": "2026-09-21T22:42:54+00:00",
+            "source": {"observed_source_sync_at": [], "candidate_count": 1, "aggregate_sha256": "x"},
+            "entries": [_entry("1")],
+        }
+
+        def fake_fetch(cid, **kwargs):
+            if cid == "3":
+                raise RuntimeError("3: HTTPError: HTTP Error 404: Not Found")
+            return _entry(cid, "d", captured_at=kwargs.get("captured_at"))
+
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "bootstrap.json"
+            out.write_text(bootstrap.dump_payload(existing), encoding="utf-8")
+            with patch.object(bootstrap, "OUT", out), patch.object(
+                bootstrap, "current_candidate_ids", return_value=["1", "2", "3"]
+            ), patch.object(bootstrap, "fetch_candidate", side_effect=fake_fetch):
+                with redirect_stdout(io.StringIO()) as buffer:
+                    code = bootstrap.run_merge_missing(strict=False)
+                self.assertEqual(0, code)
+                written = json.loads(out.read_text(encoding="utf-8"))
+                self.assertEqual(["1", "2"], [e["candidate_id"] for e in written["entries"]])
+                summary = json.loads(buffer.getvalue())
+                self.assertEqual(["2"], summary["fetched"])
+                self.assertEqual("3", summary["failed"][0]["candidate_id"])
+                self.assertIn("404", summary["failed"][0]["error"])
+
+                # --strict: mesma coleta, mas a falha derruba o job
+                out.write_text(bootstrap.dump_payload(existing), encoding="utf-8")
+                with redirect_stdout(io.StringIO()):
+                    self.assertEqual(1, bootstrap.run_merge_missing(strict=True))
+
+    def test_merge_missing_with_nothing_to_do_does_not_touch_the_file(self):
+        import tempfile
+        from contextlib import redirect_stdout
+
+        existing = {"source": {"candidate_count": 1}, "entries": [_entry("1")]}
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "bootstrap.json"
+            out.write_text(bootstrap.dump_payload(existing), encoding="utf-8")
+            before = out.read_bytes()
+            with patch.object(bootstrap, "OUT", out), patch.object(
+                bootstrap, "current_candidate_ids", return_value=["1"]
+            ):
+                with redirect_stdout(io.StringIO()):
+                    self.assertEqual(0, bootstrap.run_merge_missing(strict=True))
+            self.assertEqual(before, out.read_bytes())
+
+    def test_merge_missing_rejects_ids_outside_the_current_universe(self):
+        import tempfile
+        from contextlib import redirect_stdout
+
+        existing = {"source": {"candidate_count": 2}, "entries": [_entry("1"), _entry("9")]}
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "bootstrap.json"
+            out.write_text(bootstrap.dump_payload(existing), encoding="utf-8")
+            with patch.object(bootstrap, "OUT", out), patch.object(
+                bootstrap, "current_candidate_ids", return_value=["1", "2"]
+            ):
+                with redirect_stdout(io.StringIO()):
+                    with self.assertRaisesRegex(RuntimeError, "fora do universo"):
+                        bootstrap.run_merge_missing(strict=False)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -10,11 +10,13 @@
   gap: 7px;
   min-height: var(--tap-min);
   padding: 0 18px;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-sm);
   border: 1px solid var(--line-strong);
   background: #fff;
   color: var(--blue-dark);
-  font-weight: 800;
+  font-size: 0.88rem;
+  font-weight: 750;
+  line-height: 1.3;
   text-decoration: none;
   transition: background var(--motion-fast) ease, border-color var(--motion-fast) ease,
     color var(--motion-fast) ease;
@@ -32,7 +34,8 @@
 }
 
 .qv-btn--primary:hover {
-  background: #0e679d;
+  border-color: var(--blue-dark);
+  background: var(--blue-dark);
 }
 
 .qv-btn--ghost {
@@ -54,4 +57,5 @@
 .qv-btn:disabled {
   cursor: not-allowed;
   opacity: 0.65;
+  box-shadow: none;
 }

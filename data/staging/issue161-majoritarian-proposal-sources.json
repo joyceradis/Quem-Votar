@@ -1,0 +1,291 @@
+{
+  "version": "1.0.0",
+  "updated_at": "2026-09-29T23:09:11.207290+00:00",
+  "authorization_issue": 161,
+  "status": "staging_only",
+  "semantics": "Fontes localizadas para a primeira extração de propostas/declarações de Governador e Senador no ES 2026. Este arquivo não é consumido pela UI e não autoriza publicação canônica. A seleção de uma fonte ou trecho não implica prioridade, qualidade, apoio ou recomendação.",
+  "provenance_rule": "Governador usa como origem canônica o recurso oficial 'ES - Proposta de governo' do TSE. Quando o PDF foi lido por espelho operacional, o espelho é registrado apenas como transporte de leitura. Senado usa conteúdo diretamente atribuível à candidatura quando disponível; caso contrário, entrevista/sabatina com atribuição nominal é marcada como fonte secundária.",
+  "sources": [
+    {
+      "source_id": "gov-breno-tse-plan",
+      "candidate_id": "80002541012",
+      "candidate_name": "BRENO BARCELOS",
+      "office": "GOVERNADOR",
+      "source_kind": "institutional",
+      "source_url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026/resource/c1df9a86-90df-4f1f-a604-a0b55a1ffcae",
+      "source_title": "Plano de governo — BRENO BARCELOS — TSE ES 2026, páginas físicas 12",
+      "source_publisher": "Tribunal Superior Eleitoral",
+      "published_at": null,
+      "captured_at": "2026-09-29T23:09:11.207290+00:00",
+      "retrieval": {
+        "mode": "official_tse_package",
+        "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/proposta_governo/proposta_governo_2026_ES.zip",
+        "package_sha256": "577af6305bee4ef07f517cb3ab02ac338ccd05e865e25f7263021cf1db46a6dc",
+        "member_path": "ES/2026ES80002541012_01.pdf",
+        "document_sha256": "aa288d9a332f2e7aeec90ceab6b82b80c07cf288011ae59b3f1607aa2cbff972",
+        "content_sha256": "b3c8cd2714b26130d2df90776cdd6be6f4994ee57de300621be8f0377a749067",
+        "hash_status": "official_document_captured",
+        "note": "PDF obtido diretamente do pacote público oficial do TSE, sem uso do espelho para esta captura.",
+        "extraction_scope": "selected_physical_pages"
+      },
+      "previous_retrieval": {
+        "mode": "public_mirror_of_tse_document",
+        "url": "https://nortiva.io/eleicoes/proposta/80002541012.pdf",
+        "note": "PDF identificado como cópia do documento entregue ao TSE; requer hash/revalidação contra o pacote oficial antes de promoção canônica.",
+        "hash_status": "pending_official_package_check"
+      }
+    },
+    {
+      "source_id": "gov-helder-tse-plan",
+      "candidate_id": "80002551833",
+      "candidate_name": "HELDER SALOMÃO",
+      "office": "GOVERNADOR",
+      "source_kind": "institutional",
+      "source_url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026/resource/c1df9a86-90df-4f1f-a604-a0b55a1ffcae",
+      "source_title": "Plano de governo — HELDER SALOMÃO — TSE ES 2026, páginas físicas 31, 32",
+      "source_publisher": "Tribunal Superior Eleitoral",
+      "published_at": null,
+      "captured_at": "2026-09-29T23:09:11.207290+00:00",
+      "retrieval": {
+        "mode": "official_tse_package",
+        "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/proposta_governo/proposta_governo_2026_ES.zip",
+        "package_sha256": "577af6305bee4ef07f517cb3ab02ac338ccd05e865e25f7263021cf1db46a6dc",
+        "member_path": "ES/2026ES80002551833_01.pdf",
+        "document_sha256": "d25cb154f8de6276c82f504c81ca3b0ec7f6925625a53788ba1bf77c4d628989",
+        "content_sha256": "4e6340f4af1075d4ab8860f703859af86bc7916dd9b5ea1e5f62142841518a7a",
+        "hash_status": "official_document_captured",
+        "note": "PDF obtido diretamente do pacote público oficial do TSE, sem uso do espelho para esta captura.",
+        "extraction_scope": "selected_physical_pages"
+      },
+      "previous_retrieval": {
+        "mode": "public_mirror_of_tse_document",
+        "url": "https://nortiva.io/eleicoes/proposta/80002551833.pdf",
+        "note": "PDF identificado como cópia do documento entregue ao TSE; requer hash/revalidação contra o pacote oficial antes de promoção canônica.",
+        "hash_status": "pending_official_package_check"
+      }
+    },
+    {
+      "source_id": "gov-lorenzo-tse-plan",
+      "candidate_id": "80002552682",
+      "candidate_name": "LORENZO PAZOLINI",
+      "office": "GOVERNADOR",
+      "source_kind": "institutional",
+      "source_url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026/resource/c1df9a86-90df-4f1f-a604-a0b55a1ffcae",
+      "source_title": "Plano de governo — LORENZO PAZOLINI — TSE ES 2026, páginas físicas 14",
+      "source_publisher": "Tribunal Superior Eleitoral",
+      "published_at": null,
+      "captured_at": "2026-09-29T23:09:11.207290+00:00",
+      "retrieval": {
+        "mode": "official_tse_package",
+        "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/proposta_governo/proposta_governo_2026_ES.zip",
+        "package_sha256": "577af6305bee4ef07f517cb3ab02ac338ccd05e865e25f7263021cf1db46a6dc",
+        "member_path": "ES/2026ES80002552682_01.pdf",
+        "document_sha256": "c1e92e41340af2f42a7d4d1945ca88a1664f5d603f21c91116b34381b78965d4",
+        "content_sha256": "a681a0c07605adbdafce715bda3d628d9ea74418a24f04a66fffececb558f05c",
+        "hash_status": "official_document_captured",
+        "note": "PDF obtido diretamente do pacote público oficial do TSE, sem uso do espelho para esta captura.",
+        "extraction_scope": "selected_physical_pages"
+      },
+      "previous_retrieval": {
+        "mode": "public_mirror_of_tse_document",
+        "url": "https://nortiva.io/eleicoes/proposta/80002552682.pdf",
+        "note": "PDF identificado como cópia do documento entregue ao TSE; requer hash/revalidação contra o pacote oficial antes de promoção canônica.",
+        "hash_status": "pending_official_package_check"
+      }
+    },
+    {
+      "source_id": "gov-rafael-tse-plan",
+      "candidate_id": "80002550832",
+      "candidate_name": "RAFAEL DEMUNER",
+      "office": "GOVERNADOR",
+      "source_kind": "institutional",
+      "source_url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026/resource/c1df9a86-90df-4f1f-a604-a0b55a1ffcae",
+      "source_title": "Plano de governo — RAFAEL DEMUNER — TSE ES 2026, páginas físicas 9",
+      "source_publisher": "Tribunal Superior Eleitoral",
+      "published_at": null,
+      "captured_at": "2026-09-29T23:09:11.207290+00:00",
+      "retrieval": {
+        "mode": "official_tse_package",
+        "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/proposta_governo/proposta_governo_2026_ES.zip",
+        "package_sha256": "577af6305bee4ef07f517cb3ab02ac338ccd05e865e25f7263021cf1db46a6dc",
+        "member_path": "ES/2026ES80002550832_01.pdf",
+        "document_sha256": "fdb7dcc3ff7e430894465a9b1e4a68e16442552da4682f7c796b44229a3e0aef",
+        "content_sha256": "1b69c9ece264ed33b573fd09ef9bbc2180415594b4e6ad144357eb21f1574d83",
+        "hash_status": "official_document_captured",
+        "note": "PDF obtido diretamente do pacote público oficial do TSE, sem uso do espelho para esta captura.",
+        "extraction_scope": "selected_physical_pages"
+      },
+      "previous_retrieval": {
+        "mode": "public_mirror_of_tse_document",
+        "url": "https://nortiva.io/eleicoes/proposta/80002550832.pdf",
+        "note": "PDF identificado como cópia do documento entregue ao TSE; requer hash/revalidação contra o pacote oficial antes de promoção canônica.",
+        "hash_status": "pending_official_package_check"
+      }
+    },
+    {
+      "source_id": "gov-ricardo-tse-plan",
+      "candidate_id": "80002552172",
+      "candidate_name": "RICARDO FERRAÇO",
+      "office": "GOVERNADOR",
+      "source_kind": "institutional",
+      "source_url": "https://dadosabertos.tse.jus.br/dataset/candidatos-2026/resource/c1df9a86-90df-4f1f-a604-a0b55a1ffcae",
+      "source_title": "Plano de governo — RICARDO FERRAÇO — TSE ES 2026, páginas físicas 26",
+      "source_publisher": "Tribunal Superior Eleitoral",
+      "published_at": null,
+      "captured_at": "2026-09-29T23:09:11.207290+00:00",
+      "retrieval": {
+        "mode": "official_tse_package",
+        "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/proposta_governo/proposta_governo_2026_ES.zip",
+        "package_sha256": "577af6305bee4ef07f517cb3ab02ac338ccd05e865e25f7263021cf1db46a6dc",
+        "member_path": "ES/2026ES80002552172_01.pdf",
+        "document_sha256": "5b1bf276f82a0f7b410e0506ffef4577770673d4f7736d456583b5b81c652cc3",
+        "content_sha256": "0b540edf8edd6cea7dd3fb056c49cfbb46a574ce2382a382f3a5de83b5489dc4",
+        "hash_status": "official_document_captured",
+        "note": "PDF obtido diretamente do pacote público oficial do TSE, sem uso do espelho para esta captura.",
+        "extraction_scope": "selected_physical_pages"
+      },
+      "previous_retrieval": {
+        "mode": "public_mirror_of_tse_document",
+        "url": "https://nortiva.io/eleicoes/proposta/80002552172.pdf",
+        "note": "PDF identificado como cópia do documento entregue ao TSE; requer hash/revalidação contra o pacote oficial antes de promoção canônica.",
+        "hash_status": "pending_official_package_check"
+      }
+    },
+    {
+      "source_id": "sen-callegari-site",
+      "candidate_id": "80002542401",
+      "candidate_name": "CALLEGARI",
+      "office": "SENADOR",
+      "source_kind": "official_candidate",
+      "source_url": "https://www.wellingtoncallegari.com.br/",
+      "source_title": "Espírito Santo | Wellington Callegari",
+      "source_publisher": "Campanha Wellington Callegari",
+      "published_at": null,
+      "captured_at": "2026-09-29"
+    },
+    {
+      "source_id": "sen-evair-sim-202608",
+      "candidate_id": "80002553265",
+      "candidate_name": "EVAIR DE MELO",
+      "office": "SENADOR",
+      "source_kind": "secondary",
+      "source_url": "https://simnoticias.com.br/eleicoes/evair-dispara-contra-lula-e-stf-em-sabatina-do-grupo-sim/",
+      "source_title": "Evair dispara contra Lula e STF em Sabatina do Grupo SIM",
+      "source_publisher": "Sim Notícias",
+      "published_at": "2026-08-27",
+      "captured_at": "2026-09-29"
+    },
+    {
+      "source_id": "sen-contarato-sim-20260824",
+      "candidate_id": "80002550187",
+      "candidate_name": "FABIANO CONTARATO",
+      "office": "SENADOR",
+      "source_kind": "secondary",
+      "source_url": "https://simnoticias.com.br/eleicoes/contarato-abre-sabatina-na-tv-sim-sbt-com-criticas-a-polarizacao/",
+      "source_title": "Contarato abre Sabatina do Grupo Sim com críticas à polarização",
+      "source_publisher": "Sim Notícias",
+      "published_at": "2026-08-24",
+      "captured_at": "2026-09-29"
+    },
+    {
+      "source_id": "sen-monjardim-sim-20260902",
+      "candidate_id": "80002530022",
+      "candidate_name": "LEONARDO MONJARDIM",
+      "office": "SENADOR",
+      "source_kind": "secondary",
+      "source_url": "https://simnoticias.com.br/eleicoes/monjardim-promete-mao-de-ferro-contra-o-crime-e-critica-o-stf/",
+      "source_title": "Monjardim promete “mão de ferro” contra o crime e critica o STF",
+      "source_publisher": "Sim Notícias",
+      "published_at": "2026-09-02",
+      "captured_at": "2026-09-29"
+    },
+    {
+      "source_id": "sen-maguinha-site",
+      "candidate_id": "80002553269",
+      "candidate_name": "MAGUINHA MALTA",
+      "office": "SENADOR",
+      "source_kind": "official_candidate",
+      "source_url": "https://www.maguinhamalta.com.br/",
+      "source_title": "Maguinha Malta 222 | Senadora pelo Espírito Santo",
+      "source_publisher": "Campanha Maguinha Malta",
+      "published_at": null,
+      "captured_at": "2026-09-29"
+    },
+    {
+      "source_id": "sen-marcos-sim-20260828",
+      "candidate_id": "80002538202",
+      "candidate_name": "MARCOS DO VAL",
+      "office": "SENADOR",
+      "source_kind": "secondary",
+      "source_url": "https://simnoticias.com.br/eleicoes/marcos-do-val-critica-stf-e-se-diz-contra-fim-da-escala-6x1/",
+      "source_title": "Marcos do Val critica STF e se diz contra fim da escala 6×1",
+      "source_publisher": "Sim Notícias",
+      "published_at": "2026-08-28",
+      "captured_at": "2026-09-29"
+    },
+    {
+      "source_id": "sen-fabian-site",
+      "candidate_id": "80002549404",
+      "candidate_name": "PROFESSOR FABIAN",
+      "office": "SENADOR",
+      "source_kind": "official_candidate",
+      "source_url": "https://professorfabian.com.br/",
+      "source_title": "Professor Fabian — Senador — PSOL ES",
+      "source_publisher": "Campanha Professor Fabian",
+      "published_at": null,
+      "captured_at": "2026-09-29"
+    },
+    {
+      "source_id": "sen-casagrande-sim-20260826",
+      "candidate_id": "80002551370",
+      "candidate_name": "RENATO CASAGRANDE",
+      "office": "SENADOR",
+      "source_kind": "secondary",
+      "source_url": "https://simnoticias.com.br/eleicoes/de-apex-a-escala-6x1-o-que-disse-casagrande-em-sabatina-do-grupo-sim/",
+      "source_title": "De Apex à escala 6×1: o que disse Casagrande em sabatina do Grupo SIM",
+      "source_publisher": "Sim Notícias",
+      "published_at": "2026-08-26",
+      "captured_at": "2026-09-29"
+    },
+    {
+      "source_id": "sen-rodney-sim-20260903",
+      "candidate_id": "80002552373",
+      "candidate_name": "RODNEY MIRANDA",
+      "office": "SENADOR",
+      "source_kind": "secondary",
+      "source_url": "https://simnoticias.com.br/eleicoes/o-que-rodney-promete-para-o-es-alem-da-seguranca-publica/",
+      "source_title": "O que Rodney promete para o ES além da segurança pública",
+      "source_publisher": "Sim Notícias",
+      "published_at": "2026-09-03",
+      "captured_at": "2026-09-29"
+    },
+    {
+      "source_id": "sen-rose-sim-20260925",
+      "candidate_id": "80002551368",
+      "candidate_name": "ROSE DE FREITAS",
+      "office": "SENADOR",
+      "source_kind": "secondary",
+      "source_url": "https://simnoticias.com.br/eleicoes/rose-fala-sobre-seguranca-bets-banestes-e-escala-6x1/",
+      "source_title": "Rose fala sobre segurança, bets, Banestes e escala 6×1",
+      "source_publisher": "Sim Notícias",
+      "published_at": "2026-09-25",
+      "captured_at": "2026-09-29"
+    },
+    {
+      "source_id": "sen-meneguelli-politicacapixaba-20260922",
+      "candidate_id": "80002552692",
+      "candidate_name": "SERGIO MENEGUELLI",
+      "office": "SENADOR",
+      "source_kind": "secondary",
+      "source_url": "https://politicacapixaba.com.br/meneguelli-defende-investimentos-no-norte-do-espirito-santo/noticias-politicas/",
+      "source_title": "Meneguelli defende investimentos no Norte do Espírito Santo",
+      "source_publisher": "Política Capixaba",
+      "published_at": "2026-09-22",
+      "captured_at": "2026-09-29",
+      "source_origin": {
+        "event": "Entrevista ao Bom Dia Espírito Santo",
+        "note": "A matéria atribui nominalmente ao candidato as declarações da entrevista."
+      }
+    }
+  ]
+}

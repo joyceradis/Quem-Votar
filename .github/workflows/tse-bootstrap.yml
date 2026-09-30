@@ -1,0 +1,124 @@
+name: Coletar bootstrap TSE dos cargos majoritários
+
+# #186: o CDN oficial do TSE devolve HTTP 403 ao runner, e o bootstrap versionado
+# (data/reference/tse-enrichment-bootstrap.json) só cobria os deputados. Sem
+# entrada no bootstrap, Governador e Senador ficam com bens, redes e histórico
+# "não disponíveis". Este workflow busca SÓ as candidaturas que faltam no
+# bootstrap, a partir da rede do runner (a rede do agente não alcança o
+# transporte), e publica o resultado numa branch de dados. Não escreve em main:
+# o PR é aberto a partir da branch e passa pelos gates normais.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tse-bootstrap
+  cancel-in-progress: false
+
+jobs:
+  bootstrap:
+    name: Coletar e publicar branch com o bootstrap atualizado
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    env:
+      PYTHONPYCACHEPREFIX: /tmp/quem-votar-pycache
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Diagnóstico de acesso às fontes (somente leitura)
+        shell: bash
+        run: |
+          {
+            echo "### Acesso às fontes a partir do runner"
+            echo
+            echo "| Fonte | HTTP |"
+            echo "|---|---|"
+          } >> "$GITHUB_STEP_SUMMARY"
+          for url in \
+            "https://meuvoto.org.br/candidato/80002541012.html" \
+            "https://meuvoto.org.br/candidato/80002531643.html" \
+            "https://cdn.tse.jus.br/estatistica/sead/odsele/bem_candidato/bem_candidato_2026.zip" \
+            "https://divulgacandcontas.tse.jus.br/divulga/rest/v1/eleicao/ordinarias"; do
+            code="$(curl -sS -o /dev/null -m 30 -w '%{http_code}' -A 'Quem-Votar-ES/4.0 (+https://github.com/joyceradis/Quem-Votar)' "$url" || echo "erro-de-rede")"
+            echo "$url -> $code"
+            echo "| \`$url\` | $code |" >> "$GITHUB_STEP_SUMMARY"
+          done
+
+      - name: Coletar só as candidaturas que faltam no bootstrap
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/bootstrap-tse-enrichment.py --merge-missing | tee "$RUNNER_TEMP/bootstrap-summary.json"
+
+      - name: Validar o bootstrap resultante
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest tests.test_tse_enrichment
+
+      - name: Resumo da coleta
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          summary = json.loads(Path(os.environ["RUNNER_TEMP"], "bootstrap-summary.json").read_text())
+          lines = [
+              "### Coleta do bootstrap (cargos majoritários)",
+              "",
+              f"- solicitadas: **{summary['requested']}**",
+              f"- coletadas: **{len(summary['fetched'])}**",
+              f"- não coletadas: **{len(summary['failed'])}** (seguem como \"não disponível\")",
+          ]
+          totals = summary.get("totals_fetched") or {}
+          if totals:
+              lines.append(
+                  f"- nas coletadas: {totals.get('bens', 0)} bens, "
+                  f"{totals.get('redes', 0)} redes, {totals.get('historico', 0)} registros de histórico"
+              )
+          for item in summary["failed"]:
+              lines.append(f"- falhou `{item['candidate_id']}`: {item['error']}")
+              print(f"::warning::{item['candidate_id']} não coletado: {item['error']}")
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as handle:
+              handle.write("\n".join(lines) + "\n")
+          # Nada coletado com algo a coletar: o job precisa ficar vermelho.
+          if summary["requested"] and not summary["fetched"]:
+              raise SystemExit("nenhuma candidatura pôde ser coletada")
+          PY
+
+      - name: Publicar branch de dados com o bootstrap atualizado
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- data/reference/tse-enrichment-bootstrap.json; then
+            echo "Bootstrap sem mudanças: nada a publicar."
+            exit 0
+          fi
+          BRANCH="data/tse-bootstrap-${GITHUB_RUN_ID}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add data/reference/tse-enrichment-bootstrap.json
+          git commit -m "data(bootstrap): bens, redes e histórico TSE dos cargos majoritários
+
+          Captura por scripts/bootstrap-tse-enrichment.py --merge-missing (run
+          ${GITHUB_RUN_ID}): só as candidaturas ausentes do bootstrap; as entradas
+          já capturadas ficam intactas. Falhas não viram dado.
+
+          Authorization-Issue: #186"
+          git push -u origin "$BRANCH"
+          echo "Branch publicada: $BRANCH" >> "$GITHUB_STEP_SUMMARY"

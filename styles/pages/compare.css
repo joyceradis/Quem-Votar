@@ -1,25 +1,31 @@
 /* Comparação — portado de styles.css:38. Grade de campos iguais para todas
    as colunas: nenhuma coluna recebe destaque, cor ou ordem de "vencedor". */
 .comparison-wrap {
-  overflow: auto;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
 }
 
 .comparison-grid {
   display: grid;
-  grid-template-columns: 190px repeat(var(--compare-cols, 3), minmax(220px, 1fr));
-  min-width: max-content;
+  grid-template-columns: 170px repeat(var(--compare-cols, 3), minmax(230px, 1fr));
+  min-width: calc(170px + var(--compare-cols, 3) * 230px);
 }
 
 .comparison-grid > div {
-  padding: 16px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  padding: 22px 18px;
   border-bottom: 1px solid var(--line);
   border-right: 1px solid var(--line);
 }
 
 .row-label {
-  background: #f5fbff;
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: var(--blue-soft);
   color: var(--muted);
   font-size: 0.7rem;
   font-weight: 800;
@@ -30,22 +36,41 @@
   width: 104px;
   height: 124px;
   object-fit: cover;
-  border-radius: 20px;
+  border-radius: var(--radius-sm);
   background: linear-gradient(145deg, var(--blue-soft), var(--pink-soft));
 }
 
 .compare-person .profile-fallback {
   display: grid;
   place-items: center;
-  padding: 8px;
-  text-align: center;
+  font-size: 0;
+  color: transparent;
+  background: linear-gradient(160deg, #e3f1fa 0%, #d3e6f3 100%);
+}
+
+.compare-person .profile-fallback::before {
+  content: attr(data-initials);
+  color: var(--blue-dark);
+  font-size: 1.9rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  opacity: 0.55;
+}
+
+.compare-person .compare-office {
+  display: block;
+  margin-bottom: 2px;
   color: var(--muted);
   font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .compare-person h2 {
   margin: 10px 0 3px;
-  font-size: 1.05rem;
+  font-size: 1.25rem;
+  line-height: 1.2;
   letter-spacing: -0.02em;
 }
 
@@ -85,4 +110,68 @@
 .compare-empty a {
   color: var(--blue-strong);
   font-weight: 700;
+}
+
+/* Celular: sem rolagem lateral. Cada campo vira um bloco com o rótulo em cima
+   e um valor por candidato, sempre identificado pelo nome. Mesma ordem e mesmos
+   campos para todos; nenhuma coluna recebe destaque. */
+@media (max-width: 720px) {
+  .comparison-wrap {
+    overflow: visible;
+  }
+
+  .comparison-grid {
+    grid-template-columns: minmax(0, 1fr);
+    min-width: 0;
+  }
+
+  .comparison-grid > div {
+    border-right: 0;
+    padding: 12px 4px;
+  }
+
+  .comparison-grid > .row-label {
+    position: static;
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-bottom: 0;
+    border-radius: var(--radius-sm);
+    font-size: 0.74rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .compare-value {
+    display: grid;
+    gap: 2px;
+    font-size: 0.95rem;
+  }
+
+  .compare-value::before {
+    content: attr(data-who);
+    color: var(--muted);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .compare-person {
+    display: grid;
+    grid-template-columns: 84px minmax(0, 1fr);
+    gap: 2px 14px;
+    align-items: center;
+  }
+
+  .compare-person img,
+  .compare-person .profile-fallback {
+    grid-row: 1 / span 4;
+    width: 84px;
+    height: 100px;
+    border-radius: 16px;
+  }
+
+  .compare-person h2 {
+    margin: 0;
+  }
 }

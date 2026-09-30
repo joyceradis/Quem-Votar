@@ -86,9 +86,9 @@ jobs:
           set -euo pipefail
           CHANGED="$(git status --porcelain | awk '{print $2}')"
           if [[ -n "$CHANGED" ]]; then
-            INVALID="$(printf '%s\n' "$CHANGED" | grep -Ev '^(data/generated/|social/)' || true)"
+            INVALID="$(printf '%s\n' "$CHANGED" | grep -Ev '^(data/generated/|social/|sitemap\.xml$)' || true)"
             if [[ -n "$INVALID" ]]; then
-              echo "::error::sync tentou alterar arquivo fora de data/generated ou social/:"
+              echo "::error::sync tentou alterar arquivo fora de data/generated, social/ ou sitemap.xml:"
               printf '%s\n' "$INVALID"
               exit 1
             fi
@@ -103,9 +103,11 @@ jobs:
           mkdir -p "$OUT/data-generated" "$OUT/social"
           cp -R data/generated/. "$OUT/data-generated/"
           cp -R social/. "$OUT/social/"
+          cp sitemap.xml "$OUT/sitemap.xml"
           git diff -- data/generated > "$OUT/data-generated.patch"
           git diff -- social > "$OUT/social-previews.patch"
-          git diff --stat -- data/generated social > "$OUT/DIFFSTAT.txt"
+          git diff -- sitemap.xml > "$OUT/sitemap.patch"
+          git diff --stat -- data/generated social sitemap.xml > "$OUT/DIFFSTAT.txt"
           {
             echo "repository=${GITHUB_REPOSITORY}"
             echo "base_sha=${GITHUB_SHA}"
@@ -114,9 +116,9 @@ jobs:
           } > "$OUT/RUN_METADATA.txt"
           (
             cd "$OUT"
-            find data-generated social -type f -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS.txt
+            find data-generated social sitemap.xml -type f -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS.txt
           )
-          if git diff --quiet -- data/generated social; then
+          if git diff --quiet -- data/generated social sitemap.xml; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
@@ -165,6 +167,7 @@ jobs:
           rm -rf data/generated social
           cp -R "${RUNNER_TEMP}/sync-data-candidate/data-generated" data/generated
           cp -R "${RUNNER_TEMP}/sync-data-candidate/social" social
+          cp "${RUNNER_TEMP}/sync-data-candidate/sitemap.xml" sitemap.xml
 
           # Acopla docs/CHECKPOINT_CURRENT.md no mesmo commit (AGENTS.md §7:
           # PR que toca data/generated/* precisa atualizar o checkpoint).
@@ -203,10 +206,24 @@ jobs:
               f"- **{counts.get('topic_evidence', 0)}** evidências temáticas "
               "canônicas em `data/reference/topic-evidence.json`."
           )
+          # A Cerca exige o checkpoint no mesmo PR quando data/generated muda.
+          # Se só mudarem valores (não as contagens acima), o bloco ficaria
+          # idêntico e o PR de dados falharia por falta de diff no checkpoint.
+          # O carimbo da coleta muda a cada snapshot e mantém o acoplamento.
+          collected_at = str(meta.get("collected_at") or "")
+          stamp = (
+              "Última coleta do snapshot: "
+              + collected_at[:16].replace("T", " ")
+              + " UTC.\n\n"
+              if collected_at
+              else ""
+          )
           block = (
               "## Snapshot eleitoral público\n\nUniverso atual:\n\n"
               + "\n".join(lines)
-              + "\n\n`SQ_CANDIDATO` permanece a chave eleitoral canônica.\n\n"
+              + "\n\n"
+              + stamp
+              + "`SQ_CANDIDATO` permanece a chave eleitoral canônica.\n\n"
               "Nenhuma contagem acima deve ser tratada como avaliação de "
               "candidatura ou completude política."
           )
@@ -223,7 +240,7 @@ jobs:
           path.write_text(new_text)
           PY
 
-          git add data/generated social docs/CHECKPOINT_CURRENT.md
+          git add data/generated social sitemap.xml docs/CHECKPOINT_CURRENT.md
           git commit -m "data(sync): snapshot eleitoral ES — run ${GITHUB_RUN_ID}
 
           Snapshot gerado e auditado por sync-data.yml (job sync, run

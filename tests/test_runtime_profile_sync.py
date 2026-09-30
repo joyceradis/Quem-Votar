@@ -97,10 +97,10 @@ assert.equal(suite.scenarios[0].status, "FAIL");
 assert.match(suite.scenarios[0].error, /profile:ANCHOR_NOT_VISIBLE_impacto/);
 """)
 
-    def test_case_insensitive_label_preserves_occupation_semantics(self):
+    def test_case_insensitive_label_and_self_declared_occupation_shown_in_today(self):
         self.run_js(r"""
 const block = section(
-  '  await runScenario(browser, suite, "profile-occupation-is-not-current-activity"',
+  '  await runScenario(browser, suite, "profile-occupation-is-self-declared-fact-without-mandate"',
   '  await runScenario(browser, suite, "profile-current-mandate-is-current-activity"'
 );
 const start = block.indexOf("async ({ page }) => {") + "async ({ page }) => {".length;
@@ -114,19 +114,22 @@ const page = (electoral, today) => ({
     return selector === "#dados-eleitorais" ? electoral : today;
   } })
 });
+const caveat = "Autodeclarado no registro de candidatura ao TSE";
+const empty = "Sem atuação pública atual confirmada nesta base";
 for (const label of ["Ocupação declarada", "OCUPAÇÃO DECLARADA"]) {
-  await scenario(page(label + ": PROFESSOR", "Sem atuação atual confirmada"));
-  await assert.rejects(() => scenario(page(label + ": PROFESSOR", "PROFESSOR")));
+  await scenario(page(label + ": PROFESSOR", "PROFESSOR — " + caveat));
 }
-await assert.rejects(() => scenario(page("OCUPAÇÃO DECLARADA: OUTRA", "Sem atuação atual confirmada")));
-await assert.rejects(() => scenario(page("PROFESSOR", "Sem atuação atual confirmada")));
+await assert.rejects(() => scenario(page("PROFESSOR", "PROFESSOR — " + caveat)));
+await assert.rejects(() => scenario(page("Ocupação declarada: OUTRA", "PROFESSOR — " + caveat)));
+await assert.rejects(() => scenario(page("Ocupação declarada: PROFESSOR", empty)));
+await assert.rejects(() => scenario(page("Ocupação declarada: PROFESSOR", "PROFESSOR")));
 """)
 
     def test_desktop_and_mobile_use_hash_then_observation_only_wait(self):
         self.run_js(r"""
 const desktop = section(
   '  await runScenario(browser, suite, "profile-three-questions-anchors-keyboard"',
-  '  await runScenario(browser, suite, "profile-occupation-is-not-current-activity"'
+  '  await runScenario(browser, suite, "profile-occupation-is-self-declared-fact-without-mandate"'
 );
 const mobile = source.slice(source.indexOf('    "profile-mobile-390x844",'));
 assert.ok(desktop.includes('await link.click();'));

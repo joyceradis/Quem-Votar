@@ -7,7 +7,7 @@
 // pontuação ou destaque de "melhor".
 import { $, esc, params } from "../core/dom.js";
 import { loadCore, applyGlobalMeta, officeLabel } from "../core/data.js";
-import { formatBRL, formatSnapshot } from "../core/format.js";
+import { formatBRL, formatSnapshot, initials, registrationStatusText } from "../core/format.js";
 import { updateSearchParams } from "../core/url-state.js";
 import { setupNavigation } from "../core/a11y.js";
 import {
@@ -23,11 +23,15 @@ import { normalizeCompareIds, getCompareIds, setCompareIds } from "../core/compa
 
 setupNavigation();
 
+function fallbackMarkup(name) {
+  return `<div class="profile-fallback" data-initials="${esc(initials(name))}">Imagem não disponível</div>`;
+}
+
 function photoMarkup(candidate) {
   const source =
     candidate.photo_url || candidate.photoUrl || candidate.foto_url || candidate.photo?.url || "";
   const name = candidate.ballot_name || candidate.full_name || "candidato";
-  if (!source) return `<div class="profile-fallback">Imagem não disponível</div>`;
+  if (!source) return fallbackMarkup(name);
   return `<img src="${esc(source)}" alt="Foto de ${esc(name)}" loading="lazy" data-photo>`;
 }
 
@@ -42,7 +46,6 @@ function hasGap(candidate, field) {
 
 // Cada linha é um campo factual igual para todas as colunas.
 const LINHAS = [
-  ["Cargo", (c) => officeLabel(c._kind)],
   ["Hoje", (c) => currentActivity(c, c._kind)],
   ["Escolaridade", (c) => c.education || "Não disponível"],
   [
@@ -61,7 +64,7 @@ const LINHAS = [
       return areas.length ? areas.map((t) => t.label).join(" · ") : "Há proposta ou declaração documentada";
     },
   ],
-  ["Partido e número", (c) => `${c.party || "Partido não informado"} · nº ${c.number || "—"}`],
+  ["Situação da candidatura", (c) => registrationStatusText(c.registration_status) || NAO_DISPONIVEL],
   ["Ocupação declarada", (c) => c.occupation || "Não disponível"],
   [
     "Histórico eleitoral",
@@ -103,7 +106,7 @@ const LINHAS = [
 ];
 
 async function initCompare() {
-  const [{ all, meta, comparisonReady }, topics] = await Promise.all([loadCore(), loadTopics()]);
+  const [{ all, meta, comparisonReady, comparisonComplete }, topics] = await Promise.all([loadCore(), loadTopics()]);
   setTopics(topics);
   applyGlobalMeta(meta);
 
@@ -120,7 +123,15 @@ async function initCompare() {
   const urlParams = params();
   const fromUrl = (urlParams.get("ids") || "").split(",").filter(Boolean).map(String);
   const validIds = all.map((candidate) => String(candidate.tse_id));
-  const ids = normalizeCompareIds(urlParams.has("ids") ? fromUrl : getCompareIds(), validIds);
+  const requestedIds = urlParams.has("ids") ? fromUrl : getCompareIds();
+  // Não reescrever o link nem a seleção se faltarem dados para resolvê-los.
+  // Comparações cujos candidatos carregaram continuam disponíveis.
+  if (!comparisonComplete && normalizeCompareIds(requestedIds).some((id) => !validIds.includes(id))) {
+    mount.textContent =
+      "Não foi possível carregar todos os candidatos. Sua seleção foi preservada. Tente novamente.";
+    return;
+  }
+  const ids = normalizeCompareIds(requestedIds, validIds);
   const selected = ids.map((id) => all.find((c) => String(c.tse_id) === id)).filter(Boolean);
 
   setCompareIds(ids);
@@ -138,7 +149,10 @@ async function initCompare() {
 
   const linha = (label, renderer) =>
     `<div class="row-label">${esc(label)}</div>${selected
-      .map((candidate) => `<div class="compare-value">${esc(renderer(candidate))}</div>`)
+      .map(
+        (candidate) =>
+          `<div class="compare-value" data-who="${esc(candidate.ballot_name || candidate.full_name || "")}">${esc(renderer(candidate))}</div>`
+      )
       .join("")}`;
 
   mount.innerHTML = `
@@ -151,7 +165,8 @@ async function initCompare() {
               <div class="compare-person">
                 ${photoMarkup(candidate)}
                 <h2>${esc(candidate.ballot_name || candidate.full_name)}</h2>
-                <span>${esc(candidate.party || "—")} · Nº ${esc(candidate.number || "—")}</span>
+                <span class="compare-office">${esc(officeLabel(candidate._kind))}</span>
+                <span>${esc(candidate.party || "Partido não informado")} · nº ${esc(candidate.number || "—")}</span>
                 <a href="candidato.html?id=${encodeURIComponent(candidate.tse_id)}&cargo=${candidate._kind}">Abrir ficha</a>
               </div>`
           )
@@ -163,7 +178,7 @@ async function initCompare() {
 
   mount.querySelectorAll("img[data-photo]").forEach((img) => {
     img.addEventListener("error", () => {
-      img.outerHTML = '<div class="profile-fallback">Imagem não disponível</div>';
+      img.outerHTML = fallbackMarkup(img.alt.replace(/^Foto de /, ""));
     });
   });
 }

@@ -182,9 +182,22 @@ def run_batch(
         attempts_before = int(entry.get("attempts", 0) or 0)
         previous_status = clean(entry.get("status"))
         previous_error = clean(entry.get("last_error"))
+        snapshot = item.get("institutional_snapshot") or {}
+        section_upgrade = (
+            previous_status == "failed"
+            and previous_error == "conteúdo institucional API insuficiente para revisão"
+            and not entry.get("chamber_section_recovery_v1")
+            and isinstance(snapshot, dict)
+            and snapshot.get("siglaTipo") in {"EMR", "SBT"}
+            and bool(snapshot.get("urlInteiroTeor"))
+            and item.get("attribution_trust") in collector.TRUSTED_CHAMBER_ATTRIBUTION
+        )
         snapshot_transport_upgrade = (
             isinstance(item.get("institutional_snapshot"), dict)
             and previous_status == "failed"
+            # A network error from section recovery is not a migration to
+            # an API/bulk snapshot. Do not reopen its consumed extra attempt.
+            and not entry.get("chamber_section_recovery_v1")
             and (
                 "HTTP 429" in previous_error
                 or re.search(r"HTTP 5\\d\\d", previous_error)
@@ -199,12 +212,12 @@ def run_batch(
         if not force and previous_status in {"quarantined", "rejected"}:
             skipped_permanent += 1
             continue
-        if not force and attempts_before >= max_attempts and not snapshot_transport_upgrade:
+        if not force and attempts_before >= max_attempts and not (snapshot_transport_upgrade or section_upgrade):
             skipped_exhausted += 1
             continue
 
-        effective_force = force or snapshot_transport_upgrade
-        remaining = 1 if snapshot_transport_upgrade else (
+        effective_force = force or snapshot_transport_upgrade or section_upgrade
+        remaining = 1 if snapshot_transport_upgrade or section_upgrade else (
             retries_per_run if force else min(
                 retries_per_run, max(1, max_attempts - attempts_before)
             )
@@ -296,6 +309,10 @@ def run_batch(
                 "attempts": total_attempts,
                 "last_attempt_at": utc_now(),
                 "reprocess_count": int(previous.get("reprocess_count", 0) or 0) + (1 if force else 0),
+                "chamber_section_recovery_v1": bool(previous.get("chamber_section_recovery_v1")) or (
+                    clean(previous.get("last_error")) == "conteúdo institucional API insuficiente para revisão"
+                    and (item.get("institutional_snapshot") or {}).get("siglaTipo") in {"EMR", "SBT"}
+                ),
             }
 
             if draft is not None:
