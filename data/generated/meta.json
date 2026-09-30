@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-09-29T19:54:41.429744+00:00",
+  "collected_at": "2026-09-30T05:36:22.705799+00:00",
   "uf": "ES",
   "election_year": 2026,
   "counts": {
@@ -13,7 +13,7 @@
     "candidates_with_assets": 374,
     "asset_records": 1652,
     "candidates_with_social_links": 472,
-    "social_links": 1620,
+    "social_links": 1623,
     "candidates_with_previous_elections": 386,
     "previous_election_records": 1172,
     "candidates_with_registration_status": 563,
@@ -56,8 +56,8 @@
         "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/consulta_cand_complementar/consulta_cand_complementar_2026.zip",
         "transport_url": "https://cdn.tse.jus.br/estatistica/sead/odsele/consulta_cand_complementar/consulta_cand_complementar_2026.zip",
         "archive_member": "consulta_cand_complementar_2026_ES.csv",
-        "sha256": "442b2d3e21953174800da4cf39c701bab2c392ef5d8e2cbb041cc9f194b45341",
-        "generated_at": "29/09/2026 16:30:18",
+        "sha256": "a1acca98fdc5fc5b3e079f535cfa13aa51378b0b7e2ed1826b19011a0a1118a8",
+        "generated_at": "29/09/2026 19:30:26",
         "row_count": 591,
         "status": "fresh"
       },
@@ -66,8 +66,8 @@
         "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/bem_candidato/bem_candidato_2026.zip",
         "transport_url": "https://cdn.tse.jus.br/estatistica/sead/odsele/bem_candidato/bem_candidato_2026.zip",
         "archive_member": "bem_candidato_2026_ES.csv",
-        "sha256": "7249f3e67c727df0f1811a5b35238ff021a8a45e5aa34545ffb00201dd000789",
-        "generated_at": "29/09/2026 16:30:18",
+        "sha256": "9a0a06a1c152c4457f6095233779564715369f99b8ad55c643a102f9bad63a1c",
+        "generated_at": "29/09/2026 19:30:21",
         "row_count": 1785,
         "status": "fresh"
       },
@@ -76,9 +76,9 @@
         "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/consulta_cand/rede_social_candidato_2026.zip",
         "transport_url": "https://cdn.tse.jus.br/estatistica/sead/odsele/consulta_cand/rede_social_candidato_2026.zip",
         "archive_member": "rede_social_candidato_2026_ES.csv",
-        "sha256": "c0069389be42eb4019a5440775a2f76f6973582fd132f5b4d53102cc63b429b2",
-        "generated_at": "29/09/2026 16:30:28",
-        "row_count": 2047,
+        "sha256": "46c36657e914b7516997bffbbdd53bab1462d1332be4f2b8910bb2fd6217edab",
+        "generated_at": "29/09/2026 19:30:55",
+        "row_count": 2050,
         "status": "fresh"
       },
       "candidate_history": {
@@ -86,8 +86,8 @@
         "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/historico_candidatura/historico_candidatura_2026.zip",
         "transport_url": "https://cdn.tse.jus.br/estatistica/sead/odsele/historico_candidatura/historico_candidatura_2026.zip",
         "archive_member": "historico_candidatura_2026_ES.csv",
-        "sha256": "2478bb792a83dd63c76aa30bc37f00428200b225071dfb0166071c5317c5aa8a",
-        "generated_at": "29/09/2026 16:34:09",
+        "sha256": "1e9c60e4bea2e81cb7a32ef7ae93bfaedb6dfb4711741ba9ef266d9f6c5ab6c9",
+        "generated_at": "29/09/2026 19:34:10",
         "row_count": 1573,
         "status": "fresh",
         "join_field": "SQ_CANDIDATO_ATUAL"
