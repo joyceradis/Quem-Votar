@@ -141,10 +141,9 @@
   display: grid;
   grid-template-columns: 90px minmax(0, 1fr);
   gap: 28px;
-  padding: clamp(36px, 5vw, 54px) 0;
+  padding: clamp(28px, 4vw, 40px) 0;
   border-bottom: 1px solid var(--line);
 }
-
 
 .section-number {
   margin: 0;
@@ -154,11 +153,11 @@
   letter-spacing: 0.12em;
 }
 
-
 .answer-section h2 {
   margin: 0 0 22px;
-  font-size: clamp(1.8rem, 3.6vw, 3rem);
-  line-height: 1;
+  max-width: 32ch;
+  font-size: clamp(1.5rem, 2.8vw, 2.25rem);
+  line-height: 1.15;
   letter-spacing: -0.035em;
 }
 
@@ -226,6 +225,10 @@
 .impact-list {
   display: grid;
   gap: 0;
+}
+
+.public-records,
+.impact-list {
   border-top: 1px solid var(--line);
 }
 
@@ -233,6 +236,11 @@
 .public-records article,
 .impact-list article {
   padding: 18px 0;
+}
+
+.promise-list article:not(:last-child),
+.public-records article,
+.impact-list article {
   border-bottom: 1px solid var(--line);
 }
 
@@ -247,9 +255,11 @@
 
 .promise-list article h3 {
   margin: 6px 0 0;
-  font-size: 1.1rem;
-  line-height: 1.35;
-  letter-spacing: -0.01em;
+  max-width: 68ch;
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.6;
+  letter-spacing: 0;
 }
 
 .public-records article strong {
@@ -266,6 +276,9 @@
 
 .promise-list a,
 .public-records a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   color: var(--blue-strong);
   font-weight: 700;
   font-size: 0.8rem;

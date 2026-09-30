@@ -108,6 +108,7 @@ test.describe("Ficha do candidato", () => {
 
   test("toda proposta ou declaração documentada mostra tipo, fonte e link", async ({ page }) => {
     await openProfile(page, fichaUrl(comEvidencia));
+    await expect(page.locator("#vai-fazer")).toBeVisible();
     const itens = page.locator("#vai-fazer .promise-list article");
     const total = await itens.count();
     if (total === 0) test.skip();
