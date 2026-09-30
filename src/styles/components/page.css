@@ -52,7 +52,7 @@
    mantenedora ("por que tá azul?" / "tira o sublinhado"). Sem cor nem
    sublinhado em repouso, o peso da fonte (já herdado, 700) é o único
    sinal visual constante; o sublinhado aparece em foco/hover (mesmo
-   padrão do rodapé, .qv-fat-footer a), pra continuar identificável como
+   padrão do rodapé, .qv-footer a), pra continuar identificável como
    link sem "só cor" (AGENTS.md §6) no momento em que importa: ao
    interagir. */
 .qv-page-snapshot a {

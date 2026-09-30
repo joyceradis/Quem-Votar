@@ -22,24 +22,32 @@ test.describe("casco compartilhado — /preview-shell/", () => {
     await expect(active).toHaveText("Candidatos");
   });
 
-  test("rodapé integra a ilustração linear sem moldura e se ajusta ao celular", async ({ page }) => {
+  // O rodapé é informação e navegação, não vitrine: a ilustração de linha foi
+  // retirada por decisão da mantenedora. O contrato que fica é marca +
+  // navegação + data dos dados, num plano escuro legível, sem sangria lateral.
+  test("rodapé entrega marca, navegação e data dos dados sem ilustração e sem sangrar no celular", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("preview-shell.html");
 
-    const footer = page.locator(".qv-fat-footer");
-    await expect(footer.locator(".qv-fat-footer-brand strong")).toHaveText("Quem Votar?");
+    const footer = page.locator(".qv-footer");
+    await expect(footer.locator(".qv-footer-brand strong")).toHaveText("Quem Votar?");
     await expect(footer.getByRole("navigation", { name: "Navegação complementar" })).toBeVisible();
-    const artwork = footer.locator(".qv-fat-footer-line-art");
-    await expect(artwork.locator("svg")).toBeVisible();
-    await expect(artwork.locator("img")).toHaveCount(0);
-    await expect(artwork.locator("svg rect")).toHaveCount(0);
-    await expect(footer.locator(".qv-fat-footer-illustration")).toHaveCount(0);
-    await expect(artwork).toHaveCSS("background-image", "none");
-    await expect(artwork).toHaveCSS("border-top-width", "0px");
-    const strokeColors = await artwork.locator("svg *").evaluateAll((elements) => [
-      ...new Set(elements.map((element) => getComputedStyle(element).stroke).filter((color) => color !== "none")),
-    ]);
-    expect(strokeColors).toEqual(["rgb(17, 59, 86)"]);
+    await expect(footer.getByRole("navigation", { name: "Sobre o projeto" })).toBeVisible();
+    await expect(footer.locator("[data-snapshot-date]")).toBeAttached();
+
+    // Nenhuma arte decorativa voltou pelo caminho do SVG, do <img> ou do CSS.
+    await expect(footer.locator("svg")).toHaveCount(0);
+    await expect(footer.locator("img")).toHaveCount(0);
+    await expect(footer.locator(".qv-fat-footer-line-art")).toHaveCount(0);
+    await expect(footer.locator(".qv-footer-grid")).toHaveCSS("background-image", "none");
+
+    // Plano escuro: o texto não pode ficar com a tinta clara do corpo.
+    const plano = await footer.evaluate((el) => {
+      const estilo = getComputedStyle(el);
+      return { fundo: estilo.backgroundColor, tinta: estilo.color };
+    });
+    expect(plano.fundo).toBe("rgb(13, 44, 65)");
+    expect(plano.tinta).not.toBe(plano.fundo);
 
     const dimensions = await page.evaluate(() => ({
       viewport: innerWidth,

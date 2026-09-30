@@ -17,7 +17,7 @@
   background:
     radial-gradient(ellipse at 88% 18%, rgba(238, 143, 189, 0.18), transparent 32%),
     linear-gradient(112deg, #edf8ff 0%, #f8fcff 51%, #fff 100%);
-  padding: clamp(54px, 8vw, 112px) 0 clamp(52px, 7vw, 92px);
+  padding: clamp(54px, 8vw, 104px) 0 clamp(44px, 5vw, 68px);
 }
 
 /*
@@ -30,8 +30,8 @@
   position: absolute;
   z-index: 0;
   top: 50%;
-  right: -3%;
-  width: min(780px, 60vw);
+  right: -5%;
+  width: min(720px, 53vw);
   aspect-ratio: 755 / 340;
   background: url("../../assets/home-croqui-capixaba.webp") center / contain no-repeat;
   mix-blend-mode: multiply;
@@ -39,8 +39,8 @@
   pointer-events: none;
   user-select: none;
   transform: translateY(-50%);
-  -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,.18) 16%, #000 39%, #000 100%);
-  mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,.18) 16%, #000 39%, #000 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,.14) 22%, #000 48%, #000 100%);
+  mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,.14) 22%, #000 48%, #000 100%);
 }
 
 .home-hero-art svg {
@@ -89,7 +89,7 @@
 }
 
 .home-hero-lead {
-  max-width: 50ch;
+  max-width: 42ch;
   margin: 22px 0 28px;
   color: var(--ink-soft);
   font-size: clamp(1rem, 1.5vw, 1.18rem);
@@ -144,7 +144,7 @@
 .home-topics {
   max-width: var(--max);
   margin: 0 auto;
-  padding: clamp(48px, 6vw, 88px) var(--gutter);
+  padding: clamp(44px, 5vw, 72px) var(--gutter);
 }
 
 .home-topics[hidden] {
@@ -175,19 +175,65 @@
 
 .home-topic-links {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-  gap: 0;
-  border-top: 1px solid var(--line);
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  column-gap: clamp(20px, 3vw, 44px);
+  border-top: 1px solid var(--line-strong);
 }
 
-/* Linhas editoriais, não cartões: divisor fino em vez de caixa por tema. */
+/* Linhas editoriais, não cartões: divisor fino em vez de caixa por tema.
+   A seta aparece no hover/foco como afordância de link, sem virar ícone
+   de status (AGENTS.md §6). */
 .home-topic-links a {
+  position: relative;
   display: grid;
-  gap: 4px;
-  padding: 18px 16px 18px 0;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2px 12px;
+  padding: 20px 4px;
   border-bottom: 1px solid var(--line);
   text-decoration: none;
-  transition: color var(--motion-fast) ease;
+  transition: padding-left var(--motion-fast) var(--motion-ease);
+}
+
+/* Régua rosa que cresce da esquerda: acento de marca, não classificação. */
+.home-topic-links a::before {
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  height: 2px;
+  width: 0;
+  background: var(--pink);
+  content: "";
+  transition: width var(--motion-base) var(--motion-ease);
+}
+
+.home-topic-links a::after {
+  grid-row: 1 / span 2;
+  grid-column: 2;
+  color: var(--blue-strong);
+  font-size: 1.05rem;
+  opacity: 0;
+  content: "→";
+  transition:
+    opacity var(--motion-fast) ease,
+    transform var(--motion-fast) var(--motion-ease);
+  transform: translateX(-6px);
+}
+
+.home-topic-links a:hover,
+.home-topic-links a:focus-visible {
+  padding-left: 12px;
+}
+
+.home-topic-links a:hover::before,
+.home-topic-links a:focus-visible::before {
+  width: 100%;
+}
+
+.home-topic-links a:hover::after,
+.home-topic-links a:focus-visible::after {
+  opacity: 1;
+  transform: none;
 }
 
 .home-topic-links a:hover strong,
@@ -196,22 +242,41 @@
 }
 
 .home-topic-links strong {
+  grid-column: 1;
+  color: var(--blue-dark);
   font-family: var(--font-display);
-  font-size: 1.1rem;
-  letter-spacing: -0.02em;
+  font-optical-sizing: auto;
+  font-size: 1.15rem;
+  line-height: 1.25;
+  letter-spacing: -0.025em;
+  transition: color var(--motion-fast) ease;
 }
 
 .home-topic-links small {
+  grid-column: 1;
   color: var(--muted);
-  font-size: 0.78rem;
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-topic-links a,
+  .home-topic-links a::before,
+  .home-topic-links a::after {
+    transition: none;
+  }
+
+  .home-topic-links a:hover,
+  .home-topic-links a:focus-visible {
+    padding-left: 4px;
+  }
 }
 
 /* Caminhos de entrada: editoriais, diretos e fáceis de tocar. */
 .home-choices {
   max-width: var(--max);
   margin: 0 auto;
-  padding: clamp(56px, 7vw, 84px) var(--gutter)
-    clamp(64px, 8vw, 104px);
+  padding: clamp(8px, 1vw, 16px) var(--gutter) clamp(52px, 6vw, 80px);
 }
 
 .home-choices-head {
