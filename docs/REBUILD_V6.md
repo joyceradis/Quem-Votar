@@ -140,13 +140,13 @@ Confirmado em CI (não só localmente): `Qualidade do site` e
   nova ilustração foi movida para um caminho próprio da V6
   (`assets/v6-*.svg`), sem colidir com nada em produção. Daqui para frente,
   todo asset novo/experimental usa o prefixo `v6-` até o corte da Fase 5.
-- Fat Footer institucional novo (`src/_includes/footer.njk` +
-  `src/styles/components/footer.css`): várias colunas de link (Navegar,
-  Sobre, Snapshot) sobre fundo escuro (`--blue-dark`), com a ilustração
-  como marca d'água em opacidade 0.15 na última coluna
-  (`.qv-fat-footer-illustration`). Responde também ao feedback de
-  contraste fraco/excesso de branco, já que introduz uma seção escura real
-  na página.
+- Fat Footer institucional (`src/_includes/footer.njk` +
+  `src/styles/components/footer.css`): em 29/09/2026 a mantenedora substituiu
+  a marca-d'água raster por um desenho de linha fina, monocromático em
+  azul-marinho, da Terceira Ponte e do Convento da Penha.
+  `assets/footer-penha-line.svg` é inlinado e integrado ao bloco tipográfico
+  da marca, sem moldura ou caixa de imagem; o fundo azul-claro preserva
+  contraste e mantém a navegação como conteúdo dominante.
 - Ilustração `v6-penha-line.svg` recebeu uma segunda rodada: sombra suave
   (`feDropShadow`) e contornos internos concêntricos na ponte/morro/parede
   do convento, dando sensação de volume sem virar hachura, a pedido da
@@ -197,14 +197,14 @@ candidatas lado a lado com a mesma frase (`/styleguide/`): **A** Fraunces
 em peso alto. Escolhida uma, as outras saem de `assets/fonts/` e de
 `src/styles/fonts.css`.
 
-## Ilustração no rodapé — SVG corrigido
+## Ilustração no rodapé — linha editorial
 
-O rodapé e o styleguide ainda apontavam para a ilustração minimalista, não
-para o esboço técnico aprovado. Corrigido, e a duplicação que existia para
-isso foi eliminada: em vez de manter um segundo arquivo quase idêntico só
-para a versão clara (`v6-penha-line-watermark.svg`, **removido**), o SVG passa
-a ser inlinado pelo filtro `svgInline` (`.eleventy.js`) e recolorido por CSS
-sobre o fundo escuro. Um arquivo, duas aparências.
+O rodapé usa `assets/footer-penha-line.svg` como SVG inline: traço único
+azul-marinho, sem retângulo, fundo ou imagem raster. A arte é parte do bloco
+editorial da marca e não uma marca-d'água sobre o conteúdo. O mesmo partial
+permanece fonte única para as sete rotas; o teste de casco verifica a ausência
+da superfície raster antiga, a cor única do traço e overflow horizontal no
+viewport móvel.
 
 ## Verificação de ponta a ponta (Playwright, versionado)
 
