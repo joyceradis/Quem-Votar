@@ -142,11 +142,12 @@ Confirmado em CI (não só localmente): `Qualidade do site` e
   todo asset novo/experimental usa o prefixo `v6-` até o corte da Fase 5.
 - Fat Footer institucional novo (`src/_includes/footer.njk` +
   `src/styles/components/footer.css`): várias colunas de link (Navegar,
-  Sobre, Snapshot) sobre fundo escuro (`--blue-dark`), com a ilustração
-  como marca d'água em opacidade 0.15 na última coluna
-  (`.qv-fat-footer-illustration`). Responde também ao feedback de
-  contraste fraco/excesso de branco, já que introduz uma seção escura real
-  na página.
+  Sobre, Snapshot). Em 29/09/2026, a mantenedora pediu substituir a
+  marca-d'água raster por desenho de linha fina, monocromático em azul-marinho,
+  da Terceira Ponte e do Convento da Penha. `assets/footer-penha-line.svg`
+  agora é inline e integrado ao bloco tipográfico da marca, sem moldura ou
+  caixa de imagem; o fundo azul-claro mantém contraste com o traço. O conteúdo
+  eleitoral e o desenho do hero não mudaram.
 - Ilustração `v6-penha-line.svg` recebeu uma segunda rodada: sombra suave
   (`feDropShadow`) e contornos internos concêntricos na ponte/morro/parede
   do convento, dando sensação de volume sem virar hachura, a pedido da
