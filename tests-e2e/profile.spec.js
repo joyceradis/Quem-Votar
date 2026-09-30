@@ -80,8 +80,19 @@ test.describe("Ficha do candidato", () => {
   test("propostas e declarações ficam distintas da atuação no histórico", async ({ page }) => {
     await openProfile(page, fichaUrl(comEvidencia));
     await expect(page.locator("#vai-fazer")).toBeVisible();
-    await expect(page.locator("#vai-fazer h2")).toHaveText("O que a candidatura propõe?");
-    await expect(page.locator("#vai-fazer")).toHaveClass(/answer-section--proposals/);
+    await expect(page.locator("#vai-fazer h2")).toHaveText("O que ela diz que vai fazer?");
+    await expect(page.locator("#vai-fazer .section-number")).toBeVisible();
+    await expect(page.locator("#vai-fazer .section-number")).toHaveText("02");
+    const perguntas = await page.locator("#faz-hoje, #vai-fazer, #impacto").evaluateAll((sections) =>
+      sections.map((section) => {
+        const style = getComputedStyle(section);
+        const number = getComputedStyle(section.querySelector(".section-number"));
+        return [style.backgroundImage, style.borderRadius, style.boxShadow,
+          style.paddingTop, style.paddingLeft, number.fontSize, number.color];
+      })
+    );
+    expect(perguntas[1]).toEqual(perguntas[0]);
+    expect(perguntas[1]).toEqual(perguntas[2]);
 
     const evidencias = comEvidencia.topic_evidence || [];
     const normaliza = (v) =>
@@ -97,6 +108,7 @@ test.describe("Ficha do candidato", () => {
 
   test("toda proposta ou declaração documentada mostra tipo, fonte e link", async ({ page }) => {
     await openProfile(page, fichaUrl(comEvidencia));
+    await expect(page.locator("#vai-fazer")).toBeVisible();
     const itens = page.locator("#vai-fazer .promise-list article");
     const total = await itens.count();
     if (total === 0) test.skip();

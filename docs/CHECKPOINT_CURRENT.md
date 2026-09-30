@@ -519,3 +519,16 @@ Estado após a arrumação de governança:
 6. continuar #2/#35 sob os contratos do feature freeze, sem promoção automática de evidência política.
 
 Nenhuma dessas frentes autoriza relaxamento dos gates de `main`.
+
+
+## Continuidade — pergunta 02 e ficha visual (29/09/2026, sessão Codex)
+
+- Contrato: Issue #167; executor da correção delimitada: Codex. Decisão da mantenedora nesta sessão: restaurar a pergunta 02 ao padrão das demais e reduzir a poluição visual da ficha.
+- Base conferida: main `3ffa1a063fa7ca95479681e7b4bb0fbf8551b662`. PR #243, HEAD inicial `6961a03a70e57fa3acd115c912eb5019050aa157`: restaura “O que ela diz que vai fazer?”, número 02 acessível e remove caixa/fundo/destaque exclusivo; assets 6.0.3.
+- Evidência do executor: 28 E2E da ficha em desktop/mobile, build, verify, sintaxe JS e auditoria passaram. Prévia em `http://127.0.0.1:4182/candidato.html?id=80002552172&cargo=governador#vai-fazer` já corrigida; cinco propostas e links TSE preservados.
+- PRs #238 (pipeline Q2), #239 (largura desktop) e #242 (planos oficiais TSE em staging) foram integrados pela mantenedora. #242 não publica automaticamente evidência política canônica; a prévia usa camada temporária, preservando o snapshot público.
+- #243 integrado pela mantenedora em main `7d6fbe752cabe225dcfd3a638673e737a74155da`. Nova unidade visual: branch `codex/profile-visual-cleanup`, `/tmp/qv-profile-cleanup`, assets 6.0.4.
+- CSS simplificado preparado: títulos menores, propostas com peso moderado e linhas duplicadas removidas; fontes com alvo de toque de 44 px. Validação renovada: 28 E2E da ficha em desktop/mobile, build, verify, auditoria e cinco respostas/fontes TSE na prévia. Nenhum texto político, critério ou dado alterado. Próximo gate: revalidar o novo HEAD, registrar testes em #167/#243 e aguardar revisão independente/integração; publicação exige conferir Pages e runtime correspondente.
+- Não certificar o próprio HEAD. Não reutilizar PASS anterior para mudança material. Não tocar na lane de footer, na paginação ou nas alterações locais da branch original `codex/q2-coverage-repair`.
+- Diretórios: `/tmp/qv-q2-wording` contém a correção UI; `/tmp/qv-tse-q2` conserva a coleta e o servidor da prévia (porta 4182); checkout original permanece preservado. Fontes, hashes e páginas dos planos: `docs/research/TSE_Q2_OFFICIAL_2026_09_29.md`; propostas pendentes: `data/staging/tse-q2-publication-proposal.json`.
+- Registro contínuo desta sessão é feito na Issue #167 e neste checkpoint, sem tornar este histórico superior a main/contrato ativo.

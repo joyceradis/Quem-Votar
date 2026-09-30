@@ -18,14 +18,15 @@ body {
   margin: 0;
   font-family: var(--font-sans);
   color: var(--ink);
-  line-height: 1.5;
+  line-height: 1.6;
   background: #fff;
   -webkit-font-smoothing: antialiased;
+  overflow-wrap: anywhere;
 }
 
 /*
  * Títulos na família de display. `font-optical-sizing: auto` deixa o eixo
- * variável `opsz` da Fraunces responder ao tamanho: títulos grandes ganham
+ * variável `opsz` da Bricolage responder ao tamanho: títulos grandes ganham
  * o desenho de display (mais contraste), textos pequenos o de leitura.
  */
 h1,
@@ -35,6 +36,7 @@ h3 {
   font-optical-sizing: auto;
   letter-spacing: -0.02em;
   text-wrap: balance;
+  overflow-wrap: anywhere;
 }
 
 /* Números e dados eleitorais alinhados em colunas (tabelas, comparação). */
@@ -68,12 +70,20 @@ img {
 
 a {
   color: inherit;
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+}
+
+::selection {
+  color: var(--blue-dark);
+  background: var(--pink-soft);
 }
 
 button,
 input,
 select {
   font: inherit;
+  min-width: 0;
 }
 
 button {
@@ -110,5 +120,6 @@ summary:focus-visible {
   * {
     scroll-behavior: auto !important;
     transition: none !important;
+    animation: none !important;
   }
 }

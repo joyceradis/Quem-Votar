@@ -279,7 +279,7 @@ def main() -> None:
     assert "profile-tab" not in public_markup, "V5 não usa abas estreitas na ficha"
     profile_questions = [
         "O que essa pessoa faz hoje?",
-        "O que a candidatura propõe?",
+        "O que ela diz que vai fazer?",
         "Onde isso pode mexer na vida real?",
     ]
     assert all(question in app for question in profile_questions), (

@@ -5,15 +5,15 @@
 .office-switch {
   display: flex;
   flex-wrap: wrap;
-  gap: 9px;
+  gap: 8px;
   margin-bottom: 18px;
 }
 
 .office-button {
   min-height: var(--tap-min);
-  padding: 0 17px;
+  padding: 10px 18px;
   border: 1px solid var(--line-strong);
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-sm);
   background: #fff;
   color: var(--ink-soft);
   font-weight: 700;
@@ -38,24 +38,25 @@
 
 /* Busca e filtros */
 .search-panel {
-  padding: 14px;
+  padding: clamp(18px, 2.5vw, 28px);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
-  background: #f9fcfe;
+  background: var(--blue-soft);
 }
 
 .primary-search {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(150px, 230px) auto;
-  gap: 10px;
+  gap: 14px;
 }
 
 .primary-search select {
   min-height: 56px;
   padding: 0 10px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--line-strong);
   border-radius: var(--radius-sm);
-  background: #fff;
+  background: var(--white);
+  color: var(--ink);
 }
 
 .primary-search label,
@@ -76,9 +77,10 @@
 .primary-search input {
   min-height: 56px;
   padding: 0 16px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--line-strong);
   border-radius: var(--radius-sm);
-  background: #fff;
+  background: var(--white);
+  color: var(--ink);
 }
 
 .filter-toggle {
@@ -88,17 +90,30 @@
   align-items: center;
   gap: 8px;
   padding: 0 18px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--line-strong);
   border-radius: var(--radius-sm);
-  background: #fff;
+  background: var(--white);
   color: var(--blue-dark);
   font-weight: 700;
+}
+
+.primary-search input:focus-visible,
+.primary-search select:focus-visible,
+.secondary-filters select:focus-visible {
+  border-color: var(--blue-strong);
+  box-shadow: var(--focus-ring);
+}
+
+.filter-toggle:hover,
+.office-button:not(.active):hover {
+  border-color: var(--blue-strong);
+  background: var(--surface);
 }
 
 .secondary-filters {
   display: grid;
   grid-template-columns: 1fr 1fr auto;
-  gap: 10px;
+  gap: 14px;
   padding-top: 12px;
 }
 
@@ -126,10 +141,11 @@
 /* Resultados */
 .results-head {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: flex-end;
   gap: 20px;
-  padding: 24px 2px 12px;
+  padding: 32px 2px 18px;
   border-bottom: 1px solid var(--line);
 }
 
@@ -138,7 +154,8 @@
 }
 
 .results-head strong {
-  font-size: 1.05rem;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
 }
 
 .results-head span {
@@ -156,13 +173,13 @@
   border-bottom: 1px solid var(--line);
   border-radius: 0;
   box-shadow: none;
-  padding: 20px 4px;
+  padding: 26px 4px;
   cursor: pointer;
 }
 
 .candidate-list .qv-card:hover {
   transform: none;
-  background: #fafdff;
+  background: var(--surface);
   box-shadow: none;
 }
 
@@ -225,7 +242,7 @@
 }
 
 .qv-btn--compare {
-  min-height: 42px;
+  min-height: var(--tap-min);
   padding: 0 14px;
   font-size: 0.88rem;
 }
@@ -247,11 +264,12 @@
 }
 
 .pagination button {
-  min-width: 42px;
-  min-height: 42px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-pill);
-  background: #fff;
+  min-width: var(--tap-min);
+  min-height: var(--tap-min);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  color: var(--ink);
   font-weight: 700;
 }
 
@@ -301,7 +319,7 @@
 .compare-tray > div {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 14px;
 }
 
 .compare-tray span {
@@ -318,7 +336,7 @@
 
 .compare-tray a {
   padding: 9px 14px;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-sm);
   background: #fff;
   color: var(--ink);
   text-decoration: none;
@@ -344,7 +362,7 @@
   }
 
   .office-button {
-    padding: 0 10px;
+    padding: 10px;
     font-size: 0.86rem;
   }
 
@@ -358,11 +376,15 @@
   }
 
   .qv-card-actions {
-    grid-column: 2;
+    grid-column: 1 / -1;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: space-between;
     justify-self: start;
   }
 
   .pagination {
+    flex-wrap: wrap;
     justify-content: space-between;
     gap: 6px;
   }
@@ -376,11 +398,11 @@
     color: var(--muted);
     font-size: 0.88rem;
     font-weight: 700;
-    white-space: nowrap;
+    white-space: normal;
   }
 
   .pagination > button {
-    padding: 0 9px;
+    padding: 0 7px;
     white-space: nowrap;
   }
 
