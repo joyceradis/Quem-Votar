@@ -168,19 +168,56 @@
   gap: 0;
 }
 
+/* Linha de resultado: divisor fino, não cartão. O realce de hover é uma
+   faixa de leitura (fundo + régua), nunca um indicador de qualidade. */
 .candidate-list .qv-card {
+  position: relative;
   border: 0;
   border-bottom: 1px solid var(--line);
   border-radius: 0;
   box-shadow: none;
-  padding: 26px 4px;
+  align-items: start;
+  gap: 24px;
+  padding: 26px 18px 26px 16px;
+  margin-inline: -16px;
   cursor: pointer;
+  transition:
+    background-color var(--motion-fast) ease,
+    transform var(--motion-fast) var(--motion-ease);
 }
 
-.candidate-list .qv-card:hover {
+.candidate-list .qv-card::before {
+  position: absolute;
+  left: 0;
+  top: 14px;
+  bottom: 14px;
+  width: 3px;
+  border-radius: var(--radius-pill);
+  background: var(--pink);
+  opacity: 0;
+  content: "";
+  transition: opacity var(--motion-fast) ease;
+}
+
+.candidate-list .qv-card:hover,
+.candidate-list .qv-card:focus-within {
   transform: none;
   background: var(--surface);
   box-shadow: none;
+  border-radius: var(--radius-sm);
+}
+
+.candidate-list .qv-card:hover::before,
+.candidate-list .qv-card:focus-within::before {
+  opacity: 1;
+}
+
+.candidate-list .qv-card-photo {
+  transition: transform var(--motion-base) var(--motion-ease);
+}
+
+.candidate-list .qv-card:hover .qv-card-photo {
+  transform: scale(1.03);
 }
 
 .qv-card-photo-link {
@@ -221,24 +258,64 @@
   font-weight: 700;
 }
 
-.qv-card-now,
-.qv-card-occupation,
+.qv-card-now {
+  margin: 8px 0 0;
+  color: var(--ink-soft);
+  font-size: 0.88rem;
+}
+
+.qv-card-occupation {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+/* Contagens documentais: mesma tinta secundária, separadas por régua fina
+   para não competirem com o nome. */
 .qv-card-meta {
-  margin: 6px 0 0;
+  margin: 12px 0 0;
   color: var(--muted);
   font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.qv-card-meta + .qv-card-meta {
+  margin-top: 3px;
 }
 
 .qv-card-actions {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+  padding-top: 4px;
 }
 
 .qv-card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: var(--tap-min);
+  padding: 0 4px;
   color: var(--blue-strong);
   font-weight: 800;
   text-decoration: none;
+}
+
+.qv-card-link::after {
+  content: "→";
+  transition: transform var(--motion-fast) var(--motion-ease);
+}
+
+.qv-card-link:hover,
+.qv-card-link:focus-visible {
+  color: var(--blue-dark);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.qv-card-link:hover::after,
+.qv-card-link:focus-visible::after {
+  transform: translateX(3px);
 }
 
 .qv-btn--compare {
@@ -372,7 +449,14 @@
   }
 
   .candidate-list .qv-card {
-    padding: 16px 2px;
+    gap: 15px;
+    padding: 18px 12px;
+    margin-inline: -12px;
+  }
+
+  .candidate-list .qv-card::before {
+    top: 10px;
+    bottom: 10px;
   }
 
   .qv-card-actions {
@@ -427,4 +511,18 @@
   font-weight: 800;
   letter-spacing: -0.03em;
   opacity: 0.55;
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  .candidate-list .qv-card,
+  .candidate-list .qv-card-photo,
+  .candidate-list .qv-card::before,
+  .qv-card-link::after {
+    transition: none;
+  }
+
+  .candidate-list .qv-card:hover .qv-card-photo {
+    transform: none;
+  }
 }
