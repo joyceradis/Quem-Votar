@@ -152,6 +152,11 @@
 /* Numeral da seção: âncora de leitura da ficha longa. Ordem de leitura,
    nunca ordem de valor entre candidaturas. */
 .section-number {
+  /* `align-self` antes do `sticky`: como item de grid o numeral herdava
+     `stretch` e ficava com a altura da seção inteira, então não sobrava
+     folga para ele grudar — numa seção longa a âncora simplesmente não
+     funcionava. */
+  align-self: start;
   position: sticky;
   top: 96px;
   margin: 0;
