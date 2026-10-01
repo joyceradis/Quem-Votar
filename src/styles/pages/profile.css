@@ -420,6 +420,7 @@
 .institutional-track-list {
   display: grid;
   gap: 6px;
+  max-width: 80ch;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -454,7 +455,8 @@
 /* Histórico */
 .timeline-list {
   display: grid;
-  border-top: 1px solid var(--line);
+  max-width: 80ch;
+  border-top: 1px solid var(--line-strong);
 }
 
 .timeline-item {
@@ -480,10 +482,13 @@
   color: var(--muted);
 }
 
-/* Dados eleitorais, bens e redes (#156) */
+/* Dados eleitorais, bens e redes (#156).
+   Mesma medida de leitura das demais listas da ficha: sem o limite, o
+   carimbo de proveniência à direita descolava do bloco que ele datava. */
 .electoral-data,
 .declared-assets,
 .declared-social {
+  max-width: 80ch;
   margin-top: 22px;
   padding-top: 18px;
   border-top: 1px solid rgba(17, 59, 86, 0.12);
@@ -631,9 +636,12 @@
 }
 
 /* Fontes */
+/* Mesma medida de leitura das listas de evidência: sem isso o "Abrir"
+   atravessa a tela e desgruda da fonte que ele abre. */
 .source-list {
   display: grid;
-  border-top: 1px solid var(--line);
+  max-width: 80ch;
+  border-top: 1px solid var(--line-strong);
 }
 
 .source-item {
@@ -641,12 +649,26 @@
   justify-content: space-between;
   align-items: center;
   gap: 20px;
-  padding: 14px 0;
+  padding: 14px 12px 14px 14px;
+  margin-inline: -14px;
   border-bottom: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  transition: background-color var(--motion-fast) ease;
+}
+
+.source-item:hover {
+  background: var(--surface);
 }
 
 .source-item > div {
   display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.source-item > div > strong {
+  color: var(--ink);
+  line-height: 1.35;
 }
 
 .source-item span {
@@ -655,9 +677,33 @@
 }
 
 .source-item a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  min-height: var(--tap-min);
   color: var(--blue-strong);
   font-weight: 700;
   text-decoration: none;
+  white-space: nowrap;
+}
+
+.source-item a::after {
+  content: "↗";
+  font-size: 0.85em;
+}
+
+.source-item a:hover,
+.source-item a:focus-visible {
+  color: var(--blue-dark);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .source-item {
+    transition: none;
+  }
 }
 
 @media (max-width: 920px) {
