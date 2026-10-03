@@ -77,6 +77,8 @@ Universo atual:
 - **28** evidências institucionais ALES 2025 vinculadas;
 - **24** evidências temáticas canônicas em `data/reference/topic-evidence.json`.
 
+Última coleta do snapshot: 2026-10-03 11:43 UTC.
+
 `SQ_CANDIDATO` permanece a chave eleitoral canônica.
 
 Nenhuma contagem acima deve ser tratada como avaliação de candidatura ou completude política.
