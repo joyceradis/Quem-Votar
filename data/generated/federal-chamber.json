@@ -349,6 +349,13 @@
     "api_url": "https://dadosabertos.camara.leg.br/api/v2/deputados/220529",
     "history": [
       {
+        "legislature_id": 58,
+        "party": "PODE",
+        "condition": null,
+        "status": null,
+        "status_date": null
+      },
+      {
         "legislature_id": 57,
         "party": "PODE",
         "condition": null,
@@ -576,6 +583,13 @@
     "profile_url": "https://www.camara.leg.br/deputados/220527",
     "api_url": "https://dadosabertos.camara.leg.br/api/v2/deputados/220527",
     "history": [
+      {
+        "legislature_id": 58,
+        "party": "PT",
+        "condition": null,
+        "status": null,
+        "status_date": null
+      },
       {
         "legislature_id": 57,
         "party": "PT",
