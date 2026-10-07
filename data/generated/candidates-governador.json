@@ -12,7 +12,7 @@
     "coalition": "PARTIDO ISOLADO",
     "coalition_composition": "MISSÃO",
     "registration_status": "DEFERIDO",
-    "totalization_status": null,
+    "totalization_status": "NÃO ELEITO",
     "occupation": "ENGENHEIRO",
     "education": "SUPERIOR COMPLETO",
     "photo_url": "https://realidadebrasil.com.br/media/photos/80002541012.jpg",
@@ -33,28 +33,28 @@
           "type": "Quotas ou quinhões de capital",
           "description": "empresa 3F Gerenciamento de Projetos Ltda",
           "value_brl": 10000.0,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 2,
           "type": "Depósito bancário em conta corrente no País",
           "description": "banco 341",
           "value_brl": 1.0,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 3,
           "type": "OUTROS BENS E DIREITOS",
           "description": "valor acumulado do ano de 2025",
           "value_brl": 40000.0,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 4,
           "type": "Apartamento",
           "description": "localizado em Vila Velha - 50% do valor do imóvel",
           "value_brl": 202500.0,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         }
       ],
       "source": {
@@ -64,10 +64,10 @@
       }
     },
     "social_links": [
-      "https://youtube.com/@brenobarcelos14",
+      "https://instagram.com/brenobarcelos14",
       "https://tiktok.com/@brenobarcelos.14",
-      "https://x.com/brenobarcelos_",
-      "https://instagram.com/brenobarcelos14"
+      "https://youtube.com/@brenobarcelos14",
+      "https://x.com/brenobarcelos_"
     ],
     "tse_additional": {
       "registration_judgment": "DEFERIDO",
@@ -87,8 +87,8 @@
         "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
         "mirror_repository": "herminiotorres/dossie-cidadao",
         "mirror_path": "docs/data/tse/candidatos/ES/governador.json",
-        "mirror_blob_sha": "f40aaa162593f39c27c50edcb6b3c0bbbb07cc66",
-        "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/governador.json"
+        "mirror_blob_sha": "979bb4b9c2fb8ad788fe2e77ff860210cec376ef",
+        "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/20ef9019a8a5cf030ae90db04c585a31a6282f69/docs/data/tse/candidatos/ES/governador.json"
       }
     },
     "running_mate": {
@@ -111,8 +111,8 @@
           "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
           "mirror_repository": "herminiotorres/dossie-cidadao",
           "mirror_path": "docs/data/tse/candidatos/ES/vice-governador.json",
-          "mirror_blob_sha": "97822c9d1e6b42cfd8d2e91e1d5ff61cd088f0a4",
-          "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/vice-governador.json"
+          "mirror_blob_sha": "5d86df9d9ea19dd66b4c5063acc467de224839eb",
+          "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/20ef9019a8a5cf030ae90db04c585a31a6282f69/docs/data/tse/candidatos/ES/vice-governador.json"
         }
       }
     },
@@ -131,7 +131,7 @@
     "coalition": "FEDERAÇÃO",
     "coalition_composition": "FEDERAÇÃO BRASIL DA ESPERANÇA - FE BRASIL (13-PT / 65-PC do B / 43-PV)",
     "registration_status": "DEFERIDO",
-    "totalization_status": null,
+    "totalization_status": "NÃO ELEITO",
     "occupation": "PROFESSOR DE ENSINO MÉDIO",
     "education": "SUPERIOR COMPLETO",
     "photo_url": "https://realidadebrasil.com.br/media/photos/80002551833.jpg",
@@ -152,70 +152,70 @@
           "type": "Apartamento",
           "description": "APARTAMENTO EM SÃO GERALDO, CARIACICA-ES",
           "value_brl": 43000.0,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 2,
           "type": "Depósito bancário em conta corrente no País",
           "description": "SALDO EM CC NA CEF",
           "value_brl": 16791.26,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 3,
           "type": "Depósito bancário em conta corrente no País",
           "description": "DEPOSITO A VISTA NA WISE BRASIL",
           "value_brl": 13042.57,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 4,
           "type": "VGBL - Vida Gerador de Benefício Livre",
           "description": "VGBL CEF",
           "value_brl": 631760.85,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 5,
           "type": "Terreno",
           "description": "TERRENO NO LOT. SÃO CONRADO, ADQUIRIDO EM 09/1991",
           "value_brl": 3977.97,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 6,
           "type": "Caderneta de poupança",
           "description": "SALDO EM POUPANÇA NA CEF",
           "value_brl": 5020.7,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 7,
           "type": "Plano PAIT e caderneta de pecúlio",
           "description": "PECULIO NA CAIXA",
           "value_brl": 1943.12,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 8,
           "type": "Sala ou conjunto",
           "description": "SALA COMERCIAL EM CAMPO GRANDE, CARIACICA-ES",
           "value_brl": 138547.87,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 9,
           "type": "Depósito bancário em conta corrente no País",
           "description": "SALDO EM CONTA CORRENTE NO BANESTES",
           "value_brl": 144.89,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 10,
           "type": "Apartamento",
           "description": "APARTAMENTO EM CAMPO GRANDE, CARIACICA-ES",
           "value_brl": 352453.0,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         }
       ],
       "source": {
@@ -225,15 +225,15 @@
       }
     },
     "social_links": [
-      "https://www.facebook.com/HELDERSALOMAO.ESPIRITOSANTO",
+      "https://www.threads.com/@heldersalomao?igshid=NTc4MTIwNjQ2YQ==",
       "https://www.instagram.com/HELDERSALOMAO/",
+      "https://www.linkedin.com/IN/HELDER-SALOM%C3%A3O-49A832103/",
+      "https://www.heldersalomao.com.br/",
       "https://x.com/HELDERSALOMAO",
       "https://www.youtube.com/@HELDERSALOM%C3%A3O_ES",
-      "https://www.heldersalomao.com.br/",
-      "https://www.linkedin.com/IN/HELDER-SALOM%C3%A3O-49A832103/",
-      "https://www.linkedin.com/IN/HELDER-SALOM%C3%A3O-AA082B248/",
-      "https://www.threads.com/@heldersalomao?igshid=NTc4MTIwNjQ2YQ==",
-      "http://heldersalomao13.com.br/"
+      "https://www.facebook.com/HELDERSALOMAO.ESPIRITOSANTO",
+      "http://heldersalomao13.com.br/",
+      "https://www.linkedin.com/IN/HELDER-SALOM%C3%A3O-AA082B248/"
     ],
     "tse_additional": {
       "registration_judgment": "DEFERIDO",
@@ -294,8 +294,8 @@
         "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
         "mirror_repository": "herminiotorres/dossie-cidadao",
         "mirror_path": "docs/data/tse/candidatos/ES/governador.json",
-        "mirror_blob_sha": "f40aaa162593f39c27c50edcb6b3c0bbbb07cc66",
-        "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/governador.json"
+        "mirror_blob_sha": "979bb4b9c2fb8ad788fe2e77ff860210cec376ef",
+        "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/20ef9019a8a5cf030ae90db04c585a31a6282f69/docs/data/tse/candidatos/ES/governador.json"
       }
     },
     "running_mate": {
@@ -318,8 +318,8 @@
           "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
           "mirror_repository": "herminiotorres/dossie-cidadao",
           "mirror_path": "docs/data/tse/candidatos/ES/vice-governador.json",
-          "mirror_blob_sha": "97822c9d1e6b42cfd8d2e91e1d5ff61cd088f0a4",
-          "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/vice-governador.json"
+          "mirror_blob_sha": "5d86df9d9ea19dd66b4c5063acc467de224839eb",
+          "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/20ef9019a8a5cf030ae90db04c585a31a6282f69/docs/data/tse/candidatos/ES/vice-governador.json"
         }
       }
     },
@@ -338,7 +338,7 @@
     "coalition": "PAZ PRA VIVER UM NOVO TEMPO",
     "coalition_composition": "REPUBLICANOS / PL / DEMOCRATA",
     "registration_status": "DEFERIDO",
-    "totalization_status": null,
+    "totalization_status": "2º TURNO",
     "occupation": "SERVIDOR PÚBLICO ESTADUAL",
     "education": "SUPERIOR COMPLETO",
     "photo_url": "https://realidadebrasil.com.br/media/photos/80002552682.jpg",
@@ -359,49 +359,49 @@
           "type": "Apartamento",
           "description": "50% DE APARTAMENTO EM GUARAPARI",
           "value_brl": 45000.0,
-          "updated_at": "24/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 2,
           "type": "Depósito bancário em conta corrente no País",
           "description": "CONTA CORRENTE BANESTES",
           "value_brl": 585.57,
-          "updated_at": "24/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 3,
           "type": "Outros créditos e poupança vinculados",
           "description": "POUPANÇA BRADESCO",
           "value_brl": 32957.09,
-          "updated_at": "24/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 4,
           "type": "VGBL - Vida Gerador de Benefício Livre",
           "description": "VGBL BRADESCO",
           "value_brl": 100000.0,
-          "updated_at": "24/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 5,
           "type": "Apartamento",
           "description": "50% DE APARTAMENTO EM JARDIM DA PENHA",
           "value_brl": 195000.0,
-          "updated_at": "24/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 6,
           "type": "Apartamento",
           "description": "50% DE APARTAMENTO EM BARRO VERMELHO",
           "value_brl": 628514.0,
-          "updated_at": "24/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 7,
           "type": "Aplicação de renda fixa (CDB, RDB e outros)",
           "description": "CDB BRADESCO",
           "value_brl": 286.11,
-          "updated_at": "24/09/2026"
+          "updated_at": "04/10/2026"
         }
       ],
       "source": {
@@ -411,11 +411,11 @@
       }
     },
     "social_links": [
-      "https://www.instagram.com/lorenzopazolini",
       "https://paz10.com.br",
-      "https://www.threads.com/@lorenzopazolini?xmt=AQG07jlLNUsXNfairPa1lGtQsjBk2zT5vvO9m1o7gp9IOyA",
-      "https://www.facebook.com/lorenzopazolinioficial",
       "https://www.youtube.com/@pazolini10",
+      "https://www.instagram.com/lorenzopazolini",
+      "https://www.facebook.com/lorenzopazolinioficial",
+      "https://www.threads.com/@lorenzopazolini?xmt=AQG07jlLNUsXNfairPa1lGtQsjBk2zT5vvO9m1o7gp9IOyA",
       "https://www.tiktok.com/@lorenzo.pazolini"
     ],
     "tse_additional": {
@@ -461,8 +461,8 @@
         "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
         "mirror_repository": "herminiotorres/dossie-cidadao",
         "mirror_path": "docs/data/tse/candidatos/ES/governador.json",
-        "mirror_blob_sha": "f40aaa162593f39c27c50edcb6b3c0bbbb07cc66",
-        "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/governador.json"
+        "mirror_blob_sha": "979bb4b9c2fb8ad788fe2e77ff860210cec376ef",
+        "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/20ef9019a8a5cf030ae90db04c585a31a6282f69/docs/data/tse/candidatos/ES/governador.json"
       }
     },
     "running_mate": {
@@ -485,8 +485,8 @@
           "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
           "mirror_repository": "herminiotorres/dossie-cidadao",
           "mirror_path": "docs/data/tse/candidatos/ES/vice-governador.json",
-          "mirror_blob_sha": "97822c9d1e6b42cfd8d2e91e1d5ff61cd088f0a4",
-          "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/vice-governador.json"
+          "mirror_blob_sha": "5d86df9d9ea19dd66b4c5063acc467de224839eb",
+          "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/20ef9019a8a5cf030ae90db04c585a31a6282f69/docs/data/tse/candidatos/ES/vice-governador.json"
         }
       }
     },
@@ -505,7 +505,7 @@
     "coalition": "PARTIDO ISOLADO",
     "coalition_composition": "UP",
     "registration_status": "DEFERIDO",
-    "totalization_status": null,
+    "totalization_status": "NÃO ELEITO",
     "occupation": "SERVIDOR PÚBLICO FEDERAL",
     "education": "SUPERIOR COMPLETO",
     "photo_url": "https://realidadebrasil.com.br/media/photos/80002550832.jpg",
@@ -526,14 +526,14 @@
           "type": "Veículo automotor terrestre: caminhão, automóvel, moto, etc.",
           "description": "FORD KA 2018",
           "value_brl": 41900.0,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 2,
           "type": "Depósito bancário em conta corrente no País",
           "description": "VALORES EM CONTA CORRENTE",
           "value_brl": 8650.0,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         }
       ],
       "source": {
@@ -561,8 +561,8 @@
         "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
         "mirror_repository": "herminiotorres/dossie-cidadao",
         "mirror_path": "docs/data/tse/candidatos/ES/governador.json",
-        "mirror_blob_sha": "f40aaa162593f39c27c50edcb6b3c0bbbb07cc66",
-        "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/governador.json"
+        "mirror_blob_sha": "979bb4b9c2fb8ad788fe2e77ff860210cec376ef",
+        "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/20ef9019a8a5cf030ae90db04c585a31a6282f69/docs/data/tse/candidatos/ES/governador.json"
       }
     },
     "running_mate": {
@@ -585,8 +585,8 @@
           "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
           "mirror_repository": "herminiotorres/dossie-cidadao",
           "mirror_path": "docs/data/tse/candidatos/ES/vice-governador.json",
-          "mirror_blob_sha": "97822c9d1e6b42cfd8d2e91e1d5ff61cd088f0a4",
-          "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/vice-governador.json"
+          "mirror_blob_sha": "5d86df9d9ea19dd66b4c5063acc467de224839eb",
+          "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/20ef9019a8a5cf030ae90db04c585a31a6282f69/docs/data/tse/candidatos/ES/vice-governador.json"
         }
       }
     },
@@ -605,7 +605,7 @@
     "coalition": "AGORA É O FUTURO",
     "coalition_composition": "PODE / MDB / AGIR / PSB / PDT / FEDERAÇÃO PSDB CIDADANIA (45-PSDB / 23-CIDADANIA) / FEDERAÇÃO UNIÃO PROGRESSISTA (44-UNIÃO / 11-PP)",
     "registration_status": "DEFERIDO",
-    "totalization_status": null,
+    "totalization_status": "2º TURNO",
     "occupation": "GOVERNADOR",
     "education": "SUPERIOR INCOMPLETO",
     "photo_url": "https://realidadebrasil.com.br/media/photos/80002552172.jpg",
@@ -626,217 +626,217 @@
           "type": "Apartamento",
           "description": "APARTAMENTO (HERANÇA - PARTICIPAÇÕES DE 12,50%)",
           "value_brl": 26023.97,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 2,
           "type": "Apartamento",
           "description": "APARTAMENTO (HERANÇA - PARTICIPAÇÕES DE 12,50%)",
           "value_brl": 56072.33,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 3,
           "type": "Apartamento",
           "description": "APARTAMENTO (HERANÇA - PARTICIPAÇÕES DE 12,50%)",
           "value_brl": 16210.5,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 4,
           "type": "Apartamento",
           "description": "APARTAMENTO (HERANÇA - PARTICIPAÇÕES DE 12,50%)",
           "value_brl": 16210.5,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 5,
           "type": "Outros bens imóveis",
           "description": "2 VAGAS DE GARAGEM(HERANÇA - PARTICIPAÇÕES DE 12,50% E 14,29%)",
           "value_brl": 893.0,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 6,
           "type": "Aplicação de renda fixa (CDB, RDB e outros)",
           "description": "OUTRAS APLICAÇÕES E INVESTIMENTOS (POUPANÇA, APLICAÇÃO FINANCEIRA , RENDA FIXA, DEBÊNTURES DE INFRAESTRUTURA, LCA, CRÉDITO PRIVADO E FUNDO DE INVESTIMENTO IMOBILIÁRIO)",
           "value_brl": 16921087.71,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 7,
           "type": "Apartamento",
           "description": "APARTAMENTO (HERANÇA - PARTICIPAÇÕES DE 12,50 %)",
           "value_brl": 10453.93,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 8,
           "type": "Apartamento",
           "description": "APARTAMENTO (HERANÇA - PARTICIPAÇÕES DE 12,50%)",
           "value_brl": 7165.12,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 9,
           "type": "OUTROS BENS E DIREITOS",
           "description": "BENS IMOBILIÁRIOS",
           "value_brl": 152000.0,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 10,
           "type": "Apartamento",
           "description": "APARTAMENTO (HERANÇA - PARTICIPAÇÕES DE 12,50%)",
           "value_brl": 9339.63,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 11,
           "type": "Casa",
           "description": "CASA ( HERANÇA - PARTICIPAÇÃO DE 12,50%)",
           "value_brl": 148075.29,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 12,
           "type": "Apartamento",
           "description": "APARTAMENTO (HERANÇA - PARTICIPAÇÕES DE 12,50%)",
           "value_brl": 16210.5,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 13,
           "type": "Terreno",
           "description": "TERRENO ( HERANÇA - PARTICIPAÇÃO DE 12,50%)",
           "value_brl": 8934.97,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 14,
           "type": "Apartamento",
           "description": "APARTAMENTO",
           "value_brl": 984964.93,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 15,
           "type": "Apartamento",
           "description": "APARTAMENTO (HERANÇA - PARTICIPAÇÕES DE 12,50%)",
           "value_brl": 10453.93,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 16,
           "type": "Apartamento",
           "description": "APARTAMENTO (HERANÇA - PARTICIPAÇÕES DE 14,29%)",
           "value_brl": 10677.07,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 17,
           "type": "Apartamento",
           "description": "APARTAMENTO (HERANÇA - PARTICIPAÇÕES DE 12,50%)",
           "value_brl": 20551.08,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 18,
           "type": "Apartamento",
           "description": "APARTAMENTO (DOAÇÃO - PARTICIPAÇÃO E 25%)",
           "value_brl": 46265.73,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 19,
           "type": "Casa",
           "description": "CASA (HERANÇA - PARTICIPAÇÃO 14,29%)",
           "value_brl": 1143.2,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 20,
           "type": "Outras participações societárias",
           "description": "OUTRAS PARTICIPAÇÕES SOCIETÁRIAS",
           "value_brl": 3169799.0,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 21,
           "type": "Ações (inclusive as provenientes de linha telefônica)",
           "description": "AÇÕES",
           "value_brl": 53816.0,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 22,
           "type": "Apartamento",
           "description": "APARTAMENTO (HERANÇA - PARTICIPAÇÕES DE 12,50%)",
           "value_brl": 16210.5,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 23,
           "type": "Depósito bancário em conta corrente no País",
           "description": "DEPÓSITO BANCÁRIO EM CONTA CORRENTE NO PAÍS",
           "value_brl": 56367.07,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 24,
           "type": "Apartamento",
           "description": "APARTAMENTO",
           "value_brl": 3615450.0,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 25,
           "type": "Crédito decorrente de empréstimo",
           "description": "CRÉDITO DECORRENTE DE EMPRÉSTIMO",
           "value_brl": 70000.0,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 26,
           "type": "Apartamento",
           "description": "APARTAMENTO (HERANÇA - PARTICIPAÇÕES DE 12,50%)",
           "value_brl": 13879.46,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 27,
           "type": "Terreno",
           "description": "TERRENO RURAL (PARTICIPAÇÃO DE 50%)",
           "value_brl": 176316.0,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 28,
           "type": "Sala ou conjunto",
           "description": "2 SALAS COMERCIAIS ( HERANÇA - PARTICIPAÇÃO DE 12,50% SOBRE CADA BEM)",
           "value_brl": 7741.28,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 29,
           "type": "Apartamento",
           "description": "APARTAMENTO (HERANÇA - PARTICIPAÇÕES DE 12,50%)",
           "value_brl": 12521.69,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 30,
           "type": "Crédito decorrente de empréstimo",
           "description": "CRÉDITO DECORRENTE DE EMPRÉSTIMO",
           "value_brl": 62084.16,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         },
         {
           "order": 31,
           "type": "Terreno",
           "description": "LOTE",
           "value_brl": 1951871.0,
-          "updated_at": "18/09/2026"
+          "updated_at": "04/10/2026"
         }
       ],
       "source": {
@@ -846,14 +846,14 @@
       }
     },
     "social_links": [
-      "https://x.com/ricardoferraco",
-      "https://www.instagram.com/ricardoferraco/",
-      "https://www.youtube.com/@ricardoferra%C3%A7oOficial",
       "https://tiktok.com/@ricardo.ferraco",
+      "https://www.youtube.com/@ricardoferra%C3%A7oOficial",
       "http://www.ricardogovernador.com.br/",
-      "https://www.youtube.com/@ricardoferracoOficial",
+      "https://x.com/ricardoferraco",
       "https://www.threads.com/@ricardoferraco",
-      "https://www.facebook.com/RicardoRFerraco/"
+      "https://www.youtube.com/@ricardoferracoOficial",
+      "https://www.facebook.com/RicardoRFerraco/",
+      "https://www.instagram.com/ricardoferraco/"
     ],
     "tse_additional": {
       "registration_judgment": "DEFERIDO",
@@ -905,8 +905,8 @@
         "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
         "mirror_repository": "herminiotorres/dossie-cidadao",
         "mirror_path": "docs/data/tse/candidatos/ES/governador.json",
-        "mirror_blob_sha": "f40aaa162593f39c27c50edcb6b3c0bbbb07cc66",
-        "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/governador.json"
+        "mirror_blob_sha": "979bb4b9c2fb8ad788fe2e77ff860210cec376ef",
+        "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/20ef9019a8a5cf030ae90db04c585a31a6282f69/docs/data/tse/candidatos/ES/governador.json"
       }
     },
     "running_mate": {
@@ -929,8 +929,8 @@
           "mode": "espelho operacional do arquivo oficial consulta_cand_2026.zip",
           "mirror_repository": "herminiotorres/dossie-cidadao",
           "mirror_path": "docs/data/tse/candidatos/ES/vice-governador.json",
-          "mirror_blob_sha": "97822c9d1e6b42cfd8d2e91e1d5ff61cd088f0a4",
-          "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/vice-governador.json"
+          "mirror_blob_sha": "5d86df9d9ea19dd66b4c5063acc467de224839eb",
+          "mirror_url": "https://github.com/herminiotorres/dossie-cidadao/blob/20ef9019a8a5cf030ae90db04c585a31a6282f69/docs/data/tse/candidatos/ES/vice-governador.json"
         }
       }
     },
