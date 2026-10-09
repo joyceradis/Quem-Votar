@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-09-29T19:54:41.429744+00:00",
+  "collected_at": "2026-10-09T06:13:24.768351+00:00",
   "uf": "ES",
   "election_year": 2026,
   "counts": {
@@ -10,10 +10,10 @@
     "federal_current_mandates_linked": 7,
     "ales_2025_evidence_linked": 28,
     "topic_evidence": 24,
-    "candidates_with_assets": 374,
-    "asset_records": 1652,
-    "candidates_with_social_links": 472,
-    "social_links": 1620,
+    "candidates_with_assets": 375,
+    "asset_records": 1659,
+    "candidates_with_social_links": 474,
+    "social_links": 1637,
     "candidates_with_previous_elections": 386,
     "previous_election_records": 1172,
     "candidates_with_registration_status": 563,
@@ -56,8 +56,8 @@
         "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/consulta_cand_complementar/consulta_cand_complementar_2026.zip",
         "transport_url": "https://cdn.tse.jus.br/estatistica/sead/odsele/consulta_cand_complementar/consulta_cand_complementar_2026.zip",
         "archive_member": "consulta_cand_complementar_2026_ES.csv",
-        "sha256": "442b2d3e21953174800da4cf39c701bab2c392ef5d8e2cbb041cc9f194b45341",
-        "generated_at": "29/09/2026 16:30:18",
+        "sha256": "86194fccfde3f46c27dd9268c556affe8ba529c7bc38ede2a9db71a6b5680ab1",
+        "generated_at": "08/10/2026 19:31:17",
         "row_count": 591,
         "status": "fresh"
       },
@@ -66,9 +66,9 @@
         "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/bem_candidato/bem_candidato_2026.zip",
         "transport_url": "https://cdn.tse.jus.br/estatistica/sead/odsele/bem_candidato/bem_candidato_2026.zip",
         "archive_member": "bem_candidato_2026_ES.csv",
-        "sha256": "7249f3e67c727df0f1811a5b35238ff021a8a45e5aa34545ffb00201dd000789",
-        "generated_at": "29/09/2026 16:30:18",
-        "row_count": 1785,
+        "sha256": "4189f396f1746eb31be8e050106e9e8941ed2384080a136b970ed52b10eeb1b5",
+        "generated_at": "08/10/2026 19:30:27",
+        "row_count": 1792,
         "status": "fresh"
       },
       "candidate_social": {
@@ -76,9 +76,9 @@
         "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/consulta_cand/rede_social_candidato_2026.zip",
         "transport_url": "https://cdn.tse.jus.br/estatistica/sead/odsele/consulta_cand/rede_social_candidato_2026.zip",
         "archive_member": "rede_social_candidato_2026_ES.csv",
-        "sha256": "c0069389be42eb4019a5440775a2f76f6973582fd132f5b4d53102cc63b429b2",
-        "generated_at": "29/09/2026 16:30:28",
-        "row_count": 2047,
+        "sha256": "4998a7d62d74cead4f3f0aaa20bcd422660de29fd013da31fe98466f22140908",
+        "generated_at": "08/10/2026 19:30:17",
+        "row_count": 2064,
         "status": "fresh"
       },
       "candidate_history": {
@@ -86,8 +86,8 @@
         "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/historico_candidatura/historico_candidatura_2026.zip",
         "transport_url": "https://cdn.tse.jus.br/estatistica/sead/odsele/historico_candidatura/historico_candidatura_2026.zip",
         "archive_member": "historico_candidatura_2026_ES.csv",
-        "sha256": "2478bb792a83dd63c76aa30bc37f00428200b225071dfb0166071c5317c5aa8a",
-        "generated_at": "29/09/2026 16:34:09",
+        "sha256": "c5ee21deba0ce875cc8a31233a88c01ba88c06744a0348839eae87779bb5f285",
+        "generated_at": "08/10/2026 19:34:03",
         "row_count": 1573,
         "status": "fresh",
         "join_field": "SQ_CANDIDATO_ATUAL"
@@ -99,67 +99,67 @@
       "federal": {
         "repository": "herminiotorres/dossie-cidadao",
         "path": "docs/data/tse/candidatos/ES/deputado-federal.json",
-        "commit_sha": "1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2",
-        "blob_sha": "98f9a76a22f0a1f0c9c097dc105f9552bbf3cfde",
-        "content_sha256": "332f8ad41ca4ea53151e873bd674ccfd34333775763424f5eba371a5c25ccc84",
-        "html_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/deputado-federal.json",
-        "raw_url": "https://raw.githubusercontent.com/herminiotorres/dossie-cidadao/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/deputado-federal.json"
+        "commit_sha": "20ef9019a8a5cf030ae90db04c585a31a6282f69",
+        "blob_sha": "6782cb3e8d1b03bf8927a6f6bdea2a5d2b2839e8",
+        "content_sha256": "ec0fa20e2ed31dc07aec2b22d14613022d2abe5f1f72a005bba7071fc9ddd7c5",
+        "html_url": "https://github.com/herminiotorres/dossie-cidadao/blob/20ef9019a8a5cf030ae90db04c585a31a6282f69/docs/data/tse/candidatos/ES/deputado-federal.json",
+        "raw_url": "https://raw.githubusercontent.com/herminiotorres/dossie-cidadao/20ef9019a8a5cf030ae90db04c585a31a6282f69/docs/data/tse/candidatos/ES/deputado-federal.json"
       },
       "estadual": {
         "repository": "herminiotorres/dossie-cidadao",
         "path": "docs/data/tse/candidatos/ES/deputado-estadual.json",
-        "commit_sha": "1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2",
-        "blob_sha": "c0bab86798042fca4d05617ad8309ef79b0ec60f",
-        "content_sha256": "1de4c1f7d4dde801285e7cca69458c1430b80dbfabecaa470abc4683e197f5e7",
-        "html_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/deputado-estadual.json",
-        "raw_url": "https://raw.githubusercontent.com/herminiotorres/dossie-cidadao/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/deputado-estadual.json"
+        "commit_sha": "20ef9019a8a5cf030ae90db04c585a31a6282f69",
+        "blob_sha": "a64cebe0b6e3e4e68565c4006b06b6e6b684be0e",
+        "content_sha256": "f7bd3a5991d815e7ba5e0dde8213514e6224687c2033b5e785b2a9a4317c4d7f",
+        "html_url": "https://github.com/herminiotorres/dossie-cidadao/blob/20ef9019a8a5cf030ae90db04c585a31a6282f69/docs/data/tse/candidatos/ES/deputado-estadual.json",
+        "raw_url": "https://raw.githubusercontent.com/herminiotorres/dossie-cidadao/20ef9019a8a5cf030ae90db04c585a31a6282f69/docs/data/tse/candidatos/ES/deputado-estadual.json"
       },
       "governador": {
         "repository": "herminiotorres/dossie-cidadao",
         "path": "docs/data/tse/candidatos/ES/governador.json",
-        "commit_sha": "1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2",
-        "blob_sha": "f40aaa162593f39c27c50edcb6b3c0bbbb07cc66",
-        "content_sha256": "bbf21c357f0a1286432fd4bd3c044d3a5f26675f5a7baf36f68f00380e068b41",
-        "html_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/governador.json",
-        "raw_url": "https://raw.githubusercontent.com/herminiotorres/dossie-cidadao/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/governador.json"
+        "commit_sha": "20ef9019a8a5cf030ae90db04c585a31a6282f69",
+        "blob_sha": "979bb4b9c2fb8ad788fe2e77ff860210cec376ef",
+        "content_sha256": "f5ab971410ad20da3916f6769cb80a1eb8385a8dfe5ca9ecb5cc0b78eecddf11",
+        "html_url": "https://github.com/herminiotorres/dossie-cidadao/blob/20ef9019a8a5cf030ae90db04c585a31a6282f69/docs/data/tse/candidatos/ES/governador.json",
+        "raw_url": "https://raw.githubusercontent.com/herminiotorres/dossie-cidadao/20ef9019a8a5cf030ae90db04c585a31a6282f69/docs/data/tse/candidatos/ES/governador.json"
       },
       "senador": {
         "repository": "herminiotorres/dossie-cidadao",
         "path": "docs/data/tse/candidatos/ES/senador.json",
-        "commit_sha": "1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2",
-        "blob_sha": "e6b875ee2e04c0c6f0ecbea392dc804fd4406c2b",
-        "content_sha256": "d0ed294a416b71355105b22f0b13197c1017bd96f44b085e3486fffc62d8197a",
-        "html_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/senador.json",
-        "raw_url": "https://raw.githubusercontent.com/herminiotorres/dossie-cidadao/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/senador.json"
+        "commit_sha": "20ef9019a8a5cf030ae90db04c585a31a6282f69",
+        "blob_sha": "3b509843c5c7357ae35f3e50f3f6bbe94cfed406",
+        "content_sha256": "af3979207d237ec6c503be437aff1da1118dc162d2ea87a855c7c1cd17793b66",
+        "html_url": "https://github.com/herminiotorres/dossie-cidadao/blob/20ef9019a8a5cf030ae90db04c585a31a6282f69/docs/data/tse/candidatos/ES/senador.json",
+        "raw_url": "https://raw.githubusercontent.com/herminiotorres/dossie-cidadao/20ef9019a8a5cf030ae90db04c585a31a6282f69/docs/data/tse/candidatos/ES/senador.json"
       }
     },
     "operational_mirror_running_mates": {
       "vice": {
         "repository": "herminiotorres/dossie-cidadao",
         "path": "docs/data/tse/candidatos/ES/vice-governador.json",
-        "commit_sha": "1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2",
-        "blob_sha": "97822c9d1e6b42cfd8d2e91e1d5ff61cd088f0a4",
-        "content_sha256": "4c116cbf561ab910f554fda39229acd5155796cca20efb6141db518a649021f9",
-        "html_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/vice-governador.json",
-        "raw_url": "https://raw.githubusercontent.com/herminiotorres/dossie-cidadao/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/vice-governador.json"
+        "commit_sha": "20ef9019a8a5cf030ae90db04c585a31a6282f69",
+        "blob_sha": "5d86df9d9ea19dd66b4c5063acc467de224839eb",
+        "content_sha256": "443d5df430440b6caf34110fcb61a6cb1c2f0659544619e1003503ccca4a4ef4",
+        "html_url": "https://github.com/herminiotorres/dossie-cidadao/blob/20ef9019a8a5cf030ae90db04c585a31a6282f69/docs/data/tse/candidatos/ES/vice-governador.json",
+        "raw_url": "https://raw.githubusercontent.com/herminiotorres/dossie-cidadao/20ef9019a8a5cf030ae90db04c585a31a6282f69/docs/data/tse/candidatos/ES/vice-governador.json"
       },
       "primeiro_suplente": {
         "repository": "herminiotorres/dossie-cidadao",
         "path": "docs/data/tse/candidatos/ES/1-suplente.json",
-        "commit_sha": "1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2",
-        "blob_sha": "40992bfe015002733581568b2521a11aca575de3",
-        "content_sha256": "95568e8414b37418d5325ab99d4ecc01beb51904aa59fb734606149a5533293c",
-        "html_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/1-suplente.json",
-        "raw_url": "https://raw.githubusercontent.com/herminiotorres/dossie-cidadao/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/1-suplente.json"
+        "commit_sha": "20ef9019a8a5cf030ae90db04c585a31a6282f69",
+        "blob_sha": "dbe531876e32e6b66c756066cb286e553abc354a",
+        "content_sha256": "2b056278b1dae9eb6069e0ac62dc90cad2a3ad2335cbba909256d3a35196c6d3",
+        "html_url": "https://github.com/herminiotorres/dossie-cidadao/blob/20ef9019a8a5cf030ae90db04c585a31a6282f69/docs/data/tse/candidatos/ES/1-suplente.json",
+        "raw_url": "https://raw.githubusercontent.com/herminiotorres/dossie-cidadao/20ef9019a8a5cf030ae90db04c585a31a6282f69/docs/data/tse/candidatos/ES/1-suplente.json"
       },
       "segundo_suplente": {
         "repository": "herminiotorres/dossie-cidadao",
         "path": "docs/data/tse/candidatos/ES/2-suplente.json",
-        "commit_sha": "1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2",
-        "blob_sha": "0a730ea826ddc937e086f24435eac2ed0cffd9c0",
-        "content_sha256": "cb8e4df465c39ed98dc19fecc3611d9d846321bea1fee4eebc82c183007a02e0",
-        "html_url": "https://github.com/herminiotorres/dossie-cidadao/blob/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/2-suplente.json",
-        "raw_url": "https://raw.githubusercontent.com/herminiotorres/dossie-cidadao/1ba3219354b6320b16eb2f50e7f7a04ef01c3fe2/docs/data/tse/candidatos/ES/2-suplente.json"
+        "commit_sha": "20ef9019a8a5cf030ae90db04c585a31a6282f69",
+        "blob_sha": "44b6601b905bf3bab996286a99e698ed12c751ed",
+        "content_sha256": "b464709d073cda947d55266ae2e18bc2af793321fbec4b07319a424eb447d6be",
+        "html_url": "https://github.com/herminiotorres/dossie-cidadao/blob/20ef9019a8a5cf030ae90db04c585a31a6282f69/docs/data/tse/candidatos/ES/2-suplente.json",
+        "raw_url": "https://raw.githubusercontent.com/herminiotorres/dossie-cidadao/20ef9019a8a5cf030ae90db04c585a31a6282f69/docs/data/tse/candidatos/ES/2-suplente.json"
       }
     },
     "camara_federal": "https://dadosabertos.camara.leg.br/api/v2/deputados?siglaUf=ES&ordem=ASC&ordenarPor=nome&itens=100",
