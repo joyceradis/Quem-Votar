@@ -149,20 +149,44 @@
   border-bottom: 1px solid var(--line);
 }
 
+/* Numeral da seção: âncora de leitura da ficha longa. Ordem de leitura,
+   nunca ordem de valor entre candidaturas. */
 .section-number {
+  /* `align-self` antes do `sticky`: como item de grid o numeral herdava
+     `stretch` e ficava com a altura da seção inteira, então não sobrava
+     folga para ele grudar — numa seção longa a âncora simplesmente não
+     funcionava. */
+  align-self: start;
+  position: sticky;
+  top: 96px;
   margin: 0;
+  padding-top: 4px;
   color: var(--pink-strong);
   font-family: var(--font-display);
-  font-size: 1.15rem;
+  font-optical-sizing: auto;
+  font-size: 1.5rem;
   font-weight: 700;
-  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.section-number::after {
+  display: block;
+  width: 26px;
+  height: 2px;
+  margin-top: 12px;
+  border-radius: var(--radius-pill);
+  background: var(--pink);
+  content: "";
 }
 
 .answer-section h2 {
-  margin: 0 0 22px;
+  margin: 0 0 24px;
   max-width: 32ch;
+  color: var(--blue-dark);
   font-size: clamp(1.5rem, 2.8vw, 2.25rem);
-  line-height: 1.15;
+  line-height: 1.12;
   letter-spacing: -0.035em;
 }
 
@@ -225,11 +249,14 @@
 }
 
 /* Propostas, atuação documentada e registros */
+/* Coluna de leitura: sem isto o link da fonte fica a meia tela do texto
+   que ele documenta. */
 .promise-list,
 .public-records,
 .impact-list {
   display: grid;
   gap: 0;
+  max-width: 80ch;
 }
 
 .public-records,
@@ -237,20 +264,43 @@
   border-top: 1px solid var(--line);
 }
 
+/*
+ * Registro de evidência. Duas colunas: o texto ocupa a largura toda, e a
+ * linha de proveniência divide a última faixa com o link da fonte — antes
+ * "Abrir fonte" gastava uma linha inteira por item e esticava a seção.
+ * A colocação automática do grid põe o <a> ao lado do último <p>.
+ */
 .promise-list article,
 .public-records article,
 .impact-list article {
-  padding: 18px 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 28px;
+  padding: 18px 12px 18px 14px;
+  margin-inline: -14px;
+  border-radius: var(--radius-sm);
+  transition: background-color var(--motion-fast) ease;
+}
+
+.impact-list article {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.promise-list article:hover,
+.public-records article:hover {
+  background: var(--surface);
 }
 
 .promise-list article:not(:last-child),
 .public-records article,
 .impact-list article {
   border-bottom: 1px solid var(--line);
+  border-radius: 0;
 }
 
 .promise-list article > span,
 .public-records article > span {
+  grid-column: 1 / -1;
   color: var(--blue-strong);
   font-size: 0.7rem;
   font-weight: 800;
@@ -258,36 +308,91 @@
   letter-spacing: 0.05em;
 }
 
+.promise-list article h3,
+.public-records article strong {
+  grid-column: 1 / -1;
+}
+
 .promise-list article h3 {
-  margin: 6px 0 0;
+  margin: 7px 0 0;
   max-width: 68ch;
-  font-size: 1.05rem;
+  color: var(--ink);
+  font-size: 1.06rem;
   font-weight: 500;
-  line-height: 1.6;
+  line-height: 1.55;
   letter-spacing: 0;
 }
 
 .public-records article strong {
   display: block;
-  margin-top: 3px;
+  margin-top: 4px;
+  max-width: 68ch;
+  line-height: 1.5;
 }
 
 .evidence-meta,
 .public-records article p {
-  margin: 7px 0;
+  grid-column: 1;
+  align-self: center;
+  margin: 9px 0 0;
   color: var(--muted);
   font-size: 0.8rem;
 }
 
+/* Link da fonte: mesma faixa da proveniência, encostado à direita. */
 .promise-list a,
 .public-records a {
+  grid-column: 2;
+  justify-self: end;
+  align-self: center;
   display: inline-flex;
   align-items: center;
+  gap: 6px;
   min-height: 44px;
+  margin-top: 4px;
   color: var(--blue-strong);
   font-weight: 700;
   font-size: 0.8rem;
   text-decoration: none;
+  white-space: nowrap;
+}
+
+.promise-list a::after,
+.public-records a::after {
+  content: "↗";
+  font-size: 0.85em;
+}
+
+.promise-list a:hover,
+.promise-list a:focus-visible,
+.public-records a:hover,
+.public-records a:focus-visible {
+  color: var(--blue-dark);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+@media (max-width: 620px) {
+  .promise-list article,
+  .public-records article {
+    grid-template-columns: minmax(0, 1fr);
+    column-gap: 0;
+  }
+
+  .promise-list a,
+  .public-records a {
+    grid-column: 1;
+    justify-self: start;
+    margin-top: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .promise-list article,
+  .public-records article,
+  .impact-list article {
+    transition: none;
+  }
 }
 
 .documented-actions h3 {
@@ -320,6 +425,7 @@
 .institutional-track-list {
   display: grid;
   gap: 6px;
+  max-width: 80ch;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -354,7 +460,8 @@
 /* Histórico */
 .timeline-list {
   display: grid;
-  border-top: 1px solid var(--line);
+  max-width: 80ch;
+  border-top: 1px solid var(--line-strong);
 }
 
 .timeline-item {
@@ -380,10 +487,13 @@
   color: var(--muted);
 }
 
-/* Dados eleitorais, bens e redes (#156) */
+/* Dados eleitorais, bens e redes (#156).
+   Mesma medida de leitura das demais listas da ficha: sem o limite, o
+   carimbo de proveniência à direita descolava do bloco que ele datava. */
 .electoral-data,
 .declared-assets,
 .declared-social {
+  max-width: 80ch;
   margin-top: 22px;
   padding-top: 18px;
   border-top: 1px solid rgba(17, 59, 86, 0.12);
@@ -531,9 +641,12 @@
 }
 
 /* Fontes */
+/* Mesma medida de leitura das listas de evidência: sem isso o "Abrir"
+   atravessa a tela e desgruda da fonte que ele abre. */
 .source-list {
   display: grid;
-  border-top: 1px solid var(--line);
+  max-width: 80ch;
+  border-top: 1px solid var(--line-strong);
 }
 
 .source-item {
@@ -541,12 +654,26 @@
   justify-content: space-between;
   align-items: center;
   gap: 20px;
-  padding: 14px 0;
+  padding: 14px 12px 14px 14px;
+  margin-inline: -14px;
   border-bottom: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  transition: background-color var(--motion-fast) ease;
+}
+
+.source-item:hover {
+  background: var(--surface);
 }
 
 .source-item > div {
   display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.source-item > div > strong {
+  color: var(--ink);
+  line-height: 1.35;
 }
 
 .source-item span {
@@ -555,9 +682,33 @@
 }
 
 .source-item a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  min-height: var(--tap-min);
   color: var(--blue-strong);
   font-weight: 700;
   text-decoration: none;
+  white-space: nowrap;
+}
+
+.source-item a::after {
+  content: "↗";
+  font-size: 0.85em;
+}
+
+.source-item a:hover,
+.source-item a:focus-visible {
+  color: var(--blue-dark);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .source-item {
+    transition: none;
+  }
 }
 
 @media (max-width: 920px) {

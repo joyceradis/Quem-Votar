@@ -31,7 +31,7 @@ test.describe("Casco em todas as páginas", () => {
       await expect(page.locator("body")).toHaveAttribute("data-page", dataPage);
       await expect(page.locator("#drawer")).toBeAttached();
       await expect(page.locator("#menuButton")).toBeAttached();
-      await expect(page.locator(".qv-fat-footer")).toBeAttached();
+      await expect(page.locator(".qv-footer")).toBeAttached();
       await expect(page.locator(".skip-link")).toBeAttached();
     });
   }

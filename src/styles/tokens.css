@@ -17,6 +17,12 @@
   --blue-dark: #113b56;
   --blue-soft: #eaf7ff;
 
+  /* Plano escuro do rodapé. Estrutura de leitura, nunca classificação. */
+  --navy: #0d2c41;
+  --navy-ink: #b9d4e4;
+  --navy-muted: #8dadc0;
+  --navy-kicker: #7fc4ea;
+
   --pink: #ee8fbd;
   --pink-accent: #ff6b8b;
   --pink-strong: #b33c72;

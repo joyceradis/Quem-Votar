@@ -1,41 +1,34 @@
-{# Fat Footer institucional — fonte única, substitui o rodapé fino duplicado
-   em 6 dos 7 HTML públicos hoje (apoio.html tem o seu próprio, que a
-   Fase 3 unifica). data-snapshot-date/data-tse-source continuam sendo
-   preenchidos em runtime por core/data.js (applyGlobalMeta), não aqui. #}
-<footer class="qv-fat-footer">
-  <div class="qv-fat-footer-grid">
-    <div class="qv-fat-footer-brand">
-      <div class="qv-fat-footer-brand-art">
-        <div>
-          <p class="qv-fat-footer-kicker">Espírito Santo · Eleições 2026</p>
-          <strong>Quem Votar?</strong>
-          <p>Informação pública, em linguagem normal — sem ranking, sem recomendação de voto.</p>
-        </div>
-        <div class="qv-fat-footer-line-art" aria-hidden="true">
-          {{ "footer-penha-line.svg" | svgInline | safe }}
-        </div>
-      </div>
-      <a href="apoio.html">Apoie o projeto</a>
+{# Rodapé institucional — fonte única para todas as páginas públicas.
+   data-snapshot-date/data-tse-source continuam preenchidos em runtime por
+   core/data.js (applyGlobalMeta), não aqui. Sem ilustração: o rodapé é
+   informação e navegação, e a arte do site vive no topo da Home. #}
+<footer class="qv-footer">
+  <div class="qv-footer-grid">
+    <div class="qv-footer-brand">
+      <p class="qv-footer-kicker">Espírito Santo · Eleições 2026</p>
+      <strong>Quem Votar?</strong>
+      <p class="qv-footer-pitch">Informação pública, em linguagem normal — sem ranking, sem recomendação de voto.</p>
+      <a class="qv-footer-cta" href="apoio.html">Apoie o projeto</a>
     </div>
-    <nav class="qv-fat-footer-col" aria-label="Navegação complementar">
+    <nav class="qv-footer-col" aria-label="Navegação complementar">
       <h3>Navegar</h3>
       {% for link in navLinks %}
       <a href="{{ link.href }}">{{ link.label }}</a>
       {% endfor %}
     </nav>
-    <nav class="qv-fat-footer-col" aria-label="Sobre o projeto">
+    <nav class="qv-footer-col" aria-label="Sobre o projeto">
       <h3>Sobre</h3>
       <a href="sobre.html">Como funciona</a>
       <a href="sobre.html#fontes">Fontes e metodologia</a>
       <a href="apoio.html">Transparência e apoio</a>
     </nav>
-    <div class="qv-fat-footer-meta" role="group" aria-labelledby="footer-data-title">
+    <div class="qv-footer-col qv-footer-meta" role="group" aria-labelledby="footer-data-title">
       <h3 id="footer-data-title">Data dos dados</h3>
       <span>Atualizado em <b data-snapshot-date>—</b></span>
       <a data-tse-source href="https://dadosabertos.tse.jus.br/dataset/candidatos-2026" target="_blank" rel="noopener">Dados do TSE</a>
     </div>
   </div>
-  <div class="qv-fat-footer-legal">
+  <div class="qv-footer-legal">
     <span>Licença AGPL-3.0-only do software · dados sujeitos aos termos das fontes originais.</span>
     <span>Feito no ES, para entender o ES.</span>
   </div>
