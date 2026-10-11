@@ -45,3 +45,6 @@ _site/
 test-results/
 playwright-report/
 blob-report/
+
+# Exportações locais de conversa do Claude Code (podem conter dados pessoais)
+.claude/chat-exports/
