@@ -17,7 +17,7 @@ Antes de editar, o agente deve saber: quem decide, qual é a lane, onde registra
 
 ## 1. Objetivo e escopo
 
-Produto cívico factual e rastreável para Eleições Gerais de 2026 no Espírito Santo, atualmente Deputado Federal e Deputado Estadual.
+Produto cívico factual e rastreável para Eleições Gerais de 2026 no Espírito Santo: Deputado Federal, Deputado Estadual, Governador e Senador. Os quatro cargos já constam do registro de cargos no código e do README V6, conforme a entrega autorizada em [#186](https://github.com/joyceradis/Quem-Votar/issues/186), vinculada à [#161](https://github.com/joyceradis/Quem-Votar/issues/161). Isso não declara concluídas as camadas de propostas/evidências ainda pendentes na #161.
 
 A plataforma **informa; não decide pelo eleitor**.
 
